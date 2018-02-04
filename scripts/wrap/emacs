@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ "$1" == "--daemon" ]; then
+  /usr/bin/emacs $*  
+elif [ -n "$COLORTERM" ]; then
+  #if invoked from terminal just delegate
+  /usr/bin/emacsclient -t $*
+else
+  /usr/bin/emacsclient -c $*
+fi

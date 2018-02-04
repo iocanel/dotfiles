@@ -1,0 +1,8 @@
+#!/bin/bash
+
+#if invoked from terminal just delegate
+if [ -n "$COLORTERM" ]; then
+	/usr/bin/mutt
+else
+	urxvt -name mutt -e /usr/bin/neomutt
+fi

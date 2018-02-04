@@ -1,0 +1,47 @@
+#!/bin/bash
+
+NAMESPACE=${1:-"syndesis"}
+USER=`oc whoami`
+NAMESPACE_EXISTS=`oc get projects | grep $NAMESPACE`
+
+project_exists() {
+  local project=$1
+  local exists=`oc get project | grep $project`
+}
+
+wait_until_deleted() {  
+  local project=$1
+  local e=$(project_exists $project)
+  while [ -n "$e" ]; do
+    sleep 1000
+    e=$(project_exists $project)
+  done
+}
+
+if [ -n "$NAMESPACE_EXISTS" ]; then
+  echo "Project: $NAMESPACE exists. Deleting ..."
+  oc delete project $NAMESPACE --now=true
+  wait_until_deleted
+  echo "Project: $NAMESPACE deleted!"
+  exit
+fi
+
+echo "Creating project $NAMESPACE as admin"
+oc login -u admin -p admin
+oc new-project $NAMESPACE
+
+pushd  ~/workspace/src/github.com/syndesisio/syndesis
+oc create -f app/deploy/support/serviceaccount-as-oauthclient-restricted.yml
+
+oc login -u system:admin
+oc adm policy add-cluster-role-to-user system:auth-delegator -z syndesis-oauth-client
+
+
+oc login -u admin -p admin
+oc create -f app/deploy/syndesis-restricted.yml 
+./app/build.sh --clean --openshift -f
+oc new-app syndesis-restricted -p ROUTE_HOSTNAME=syndesis.$(minishift ip).nip.io -p OPENSHIFT_MASTER=$(oc whoami --show-server) -p OPENSHIFT_PROJECT=$(oc project -q) -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
+popd
+
+
+

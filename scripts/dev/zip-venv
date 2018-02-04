@@ -1,0 +1,20 @@
+#!/bin/bash
+
+#Cleanup
+if [ -d dist ]; then
+    rm -rf dist
+fi
+
+#Create the dist folder
+mkdir dist
+cp -rf src conf data dist
+cp -rf $VIRTUAL_ENV/lib/python2.7/site-packages/* dist
+
+# Check if the project contains native libraries and if so, copy them into the dist
+if [ -d native_libs ]; then
+    cp -rf native_libs/* dist
+fi
+
+pushd dist
+   zip -r deployment.zip .
+popd

@@ -1,0 +1,11 @@
+#!/bin/zsh
+
+PID=`ps -aef | grep emacs | grep daemon | awk -F " " '{print $2}'`
+kill -9 $PID
+
+source ~/.zshenv
+/usr/bin/emacs --daemon
+
+# Send notification and switch to namespace
+notify-send -a "Emacs" -u "normal" "Restarted" "Emacs daemon has been restarted"
+

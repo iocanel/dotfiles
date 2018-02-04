@@ -1,0 +1,73 @@
+#!/bin/bash
+
+TUN_MODULE=`sudo lsmod | grep -sw tun`
+DEFAULT_NET=`sudo virsh net-list | grep active | grep default`
+DOCKER_MACHINES_NET=`sudo virsh net-list | grep active | grep docker-machines`
+
+DEFAULT_MEMORY=8192
+DEFAULT_NAMESPACE=iocanel
+
+if [ -z "$1" ]; then
+    MEMORY=$DEFAULT_MEMORY
+else
+    MEMORY=$1
+fi
+
+if [ -z "$TUN_MODULE" ]; then
+   echo "Installing tun module..."
+   sudo modprobe tun
+fi
+
+if [ -z "$DEFAULT_NET" ];then
+	echo "Creating net default..."
+	sudo virsh net-start default
+fi
+
+if [ -z "$DOCKER_MACHINES_NET" ];then
+	echo "Creating net docker-machines..."
+	sudo virsh net-start docker-machines
+fi
+
+minishift start --vm-driver=kvm --memory $MEMORY --disk-size=80g -v 8
+RESULT=$?
+TITLE="Minishift"
+
+DESCRIPTION=""
+
+if [ $RESULT == 0 ]; then
+	ERGENCY="normal"
+	STATUS="Started Successfully"
+	eval $(minishift docker-env)
+else
+	ERGENCY="critical"
+	STATUS="Failed to Start"
+fi
+
+
+#NON_LOCAL_IP=`hostname -i`
+NON_LOCAL_IP=`ifconfig | grep wlp4s0 -A1 | grep inet | awk -F " " '{print $2}'`
+MINISHIFT_IP=`minishift ip`
+
+# Update all minishift hosts (*.mini.io) with the new non local ip
+for h in `cat /etc/hosts | grep mini.io | awk -F "[.\t]" '{print $5}'`; do
+  sudo sed -i "/$h.mini.io/ s/.*/$NON_LOCAL_IP\t$h.mini.io/g" /etc/hosts
+done
+
+# Update nginx reverse proxy with the new minishift ip
+for i in `cat /etc/nginx/nginx.conf | grep proxy_pass | awk -F "[:;/]" '{print $4}'`;do
+  sudo sed -i "s/$i/$MINISHIFT_IP/g" /etc/nginx/nginx.conf
+done
+# Restart nginx
+sudo systemctl restart nginx
+
+# Send notification and switch to namespace
+notify-send -a "$TITLE" -u "$ERGENCY" "$STATUS" "$DESCRIPTION"
+
+eval $(minishift docker-env)
+#restart emacs daemon to pickup the latest env.
+read -p "I suggest restarting the emacs deamon, so that it uses minishift. Save all your work before you proceed. Are you sure? " -n 1 -r
+echo    # (optional) move to a new line
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+	restart-emacsd
+fi

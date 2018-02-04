@@ -1,0 +1,4 @@
+#!/bin/bash
+
+SUCCESS_WAV=`ls ~/.wavs/*notification*.wav | shuf | head -n 1`
+mplayer $SUCCESS_WAV > /dev/null

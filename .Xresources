@@ -1,0 +1,87 @@
+URxvt*scrollBar:         false
+URxvt*scrollBar_right:   false
+
+URxvt*depth: 32
+URxvt*foreground: #a9b7c1
+URxvt*background: #262626
+
+URxvt*font: xft:DejaVu Sans Mono for Powerline-12
+
+URxvt.letterSpace: -1
+
+URxvt.cursorBlink: 1
+URxvt.cursorUnderline: 1
+URxvt.urgentOnBell:  true
+
+URxvt.internalBorder: 0
+URxvt.externalBorder: 0
+
+! 
+! Perl extensions
+! 
+
+URxvt.perl-ext: default,url-select,selection-to-clipboard
+URxvt.perl-ext-common: default,matcher,font-size,keyboard-select
+
+! Url launcher
+URxvt.url-launcher: /usr/bin/xdg-open
+URxvt.matcher.button: 1
+URxvt.keysym.M-u: perl:url-select:select_next
+URxvt.url-select.launcher: /usr/bin/xdg-open
+URxvt.url-select.underline: true
+URxvt.colorUL: #3e86a0
+
+
+! Font handling
+URxvt.keysym.C-minus: perl:font-size:decrease
+URxvt.keysym.C-equal: perl:font-size:increase
+! The default font increase step size is 1. This is for portability across all
+! fonts (some fonts do not support particular font sizes). Because changing font
+! size only really makes sense for anti-aliased fonts (Terminus is bitmapped),
+! and because anti-aliased fonts support any size, it makes sense to just use a
+! size step of 4 for faster transitions between font size changes.
+URxvt.font-size.step: 1
+
+
+! keyboard-select
+URxvt.keysym.C-Escape: perl:keyboard-select:activate
+
+!
+! Colors
+!
+
+!Normal     
+!0 Black 
+URxvt*color0: #262626
+!1 Red
+!URxvt*color1: #3a2323 Too dark
+URxvt*color1: #ff0000
+!2 Yellow 
+URxvt*color2: #c57632
+!3 Green   
+URxvt*color3: #528369
+!4 Blue     
+URxvt*color4: #3e86a0
+!5 Magenta   
+URxvt*color5: #9876aa
+!6 Cyan      
+URxvt*color6: #6594b6
+!7 White     
+URxvt*color7: #a0b7c1
+
+
+!Bright
+!8 Black
+URxvt*color8: #3a3a3a
+!9 Red
+URxvt*color9: #e78779
+!10 Yellow
+URxvt*color10: #bbb529
+!URxvt*color10: #ffc66d
+!11 Green
+!12 Blue
+!13 Magenta
+URxvt*color13: #7567a6
+!14 Cyan
+!15 White
+URxvt*color15: #555555

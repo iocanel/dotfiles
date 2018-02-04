@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ -z "$1" ];then
+	echo "Usage: use-namespace <kubernetes namespace>"
+fi
+
+kubectl config set-context $(kubectl config current-context) --namespace=$1

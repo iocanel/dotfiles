@@ -1,0 +1,194 @@
+#!/bin/bash
+
+# Exit if any error occurs
+set -e
+
+DURATION=1500
+PROGRESS_UNIT=300
+
+TICK_WAV_PATH="$HOME/.wavs/tick.wav"
+
+NOW=`date +%s`
+
+#
+# Display a help message.
+function displayHelp() {
+    echo "This tool helps you manage your pomodoro."
+    echo "The available options are:"
+    echo " -t                    Toggles the pomodoro session."
+    echo " -r                    Resets the pomodoro session."
+    echo " -m                    Mutes/Unmutes the tick sound."
+    echo " --help                Displays this help message."
+}
+
+#
+# Checks if a flag is present in the arguments.
+function hasflag() {
+    filter=$1
+    for var in "${@:2}"; do
+        if [ "$var" = "$filter" ]; then
+            echo 'true'
+            break;
+        fi
+    done
+}
+
+#
+# Reads a file from the .pomodoro dir and returns that or a fallback value.
+function readstate() {
+    FALLBACK=${2:-""}
+    if [ -d $HOME/.pomodoro ]; then
+        if [ -f $HOME/.pomodoro/$1 ]; then
+            cat $HOME/.pomodoro/$1
+        else
+            echo $FALLBACK
+        fi
+    else
+        echo $FALLBACK
+    fi
+}
+
+function rmstate() {
+    if [ -f "$HOME/.pomodoro/$1" ]; then
+       rm $HOME/.pomodoro/$1
+    fi
+}
+function log() {
+    STARTED=$(readstate "started" "          ")
+    REMAINING=$(readstate "remaining" "          ")
+    ENDS=$(readstate "ENDS" "          ")
+    echo -n "$NOW" >> $HOME/.pomodoro/pomodoro.log
+
+    echo -n " $STARTED" >> $HOME/.pomodoro/pomodoro.log
+    echo -n " $REMAINING" >> $HOME/.pomodoro/pomodoro.log
+    echo -n " $ENDS" >> $HOME/.pomodoro/pomodoro.log
+
+    echo $1 >> $HOME/.pomodoro/pomodoro.log
+}
+
+function init() {
+    if [ ! -d $HOME/.pomodoro ]; then
+        mkdir -p $HOME/.pomodoro
+        log "Initialized Pomodoro"
+    fi
+
+    if [ ! -f $HOME/.pomodoro/state ]; then
+        echo "Inactive" > $HOME/.pomodoro/state
+    fi
+
+    if [ ! -f $HOME/.pomodoro/started ];then
+        echo $NOW > $HOME/.pomodoro/started
+        echo $DURATION > $HOME/.pomodoro/remaining
+        echo $((NOW+DURATION)) > $HOME/.pomodoro/ends
+    fi
+}
+
+function deactivate() {
+    log "Deactivating"
+    echo "Inactive" > $HOME/.pomodoro/state
+    STARTED=`cat $HOME/.pomodoro/started`
+    ENDS=`cat $HOME/.pomodoro/ends`
+    REMAINING=$((ENDS-NOW))
+    echo $REMAINING > $HOME/.pomodoro/remaining
+}
+
+function activate() {
+    log "Activating"
+    REMAINING=`cat $HOME/.pomodoro/remaining`
+    echo $NOW > $HOME/.pomodoro/started
+    echo $((NOW+REMAINING)) > $HOME/.pomodoro/ends
+    echo "Active" > $HOME/.pomodoro/state
+}
+
+function mute() {
+    if [ ! -f "$HOME/.pomodoro/tick" ]; then
+        echo "Active" > "$HOME/.pomodoro/tick"
+    else
+        TICK=`cat $HOME/.pomodoro/tick`
+        if [ "$TICK" == "Active" ]; then
+            echo "Inactive" > "$HOME/.pomodoro/tick"
+        else
+            echo "Active" > "$HOME/.pomodoro/tick"
+
+        fi
+    fi
+}
+
+function tick() {
+    STATE=$(readstate "state")
+    TICK=$(readstate "tick")
+    if [ "$STATE" == "Active" ] && [ "$TICK" == "Active" ]; then
+        if [ $(which mplayer) ]; then
+            mplayer $TICK_WAV_PATH > /dev/null
+        fi
+    fi
+}
+
+function showtime() {
+    echo $1 | awk '{printf "%02d:%02d", ($1/60)%60, $1%60}'
+}
+
+function showstatus() {
+    ENDS=`cat $HOME/.pomodoro/ends`
+    DIFF=$((ENDS-NOW))
+    STATE=`cat $HOME/.pomodoro/state`
+
+    if [ "$STATE" == "Inactive" ]; then
+        DIFF=`cat $HOME/.pomodoro/remaining`
+    fi
+
+    if [ "$STATE" == "Complete" ]; then
+        echo "◽◽◽◽"
+    elif [ $DIFF -lt 0 ]; then
+        echo "◽◽◽◽"
+        echo "Complete" > $HOME/.pomodoro/state
+        log "Completed"
+        DURATION_MMSS=$(showtime $DURATION)
+        if [ $(which notify-send) ]; then
+            notify-send -a "Yapt" -u "normal" "Pomodoro Completed" "$DURATION_MMSS has elapsed."
+        fi
+    else
+        for i in `seq 1 5`;do
+            VAL=$(($i*$PROGRESS_UNIT))
+            if [ $VAL -gt $DIFF ]; then
+                echo -n "◽";
+            else
+                echo -n "◾"
+            fi
+        done
+        echo -n " "
+        showtime $DIFF
+        echo ""
+        tick
+    fi
+}
+
+TOGGLE=$(hasflag -t "$@" 2> /dev/null)
+RESET=$(hasflag -r "$@" 2> /dev/null)
+MUTE=$(hasflag -m "$@" 2> /dev/null)
+
+if [ -n "$RESET" ]; then
+    rmstate "state"
+    rmstate "started"
+    rmstate "ends"
+    rmstate "remaining"
+fi
+
+if [ -n "$MUTE" ]; then
+    mute
+    exit 0
+fi
+
+
+init
+if [ -n "$TOGGLE" ]; then
+    STATE=`cat $HOME/.pomodoro/state`
+    if [ "$STATE" == "Active" ]; then
+        deactivate
+        exit 0
+    else
+        activate
+        exit 0
+    fi
+fi
+showstatus

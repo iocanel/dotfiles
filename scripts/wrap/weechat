@@ -1,0 +1,24 @@
+#!/bin/bash
+
+
+IRC_NICKSERV_PASS=`pass show irc/freenode/nicksrv`
+MATRIX_PASSWORD=`pass show matrix/iocanel/password`
+
+cleanup() {
+.config/weechat/irc.conf
+.config/weechat/plugins.conf
+}
+
+cleanup
+
+sed -e "s/\${sec.data.freenode}/$IRC_NICKSERV_PASS/g" $HOME/.config/weechat/password-store/irc.conf > $HOME/.config/weechat/irc.conf 
+sed -e "s/\${sec.data.matrix}/$MATRIX_PASSWORD/g" $HOME/.config/weechat/password-store/plugins.conf > $HOME/.config/weechat/plugins.conf 
+
+trap "cleanup" EXIT
+
+#if invoked from terminal just delegate
+if [ -n "$COLORTERM" ]; then
+	/usr/bin/weechat -d $HOME/.config/weechat
+else
+	urxvt -name weechat -e /usr/bin/weechat -d $HOME/.config/weechat
+fi

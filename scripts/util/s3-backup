@@ -1,0 +1,121 @@
+#!/bin/bash
+
+# Export some ENV variables so you don't have to type anything
+export AWS_ACCESS_KEY_ID=`pass show aws/backup/access_key`
+export AWS_SECRET_ACCESS_KEY=`pass show aws/backup/secret`
+export PASSPHRASE=`pass show gpg/passphrase`
+
+# Your GPG key
+GPG_KEY="C51F265BBFB59F585E8664F7732253EA4C300A66"
+
+# The S3 destination followed by bucket name
+DEST="s3://s3.eu-central-1.amazonaws.com/iocanel-backup"
+
+
+# Set up some variables for logging
+LOGFILE=".log/duplicity/backup.log"
+DAILYLOGFILE=".log/duplicity/backup.daily.log"
+FULLBACKLOGFILE=".log/duplicity/backup.full.log"
+HOST=`hostname`
+DATE=`date +%Y-%m-%d`
+MAILADDR="iocanel@gmail.com"
+TODAY=$(date +%d%m%Y)
+
+is_running=$(ps -ef | grep duplicity  | grep python | wc -l)
+
+if [ ! -d .log/duplicity ];then
+    mkdir -p .log/duplicity
+fi
+
+if [ ! -f $FULLBACKLOGFILE ]; then
+    touch $FULLBACKLOGFILE
+fi
+
+if [ $is_running -eq 0 ]; then
+    # Clear the old daily log file
+    cat /dev/null > ${DAILYLOGFILE}
+
+    # Trace function for logging, don't change this
+    trace () {
+            stamp=`date +%Y-%m-%d_%H:%M:%S`
+            echo "$stamp: $*" >> ${DAILYLOGFILE}
+    }
+
+    # How long to keep backups for
+    OLDER_THAN="1M"
+
+    # The source of your backup
+    SOURCE=/
+
+    FULL=
+    tail -1 ${FULLBACKLOGFILE} | grep ${TODAY} > /dev/null
+    if [ $? -ne 0 -a $(date +%d) -eq 1 ]; then
+            FULL=full
+    fi;
+
+    trace "Backup for local filesystem started"
+
+    trace "... removing old backups"
+
+    duplicity remove-older-than ${OLDER_THAN} ${DEST} >> ${DAILYLOGFILE} 2>&1
+
+    trace "... backing up filesystem"
+
+    duplicity \
+        ${FULL} \
+        --encrypt-key=${GPG_KEY} \
+        --sign-key=${GPG_KEY} \
+        --include=/etc/portage \
+	--include=/etc/NetworkManager \
+        --include=/home/iocanel/bin \
+        --include=/home/iocanel/.Xresources \
+        --include=/home/iocanel/.config \
+        --exclude=/home/iocanel/.config/Atom \
+        --exclude=/home/iocanel/.config/google-chrome \
+        --exclude=/home/iocanel/.config/cef_user_data \
+        --exclude=/home/iocanel/.config/inkscape \
+        --include=/home/iocanel/.fonts \
+        --include=/home/iocanel/.gpg \
+	--include=/home/iocanel/.local \
+	--include=/home/iocanel/.mailcap \
+	--include=/home/iocanel/.mutt \
+	--include=/home/iocanel/.msmtprc \
+        --include=/home/iocanel/.oh-my-zsh \
+	--include=/home/iocanel/.offlineimaprc \
+	--include=/home/iocanel/.password-store \
+	--include=/home/iocanel/.scripts \
+        --include=/home/iocanel/.vim \
+        --include=/home/iocanel/.vimrc \
+        --include=/home/iocanel/.wavs \
+        --include=/home/iocanel/.weechat \
+	--include=/home/iocanel/.zshrc \
+        --include=/home/iocanel/.zshenv \
+        --include=/home/iocanel/.zshenv.dev \
+        --include=/home/iocanel/.zshenv.kubernetes \
+        --exclude=/home/iocanel/** \
+        --exclude=/** \
+	--s3-european-buckets \
+	--s3-use-new-style \
+        ${SOURCE} ${DEST} >> ${DAILYLOGFILE} 2>&1
+
+    trace "Backup for local filesystem complete"
+    trace "------------------------------------"
+
+    # Send the daily log file by email
+    BACKUPSTATUS=`cat "$DAILYLOGFILE" | grep Errors | awk '{ print $2 }'`
+    if [ "$BACKUPSTATUS" != "0" ]; then
+	    echo "Subject: Duplicity Backup Log for $HOST - $DATE $MAILADDR\n\n$ $(cat $DAILYLOGFILE)" | msmtp -a personal iocanel@gmail.com
+
+   elif [ "$FULL" = "full" ]; then
+        echo "$(date +%d%m%Y_%T) Full Back Done" >> $FULLBACKLOGFILE
+    fi
+
+    # Append the daily log file to the main log file
+    cat "$DAILYLOGFILE" >> $LOGFILE
+
+    # Reset the ENV variables. Don't need them sitting around
+    unset AWS_ACCESS_KEY_ID
+    unset AWS_SECRET_ACCESS_KEY
+    unset PASSPHRASE
+
+fi

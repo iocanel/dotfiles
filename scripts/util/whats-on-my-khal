@@ -1,0 +1,79 @@
+#!/bin/bash
+export DISPLAY=:0.0
+
+TITLE="Reminder"
+
+if [ -r "$HOME/.dbus/Xdbus" ]; then
+	. "$HOME/.dbus/Xdbus"
+fi
+
+NEW_EVENT_REGEX="^([0-9]{2}:[0-9]{1,2}-[0-9]{1,2}:[0-9]{2})"
+NEXT=~/.local/share/khal/next
+
+
+readstatus() {
+	# The first line has the following format HH:MM-HH-MM <TITLE> :: <FIRST DESCRIPTION LINE>
+	# We want to just grab the title and ignore the period and the first line
+	LINE=`cat $1 | head -1 | awk -F "::" '{print $1}'`
+	if [[ "$LINE" =~ $NEW_EVENT_REGEX ]]; then
+		EVENT_TIME="$BASH_REMATCH"
+		EVENT_TIME_LENGTH=${#EVENT_TIME}
+		LINE_LENGTH=${#LINE}
+
+		FROM=`expr $EVENT_TIME_LENGTH + 1`
+		TO=$LINE_LENGTH
+		if [ $TO -le $FROM ]; then
+			STATUS="No title at $EVENT_TIME"
+		else
+			STATUS="$(echo $LINE | cut -c$FROM-${TO}) at $EVENT_TIME"
+		fi
+	else 
+		STATUS="$LINE"
+	fi
+	echo $STATUS
+}
+
+readdescription() {
+	# The first line has the following format HH:MM-HH-MM <TITLE> :: <FIRST DESCRIPTION LINE>
+	# We want to grab just the description lines...
+	cat $1 | head -1 | awk -F ":: " '{print $2}'
+	cat $1 | fmt -w270 | tail -n +2 
+}
+notify() {
+	TEMPDIR=$(mktemp -d whats-on-my-khal.XXXXXXXX)
+	OFFSET=${1}
+	RANGE=${2:="15mins"}
+	ERGENCY=${3:="Normal"}
+
+	#We are filtering out non-ASCII characters that can cause notify-send to barf.
+        DATE=`date +"%d/%m/%Y %H:%M" -d $end_date+$OFFSET`
+	khal list $DATE $RANGE | perl -CIO -pe 's/[^[:ascii:]]/ /g' | awk '{$1=$1};1' > $NEXT
+#	khal list $DATE $RANGE | perl -CIO -pe 's/[^[:ascii:]]/ /g' > $NEXT
+	TODAY=`head -1 $NEXT | cut -d " " -f2` 
+	NEXT_FILE=0
+	cat $NEXT | tail -n +2 | \
+		while read line
+		do
+			if [[ "$line" =~ $NEW_EVENT_REGEX ]]; then
+				NEXT_FILE=$((NEXT_FILE + 1))
+			fi
+			echo $line >> $TEMPDIR/$NEXT_FILE
+		done
+		for event in `ls $TEMPDIR/`; do
+			STATUS=$(readstatus $TEMPDIR/$event)
+			DESCRIPTION=$(readdescription $TEMPDIR/$event)
+			echo $TITLE
+			echo $STATUS
+			echo $DESCRIPTION
+
+			/usr/bin/notify-send -a "$TITLE" -u "$ERGENCY" "$STATUS" "$DESCRIPTION"
+		done
+		rm -rf $TEMPDIR
+	}
+
+	notify "0mins" "5min" "critical"
+	notify "5mins" "15min" "normal"
+	notify "15mins" "1hour" "low"
+
+	#cleanup
+	rm -rf $TEMPDIR

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+case $BLOCK_BUTTON in
+    1) yapt -t && exit 0 & ;;
+    2) yapt -r && exit 0 & ;;
+    3) yapt -m && exit 0 & ;;
+esac
+yapt
