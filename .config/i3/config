@@ -107,12 +107,12 @@ set $menu6 
 
 # switch to workspace
 bindsym $mod+1 workspace 1; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title terminal' ) -eq 2 ] && urxvt --title terminal
-bindsym $mod+2 workspace 2; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title neomutt -e neomutt' ) -eq 2 ] && urxvt --title neomutt -e neomutt
+bindsym $mod+2 workspace 2; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title mutt -name mutt' ) -eq 2 ] && urxvt --title mutt -name mutt -e neomutt
 bindsym $mod+3 workspace 3; exec [ $( ps -eo cmd | grep -c '[c]hromium' ) -eq 2 ] && chromium
-bindsym $mod+4 workspace 4; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title weechat -e weechat' ) -eq 2 ] && urxvt --title weechat -e weechat
-bindsym $mod+5 workspace 5; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title ranger' ) -eq 2 ] && urxvt --title ranger -e ranger
+bindsym $mod+4 workspace 4; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title weechat -name weechat' ) -eq 2 ] && urxvt --title weechat -name -e weechat
+bindsym $mod+5 workspace 5; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title ranger -name ranger' ) -eq 2 ] && urxvt --title ranger -name ranger -e ranger
 bindsym $mod+6 workspace 6; exec [ $( ps -eo cmd | grep -c '[i]dea.sh' ) -eq 2 ] && /home/iocanel/tools/idea/bin/idea.sh
-bindsym $mod+7 workspace 7; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title uvim -e vim' ) -eq 2 ] && urxvt --title uvim -e vim
+bindsym $mod+7 workspace 7; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title vim -name vim' ) -eq 2 ] && urxvt --title vim -name vim -e vim
 bindsym $mod+8 workspace 8; exec [ $( ps -eo cmd | grep -c '[e]macsclient -c' ) -eq 2 ] && emacsclient -c
 bindsym $mod+9 workspace 9
 bindsym $mod+0 workspace 10
@@ -228,8 +228,8 @@ exec --no-startup-id /usr/bin/emacs --daemon
 
 # Applications
 exec --no-startup-id i3-msg 'workspace 1; exec urxvt --title terminal'
-exec --no-startup-id i3-msg 'workspace 2; exec urxvt -name mutt --title mutt -name mutt -e mutt'
+exec --no-startup-id i3-msg 'workspace 2; exec urxvt --title mutt -name mutt -e mutt'
 exec --no-startup-id i3-msg 'workspace 3; exec chromium'
-exec --no-startup-id i3-msg 'workspace 4; exec urxvt -name weechat --title weechat -e weechat'
-exec --no-startup-id i3-msg 'workspace 5; exec urxvt -name ranger --title ranger -e ranger'
+exec --no-startup-id i3-msg 'workspace 4; exec urxvt --title weecahat -name weechat -e weechat'
+exec --no-startup-id i3-msg 'workspace 5; exec urxvt --title ranger -name ranger -e ranger'
     
