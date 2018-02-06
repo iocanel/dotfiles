@@ -18,3 +18,7 @@ done
 
 # Then, source plugins and add commands to $PATH
 zplug load
+
+# These need to run after zplug load (?)
+source <(kubectl completion zsh)
+source <(oc completion zsh)
