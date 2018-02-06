@@ -1,6 +1,6 @@
 -- WeeChat Matrix.org Client
 -- vim: expandtab:ts=4:sw=4:sts=4
--- luacheck: globals weechat command_help command_connect matrix_command_cb matrix_away_command_run_cb configuration_changed_cb real_http_cb matrix_unload http_cb upload_cb send buffer_input_cb poll polltimer_cb cleartyping otktimer_cb join_command_cb part_command_cb leave_command_cb me_command_cb topic_command_cb upload_command_cb query_command_cb create_command_cb createalias_command_cb invite_command_cb list_command_cb op_command_cb voice_command_cb devoice_command_cb kick_command_cb deop_command_cb nick_command_cb whois_command_cb notice_command_cb msg_command_cb encrypt_command_cb public_command_cb names_command_cb more_command_cb roominfo_command_cb name_command_cb closed_matrix_buffer_cb closed_matrix_room_cb typing_notification_cb buffer_switch_cb typing_bar_item_cb
+-- luacheck: globals weechat command_help command_connect matrix_command_cb matrix_away_command_run_cb configuration_changed_cb real_http_cb matrix_unload http_cb upload_cb send buffer_input_cb poll polltimer_cb cleartyping otktimer_cb join_command_cb part_command_cb leave_command_cb me_command_cb topic_command_cb upload_command_cb query_command_cb create_command_cb createalias_command_cb invite_command_cb list_command_cb op_command_cb voice_command_cb devoice_command_cbtow.config_get_plugin('timeout')) kick_command_cb deop_command_cb nick_command_cb whois_command_cb notice_command_cb msg_command_cb encrypt_command_cb public_command_cb names_command_cb more_command_cb roominfo_command_cb name_command_cb closed_matrix_buffer_cb closed_matrix_room_cb typing_notification_cb buffer_switch_cb typing_bar_item_cb devoice_command_cb
 
 --[[
  Author: xt <xt@xt.gg>
@@ -68,6 +68,10 @@ local DEBUG = false
 -- happens before it will return sooner.
 -- default Nginx proxy timeout is 60s, so we go slightly lower
 local POLL_INTERVAL = 55
+
+-- Time in seconds until a connection is assumed to be timed out.
+-- Floating values like 0.4 should work too.
+local timeout = 5*1000 -- overriden by w.config_get_plugin later
 
 local default_color = w.color('default')
 -- Cache error variables so we don't have to look them up for every error
@@ -409,24 +413,28 @@ function matrix_away_command_run_cb(data, buffer, args)
 end
 
 function configuration_changed_cb(data, option, value)
-    if value == 'on' then
-        DEBUG = true
-        w.print('', SCRIPT_NAME..': debugging messages enabled')
-    else
-        DEBUG = false
-        w.print('', SCRIPT_NAME..': debugging messages disabled')
+    if option == 'plugins.var.lua.matrix.timeout' then
+        timeout = tonumber(value)*1000
+    elseif option == 'plugins.var.lua.matrix.debug' then 
+        if value == 'on' then
+            DEBUG = true
+            w.print('', SCRIPT_NAME..': debugging messages enabled')
+        else
+            DEBUG = false
+            w.print('', SCRIPT_NAME..': debugging messages disabled')
+        end
     end
 end
 
-local function http(url, post, cb, timeout, extra, api_ns)
+local function http(url, post, cb, h_timeout, extra, api_ns)
     if not post then
         post = {}
     end
     if not cb then
         cb = 'http_cb'
     end
-    if not timeout then
-        timeout = 60*1000
+    if not h_timeout then
+        h_timeout = 60*1000
     end
     if not extra then
         extra = nil
@@ -455,7 +463,7 @@ local function http(url, post, cb, timeout, extra, api_ns)
             post=post,extra=extra}
         }
     end
-    w.hook_process_hashtable('url:' .. url, post, timeout, cb, extra)
+    w.hook_process_hashtable('url:' .. url, post, h_timeout, cb, extra)
 end
 
 local function parse_http_statusline(line)
@@ -475,7 +483,7 @@ function real_http_cb(extra, command, rc, stdout, stderr)
     end
 
     if stderr and stderr ~= '' then
-        mprint(('error: %s'):format(stderr))
+        mprint(('error: %s'):format(accesstoken_redact(stderr)))
         return w.WEECHAT_RC_OK
     end
 
@@ -499,6 +507,10 @@ function real_http_cb(extra, command, rc, stdout, stderr)
         local httpversion, status_code, reason_phrase = parse_http_statusline(stdout)
         if not httpversion then
             perr(('Invalid http request: %s'):format(stdout))
+            return w.WEECHAT_RC_OK
+        end
+        if status_code == 504 and command:find'/sync' then -- keep hammering to try to get in as the server will keep slowly generating the response
+            SERVER:initial_sync()
             return w.WEECHAT_RC_OK
         end
         if status_code >= 500 then
@@ -613,6 +625,14 @@ function real_http_cb(extra, command, rc, stdout, stderr)
                             local chunks = ephemeral.events or {}
                             for _, chunk in ipairs(chunks) do
                                 myroom:ParseChunk(chunk, backlog, 'states')
+                            end
+                        end
+                        local account_data = room.account_data
+                        if account_data then
+                            -- looks for m.fully_read event
+                            local chunks = account_data.events or {}
+                            for _, chunk in ipairs(chunks) do
+                                myroom:ParseChunk(chunk, backlog, 'account_data')
                             end
                         end
                         if backlog then
@@ -739,7 +759,7 @@ function real_http_cb(extra, command, rc, stdout, stderr)
             -- As a better than nothing approach we send read receipt when
             -- user sends a message, since most likely the user has read
             -- messages in that room if sending messages to it.
-            SERVER:SendReadReceipt(room_id, event_id)
+            SERVER:SendReadMarker(room_id, event_id)
         elseif command:find'createRoom' then
             -- We get join events, so we don't have to do anything
         elseif command:find'/publicRooms' then
@@ -768,6 +788,8 @@ function real_http_cb(extra, command, rc, stdout, stderr)
         elseif command:find'/invite' then
         elseif command:find'receipt' then
             -- we don't care about receipts for now
+        elseif command:find'read_markers' then
+            -- we don't care about read markers for now
         elseif command:find'directory/room' then
             --- XXX: parse result
             mprint 'Created new alias for room'
@@ -775,7 +797,7 @@ function real_http_cb(extra, command, rc, stdout, stderr)
             -- Return of SendPresence which we don't have to handle because
             -- it will be sent back to us as an event
         else
-            dbg{['error'] = {msg='Unknown command in http cb', command=command,
+            dbg{['error'] = {msg='Unknown command in http cb', command=accesstoken_redact(command),
                 js=js}}
         end
     end
@@ -896,7 +918,7 @@ function Olm:query(user_ids) -- Query keys from other user_id
     http('/keys/query/?'..auth,
         {postfields=json.encode(data)},
         'http_cb',
-        5*1000, nil,
+        timeout, nil,
         v2_api_ns
     )
 end
@@ -905,7 +927,7 @@ function Olm:check_server_keycount()
     local data = urllib.urlencode{access_token=SERVER.access_token}
     http('/keys/upload/'..self.device_id..'?'..data,
         {},
-        'http_cb', 5*1000, nil, v2_api_ns
+        'http_cb', timeout, nil, v2_api_ns
     )
 end
 
@@ -967,7 +989,7 @@ function Olm:upload_keys()
     }
     http('/keys/upload/'..self.device_id..'?'..data, {
         postfields = json.encode(msg)
-    }, 'http_cb', 5*1000, nil, v2_api_ns)
+    }, 'http_cb', timeout, nil, v2_api_ns)
 
     self.account:mark_keys_as_published()
 
@@ -988,7 +1010,7 @@ function Olm:claim(user_id, device_id) -- Fetch one time keys
     }
     http('/keys/claim?'..auth,
         {postfields=json.encode(data)},
-        'http_cb', 30*1000, nil, v2_api_ns
+        'http_cb', timeout, nil, v2_api_ns
     )
 end
 
@@ -1135,11 +1157,12 @@ function MatrixServer:connect()
         local post = {
             ["type"]="m.login.password",
             ["user"]=user,
-            ["password"]=password
+            ["password"]=password,
+            ['initial_device_display_name']='WeeMatrix'
         }
         http('/login', {
             postfields = json.encode(post)
-        }, 'http_cb', 5*1000) -- Set a short timeout so user can get more immidiate feedback
+        }, 'http_cb', timeout)
     end
 end
 
@@ -1227,7 +1250,7 @@ function MatrixServer:part(room)
         access_token= self.access_token,
     })
     http(('/rooms/%s/leave?%s'):format(id, data), {postfields = "{}"},
-        'http_cb', 10000, room.identifier)
+        'http_cb', timeout, room.identifier)
 end
 
 function MatrixServer:poll()
@@ -1284,17 +1307,29 @@ function MatrixServer:delRoom(room_id)
     end
 end
 
-function MatrixServer:SendReadReceipt(room_id, event_id)
+function MatrixServer:SendReadMarker(room_id, event_id)
+    -- Send read marker and read receipt too.
+    -- Read receipt is a federated event, read marker is only visible by the
+    -- user to by used by clients.
+    --
     -- TODO: prevent sending multiple identical read receipts
-    local r_type = 'm.read'
     local auth = urllib.urlencode{access_token=self.access_token}
-    room_id = urllib.quote(room_id)
-    event_id = urllib.quote(event_id)
-    local url = '/rooms/'..room_id..'/receipt/'..r_type..'/'..event_id..'?'..auth
+    local url = '/rooms/'..room_id..'/read_markers?'..auth
+    local data = {
+        customrequest = 'POST',
+        postfields = {}
+    }
+    data.postfields['m.fully_read'] = event_id
+
+    if w.config_get_plugin('read_receipts') == 'on' then
+        data.postfields['m.read'] = event_id
+    end
+
+    data.postfields = json.encode(data.postfields)
     http(url,
-      {customrequest = 'POST'},
+      data,
       'http_cb',
-      5*1000
+      timeout
     )
 end
 
@@ -1727,7 +1762,7 @@ function Room:SetName(name)
         end
     elseif self.aliases then
         local alias = self.aliases[1]
-        if name then
+        if name and alias then
             local _
             name, _ = alias:match('(.+):(.+)')
         end
@@ -2672,6 +2707,11 @@ function Room:ParseChunk(chunk, backlog, chunktype)
     -- luacheck: ignore 542
     elseif chunk['type'] == 'm.receipt' then
         -- TODO: figure out if we can do something sensible with read receipts
+    elseif chunk['type'] == 'm.fully_read' and self.buffer ~= w.current_buffer() then
+        -- we don't want to update read line for the current buffer
+        -- TODO: check if read marker correspond to the last event in the room
+        w.buffer_set(self.buffer, "unread", "")
+        w.buffer_set(self.buffer, "hotlist", "-1")
     else
         if DEBUG then
             perr(('Unknown event type %s%s%s in room %s%s%s'):format(
@@ -2807,7 +2847,7 @@ function Room:MarkAsRead()
             local tag = w.hdata_string(hdata_line_data, data, i .. "|tags_array")
             -- Event ids are like $142533663810152bfUKc:matrix.org
             if tag:match'^%$.*:' then
-                SERVER:SendReadReceipt(self.identifier, tag)
+                SERVER:SendReadMarker(self.identifier, tag)
                 break
             end
         end
@@ -3297,6 +3337,8 @@ if w.register(SCRIPT_NAME, SCRIPT_AUTHOR, SCRIPT_VERSION, SCRIPT_LICENSE, SCRIPT
         debug = {'off', 'Print a lot of extra information to help with finding bugs and other problems.'},
         encrypted_message_color = {'lightgreen', 'Print encrypted mesages with this color'},
         --olm_secret = {'', 'Password used to secure olm stores'},
+        timeout = {'5', 'Time in seconds until a connection is assumed to be timed out'},
+        read_receipts = {'on', 'Send read receipts. Note that not sending them will prevent a room to be marked as read in Riot clients.'}
     }
     -- set default settings
     for option, value in pairs(settings) do
@@ -3308,6 +3350,7 @@ if w.register(SCRIPT_NAME, SCRIPT_AUTHOR, SCRIPT_VERSION, SCRIPT_LICENSE, SCRIPT
                      value[2], value[1]))
         end
     end
+    timeout = tonumber(w.config_get_plugin('timeout'))*1000
     errprefix = wconf'weechat.look.prefix_error'
     errprefix_c = wcolor'weechat.color.chat_prefix_error'
     HOMEDIR = w.info_get('weechat_dir', '') .. '/'
@@ -3330,6 +3373,7 @@ if w.register(SCRIPT_NAME, SCRIPT_AUTHOR, SCRIPT_VERSION, SCRIPT_LICENSE, SCRIPT
     end
 
     w.hook_config('plugins.var.lua.matrix.debug', 'configuration_changed_cb', '')
+    w.hook_config('plugins.var.lua.matrix.timeout', 'configuration_changed_cb', '')
 
     local cmds = {'help', 'connect', 'debug', 'msg'}
     w.hook_command(SCRIPT_COMMAND, 'Plugin for matrix.org chat protocol',
