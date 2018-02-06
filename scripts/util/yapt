@@ -163,9 +163,15 @@ function showstatus() {
     fi
 }
 
+HELP=$(hasflag --help "$@" 2> /dev/null)
 TOGGLE=$(hasflag -t "$@" 2> /dev/null)
 RESET=$(hasflag -r "$@" 2> /dev/null)
 MUTE=$(hasflag -m "$@" 2> /dev/null)
+
+if [ -n "$HELP" ]; then
+  displayHelp
+  exit 0;
+fi
 
 if [ -n "$RESET" ]; then
     rmstate "state"
