@@ -1,0 +1,8 @@
+text/html; w3m -dump -T text/html -cols 70; copiousoutput; description=HTML Text; test=type w3m >/dev/null
+image/jpeg; feh %s;
+image/gif; feh %s;
+image/png; feh %s;
+
+text/plain; view %s ; needsterminal
+
+
