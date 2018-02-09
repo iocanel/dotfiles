@@ -1,0 +1,40 @@
+# vim: filetype=muttrc
+
+color status                brightwhite     default
+color indicator             white           brightwhite
+color sidebar_divider       blue            default
+color sidebar_new           green           default
+color tree                  blue            default
+
+# --- Index
+color index                 brightwhite     default         "~A"            # all messages
+color index                 white           default         "~N"            # new messages
+color index                 green           default         "~U"            # unread messages
+
+# --- Headers
+color hdrdefault            brightwhite     default
+color header                yellow          default        "^(From|To|Cc|Bcc)"
+color header                yellow          default        "^(Subject|Date)"
+
+# quote blocks
+color quoted                yellow          default
+color quoted1               yellow          default
+color quoted2               yellow          default
+color quoted3               yellow          default
+color quoted4               yellow          default
+color quoted5               yellow          default
+color quoted6               yellow          default
+color quoted7               yellow          default
+
+#--- Body 
+color body		            blue 		    default    "(ftp|https?|gopher|news|telnet|finger)://[^ \"\t\r\n]+" # Url
+color body		            blue            default    "[-a-z_0-9.]+@[-a-z_0-9.]+"                              # Email
+color body		            green           default    "[#$%&\:\.,!?\(\)\{\}<>]"                                # Special charachters
+color body		            magenta         default    "@[a-zA-Z0-9]*"                                          # Tweeter refs / Annotations
+color body		            yellow          default    "\'[^\']*\'"                                             # Single quoted text
+color body		            yellow          default    "\"[^\"]*\""                                             # Double quoted text
+color body		            blue            default    "[a-zA-Z0-9_\.\-]*[0-9]+[a-zA-Z0-9_\.\-]*"               # Alphanumerics
+color body                  brightwhite     default    "^(>).*"                                                 # Lines starting with > (response refs)
+color body                  red             default    "iocanel|ikanello|Ioannis|Canellos|Kanellos"             # References to me.
+color signature             brightblack     default                                                             # everything below /^--\s*$/
+
