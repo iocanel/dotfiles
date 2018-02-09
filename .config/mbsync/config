@@ -1,0 +1,57 @@
+IMAPAccount iocanel-gmail
+# Address to connect to
+Host imap.gmail.com
+User iocanel@gmail.com
+PassCmd "pass show mail/iocanel@gmail.com/token"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore iocanel-gmail-remote
+Account iocanel-gmail
+
+MaildirStore iocanel-gmail-local
+# The trailing "/" is important
+Path ~/.mail/iocanel@gmail.com/
+Inbox ~/.mail/iocanel@gmail.com/Inbox
+SubFolders Legacy
+
+Channel iocanel-gmail
+Master :iocanel-gmail-remote:
+Slave :iocanel-gmail-local:
+# Exclude everything under the internal [Gmail] folder, except the interesting folders
+Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "[Gmail]/All Mail"
+# Or include everything
+#Patterns *
+# Automatically create missing mailboxes, both locally and on the server
+Create Both
+# Save the synchronization state files in the relevant directory
+SyncState *
+
+IMAPAccount ikanello-gmail
+# Address to connect to
+Host imap.gmail.com
+User ikanello@redhat.com
+PassCmd "pass show mail/ikanello@redhat.com/token"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore ikanello-gmail-remote
+Account ikanello-gmail
+
+MaildirStore ikanello-gmail-local
+# The trailing "/" is important
+Path ~/.mail/ikanello@redhat.com/
+Inbox ~/.mail/ikanello@redhat.com/Inbox
+SubFolders Legacy
+
+Channel ikanello-gmail
+Master :ikanello-gmail-remote:
+Slave :ikanello-gmail-local:
+# Exclude everything under the internal [Gmail] folder, except the interesting folders
+Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "[Gmail]/All Mail"
+# Or include everything
+#Patterns *
+# Automatically create missing mailboxes, both locally and on the server
+Create Both
+# Save the synchronization state files in the relevant directory
+SyncState *
