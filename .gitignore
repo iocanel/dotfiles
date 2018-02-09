@@ -26,6 +26,12 @@
 !.config/i3
 !.config/i3/**
 
+#icons
+!.local
+!.local/share
+!.local/share/icons
+!.local/share/icons/*.png
+
 #IntelliJ
 !.IntelliJIdea2017.1
 !.IntelliJIdea2017.1/config
@@ -38,12 +44,20 @@
 !.gnupg
 !.gnupg/gpg-agent.conf
 
+#mailcap
+!.mailcap
+
+#mbsync / isync
+!.config/mbsync
+!.config/mbsync/**
+
 #mutt
-!.mutt/muttrc*
-!.mutt/muttrc.gmail
-.mutt/muttrc.gmail.secret
-.mutt/muttrc.work
-.mutt/muttrc.work.secret
+!.config/mutt
+!.config/mutt/muttrc*
+!.config/mutt/muttrc.iocanel@gmail.com
+!.config/mutt/muttrc.ikanello@redhat.com
+!.config/mutt/colors
+!.config/mutt/sig
 
 #qutebrowser
 !.config/qutebrowser
