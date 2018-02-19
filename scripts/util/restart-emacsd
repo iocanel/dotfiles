@@ -7,5 +7,5 @@ source ~/.zshenv
 /usr/bin/emacs --daemon
 
 # Send notification and switch to namespace
-notify-send -a "Emacs" -u "normal" "Restarted" "Emacs daemon has been restarted"
+notify-send -a "Emacs" -u "normal" -i /usr/share/icons/hicolor/48x48/apps/emacs.png "Restarted" "Emacs daemon has been restarted"
 

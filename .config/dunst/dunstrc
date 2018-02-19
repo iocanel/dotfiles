@@ -1,5 +1,5 @@
 [global]
-    font = Droid Sans Mono 14
+    font = Droid Sans Mono 18
 
     # allow a small subset of html markup:
     # <b>bold</b>
@@ -9,7 +9,10 @@
     #
     # for a complete reference see http://developer.gnome.org/pango/stable/PangoMarkupFormat.html
     # If markup is not allowed, those tags will be stripped out of the message.
-    allow_markup = yes
+    markup = yes
+
+    icon_position = left
+    icon_folder =  /usr/share/icons/hicolor/48x48/apps/
 
     # The format of the message. Possible variables are:
     #   %a  appname
@@ -59,7 +62,8 @@
     # right side of the screen.  Y is measured from the top and down respectevly.
     # The width can be negative. In this case the actual width is the
     # screen width minus the width defined in within the geometry option.
-    geometry = "300x5-30+20"
+
+    geometry = "00x20-1-32"
 
     # The transparency of the window. range: [0; 100]
     # This option will only work if a compositing windowmanager is present (e.g. xcompmgr, compiz, etc..)
@@ -124,9 +128,8 @@
     browser = /usr/bin/chromium -new-tab
 
 
-[frame]
-    width = 0
-    color = "#000000"
+    frame_width = 0
+    frame_color = "#000000"
 
 [shortcuts]
     # shortcuts are specified as [modifier+][modifier+]...key
@@ -151,12 +154,12 @@
     # Otherwise the '#' and following  would be interpreted as a comment.
     background = "#222222"
     foreground = "#888888"
-    timeout = 10
+    timeout = 0
 
 [urgency_normal]
     background = "#285577"
     foreground = "#ffffff"
-    timeout = 10
+    timeout = 0
 
 [urgency_critical]
     background = "#900000"
@@ -182,42 +185,31 @@
 # NOTE: It might be helpful to run dunst -print in a terminal in order to find
 # fitting options for rules.
 
-#[espeak]
-#    summary = "*"
-#    script = dunst_espeak.sh
+[dunst-boot]  
+    appname = dunst
+    script  = play_success
 
-#[script-test]
-#    summary = "*script*"
-#    script = dunst_test.sh
-
-#[ignore]
-## This notification will not be displayed
-#    summary = "foobar"
-#    format = ""
-
-[signed_on]
-    appname = Pidgin
-    summary = "*signed on*"
+[minikube]  
+    appname = Minikube
+    summary = "Started *"
     urgency = low
+    script  = play_completed_notification
 
-[signed_off]
-    appname = Pidgin
-    summary = *signed off*
+[minishift]  
+    appname = Minishift
+    summary = "Started *"
     urgency = low
+    script  = play_completed_notification
 
-[says]
-    appname = Pidgin
-    summary = *says*
-    urgency = critical
-    format  = "%s "%b""
+[emacs]  
+    appname = Emacs
+    script  = play_completed_notification
 
-[music]
-    appname = Amarok
-    summary = "Now playing"
-    urgency = low
+[eclim]  
+    appname = Eclim
+    summary = "Restarted *"
+    script  = play_completed_notification
 
-#[twitter]
-#    appname = Pidgin
-#    summary = *twitter.com*
-#    urgency = normal
-#
+[weechat]  
+    appname = weechat
+    script  = play_chat

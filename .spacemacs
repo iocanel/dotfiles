@@ -31,6 +31,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     auto-completion
      better-defaults
      docker
      emacs-lisp
@@ -39,6 +40,7 @@ values."
      (go :variables gofmt-command "goimports")
      helm
      html
+     java
      javascript
      (latex :variables
             latex-enable-folding t)
@@ -331,6 +333,18 @@ you should place your code here."
 ;; Background
 (add-to-list 'default-frame-alist '(background-color . "#262626"))
 
+
+;; Eclim
+
+(setq
+ ;; Use another eclimd executable
+ eclimd-executable "/usr/lib/eclipse/eclimd"
+ ;; Specify the workspace to use by default
+ eclimd-default-workspace "/home/iocanel/eclipse-workspace"
+ ;; Whether or not to block emacs until eclimd is ready
+ eclimd-wait-for-process t)
+
+
 ;; Add Jenkinsfile to groovy-mode
 (add-to-list 'auto-mode-alist '("Jenkinsfile" . groovy-mode))
 
@@ -402,9 +416,10 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
-    (latex-preview-pane auctex-latexmk yapfify yaml-mode xterm-color web-mode web-beautify unfill tide typescript-mode tagedit smeargle slim-mode shell-pop scss-mode sass-mode ranger pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements ox-reveal orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow magit-gh-pulls livid-mode skewer-mode simple-httpd live-py-mode less-css-mode kubernetes js2-refactor yasnippet multiple-cursors js2-mode js-doc jenkins hy-mode dash-functional htmlize helm-pydoc helm-gitignore helm-css-scss haml-mode groovy-mode go-guru go-eldoc go-mode gnuplot gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gist gh marshal logito pcache ht gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit git-commit ghub let-alist with-editor eshell-z eshell-prompt-extras esh-help emmet-mode dockerfile-mode docker json-mode tablist magit-popup docker-tramp json-snatcher json-reformat diff-hl cython-mode coffee-mode auto-dictionary auctex anaconda-mode pythonic ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
+    (company-emacs-eclim eclim helm-company helm-c-yasnippet fuzzy company-web web-completion-data company-tern tern company-statistics company-go company-auctex company-anaconda company auto-yasnippet ac-ispell auto-complete latex-preview-pane auctex-latexmk yapfify yaml-mode xterm-color web-mode web-beautify unfill tide typescript-mode tagedit smeargle slim-mode shell-pop scss-mode sass-mode ranger pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements ox-reveal orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow magit-gh-pulls livid-mode skewer-mode simple-httpd live-py-mode less-css-mode kubernetes js2-refactor yasnippet multiple-cursors js2-mode js-doc jenkins hy-mode dash-functional htmlize helm-pydoc helm-gitignore helm-css-scss haml-mode groovy-mode go-guru go-eldoc go-mode gnuplot gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gist gh marshal logito pcache ht gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit git-commit ghub let-alist with-editor eshell-z eshell-prompt-extras esh-help emmet-mode dockerfile-mode docker json-mode tablist magit-popup docker-tramp json-snatcher json-reformat diff-hl cython-mode coffee-mode auto-dictionary auctex anaconda-mode pythonic ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
