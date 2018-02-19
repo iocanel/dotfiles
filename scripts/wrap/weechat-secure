@@ -17,10 +17,12 @@ cleanup() {
 
 cleanup
 
-trap "cleanup" EXIT
+$trap "cleanup" EXIT
 
 IRC_NICKSERV_PASS=`pass show irc/freenode/nicksrv`
-MATRIX_PASSWORD=`pass show matrix/iocanel/password`
+MATRIX_PASS=`pass show matrix/iocanel/password`
+SLACK_TOKENS=`pass show slack/tokens`
 sed -e "s/\${sec.data.freenode}/$IRC_NICKSERV_PASS/g" $HOME/.config/weechat/password-store/irc.conf > $HOME/.config/weechat/irc.conf 
-sed -e "s/\${sec.data.matrix}/$MATRIX_PASSWORD/g" $HOME/.config/weechat/password-store/plugins.conf > $HOME/.config/weechat/plugins.conf 
+sed -e "s/\${sec.data.matrix}/$MATRIX_PASS/g" $HOME/.config/weechat/password-store/plugins.conf > $HOME/.config/weechat/plugins.conf 
+sed -e "s/\${sec.data.slack}/$SLACK_TOKENS/g" $HOME/.config/weechat/password-store/plugins.conf > $HOME/.config/weechat/plugins.conf 
 /usr/bin/weechat -d $HOME/.config/weechat
