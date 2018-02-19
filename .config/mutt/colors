@@ -7,9 +7,13 @@ color sidebar_new           green           default
 color tree                  blue            default
 
 # --- Index
-color index                 brightwhite     default         "~A"            # all messages
-color index                 white           default         "~N"            # new messages
-color index                 green           default         "~U"            # unread messages
+color index                 brightwhite     default         "~A"                    # all messages
+color index                 white           default         "~N"                    # new messages
+color index                 green           default         "~U"                    # unread messages
+color index                 blue            default         "~U ~b iocanel"         # unread messages
+color index                 blue            default         "~U ~b Ioannis"         # unread messages
+color index                 yellow          default         "!~U ~b iocanel"            # unread messages
+color index                 yellow          default         "!~U ~b Ioannis"            # unread messages
 
 # --- Headers
 color hdrdefault            brightwhite     default
