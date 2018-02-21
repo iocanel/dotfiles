@@ -80,6 +80,17 @@
 !.SpaceVim.d
 !.SpaceVim.d/init.vim
 
+#systemd
+!.local
+!.local/share
+!.local/share/systemd
+!.local/share/systemd/user
+!.local/share/systemd/user/**
+
+#vdirsyncer
+!.config/vdirsyncer
+!.config/vdirsyncer/config
+
 #vim
 !.vimrc
 !.vim
