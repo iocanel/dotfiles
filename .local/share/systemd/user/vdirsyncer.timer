@@ -1,0 +1,9 @@
+[Unit]
+Description=Mbsync. Run every minuite.
+
+[Timer]
+OnBootSec=1s
+OnUnitActiveSec=1m 
+
+[Install]
+WantedBy=timers.target
