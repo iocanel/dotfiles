@@ -99,7 +99,8 @@
 #virtual environments
 !.virtualenvs
 !.virtualenvs/bin
-!.virtualenvs/bin/virtualenv-setup.sh #Only include the script that needs to setup the rest.
+#Only include the script that needs to setup the rest.
+!.virtualenvs/bin/virtualenv-setup.sh 
 
 #weechat
 !.config/weechat
