@@ -96,6 +96,11 @@
 !.vim
 !.vim/**
 
+#virtual environments
+!.virtualenvs
+!.virtualenvs/bin
+!.virtualenvs/bin/virtualenv-setup.sh #Only include the script that needs to setup the rest.
+
 #weechat
 !.config/weechat
 !.config/weechat/**
