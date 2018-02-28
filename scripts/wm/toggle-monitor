@@ -1,0 +1,19 @@
+#!/bin/bash
+
+dpms_status() {
+  xset q | grep Monitor | awk -F " " '{print $3}'
+}
+
+
+status=$(dpms_status)
+echo "Monitor is $status"
+if [ "$status" == "On" ]; then
+  echo "Turning off monitor"
+  sleep 1; xset dpms force off
+else
+  echo "Turning on monitor"
+  sleep 1; xset dpms force on
+fi
+
+status=$(dpms_status)
+
