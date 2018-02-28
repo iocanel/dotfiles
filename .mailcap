@@ -4,4 +4,4 @@ image/gif; feh %s;
 image/png; feh %s;
 
 text/plain; view %s ; needsterminal
-application/pdf; /usr/bin/pdftohtml -q -stdout '%s' | w3m -T text/html -cols 70; copiousoutput; description=HTML Text; test=type w3m >/dev/null
+application/pdf; /usr/bin/evince '%s' -f
