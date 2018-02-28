@@ -340,7 +340,7 @@ you should place your code here."
  ;; Use another eclimd executable
  eclimd-executable "/usr/lib/eclipse/eclimd"
  ;; Specify the workspace to use by default
- eclimd-default-workspace "/home/iocanel/eclipse-workspace"
+ eclimd-default-workspace "/home/iocanel/workspace/eclipse"
  ;; Whether or not to block emacs until eclimd is ready
  eclimd-wait-for-process t)
 
