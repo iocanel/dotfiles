@@ -138,13 +138,13 @@
     # xev might be helpful to find names for keys
 
     # close notification
-    close = mod4+m
+    close = ctrl+space
 
     # close all notifications
-    close_all = mod4+shift+m
+    close_all = ctrl+shift+space
 
     # redisplay last message(s)
-    history = mod4+n
+    history = ctrl+grave
 
     # context menu
     context = mod4+shift+i
