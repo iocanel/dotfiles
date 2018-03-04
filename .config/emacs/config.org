@@ -1,0 +1,456 @@
+* My Emacs configuration
+** General Settings
+*** Dashboard   
+   #+BEGIN_SRC emacs-lisp
+     (use-package dashboard
+       :ensure t
+       :config
+       (dashboard-setup-startup-hook)
+       (setq dahboard-items `((recents . 10)))
+       (setq dahboard-banner-logo-title "Never Settle"))
+   #+END_SRC
+*** Key Bindings
+**** Escape for cancel
+   #+BEGIN_SRC emacs-lisp
+     (define-key isearch-mode-map [escape] 'isearch-abort)
+     (define-key isearch-mode-map "\e" 'isearch-abort)
+     (global-set-key [escape] 'keyboard-escape-quit)
+   #+END_SRC
+*** Evil Mode
+    #+BEGIN_SRC emacs-lisp
+      (use-package evil-leader
+        :ensure t
+        :config
+        (global-evil-leader-mode))
+
+      (use-package evil
+        :ensure t
+        :init
+      (evil-mode 1))
+    #+END_SRC
+*** Which Key
+    #+BEGIN_SRC emacs-lisp
+      (use-package which-key
+        :ensure t
+        :init
+        (which-key-mode))
+   #+END_SRC  
+*** Buffers
+    Use ibuffer instead of the default buffer list.
+    #+BEGIN_SRC emacs-lisp
+      (global-set-key (kbd "C-x C-b") 'ibuffer)
+    #+END_SRC
+*** Code Completion
+**** Smart Tab
+     #+BEGIN_SRC emacs-lisp
+       (use-package smart-tab
+	 :ensure t
+	 :init
+	 (progn
+	   (setq hippie-expand-try-functions-list '(yas-hippie-try-expand
+						    try-complete-file-name-partially
+						    try-expand-dabbrev-visible
+						    try-expand-dabbrev
+						    try-expand-dabbrev-all-buffers
+						    try-complete-lisp-symbol-partially
+						    try-complete-lisp-symbol))
+	   (setq smart-tab-using-hippie-expand t)
+	   (setq smart-tab-disabled-major-modes '(org-mode term-mode eshell-mode inferior-python-mode))
+	   (global-smart-tab-mode 1)))
+     #+END_SRC
+**** Company Mode
+     Company mode is an auto completion framework with a lot of extension.
+     The extensions are going to be installed exactly where needed.
+***** Package
+     #+BEGIN_SRC emacs-lisp
+       (use-package company
+         :ensure t
+         :init
+        (add-hook 'after-init-hook 'global-company-mode))
+     #+END_SRC
+
+** UI
+*** Layout
+    #+BEGIN_SRC emacs-lisp
+      (tool-bar-mode -1)
+      (menu-bar-mode -1)
+      (scroll-bar-mode -1)
+    #+END_SRC      
+*** Editor
+**** Line numbers
+     #+BEGIN_SRC emacs-lisp
+	      (use-package linum-relative
+		:ensure t
+		:init
+		(setq linum-relative-current-symbol ""))
+
+       ;; We don't want this on non programming modes
+       (add-hook 'org-mode-hook (lambda () (linum-relative-mode)))
+     #+END_SRC
+**** Sudo Edit
+This allows editing files that require root access.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package sudo-edit
+    :ensure t
+    :bind ("s-e" . sudo-edit))
+#+END_SRC
+The plugin plays extremely well with a custom su wrapper that combines su with passwordless sudo.
+**** Rainbow delimeters
+     To be able to match parenthesis etc:
+     #+BEGIN_SRC emacs-lisp
+       (use-package rainbow-delimiters
+	 :ensure t
+	 :init
+	 (rainbow-delimiters-mode 1))
+     #+END_SRC
+*** Theme
+    #+BEGIN_SRC emacs-lisp
+      ;;(use-package darcula-theme
+      ;;  :ensure t
+      ;;  :config)
+      (load "~/.config/emacs/darcula-theme.el")
+    #+END_SRC
+**** Custom colors
+     #+BEGIN_SRC emacs-lisp
+       (set-foreground-color "#a9b7c1")
+       (set-background-color "#262626")
+     #+END_SRC
+*** Status Line
+**** Package
+     #+BEGIN_SRC emacs-lisp
+       ;; Powerline
+       ;;
+       ;;(use-package powerline
+       ;;  :ensure t)
+
+       ;;(require 'powerline)
+       ;;(powerline-center-theme)
+       (setq powerline-default-separator    'arrow)
+
+       ;; Smartline
+       ;;
+       (use-package smart-mode-line-powerline-theme
+	  :ensure t
+	  :after powerline
+	  :after smart-mode-line
+	  :init
+	  (sml/setup)
+	  (sml/apply-theme 'dark))
+
+       ;; Spaceline
+       ;;
+       ;;(use-package spaceline
+       ;; :ensure t
+       ;;	 :config
+       ;;	 (require 'spaceline-config)
+       ;;	 (setq powerline-default-separator (quote arrow))
+       ;;	 (spaceline-spacemacs-theme))
+     #+END_SRC
+**** Customization
+     #+BEGIN_SRC emacs-lisp
+       (set-face-attribute 'mode-line nil
+                           :foreground "#262626"
+                           :background "#555555"
+                           :box nil)
+       (set-face-attribute 'mode-line-buffer-id nil
+                           :foreground "#262626"
+                           :background "#c57632"
+                           :box nil)
+
+       (setq powerline-arrow-shape 'wave)
+     #+END_SRC     
+*** Completion
+**** IDO
+***** Initialize    
+      #+BEGIN_SRC emacs-lisp
+        (setq ido-enable-flex-matching nil)
+        (setq ido-create-new-buffer 'always)
+        (setq ido-everywhere t)
+        (ido-mode 1)
+      #+END_SRC
+***** Vertical Mode
+****** Package     
+       #+BEGIN_SRC emacs-lisp
+         (use-package ido-vertical-mode
+           :ensure t
+           :init
+           (ido-vertical-mode 1))
+       #+END_SRC
+****** Colors
+       #+BEGIN_SRC emacs-lisp
+         (setq ido-use-faces t)
+         (set-face-attribute 'ido-vertical-first-match-face nil
+                             :foreground "#ff0000")
+         (set-face-attribute 'ido-vertical-only-match-face nil
+                             :foreground "#ff0000")
+         (set-face-attribute 'ido-vertical-match-face nil
+                             :foreground "#a0b7c1")
+       #+END_SRC
+****** Keybindings
+       #+BEGIN_SRC emacs-lisp
+         (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
+       #+END_SRC      
+****** Dired integration
+       #+BEGIN_SRC emacs-lisp
+         (setq ido-show-dot-for-dired t)
+       #+END_SRC
+****** Bookmark integration
+       #+BEGIN_SRC emacs-lisp
+         (require 'bookmark)
+         (require 'ido)
+
+         (defun ido-bookmark-jump ()
+           "Uses ido to search for the bookmark"
+           (interactive)
+           (bookmark-jump
+            (bookmark-get-bookmark
+             (ido-completing-read "find bookmark: " (bookmark-all-names)))))
+
+         (provide 'ido-bookmark-jump)
+
+         (global-set-key (kbd "C-x r b") 'ido-bookmark-jump)
+        #+END_SRC
+** Tools   
+*** Terminal
+**** Shell configuration
+     #+BEGIN_SRC emacs-lisp
+       (defvar my-term-shell "/bin/zsh")
+       (defadvice ansi-term (before force-zsh)
+         (interactive (list my-term-shell)))
+       (ad-activate 'ansi-term)
+     #+END_SRC
+
+**** Terminal Binding
+     #+BEGIN_SRC emacs-lisp
+       (global-set-key (kbd "<S-'>") 'ansi-term)
+     #+END_SRC
+*** Version Control
+**** Magit
+     #+BEGIN_SRC emacs-lisp
+       (use-package magit
+	 :ensure t)
+
+       ;; Pull request integration
+       (use-package magit-gh-pulls
+	 :ensure t)
+     #+END_SRC
+**** Github
+***** Github Pull Request
+      #+BEGIN_SRC emacs-lisp
+      (use-package github-pullrequest :ensure t)
+      #+END_SRC
+***** Github Issues     
+      #+BEGIN_SRC emacs-lisp
+      (use-package github-issues :ensure t)
+      #+END_SRC
+*** Projectile
+    #+BEGIN_SRC emacs-lisp
+      (use-package projectile
+	:ensure t)
+    #+END_SRC
+*** Yasnippet
+    #+BEGIN_SRC emacs-lisp
+      (use-package yasnippet
+	:ensure t
+	:init
+	(yas-global-mode)
+	:config
+	(yas-reload-all))
+
+      (setq yas-snippet-dirs (append yas-snippet-dirs
+				     '("~/.config/yasnippets")))
+    #+END_SRC
+** Modes
+*** Org Mode
+**** Evil    
+     #+BEGIN_SRC emacs-lisp
+     (use-package org-evil :ensure t)
+     #+END_SRC
+**** Code blocks
+***** Edit code in a new window
+      By pressing (C-c ') you can edit the code in a new buffer.
+      #+BEGIN_SRC emacs-lisp
+        (setq org-src-window-setup 'current-window)
+      #+END_SRC    
+***** Code block identation
+      #+BEGIN_SRC emacs-lisp
+        (setq org-src-tab-acts-natively t)
+      #+END_SRC
+***** Babel packs
+      #+BEGIN_SRC emacs-lisp
+      (use-package ob-go :ensure t)
+      (use-package ob-typescript :ensure t)
+      #+END_SRC
+**** Bullets
+    To replace ascii asterisks with bullets:    
+    #+BEGIN_SRC emacs-lisp
+      (use-package org-bullets
+        :ensure t
+        :config
+        (add-hook 'org-mode-hook (lambda () (org-bullets-mode)))) 
+    #+END_SRC
+**** Presentaions
+***** org-present
+      #+BEGIN_SRC emacs-lisp
+	;; Seems missing at the moment
+        ;; (use-package org-present :ensure t)
+      #+END_SRC
+***** ox-reveal
+      #+BEGIN_SRC emacs-lisp
+	(use-package ox-reveal :ensure t)
+      #+END_SRC
+**** Blogging
+***** Installation
+      To install the org2blog plugin:
+      #+BEGIN_SRC emacs-lisp
+        (use-package org2blog :ensure t)
+      #+END_SRC
+***** Setup
+      #+BEGIN_SRC emacs-lisp
+        (let (blog-password)
+          (setq blog-password (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show iocanel.com/iocanel@gmail.com")))
+          (setq org2blog/wp-blog-alist
+                `(("iocanel.com"
+                   :url "https://iocanel.com/xmlrpc.php"
+                   :username "iocanel@gmail.com"
+                  :password ,blog-password))))
+      #+END_SRC      
+***** Troubleshooting
+****** Symbol’s function definition is void: org-define-error
+       Issue and workaround can be found at: https://github.com/eschulte/epresent/issues/61
+	#+BEGIN_SRC emacs-lisp
+	(define-obsolete-function-alias 'org-define-error 'define-error)
+	#+END_SRC
+
+**** Export Formats
+***** asciidoc
+      #+BEGIN_SRC emacs-lisp
+      (use-package ox-asciidoc :ensure t)
+      #+END_SRC
+***** markdown
+      #+BEGIN_SRC emacs-lisp
+      (use-package ox-gfm :ensure t)
+      #+END_SRC
+** Development
+*** Angular   
+    #+BEGIN_SRC emacs-lisp
+    (use-package ng2-mode :ensure t)
+    #+END_SRC
+*** Go
+**** Depenendencies
+     Install the following using from the command line:
+    #+BEGIN_SRC shell
+    go get -u -v github.com/nsf/gocode
+    go get -u -v github.com/rogpeppe/godef
+    go get -u -v golang.org/x/tools/cmd/guru
+    go get -u -v golang.org/x/tools/cmd/gorename
+    go get -u -v golang.org/x/tools/cmd/goimports
+    #+END_SRC
+**** Go Mode
+     #+BEGIN_SRC emacs-lisp
+              (use-package go-mode
+                :ensure t)
+       (require 'go-mode)
+       (add-hook 'before-save-hook 'gofmt-before-save)
+     #+END_SRC
+**** Completion
+***** Package
+      #+BEGIN_SRC emacs-lisp
+        (use-package company-go
+          :ensure t
+          :init
+          (add-hook 'go-mode-hook (lambda ()
+                                  (set (make-local-variable 'company-backends) '(company-go))
+                                  (company-mode))))
+      #+END_SRC
+***** Improvements
+      #+BEGIN_SRC emacs-lisp
+        (setq company-tooltip-limit 20)                      ; bigger popup window
+        (setq company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
+        (setq company-echo-delay 0)                          ; remove annoying blinking
+        (setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
+      #+END_SRC
+
+*** Html
+**** emmet-mode
+     #+BEGIN_SRC emacs-lisp
+       (use-package emmet-mode :ensure t)
+	(defun add-emmet-expand-to-smart-tab-completions ()
+	 ;; Add an entry for current major mode in
+	 ;; `smart-tab-completion-functions-alist' to use
+	 ;; `emmet-expand-line'.
+	 (add-to-list 'smart-tab-completion-functions-alist
+		      (cons major-mode #'emmet-expand-line)))   
+
+       (add-hook 'html-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+       (add-hook 'html-mode-hook 'emmet-preview-mode) ;; Auto-start on any markup modes
+       ;;(add-hook 'html-mode-hook 'add-emmet-expand-to-smart-tab-completions)
+       (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
+       (add-hook 'css-mode-hook 'emmet-preview-mode) ;; Auto-start on any markup modes
+       ;;(add-hook 'css-mode-hook 'add-emmet-expand-to-smart-tab-completions)
+     #+END_SRC
+*** Java
+**** Groovy
+     #+BEGIN_SRC emacs-lisp
+       (use-package groovy-mode :ensure t)
+     #+END_SRC
+**** Kotlin
+     #+BEGIN_SRC emacs-lisp
+     (use-package kotlin-mode :ensure t)
+     #+END_SRC
+*** Javascript
+*** Python
+*** Protobuf
+    #+BEGIN_SRC emacs-lisp
+    (use-package protobuf-mode :ensure t)
+    #+END_SRC
+*** Typescript
+    #+BEGIN_SRC emacs-lisp
+     (use-package typescript-mode :ensure t)
+    #+END_SRC
+*** JSON
+    #+BEGIN_SRC emacs-lisp
+    (use-package json-mode :ensure t)
+    (use-package json-reformat :ensure t)
+    #+END_SRC
+*** YAML
+    #+BEGIN_SRC emacs-lisp
+    (use-package yaml-mode :ensure t)
+    #+END_SRC
+** Operations
+*** Docker
+     #+BEGIN_SRC emacs-lisp
+     (use-package docker :ensure t)
+     (use-package docker-tramp :ensure t)
+     (use-package dockerfile-mode :ensure t)
+     #+END_SRC
+*** Kubermetes
+    #+BEGIN_SRC emacs-lisp
+      (use-package kubernetes :ensure t)
+      (use-package kubernetes-evil :ensure t)
+      (use-package kubernetes-tramp :ensure t)
+    #+END_SRC
+
+* Future Work
+** Development
+*** Go
+**** go-guru
+**** go-imports
+**** go-rename
+**** go-snippets
+**** go-playground
+**** flymake-go
+**** ob-go
+*** Python
+    #+BEGIN_SRC emacs-lisp
+    (use-package python-mode :ensure t)
+    (use-package pyenv-mode :ensure t)
+    (use-package anaconda-mode :ensure t)
+    (use-package company-anaconda :ensure t)
+    #+END_SRC 
+
+**** Notes    
+     Issues encountered in the past with *ob-ipython*.
+
+   
