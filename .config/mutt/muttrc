@@ -220,7 +220,8 @@ auto_view text/x-vcard                          # vcard attachments viewed throu
 set implicit_autoview=yes                       # Load in pager if setting in .mailcap says 'copiousoutput'.
 
 
-set editor = "vim +:silent+?^$"                  # use terminal Vim to compose email
+set editor = "emacs"                            # use terminal Vim to compose email
+# set editor = "vim +:silent+?^$"                  # use terminal Vim to compose email
 set text_flowed = yes                            # eliminate odd line breaks
 # set editor = "vim -c 'set spell spelllang=en' -c 'setlocal fo+=aw' +:silent+?^$"
 
