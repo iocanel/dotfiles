@@ -1,8 +1,4 @@
-
-#For GPG
-GNUPGHOME=~/.gnupg
-GPG_TTY=$(tty)
-export GPG_TTY
+export GPG_TTY=$(tty)
 
 # Load environment variables
 for e in $HOME/.zshenv.d/*;do
