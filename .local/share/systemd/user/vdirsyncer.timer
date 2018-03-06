@@ -2,7 +2,7 @@
 Description=Mbsync. Run every minuite.
 
 [Timer]
-OnBootSec=1s
+OnBootSec=3m
 OnUnitActiveSec=1m 
 
 [Install]
