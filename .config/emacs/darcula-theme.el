@@ -118,7 +118,7 @@
  '(flymake-warnline ((t (:inherit 'warning))))
  '(escape-glyph ((((background dark)) (:foreground "cyan")) (((type pc)) (:foreground "magenta")) (t (:foreground "brown"))))
  '(minibuffer-prompt ((t (:weight bold :slant normal :underline nil :inverse-video nil :foreground "#259185"))))
- '(highlight ((t (:background "#ff0000")))) ;; custom highlight to be more clear original value #0a2832"
+ '(highlight ((t (:background "#000000")))) ;; custom highlight to be more clear original value #0a2832"
  '(region ((t (:weight normal :slant normal :underline nil :inverse-video t :foreground "#465a61" :background "#042028"))))
  '(shadow ((t (:foreground "#465a61"))))
  '(secondary-selection ((t (:background "#0a2832"))))
@@ -136,6 +136,7 @@
  '(mode-line-highlight ((((class color) (min-colors 88))) (t (:inherit (highlight)))))
  '(popup-menu-face ((t (:inherit 'mode-line))))
  '(popup-menu-selection-face ((t (:inherit 'highlight))))
+ '(popup-menu-selection-face ((t (:background "#ff0000")))) ;; originally inherited 'highlight
  '(popup-face ((t (:inherit 'mode-line))))
  '(popup-menu-summary-face ((t (:inherit 'mode-line :weight bold))))
  '(popup-summary-face ((t (:inherit 'mode-line :weight bold))))
