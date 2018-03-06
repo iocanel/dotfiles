@@ -26,6 +26,8 @@
 !.config/emacs
 !.config/emacs/*.el
 !.config/emacs/*.org
+!.emacs.d
+!.emacs.d/bookmarks
 
 #i3
 !.config/i3
