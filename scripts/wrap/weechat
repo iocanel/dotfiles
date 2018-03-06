@@ -1,11 +1,5 @@
 #!/bin/bash
 
-
-cleanup
-
-
-trap "cleanup" EXIT
-
 #if invoked from terminal just delegate
 if [ -n "$COLORTERM" ]; then
   weechat-secure
