@@ -1,0 +1,10 @@
+[Unit]
+Description=MBSync Service
+Documentation=man:mbsync(1)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/mbsync -c /home/iocanel/.config/mbsync/config -a
+
+[Install]
+WantedBy=default.target
