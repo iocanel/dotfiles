@@ -31,16 +31,16 @@ oc login -u admin -p admin
 oc new-project $NAMESPACE
 
 pushd  ~/workspace/src/github.com/syndesisio/syndesis
-oc create -f app/deploy/support/serviceaccount-as-oauthclient-restricted.yml
+oc create -f install/support/serviceaccount-as-oauthclient-restricted.yml
 
 oc login -u system:admin
 oc adm policy add-cluster-role-to-user system:auth-delegator -z syndesis-oauth-client
 
 
 oc login -u admin -p admin
-oc create -f app/deploy/syndesis-restricted.yml 
+oc create -f install/syndesis.yml 
 ./app/build.sh --clean --openshift -f
-oc new-app syndesis-restricted -p ROUTE_HOSTNAME=syndesis.$(minishift ip).nip.io -p OPENSHIFT_MASTER=$(oc whoami --show-server) -p OPENSHIFT_PROJECT=$(oc project -q) -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
+oc new-app syndesis -p ROUTE_HOSTNAME=syndesis.$(minishift ip).nip.io -p OPENSHIFT_MASTER=$(oc whoami --show-server) -p OPENSHIFT_PROJECT=$(oc project -q) -p OPENSHIFT_OAUTH_CLIENT_SECRET=$(oc sa get-token syndesis-oauth-client)
 popd
 
 
