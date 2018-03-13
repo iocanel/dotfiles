@@ -155,8 +155,10 @@ bindsym $mod+Shift+m exec toggle-monitor
 #Emacs Daemon
 bindsym $mod+Shift+e exec restart-emacsd
 
-#Network Manager
+# Bluetooth Manager
+bindsym --release $mod+Ctrl+b exec toggle-blueman-applet
 
+#Network Manager
 bindsym --release $mod+Ctrl+n exec toggle-nm-applet
 
 # resize window (you can also use the mouse for that)
