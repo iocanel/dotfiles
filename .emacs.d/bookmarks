@@ -2,7 +2,32 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("darcula-theme.el"
+(("syndesisio"
+ (filename . "~/workspace/src/github.com/syndesisio/")
+ (front-context-string . "syndesis\n  drwxr")
+ (rear-context-string . "96 Mar  9 10:13 ")
+ (position . 258))
+("iocanel"
+ (filename . "~/workspace/src/github.com/iocanel/")
+ (front-context-string . "alexa-media-mana")
+ (rear-context-string . "96 Feb 16 20:44 ")
+ (position . 256))
+("notes.org"
+ (filename . "~/Documents/notes/notes.org")
+ (front-context-string . "#+TITLE:       N")
+ (rear-context-string)
+ (position . 1))
+("workstation.org"
+ (filename . "~/Documents/notes/workstation.org")
+ (front-context-string . "* Workstation Se")
+ (rear-context-string)
+ (position . 1))
+("todo.org"
+ (filename . "~/Documents/notes/todo.org")
+ (front-context-string . "#+TITLE:       T")
+ (rear-context-string)
+ (position . 1))
+("darcula-theme.el"
  (filename . "~/.config/emacs/darcula-theme.el")
  (front-context-string . ";;; darcula-them")
  (rear-context-string)
