@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Before the GPG_PRESETS
+HEAD=`sed '/BEGIN_GPG_PRESETS/q' /home/iocanel/.zlogin`
+
+# After the GPG_PRESETS
+TAIL=`sed -n '/END_GPG_PRESETS/,$ p' /home/iocanel/.zlogin`
+
+cat >   /home/iocanel/.zlogin <<< "$HEAD"
+cat >> /home/iocanel/.zlogin <<< "$TAIL"

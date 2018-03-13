@@ -50,6 +50,7 @@
 #gpg
 !.gnupg
 !.gnupg/gpg-agent.conf
+!.gnupg/preset-passphrase
 
 #mailcap
 !.mailcap
@@ -123,6 +124,8 @@
 !.Xresources
 
 #zsh
+!.zcleanup
+!.zlogin
 !.zshrc
 !.zshrc.d
 !.zshrc.d/**
