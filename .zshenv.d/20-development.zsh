@@ -1,3 +1,4 @@
+export VISUAL=emacs
 #GOLANG
 export GOPATH=$HOME/workspace
 export GO15VENDOREXPERIMENT=1
