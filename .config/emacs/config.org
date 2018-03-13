@@ -5,57 +5,16 @@
       (setq make-backup-files nil) ; stop creating backup~ files
       (setq auto-save-default nil) ; stop creating #autosave# files
     #+END_SRC
-*** Dashboard
-   #+BEGIN_SRC emacs-lisp
-     (use-package dashboard
-       :ensure t
-       :config
-       (dashboard-setup-startup-hook)
-       (setq dahboard-items `((recents . 10)))
-       (setq dahboard-banner-logo-title "Never Settle"))
-   #+END_SRC
-*** Key Bindings
-**** Escape for cancel
-   #+BEGIN_SRC emacs-lisp
-     (define-key isearch-mode-map [escape] 'isearch-abort)
-     (define-key isearch-mode-map "\e" 'isearch-abort)
-     (global-set-key [escape] 'keyboard-escape-quit)
-   #+END_SRC
-*** Evil Mode
+*** Avy    
     #+BEGIN_SRC emacs-lisp
-      (use-package evil-leader
-	 :ensure t
-	 :config
-	 (global-evil-leader-mode))
-
-      (use-package evil
-	 :ensure t
-	 :init
-       (evil-mode 1))
-
-      ;; Fix issue with undo granularity (See: https://github.com/syl20bnr/spacemacs/issues/2675)
-      (setq evil-want-fine-undo nil)
+      (use-package avy
+	:bind ("M-s" . 'avy-goto-char))
     #+END_SRC
-*** Which Key
-    #+BEGIN_SRC emacs-lisp
-      (use-package which-key
-        :ensure t
-        :init
-        (which-key-mode))
-   #+END_SRC  
 *** Buffers
     Use ibuffer instead of the default buffer list.
     #+BEGIN_SRC emacs-lisp
       (global-set-key (kbd "C-x C-b") 'ibuffer)
     #+END_SRC
-*** Windows
-**** Switching
-     #+BEGIN_SRC emacs-lisp
-       (use-package ace-window 
-	 :ensure t
-	 :init
-	 (global-set-key (kbd "M-o") 'ace-window))
-     #+END_SRC
 *** Code Completion
 **** IDO
 ***** Initialize
@@ -143,10 +102,102 @@
 ***** Improvements
       #+BEGIN_SRC emacs-lisp
         (setq company-tooltip-limit 20)                      ; bigger popup window
-        (setq company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
+        (setq company-idle-delay 0)                          ; decrease delay before autocompletion popup shows
         (setq company-echo-delay 0)                          ; remove annoying blinking
         (setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
       #+END_SRC
+*** Dashboard
+   #+BEGIN_SRC emacs-lisp
+     (use-package dashboard
+       :ensure t
+       :config
+       (dashboard-setup-startup-hook)
+       (setq dahboard-items `((recents . 10)))
+       (setq dahboard-banner-logo-title "Never Settle"))
+   #+END_SRC
+*** Evil Mode
+    #+BEGIN_SRC emacs-lisp
+      (use-package evil-leader
+	 :ensure t
+	 :config
+	 (global-evil-leader-mode))
+
+      (use-package evil
+	 :ensure t
+	 :init
+       (evil-mode 1))
+
+      ;; Fix issue with undo granularity (See: https://github.com/syl20bnr/spacemacs/issues/2675)
+      (setq evil-want-fine-undo nil)
+    #+END_SRC
+*** Hydra
+    #+BEGIN_SRC emacs-lisp
+      (use-package hydra
+	:ensure t)
+    #+END_SRC
+*** Key Bindings
+**** Escape for cancel
+   #+BEGIN_SRC emacs-lisp
+     (define-key isearch-mode-map [escape] 'isearch-abort)
+     (define-key isearch-mode-map "\e" 'isearch-abort)
+     (global-set-key [escape] 'keyboard-escape-quit)
+   #+END_SRC
+*** Mark multiple   
+    #+BEGIN_SRC emacs-lisp
+      (use-package mark-multiple
+	:ensure t
+	:bind ("C-c m" . 'mark-next-like-this))
+
+      (use-package expand-region
+	:ensure t
+	:bind ("C-q" . 'er/expand-region))
+    #+END_SRC
+*** Popup kill ring
+    #+BEGIN_SRC emacs-lisp
+      (use-package popup-kill-ring
+	:ensure t
+	:bind ("M-y" . popup-kill-ring))
+    #+END_SRC
+*** Swiwper    
+    #+BEGIN_SRC emacs-lisp
+      (use-package swiper
+	:bind ("C-s" . 'swiper)
+	:custom
+	(swiper-action-recenter t))
+    #+END_SRC
+*** Windows
+**** Switching
+     #+BEGIN_SRC emacs-lisp
+       (use-package ace-window 
+	 :ensure t
+	 :init
+	 (global-set-key (kbd "M-o") 'ace-window))
+     #+END_SRC
+**** Splitting     
+     #+BEGIN_SRC emacs-lisp
+       (defun split-and-follow-horizontaly ()
+	 (interactive)
+	 (split-window-below)
+	 (balance-windows)
+	 (other-window 1))
+
+	 (global-set-key (kbd "C-x 2") 'split-and-follow-horizontaly)
+
+       (defun split-and-follow-verticaly ()
+	 (interactive)
+	 (split-window-right)
+	 (balance-windows)
+	 (other-window 1))
+
+	 (global-set-key (kbd "C-x 3") 'split-and-follow-verticaly)
+     #+END_SRC
+*** Which Key
+    #+BEGIN_SRC emacs-lisp
+      (use-package which-key
+        :ensure t
+        :init
+        (which-key-mode))
+   #+END_SRC  
 ** UI
 *** Layout
     #+BEGIN_SRC emacs-lisp
@@ -182,7 +233,7 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
 	 :init
 	 (rainbow-delimiters-mode 1))
      #+END_SRC
-**** Highlight line     
+**** Highlight line
      #+BEGIN_SRC emacs-lisp
        (global-hl-line-mode t)
      #+END_SRC
@@ -235,13 +286,17 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
 **** Customization
      #+BEGIN_SRC emacs-lisp
        (set-face-attribute 'mode-line nil
-                           :foreground "#262626"
-                           :background "#555555"
-                           :box nil)
+			   :foreground "#262626"
+			   :background "#555555"
+			   :box nil)
+       (set-face-attribute 'mode-line-inactive nil
+			   :foreground "#262626"
+			   :background "#262626"
+			   :box nil)
        (set-face-attribute 'mode-line-buffer-id nil
-                           :foreground "#262626"
-                           :background "#c57632"
-                           :box nil)
+			   :foreground "#262626"
+			   :background "#c57632"
+			   :box nil)
 
        (setq powerline-arrow-shape 'wave)
      #+END_SRC     
@@ -266,6 +321,7 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
 ***** Aliases
       #+BEGIN_SRC emacs-lisp
 	(add-hook 'eshell-mode-hook (lambda ()
+	    (eshell/alias "ls" "TERM=ansi ls --color=always $*")
 	    (eshell/alias "e" "find-file $1")
 	    (eshell/alias "ff" "find-file $1")
 	    (eshell/alias "emacs" "find-file $1")
@@ -276,11 +332,7 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
 	    (eshell/alias "gds" "magit-diff-staged")
 	    (eshell/alias "d" "dired $1")
 
-	    ;; The 'ls' executable requires the Gnu version on the Mac
-	    (let ((ls (if (file-exists-p "/usr/local/bin/gls")
-			  "/usr/local/bin/gls"
-			"/bin/ls")))
-	      (eshell/alias "ll" (concat ls " -AlohG --color=always")))))
+            (eshell/alias "ll" "ls -AlohG --color=always $*")))
       #+END_SRC
 ***** Prompt
       #+BEGIN_SRC emacs-lisp
@@ -317,6 +369,18 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
 	   (propertize " $ " 'face `(:foreground "#c57632")))))
 	(setq eshell-highlight-prompt nil)
       #+End_SRC
+***** Disable highlighting
+      #+BEGIN_SRC emacs-lisp
+	(add-hook 'eshell-mode-hook (lambda ()
+					    (setq-local global-hl-line-mode nil)))
+      #+END_SRC
+***** Autosuggest
+      #+BEGIN_SRC emacs-lisp
+	(use-package esh-autosuggest
+	  :ensure t)
+	(add-hook 'eshell-mode-hook (lambda ()
+					    (setq-local esh-autosuggest-mode 1)))
+      #+END_SRC
 **** Mutli-term
      #+BEGIN_SRC emacs-lisp
        (use-package multi-term :ensure t)
@@ -349,6 +413,38 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
        (global-set-key (kbd "C-c g s") 'magit-status)
        (global-set-key (kbd "C-c g p r") 'magit-gh-pulls-popup)
      #+END_SRC
+**** Git timemachine
+     Allows you a buffer to move back in time (previous commits)
+***** Package     
+      #+BEGIN_SRC emacs-lisp
+	(use-package git-timemachine
+	  :ensure t
+	  :config
+	  (global-set-key (kbd "C-c g t") 'git-timemachine-toggle))
+      #+END_SRC
+***** Hooks
+     #+BEGIN_SRC emacs-lisp
+       (eval-after-load 'git-timemachine
+	 '(progn
+	    (evil-make-overriding-map git-timemachine-mode-map 'normal)
+	    ;; force update evil keymaps after git-timemachine-mode loaded
+	    (add-hook 'git-timemachine-mode-hook #'evil-normalize-keymaps)))
+     #+END_SRC
+***** Hydras
+      #+BEGIN_SRC emacs-lisp
+	(defhydra hydra-git-timemachine ()
+	  "Git timemachine"
+	  ("p" git-timemachine-show-previous-revision "previous revision")
+	  ("n" git-timemachine-show-next-revision "next revision")
+	  ("q" nil "quit"))
+      #+END_SRC
+**** Git gutter
+     Displays marks on the left bar about changes since last commit.
+     #+BEGIN_SRC emacs-lisp
+       (use-package git-gutter-fringe :ensure t)
+       ;; We don't want this on non programming modes
+       (add-hook 'prog-mode-hook (lambda () (git-gutter-mode)))
+     #+END_SRC
 **** Github
 ***** Github Pull Request
       #+BEGIN_SRC emacs-lisp
@@ -378,6 +474,8 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
 	:init
 	(yas-global-mode)
 	:config
+	(use-package yasnippet-snippets
+	  :ensure t)
 	(yas-reload-all))
 
       (setq yas-snippet-dirs (append yas-snippet-dirs
@@ -547,6 +645,12 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
       (use-package ox-gfm :ensure t)
       #+END_SRC
 ** Development
+*** Flycheck
+    #+BEGIN_SRC emacs-lisp
+      (use-package flycheck
+	:ensure t)
+	
+    #+END_SRC
 *** Angular
     #+BEGIN_SRC emacs-lisp
     (use-package ng2-mode :ensure t)
@@ -578,9 +682,22 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
                                   (set (make-local-variable 'company-backends) '(company-go))
                                   (company-mode))))
       #+END_SRC
+**** Go guru
+     #+BEGIN_SRC emacs-lisp
+       (use-package go-guru
+	 :ensure t
+	 :commands go-guru-hl-identifier-mode
+	 :init (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode))
+     #+END_SRC
+**** Go eldoc
+     #+BEGIN_SRC emacs-lisp
+       (use-package go-eldoc
+	 :ensure t
+	 :commands go-eldoc-setup
+	 :init (add-hook 'go-mode-hook 'go-eldoc-setup))
+     #+END_SRC
 **** Go Tooling
      #+BEGIN_SRC emacs-lisp
-     (use-package go-guru :ensure t)
      (use-package go-imports :ensure t)
      (use-package go-rename :ensure t)
      (use-package go-snippets :ensure t)
@@ -604,10 +721,15 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
        ;;(add-hook 'css-mode-hook 'add-emmet-expand-to-smart-tab-completions)
      #+END_SRC
 *** Java
-**** Eclim    
+**** Eclim
      #+BEGIN_SRC emacs-lisp
        (use-package eclim
-	 :ensure t)
+	 :ensure t
+	 :config 
+	 (use-package company-emacs-eclim
+	   :ensure t
+	   :config
+	   (company-emacs-eclim-setup)))
 
        (setq
 	;; Use another eclimd executable
@@ -629,19 +751,59 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
      #+END_SRC
 *** Javascript
 *** Python
+**** Packages
     #+BEGIN_SRC emacs-lisp
-    (use-package python-mode :ensure t)
-    (use-package pyenv-mode :ensure t)
-    (use-package anaconda-mode :ensure t)
-    (use-package company-anaconda :ensure t)
-    (use-package pytest :ensure t)
+      (use-package python-mode :ensure t)
+      (use-package virtualenvwrapper :ensure t)
+      (use-package pytest :ensure t)
+
     #+END_SRC
-*** Notes
+**** py-flycheck
+     #+BEGIN_SRC emacs-lisp
+       (add-hook 'python-mode-hook (lambda () (flycheck-mode)))
+     #+END_SRC
+**** pyenv
+     #+BEGIN_SRC emacs-lisp
+       (use-package pyenv-mode :ensure t)
+
+       (defun projectile-pyenv-mode-set ()
+	 "Set pyenv version matching project name."
+	 (let ((project (projectile-project-name)))
+	   (if (member project (pyenv-mode-versions))
+	       (pyenv-mode-set project)
+	     (pyenv-mode-unset))))
+
+       (add-hook 'projectile-after-switch-project-hook 'projectile-pyenv-mode-set)
+
+     #+END_SRC
+**** anaconda-mode
+     #+BEGIN_SRC emacs-lisp
+       (use-package anaconda-mode :ensure t)
+       (use-package company-anaconda :ensure t)
+
+       (add-hook 'python-mode-hook 'anaconda-mode)
+       (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+
+
+       (use-package company-anaconda
+	 :ensure t
+	 :init (add-to-list 'company-backends 'company-anaconda))
+     #+END_SRC
+**** jedi     
+     #+BEGIN_SRC emacs-lisp
+       (use-package company-jedi :ensure t)
+
+       (defun add-company-jedi-to-backends ()
+	 (add-to-list 'company-backends 'company-jedi))
+
+       (add-hook 'python-mode-hook 'add-company-jedi-to-backends)
+     #+END_SRC
+**** Notes
      Issues encountered in the past with *ob-ipython*.
-**** Protobuf
-    #+BEGIN_SRC emacs-lisp
-    (use-package protobuf-mode :ensure t)
-    #+END_SRC
+*** Protobuf
+   #+BEGIN_SRC emacs-lisp
+   (use-package protobuf-mode :ensure t)
+   #+END_SRC
 *** Typescript
     #+BEGIN_SRC emacs-lisp
      (use-package typescript-mode :ensure t)
@@ -692,17 +854,23 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
 		 (message "Portforwarding: %s" ellipsized)
 		 )))))
      #+END_SRC
-**** Bindings
+**** COMMENT Hydra     
      #+BEGIN_SRC emacs-lisp
-       (define-key evil-normal-state-map (kbd "C-k o") 'kubernetes-overview)
-       (define-key evil-normal-state-map (kbd "C-k o") 'kubernetes-overview)
-       (define-key evil-normal-state-map (kbd "C-k r c") 'kubernetes-create-from-buffer)
-       (define-key evil-normal-state-map (kbd "C-k r d") 'kubernetes-delete-from-buffer)
-       (define-key evil-normal-state-map (kbd "C-k r r") 'kubernetes-replace-from-buffer)
-       (define-key evil-normal-state-map (kbd "C-k p e") 'kubernetes-exec-into)
-       (define-key evil-normal-state-map (kbd "C-k e") 'kubernetes-execute-marks)
-       (define-key evil-normal-state-map (kbd "C-k d") 'kubernetes-mark-for-delete)
-       (define-key evil-normal-state-map (kbd "C-k j d") 'kubernetes-portforward)
+       (defhydra kubernetes-hydra ()
+	"Kubernetes"
+	("o" kubernetes-overview "overview")
+	("C" kubernetes-create-from-buffer "create")
+	("D" kubernetes-delete-from-buffer "delete")
+	("R" kubernetes-replace-from-buffer "replace")
+	("e" kubernetes-exec-into "exec")
+	("l" kubernetes-logs-follow "logs")
+	("d" kubernetes-mark-for-delete "mark for delete")
+	("x" kubernetes-execute-marks "execute marks")
+	("p" kubernetes-portforward "portforward")
+	("q" nil "quit")
+       )
+
+       (define-key evil-normal-state-map (kbd "C-k") 'kubernetes-hydra/body)
      #+END_SRC
 *** Jenkins
 **** Pipeline from buffer
@@ -786,3 +954,7 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
      #+BEGIN_SRC emacs-lisp
        (add-to-list 'auto-mode-alist '("Jenkinsfile" . groovy-mode))
      #+END_SRC
+     
+
+    
+

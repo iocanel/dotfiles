@@ -149,6 +149,10 @@
  '(company-tooltip-common ((t (:inherit 'mode-line-emphasis))))
  '(company-tooltip-common-selection ((t (:inherit 'highlight))))
  '(company-tooltip-annotation ((t (:inherit 'mode-line))))
+
+ '(company-preview ((t (:background "#262626" :foreground "#555555"))))
+ '(company-preview-common ((t (:background "#262626" :foreground "#555555"))))
+
  '(org-code ((t (:inherit 'default))))
  '(org-block ((t (:inherit 'org-code))))
  '(org-verbatim ((t (:foreground "#c9d7e6"))))
