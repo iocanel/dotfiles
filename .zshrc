@@ -1,12 +1,6 @@
 source ~/.zplug/init.zsh
 
 eval $( dircolors -b $HOME/.dircolors )
-
-#Configure History
-export HISTFILE=~/.zsh_history
-export SAVEHIST=10
-export HISTSIZE=1000000
-
 # Load functions
 fpath=( "$HOME/.zfunc.d" $fpath )
 
