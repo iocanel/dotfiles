@@ -3,6 +3,10 @@
 
 config_version: 1
 global:
+  aliases:
+    q: quit
+    w: session-save
+    wq: quit --save
   colors.downloads.bar.bg: black
   colors.downloads.start.fg: white
   colors.statusbar.caret.bg: purple
@@ -31,6 +35,8 @@ global:
   colors.tabs.selected.odd.bg: '#3a3a3a'
   colors.tabs.selected.odd.fg: white
   colors.webpage.bg: white
+  confirm_quit:
+  - never
   fonts.completion.category: bold 10pt FontAwesome
   fonts.completion.entry: 10pt FontAwesome
   fonts.debug_console: 10pt FontAwesome
@@ -43,4 +49,13 @@ global:
   fonts.monospace: /Consolas, Terminal
   fonts.prompts: 12pt sans-serif
   fonts.statusbar: 10pt FontAwesome
-  fonts.tabs: 12pt FontAwesome
+  fonts.tabs: 10pt FontAwesome
+  statusbar.hide: true
+  statusbar.padding:
+    bottom: 1
+    left: 0
+    right: 0
+    top: 1
+  statusbar.position: bottom
+  tabs.background: false
+  tabs.show: switching
