@@ -750,7 +750,7 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
 	;; Use another eclimd executable
 	eclimd-executable "/usr/lib/eclipse/eclimd"
 	;; Specify the workspace to use by default
-	eclimd-default-workspace "/home/iocanel/workspace/eclipse"
+	eclimd-default-workspace "/home/iocanel/workspace/eclipse/default"
 	;; Whether or not to block emacs until eclimd is ready
 	eclimd-wait-for-process t)
 
