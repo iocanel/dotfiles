@@ -105,17 +105,6 @@ set $menu5 
 set $menu6 
 
 
-# switch to workspace
-bindsym $mod+1 workspace 1; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title terminal' ) -eq 2 ] && urxvt --title terminal
-bindsym $mod+2 workspace 2; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title mutt -name mutt' ) -eq 2 ] && urxvt --title mutt -name mutt -e neomutt
-bindsym $mod+3 workspace 3; exec [ $( ps -eo cmd | grep -c '[c]hromium' ) -eq 2 ] && chromium
-bindsym $mod+4 workspace 4; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title weechat -name weechat' ) -eq 2 ] && urxvt --title weechat -name -e weechat
-bindsym $mod+5 workspace 5; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title ranger -name ranger' ) -eq 2 ] && urxvt --title ranger -name ranger -e ranger
-bindsym $mod+6 workspace 6; exec [ $( ps -eo cmd | grep -c '[i]dea.sh' ) -eq 2 ] && /home/iocanel/tools/idea/bin/idea.sh
-bindsym $mod+7 workspace 7; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title vim -name vim' ) -eq 2 ] && urxvt --title vim -name vim -e vim
-bindsym $mod+8 workspace 8; exec [ $( ps -eo cmd | grep -c '[e]macsclient -c' ) -eq 2 ] && emacsclient -c
-bindsym $mod+9 workspace 9
-bindsym $mod+0 workspace 10
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace 1
@@ -214,13 +203,14 @@ new_window pixel 1
 hide_edge_borders both
 
 # Assing applications to workspaces
-
-assign [class="^Urxvt$" instance="^mutt$"] 2
+assign [class="^Urxvt$" instance="^mutt$"] 1
+assign [class="Emacs"] 2
 assign [class="Chromium"] 3
-assign [class="^Urxvt$" instance="^weechat$"] 4
-assign [class="^Urxvt$" instance="^ranger$"] 5
-assign [class="jetbrains-idea"] 6
-assign [class="Emacs"] 8
+assign [class="qutebrowser"] 3
+assign [class="jetbrains-idea"] 4
+assign [class="^Urxvt$" instance="^weechat$"] 5
+assign [class="^Urxvt$" instance="^mutt$"] 6
+assign [class="^Urxvt$" instance="^ranger$"] 7
 
 #Autostart programs
 
@@ -229,7 +219,6 @@ assign [class="Emacs"] 8
 
 
 # Services 
-
 exec --no-startup-id feh --bg-scale ~/.config/i3/background.png
 exec --no-startup-id "setxkbmap -model pc105 -layout us,gr -option grp:alt_shift_toggle"
 exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
@@ -238,8 +227,29 @@ exec --no-startup-id xautolock -time 10 -locker 'lock-screen'
 
 # Applications
 exec --no-startup-id i3-msg 'workspace 1; exec urxvt --title terminal'
-exec --no-startup-id i3-msg 'workspace 2; exec urxvt --title mutt -name mutt -e mutt'
-exec --no-startup-id i3-msg 'workspace 3; exec chromium'
-exec --no-startup-id i3-msg 'workspace 4; exec urxvt --title weecahat -name weechat -e weechat'
-exec --no-startup-id i3-msg 'workspace 5; exec urxvt --title ranger -name ranger -e ranger'
-    
+exec --no-startup-id i3-msg 'workspace 2; exec urxvt --title emacs -name emacs -e emacs'
+exec --no-startup-id i3-msg 'workspace 3; exec qutebrowser'
+exec --no-startup-id i3-msg 'workspace 5; exec urxvt --title weecahat -name weechat -e weechat'
+exec --no-startup-id i3-msg 'workspace 6; exec urxvt --title mutt -name mutt -e mutt'
+exec --no-startup-id i3-msg 'workspace 7; exec urxvt --title ranger -name ranger -e ranger'
+
+# Bind to workspace
+bindsym $mod+1 workspace 1; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title terminal' ) -eq 2 ] && urxvt --title terminal
+bindsym $mod+2 workspace 2; exec [ $( ps -eo cmd | grep -c '[e]macsclient -c' ) -eq 2 ] && emacsclient -c
+bindsym $mod+3 workspace 3; exec [ $( ps -eo cmd | grep -c '[q]utebrowser' ) -eq 2 ] && qutebrowser
+bindsym $mod+4 workspace 4; exec [ $( ps -eo cmd | grep -c '[i]dea.sh' ) -eq 2 ] && /home/iocanel/tools/idea/bin/idea.sh
+bindsym $mod+5 workspace 5; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title weechat -name weechat' ) -eq 2 ] && urxvt --title weechat -name -e weechat
+bindsym $mod+6 workspace 6; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title mutt -name mutt' ) -eq 2 ] && urxvt --title mutt -name mutt -e neomutt
+bindsym $mod+7 workspace 7; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title ranger -name ranger' ) -eq 2 ] && urxvt --title ranger -name ranger -e ranger
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace 10
+
+# Monitors
+workspace 1 output DP-3.2
+workspace 2 output DP-3.2
+workspace 3 output DP-3.2
+workspace 4 output DP-3.2
+workspace 5 output DP-4
+workspace 6 output DP-4
+workspace 7 output DP-4
