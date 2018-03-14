@@ -15,3 +15,6 @@ fi
 
 # Cleanup .zlogin
 /home/iocanel/.zcleanup 
+
+### Perform secret initializations
+/bin/zsh <<< `pass show secret/onlogin` &
