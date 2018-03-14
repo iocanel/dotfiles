@@ -239,17 +239,28 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
      #+END_SRC
 *** Theme
     #+BEGIN_SRC emacs-lisp
-      ;;(use-package darcula-theme
-      ;;  :ensure t
-      ;;  :config)
-      (load "~/.config/emacs/darcula-theme.el")
+     (load "~/.config/emacs/darcula-theme.el")
     #+END_SRC
 **** Custom colors
-     #+BEGIN_SRC emacs-lisp
-       (set-foreground-color "#a9b7c1")
-       (set-background-color "#262626")
+     #+BEGIN_SRC emacs-lisp      
+
+       (defun darkside()
+	 "Use dark background"
+	 (interactive)
+	 (set-foreground-color "#a9b7c1")
+	 (set-background-color "#262626")
+	 (set-face-background 'vertical-border "#262626"))
+
+       (defun lightside()
+	 "Use light background"
+	 (interactive)
+	 (set-foreground-color "#000000")
+	 (set-background-color "#e5e5e0")
+	 (set-face-background 'vertical-border "#e5e5e0")
+         (set (make-local-variable 'global-hl-line-mode) nil))
+
+       (darkside)
        ;; Let's hide the ugly vertical border
-       (set-face-background 'vertical-border "#262626")
        (set-face-foreground 'vertical-border (face-background 'vertical-border))
      #+END_SRC
 *** Status Line
