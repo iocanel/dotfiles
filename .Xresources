@@ -2,8 +2,18 @@ URxvt*scrollBar:         false
 URxvt*scrollBar_right:   false
 
 URxvt*depth: 32
+
+! Dark
 URxvt*foreground: #a9b7c1
 URxvt*background: #262626
+
+! Light
+!URxvt*foreground: #000000 
+!URxvt*background: #e5e5e0
+
+! Switch between Light and Dark
+URxvt.keysym.C-1: command:\033]11;#262626\007\033]10;#a9b7c1\007
+URxvt.keysym.C-2: command:\033]11;#e5e5e0\007\033]10;#000000\007
 
 URxvt*font: xft:DejaVu Sans Mono for Powerline-10
 
@@ -85,3 +95,4 @@ URxvt*color13: #7567a6
 !14 Cyan
 !15 White
 URxvt*color15: #555555
+
