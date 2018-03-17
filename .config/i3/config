@@ -221,6 +221,8 @@ assign [class="^Urxvt$" instance="^ranger$"] 7
 # Services 
 exec --no-startup-id feh --bg-scale ~/.config/i3/background.png
 exec --no-startup-id "setxkbmap -model pc105 -layout us,gr -option grp:alt_shift_toggle"
+exec --no-startup-id "setxkbmap -option ctrl:nocaps"
+
 exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
 exec --no-startup-id /usr/bin/emacs --daemon
 exec --no-startup-id xautolock -time 10 -locker 'lock-screen'
