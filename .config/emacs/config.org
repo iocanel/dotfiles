@@ -720,20 +720,27 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
 *** Html
 **** emmet-mode
      #+BEGIN_SRC emacs-lisp
-       (use-package emmet-mode :ensure t)
-	(defun add-emmet-expand-to-smart-tab-completions ()
+       (defun add-emmet-expand-to-smart-tab-completions ()
 	 ;; Add an entry for current major mode in
 	 ;; `smart-tab-completion-functions-alist' to use
 	 ;; `emmet-expand-line'.
-	 (add-to-list 'smart-tab-completion-functions-alist
-		      (cons major-mode #'emmet-expand-line)))   
+	 (add-to-list 'hippie-expand-try-functions-list 'emmet-expand-line))
 
-       (add-hook 'html-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
-       (add-hook 'html-mode-hook 'emmet-preview-mode) ;; Auto-start on any markup modes
-       ;;(add-hook 'html-mode-hook 'add-emmet-expand-to-smart-tab-completions)
-       (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
-       (add-hook 'css-mode-hook 'emmet-preview-mode) ;; Auto-start on any markup modes
-       ;;(add-hook 'css-mode-hook 'add-emmet-expand-to-smart-tab-completions)
+	 (use-package emmet-mode :ensure t
+	   :commands emmet-mode
+	   :init
+	   (setq emmet-indentation 2)
+	   (setq emmet-move-cursor-between-quotes t)
+	   :config
+	   (add-emmet-expand-to-smart-tab-completions))
+
+	 (add-hook 'html-mode-hook 'emmet-mode) ;; Auto-start on any markup mqdes
+	 ;;(add-hook 'html-mode-hook 'emmet-preview-mode) ;; Auto-start on any markup modes
+	 (add-hook 'html-mode-hook 'add-emmet-expand-to-smart-tab-completions)
+
+	 (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
+	 ;;(add-hook 'css-mode-hook 'emmet-preview-mode) ;; Auto-start on any markup modes
+	 (add-hook 'css-mode-hook 'add-emmet-expand-to-smart-tab-completions)
      #+END_SRC
 *** Java
 **** Eclim
