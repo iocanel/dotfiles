@@ -662,7 +662,7 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
       (use-package ox-gfm :ensure t)
       #+END_SRC
 ** Development
-*** COMMENT Flycheck
+*** Flycheck
     #+BEGIN_SRC emacs-lisp
       (use-package flycheck
 	:ensure t
@@ -947,7 +947,7 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
 		 (message "Portforwarding: %s" ellipsized)
 		 )))))
      #+END_SRC
-**** COMMENT Hydra     
+**** Hydra     
      #+BEGIN_SRC emacs-lisp
        (defhydra kubernetes-hydra ()
 	"Kubernetes"
