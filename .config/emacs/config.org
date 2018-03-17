@@ -105,10 +105,12 @@
      #+END_SRC
 ***** Improvements
       #+BEGIN_SRC emacs-lisp
-        (setq company-tooltip-limit 20)                      ; bigger popup window
-        (setq company-idle-delay 0)                          ; decrease delay before autocompletion popup shows
-        (setq company-echo-delay 0)                          ; remove annoying blinking
-        (setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
+	(setq company-tooltip-limit 20)                      ; bigger popup window
+	(setq company-idle-delay 0)                          ; decrease delay before autocompletion popup shows
+	(setq company-echo-delay 0)                          ; remove annoying blinking
+	(setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
+	(setq company-tooltip-align-annotations t)           ; aligns annotation to the right hand side
+	(setq company-dabbrev-downcase nil)                  ; don't downcase
       #+END_SRC
 *** Dashboard
    #+BEGIN_SRC emacs-lisp
