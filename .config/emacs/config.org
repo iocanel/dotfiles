@@ -660,11 +660,13 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
       (use-package ox-gfm :ensure t)
       #+END_SRC
 ** Development
-*** Flycheck
+*** COMMENT Flycheck
     #+BEGIN_SRC emacs-lisp
       (use-package flycheck
-	:ensure t)
-	
+	:ensure t
+	:config
+	(add-hook 'prog-mode-hook (lambda () (flycheck-mode)))
+
     #+END_SRC
 *** Angular
     #+BEGIN_SRC emacs-lisp
