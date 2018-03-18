@@ -122,7 +122,9 @@
        :config
        (dashboard-setup-startup-hook)
        (setq dahboard-items `((recents . 10)))
-       (setq dahboard-banner-logo-title "Never Settle"))
+       (setq dahboard-banner-logo-title "Emacs")
+       (setq initial-buffer-choice 'dashboard-refresh-buffer)
+       )
    #+END_SRC
 *** Evil Mode
     #+BEGIN_SRC emacs-lisp
