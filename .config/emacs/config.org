@@ -678,7 +678,7 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
       (use-package flycheck
 	:ensure t
 	:config
-	(add-hook 'prog-mode-hook (lambda () (flycheck-mode)))
+	(add-hook 'prog-mode-hook (lambda () (flycheck-mode))))
 
     #+END_SRC
 *** Angular
@@ -876,6 +876,7 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
 
        (use-package typescript-mode
 	 :ensure t
+	 :mode "\\.ts\\'"
 	 :init
 	 (setup-typescript-mode))
      #+END_SRC
@@ -894,13 +895,12 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
 	(company-mode +1))
 
       (use-package tide
-	:ensure t
-	:mode ("\\.ts\\'" . typescript-mode)
-	:config
+	:ensure t)
+
 	(add-hook 'typescript-mode-hook
 		  (lambda ()
 		    (setup-tide-mode)
-		    (add-hook 'before-save-hook 'tide-format-before-save nil t))))
+		    (add-hook 'before-save-hook 'tide-format-before-save nil t)))
 
     #+END_SRC
 **** tss
@@ -1057,3 +1057,4 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
 
     
 
+     
