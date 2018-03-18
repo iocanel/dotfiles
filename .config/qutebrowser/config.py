@@ -46,7 +46,9 @@ c.fonts.monospace="/Consolas, Terminal"
 c.fonts.prompts="12pt sans-serif"
 c.fonts.statusbar="10pt FontAwesome"
 
-  
+#SSL
+c.content.ssl_strict=False
+
 #Misc
 c.tabs.position = "top"
 c.tabs.show = "switching"
