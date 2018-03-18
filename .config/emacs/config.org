@@ -252,14 +252,20 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
     #+BEGIN_SRC emacs-lisp
      (load "~/.config/emacs/darcula-theme.el")
     #+END_SRC
+**** Custor cursor
+     #+BEGIN_SRC emacs-lisp
+       (setq-default cursor-type 'bar)
+       (set-cursor-color "#ff0000")
+       (set-face-attribute 'cursor "#ff0000")
+     #+END_SRC
 **** Custom colors
      #+BEGIN_SRC emacs-lisp      
-
        (defun darkside()
 	 "Use dark background"
 	 (interactive)
 	 (set-foreground-color "#a9b7c1")
 	 (set-background-color "#262626")
+         (set-cursor-color "#ff0000")
 	 (set-face-background 'vertical-border "#262626"))
 
        (defun lightside()
@@ -267,9 +273,9 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
 	 (interactive)
 	 (set-foreground-color "#000000")
 	 (set-background-color "#e5e5e0")
-	 (set-face-background 'vertical-border "#e5e5e0")
-         (set (make-local-variable 'global-hl-line-mode) nil))
-
+         (set-cursor-color "#ff0000")
+	 (set-face-background 'highlight "#555555")
+	 (set-face-background 'vertical-border "#e5e5e0"))
        (darkside)
        ;; Let's hide the ugly vertical border
        (set-face-foreground 'vertical-border (face-background 'vertical-border))
