@@ -70,6 +70,11 @@
 #qutebrowser
 !.config/qutebrowser
 !.config/qutebrowser/**
+!.local
+!.local/share
+!.local/share/qutebrowser
+!.local/share/qutebrowser/userscripts
+!.local/share/qutebrowser/userscripts/*
 
 #Ranger
 !.config/ranger
