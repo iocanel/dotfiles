@@ -714,15 +714,6 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
     (use-package ng2-mode :ensure t)
     #+END_SRC
 *** Go
-**** Depenendencies
-     Install the following using from the command line:
-    #+BEGIN_SRC shell
-    go get -u -v github.com/nsf/gocode
-    go get -u -v github.com/rogpeppe/godef
-    go get -u -v golang.org/x/tools/cmd/guru
-    go get -u -v golang.org/x/tools/cmd/gorename
-    go get -u -v golang.org/x/tools/cmd/goimports
-    #+END_SRC
 **** Go Mode
      #+BEGIN_SRC emacs-lisp
               (use-package go-mode
@@ -740,12 +731,33 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
                                   (set (make-local-variable 'company-backends) '(company-go))
                                   (company-mode))))
       #+END_SRC
+**** Depenendencies
+     Install the following using from the command line:
+    #+BEGIN_SRC shell
+    go get -u -v github.com/nsf/gocode
+    go get -u -v github.com/rogpeppe/godef
+    go get -u -v golang.org/x/tools/cmd/guru
+    go get -u -v golang.org/x/tools/cmd/gorename
+    go get -u -v golang.org/x/tools/cmd/goimports
+    #+END_SRC
 **** Go guru
      #+BEGIN_SRC emacs-lisp
        (use-package go-guru
 	 :ensure t
 	 :commands go-guru-hl-identifier-mode
 	 :init (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode))
+     #+END_SRC
+**** Goflymake
+     To install goflymake we first need to build the goflymake binary:
+     #+BEGIN_SRC sh
+       go get -u github.com/dougm/goflymake
+       go build github.com/dougm/goflymake
+     #+END_SRC
+
+     #+BEGIN_SRC emacs-lisp
+       (add-to-list 'load-path "~/workspace/src/github.com/dougm/goflymake")
+       (require 'go-flymake)
+       (require 'go-flycheck)
      #+END_SRC
 **** Go eldoc
      #+BEGIN_SRC emacs-lisp
@@ -759,6 +771,31 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
      (use-package go-imports :ensure t)
      (use-package go-rename :ensure t)
      (use-package go-snippets :ensure t)
+     (use-package go-projectile :ensure t)
+     #+END_SRC
+**** Go Hydra
+     #+BEGIN_SRC emacs-lisp
+       (defhydra go-hydra (:hint nil :exit t)
+	 "
+	 ^Edit^                           ^Test or Task^                       ^Navigation^
+	 ^^^^^^-----------------------------------------------------------------------------------------------
+	 _u_: go-remove-unused-imports    _P_: go-play-buffer                  _r_: go-guru-referrers
+	 _F_: gofmt                       _R_: go-play-region                  _d_: go-guru-definition
+	 _G_: magit-status
+	 "
+					       ; Edit
+	 ("u" go-remove-unused-imports)
+	 ("F" gofmt)
+	 ("G" magit-status)
+					       ; Task
+	 ("P" go-play-buffer)
+	 ("R" go-play-region)
+					       ; Navifation
+	 ("r" go-guru-referrers)
+	 ("d" go-guru-definition)
+	 ("q" nil "quit"))
+
+       (evil-leader/set-key "g" 'go-hydra/body)
      #+END_SRC
 *** Html
 **** emmet-mode
