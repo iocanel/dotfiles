@@ -631,6 +631,17 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
      #+END_SRC
 ** Modes
 *** Org Mode
+**** Package
+     #+BEGIN_SRC emacs-lisp
+       (use-package org
+	 :config
+	 (org-babel-do-load-languages 'org-babel-load-languages
+				      '((shell      . t)
+					(js         . t)
+					(emacs-lisp . t)
+					(scala      . t)
+					(python     . t))))
+     #+END_SRC
 **** Evil    
      #+BEGIN_SRC emacs-lisp
      (use-package org-evil :ensure t)
