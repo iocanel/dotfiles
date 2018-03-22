@@ -76,3 +76,6 @@ c.url.searchengines = {
         "w": "http://www.wikipedia.org/w/index.php?title=Special:Search&search={}",
         "yt": "https://www.youtube.com/results?search_query={}"
     }
+
+# Keybindings
+config.bind('<Ctrl-p>', 'spawn --userscript qute-pass') 
