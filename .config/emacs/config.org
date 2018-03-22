@@ -23,7 +23,7 @@
 **** IDO
 ***** Initialize
       #+BEGIN_SRC emacs-lisp
-        (setq ido-enable-flex-matching nil)
+        (setq ido-enable-flex-matching t)
         (setq ido-create-new-buffer 'always)
         (setq ido-everywhere t)
         (ido-mode 1)
