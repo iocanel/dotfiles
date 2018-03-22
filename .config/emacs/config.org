@@ -128,15 +128,16 @@
    #+END_SRC
 *** Evil Mode
     #+BEGIN_SRC emacs-lisp
-      (use-package evil-leader
-	 :ensure t
-	 :config
-	 (global-evil-leader-mode))
-
       (use-package evil
-	 :ensure t
-	 :init
-       (evil-mode 1))
+	:ensure t
+	:init
+	(evil-mode 1))
+
+      (use-package evil-leader
+	:ensure t
+	:config
+	(evil-leader/set-leader "<SPC>")
+	(global-evil-leader-mode))
 
       ;; Fix issue with undo granularity (See: https://github.com/syl20bnr/spacemacs/issues/2675)
       (setq evil-want-fine-undo nil)
