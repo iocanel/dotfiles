@@ -484,6 +484,7 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
       (use-package github-issues :ensure t)
       #+END_SRC
 *** Projectile
+**** Package
     #+BEGIN_SRC emacs-lisp
       (use-package projectile
 	:config
@@ -496,6 +497,32 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
 	(global-set-key (kbd "C-c p g") 'projectile-grep)
 	:ensure t)
     #+END_SRC
+**** Hydra
+     #+BEGIN_SRC emacs-lisp
+       (defhydra projectile-hydra (:hint nil :exit t)
+		"
+		^Edit^                           ^Test or Task^                       ^Navigation^
+		^^^^^^-----------------------------------------------------------------------------------------------
+		_R_: projectile-rename           _e_: projectile-run-eshell           _f_: projectile-find-file-dwim
+		_G_: magit-status                                                     _g_: projectile-grep
+										      _d_: projectile-dired
+										      _r_: projectile-recentf
+		"
+					       ; Edit
+	 ("R" projectile-rename)
+	 ("G" magit-status)
+					       ; Task
+	 ("e" projectile-run-eshel)
+	 ("R" go-play-region)
+					       ; Navifation
+	 ("f" projectile-find-file-dwim)
+	 ("g" projectile-grep)
+	 ("d" projectile-dired)
+	 ("r" projectile-recentf)
+	 ("q" nil "quit"))
+
+       (evil-leader/set-key "p" 'projectile-hydra/body) 
+     #+END_SRC
 *** Yasnippet
     #+BEGIN_SRC emacs-lisp
       (use-package yasnippet
