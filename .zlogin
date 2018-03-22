@@ -17,4 +17,4 @@ fi
 /home/iocanel/.zcleanup 
 
 ### Perform secret initializations
-/bin/zsh <<< `pass show secret/onlogin` &
+/bin/zsh <<< `pass show secrets/passbridge/init` &

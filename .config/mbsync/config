@@ -2,7 +2,7 @@ IMAPAccount iocanel-gmail
 # Address to connect to
 Host imap.gmail.com
 User iocanel@gmail.com
-PassCmd "pass show mail/iocanel@gmail.com/token"
+PassCmd "pass show services/mail/iocanel@gmail.com/token"
 SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
@@ -31,7 +31,7 @@ IMAPAccount ikanello-gmail
 # Address to connect to
 Host imap.gmail.com
 User ikanello@redhat.com
-PassCmd "pass show mail/ikanello@redhat.com/token"
+PassCmd "pass show services/mail/ikanello@redhat.com/token"
 SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 

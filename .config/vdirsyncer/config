@@ -26,8 +26,8 @@ fileext = ".vcf"
 [storage card_ikanello_remote]
 type = "google_contacts"
 token_file = "~/.tokens/ikanello@redhat.com/card"
-client_id.fetch = ["command", "pass", "show", "google/vdirsyncer/ikanello@redhat.com/client-id"]
-client_secret.fetch = ["command", "pass", "show", "google/vdirsyncer/ikanello@redhat.com/secret"]
+client_id.fetch = ["command", "pass", "show", "services/google/vdirsyncer/ikanello@redhat.com/client-id"]
+client_secret.fetch = ["command", "pass", "show", "services/google/vdirsyncer/ikanello@redhat.com/secret"]
 
 # CALDAV
 [pair calendar_ikanello]
@@ -43,8 +43,8 @@ fileext = ".ics"
 [storage calendar_ikanello_remote]
 type = "google_calendar"
 token_file = "~/.tokens/ikanello@redhat.com/calendar"
-client_id.fetch = ["command", "pass", "show", "google/vdirsyncer/ikanello@redhat.com/client-id"]
-client_secret.fetch = ["command", "pass", "show", "google/vdirsyncer/ikanello@redhat.com/secret"]
+client_id.fetch = ["command", "pass", "show", "services/google/vdirsyncer/ikanello@redhat.com/client-id"]
+client_secret.fetch = ["command", "pass", "show", "services/google/vdirsyncer/ikanello@redhat.com/secret"]
 
 # CARDDAV
 [pair card_iocanel]
@@ -60,8 +60,8 @@ fileext = ".vcf"
 [storage card_iocanel_remote]
 type = "google_contacts"
 token_file = "~/.tokens/iocanel@gmail.com/card"
-client_id.fetch = ["command", "pass", "show", "google/vdirsyncer/iocanel@gmail.com/client-id"]
-client_secret.fetch = ["command", "pass", "show", "google/vdirsyncer/iocanel@gmail.com/secret"]
+client_id.fetch = ["command", "pass", "show", "services/google/vdirsyncer/iocanel@gmail.com/client-id"]
+client_secret.fetch = ["command", "pass", "show", "services/google/vdirsyncer/iocanel@gmail.com/secret"]
 
 # CALDAV
 [pair calendar_iocanel]
@@ -77,8 +77,8 @@ fileext = ".ics"
 [storage calendar_iocanel_remote]
 type = "google_calendar"
 token_file = "~/.tokens/iocanel@gmail.com/calendar"
-client_id.fetch = ["command", "pass", "show", "google/vdirsyncer/iocanel@gmail.com/client-id"]
-client_secret.fetch = ["command", "pass", "show", "google/vdirsyncer/iocanel@gmail.com/secret"]
+client_id.fetch = ["command", "pass", "show", "services/google/vdirsyncer/iocanel@gmail.com/client-id"]
+client_secret.fetch = ["command", "pass", "show", "services/google/vdirsyncer/iocanel@gmail.com/secret"]
 
 
 

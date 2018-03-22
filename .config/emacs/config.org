@@ -649,7 +649,7 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
 ***** Setup
       #+BEGIN_SRC emacs-lisp
         (let (blog-password)
-          (setq blog-password (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show iocanel.com/iocanel@gmail.com")))
+          (setq blog-password (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show websites/iocanel.com/iocanel@gmail.com")))
           (setq org2blog/wp-blog-alist
                 `(("iocanel.com"
                    :url "https://iocanel.com/xmlrpc.php"
