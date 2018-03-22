@@ -818,7 +818,7 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
        (add-hook 'css-mode-hook 'add-emmet-expand-to-smart-tab-completions)
      #+END_SRC
 *** Java
-**** Eclim
+**** COMMENT Eclim
      #+BEGIN_SRC emacs-lisp
        (use-package eclim
 	 :ensure t
@@ -838,6 +838,67 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
 
        (add-hook 'java-mode-hook (lambda () (eclim-mode 1)))
      #+END_SRC
+**** Meghanada
+***** Package
+     #+BEGIN_SRC emacs-lisp
+       (use-package meghanada
+	 :ensure t
+	 :init
+	 (setq meghanada-java-path "java")
+	 (setq meghanada-maven-path "mvn")
+	 (setq company-meghanada-prefix-length 2)
+	 (setq meghanada-server-jvm-option "-ea -server -XX:+UseConcMarkSweepGC -XX:SoftRefLRUPolicyMSPerMB=50 -Xverify:none -Xms512m -Dfile.encoding=UTF-8")
+	 :config
+	 (add-hook 'java-mode-hook
+		   (lambda ()
+		     ;; meghanada-mode on
+		     (meghanada-mode t)
+		     (flycheck-mode +1)
+		     (setq c-basic-offset 2)
+		     ;; use code format (disable it for now as it can become really annoying).
+		     ;;(add-hook 'before-save-hook 'meghanada-code-beautify-before-save)))
+		     )))
+     #+END_SRC
+***** Hydra
+      #+BEGIN_SRC emacs-lisp
+	 (defhydra meghanada-hydra (:hint nil :exit t)
+	 "
+	 ^Edit^                           ^Tast or Task^                       ^Navigation^
+	 ^^^^^^-----------------------------------------------------------------------------------------------
+	 _f_: meghanada-compile-file      _m_: meghanada-restart               _r_: meghanada-reference
+	 _c_: meghanada-compile-project   _t_: meghanada-run-task              _d_: meghanada-jump-declaration
+	 _o_: meghanada-optimize-import   _j_: meghanada-run-junit-test-case   _b_: meghanada-back-jump
+	 _s_: meghanada-switch-test-case  _J_: meghanada-run-junit-class
+	 _v_: meghanada-local-variable    _R_: meghanada-run-junit-recent
+	 _i_: meghanada-import-all        _T_: meghanada-typeinfo
+	 _G_: magit-status
+	 "
+	   ; Edit
+	   ("f" meghanada-compile-file)
+	   ("c" meghanada-compile-project)
+	   ("o" meghanada-optimize-import)
+	   ("v" meghanada-local-variable)
+	   ("i" meghanada-import-all)
+	   ("G" magit-status)
+
+	   ; Task
+	   ("s" meghanada-switch-test-case)
+	   ("m" meghanada-restart)
+
+	   ("t" meghanada-run-task)
+	   ("j" meghanada-run-junit-test-case)
+	   ("J" meghanada-run-junit-class)
+	   ("R" meghanada-run-junit-recent)
+	   ("T" meghanada-typeinfo)
+	   ; Navifation
+	   ("r" meghanada-reference)
+	   ("d" meghanada-jump-declaration)
+	   ("b" meghanada-back-jump)
+	   ("q" nil "quit"))
+
+	(evil-leader/set-key "m" 'meghanada-hydra/body)
+	(define-key evil-normal-state-map (kbd "C-z") 'meghanada-hydra/body)
+      #+END_SRC
 **** Groovy
      #+BEGIN_SRC emacs-lisp
        (use-package groovy-mode :ensure t)
