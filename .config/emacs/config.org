@@ -1079,7 +1079,7 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
 		 (message "Portforwarding: %s" ellipsized)
 		 )))))
      #+END_SRC
-**** Hydra     
+**** Hydra
      #+BEGIN_SRC emacs-lisp
        (defhydra kubernetes-hydra ()
 	"Kubernetes"
@@ -1095,6 +1095,7 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
 	("q" nil "quit")
        )
 
+       (evil-leader/set-key "k" 'kubernetes-hydra/body)
        (define-key evil-normal-state-map (kbd "C-k") 'kubernetes-hydra/body)
      #+END_SRC
 *** Jenkins
