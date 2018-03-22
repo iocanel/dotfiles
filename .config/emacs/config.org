@@ -302,52 +302,65 @@ The plugin plays extremely well with a custom su wrapper that combines su with p
        (set-face-foreground 'vertical-border (face-background 'vertical-border))
      #+END_SRC
 *** Status Line
-**** Package
+**** COMMENT powerline
      #+BEGIN_SRC emacs-lisp
-       ;; Powerline
-       ;;
-       ;;(use-package powerline
-       ;;  :ensure t)
+       (use-package powerline
+         :ensure t)
 
-       ;;(require 'powerline)
-       ;;(powerline-center-theme)
+       (require 'powerline)
+       (powerline-center-theme)
        (setq powerline-default-separator    'arrow)
-
-       ;; Smartline
-       ;;
-       (use-package smart-mode-line-powerline-theme
-	  :ensure t
+     #+END_SRC
+**** COMMENT smartline
+     #+BEGIN_SRC emacs-lisp
+       (use-package smart-mode-line-powerline-theme	  :ensure t
 	  :after powerline
 	  :after smart-mode-line
 	  :config
 	  (sml/setup)
 	  (sml/apply-theme 'dark))
 
-       ;; Spaceline
-       ;;
-       ;;(use-package spaceline
-       ;; :ensure t
-       ;;	 :config
-       ;;	 (require 'spaceline-config)
-       ;;	 (setq powerline-default-separator (quote arrow))
-       ;;	 (spaceline-spacemacs-theme))
+     #+END_SRC
+**** spaceline
+     #+BEGIN_SRC emacs-lisp
+       (use-package spaceline
+	:ensure t
+	:init
+	(progn
+	 (require 'spaceline-config)
+	 (setq powerline-default-separator 'arrow)
+	 (setq spaceline-workspace-numbers-unicode t)
+;	 (setq spaceline-separator-dir-left '(left . left))
+;	 (setq spaceline-separator-dir-right '(right . right))
+	 (setq powerline-height 32)
+	 (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
+	 (winum-mode)
+	 (spaceline-toggle-major-mode-on)
+	 (spaceline-toggle-minor-modes-on)
+	 (spaceline-toggle-hud-on)
+	 (spaceline-spacemacs-theme)
+))
      #+END_SRC
 **** Customization
      #+BEGIN_SRC emacs-lisp
        (set-face-attribute 'mode-line nil
-			   :foreground "#262626"
-			   :background "#555555"
+			   :background "#262626"
+			   :foreground "#555555"
 			   :box nil)
        (set-face-attribute 'mode-line-inactive nil
-			   :foreground "#262626"
 			   :background "#262626"
+			   :foreground "#262626"
 			   :box nil)
        (set-face-attribute 'mode-line-buffer-id nil
-			   :foreground "#262626"
-			   :background "#c57632"
+			   :background  "#262626"
+			   :foreground  "#c57632"
+			   :box nil)
+       (set-face-attribute 'mode-line-buffer-id-inactive nil
+			   :background  "#262626"
+			   :foreground  "#555555"
 			   :box nil)
 
-       (setq powerline-arrow-shape 'wave)
+       (setq powerline-arrow-shape 'arrow)
      #+END_SRC     
 *** Completion
 ** Tools
