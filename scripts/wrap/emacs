@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$1" == "--daemon" ] || [ "$1" == "--version" ]; then
+if [ "$1" == "--daemon" ] || [ "$1" == "--version" ] || [ "$1" == "-Q" ]; then
   /usr/bin/emacs $*  
 elif [ -n "$COLORTERM" ] || [ "$TERM" == "xterm-256color" ]; then
   #if invoked from terminal just delegate
