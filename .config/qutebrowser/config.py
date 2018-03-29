@@ -63,6 +63,7 @@ c.url.searchengines = {
         "amu": "https://www.amazon.co.uk/s/field-keywords={}",
         "amd": "https://www.amazon.co.de/s/field-keywords={}",
         "at": "http://www.athinorama.gr/search/default.aspx?q={}",
+        "eb": "https://www.ebay.co.uk/sch/i.html?_nkw={}&_sacat=0",
         "aw": "https://wiki.archlinux.org/index.php?search={}",
         "gw": "https://wiki.gentoo.org/?search={}",
         "gh": "https://github.com/search?q={}",
