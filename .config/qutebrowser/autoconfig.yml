@@ -128,4 +128,4 @@ settings:
   tabs.background:
     global: false
   tabs.show:
-    global: switching
+    global: always

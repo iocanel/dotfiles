@@ -51,7 +51,7 @@ c.content.ssl_strict=False
 
 #Misc
 c.tabs.position = "top"
-c.tabs.show = "switching"
+c.tabs.show = "always"
 c.statusbar.hide = True
 
 # Search engines
