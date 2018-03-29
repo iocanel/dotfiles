@@ -26,6 +26,8 @@
 !.config/emacs
 !.config/emacs/init.el
 !.config/emacs/config.org
+!.config/emacs/bookmarks
+!.config/emacs/themes/*
 !.emacs.d
 !.emacs.d/bookmarks
 

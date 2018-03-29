@@ -345,7 +345,7 @@
      #+END_SRC
 *** Theme
     #+BEGIN_SRC emacs-lisp
-      (load "~/.config/emacs/darcula-theme.el")
+      (load "~/.config/emacs/themes/darcula-theme.el")
     #+END_SRC
 **** Custor cursor
      #+BEGIN_SRC emacs-lisp
