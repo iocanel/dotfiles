@@ -505,7 +505,7 @@
         (setq mu4e-trash-folder "/iocanel@gmail.com/Deleted Messages")
         (setq mu4e-sent-folder "/iocanel@gmail.com/Sent Messages")
         (setq mu4e-get-mail-command "mbsync -a -c /home/iocanel/.config/mbsync/config")
-                                                ;(setq mu4e-update-interval 60)
+        (setq mu4e-update-interval 300)
 
         (setq mu4e-compose-context-policy 'ask-if-none
               mu4e-context-policy 'pick-first
@@ -710,7 +710,6 @@
          (projectile-run-eshell)
          (evil-window-set-height 12)
          (treemacs-projectile)
-         (other-window 1)
          (other-window 1))
 
        (advice-add 'projectile-switch-project :after 'ide-view-mode)
@@ -722,7 +721,7 @@
                        ^Edit^                           ^Test or Task^                       ^Navigation^
                        ^^^^^^-----------------------------------------------------------------------------------------------
                         _R_: projectile-rename           _e_: projectile-run-eshell           _p_: projectile-switch-project
-                        _G_: magit-status                _i_: ide-view-mode                 _f_: projectile-find-file-dwim
+                        _G_: magit-status                _i_: ide-view-mode                   _f_: projectile-find-file-dwim
                                                                                           _g_: projectile-grep
                                                                                           _d_: projectile-dired
                                                                                           _r_: projectile-recentf
