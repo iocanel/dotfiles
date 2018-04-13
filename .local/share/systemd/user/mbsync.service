@@ -4,7 +4,7 @@ Documentation=man:mbsync(1)
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/mbsync -c /home/iocanel/.config/mbsync/config -a
+ExecStart=/home/iocanel/scripts/util/get-mail-and-index
 
 [Install]
 WantedBy=default.target
