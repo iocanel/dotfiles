@@ -5,12 +5,16 @@
       (setq gc-cons-threshold 50000000)
     #+END_SRC
 ** General Settings
+*** Aliases
+    #+BEGIN_SRC emacs-lisp
+      (defalias 'yes-or-no-p 'y-or-n-p)
+    #+END_SRC
 *** Autosave and Backup
     #+BEGIN_SRC emacs-lisp
       (setq make-backup-files nil) ; stop creating backup~ files
       (setq auto-save-default nil) ; stop creating #autosave# files
     #+END_SRC
-*** Avy    
+*** Avy
     #+BEGIN_SRC emacs-lisp
       (use-package avy
         :bind ("M-s" . 'avy-goto-char))
@@ -89,7 +93,7 @@
          (progn
            (setq hippie-expand-try-functions-list '(yas-hippie-try-expand
                                                     try-complete-file-name-partially
-                                                    try-expand-dabbrev
+                                               ;try-expand-dabbrev
                                                ;try-expand-dabbrev-visible
                                                ;try-expand-dabbrev-all-buffers
                                                ;try-complete-lisp-symbol-partially
@@ -147,7 +151,7 @@
       ;; Fix issue with undo granularity (See: https://github.com/syl20bnr/spacemacs/issues/2675)
       (setq evil-want-fine-undo nil)
     #+END_SRC
-*** Flyspell    
+*** Flyspell 
     #+BEGIN_SRC emacs-lisp
       (use-package flyspell
         :ensure t
@@ -307,6 +311,13 @@
        (add-hook 'prog-mode-hook 'no-arrows-mode)
        (add-hook 'org-mode-hook 'no-arrows-mode)
      #+END_SRC
+**** Editorconfig     
+     #+BEGIN_SRC emacs-lisp
+       (use-package editorconfig
+         :ensure t
+         :config
+         (editorconfig-mode 1))
+     #+END_SRC
 **** Highlight line
      #+BEGIN_SRC emacs-lisp
        (global-hl-line-mode t)
@@ -330,6 +341,10 @@
          :bind ("s-e" . sudo-edit))
      #+END_SRC
      The plugin plays extremely well with a custom su wrapper that combines su with passwordless sudo.
+**** Scroll     
+     #+BEGIN_SRC emacs-lisp
+       (setq scroll-conservatively 100)
+     #+END_SRC
 **** Rainbow delimeters
      To be able to match parenthesis etc:
      #+BEGIN_SRC emacs-lisp
@@ -412,6 +427,9 @@
            (spaceline-toggle-major-mode-on)
            (spaceline-toggle-minor-modes-on)
            (spaceline-toggle-hud-on)
+           (spaceline-toggle-projectile-root-on)
+           (spaceline-toggle-version-control-on)
+           (spaceline-toggle-python-pyenv-on)
            (spaceline-spacemacs-theme)
            ))
      #+END_SRC
@@ -504,7 +522,7 @@
         (setq mu4e-refile-folder "/iocanel@gmail.com/Archived")
         (setq mu4e-trash-folder "/iocanel@gmail.com/Deleted Messages")
         (setq mu4e-sent-folder "/iocanel@gmail.com/Sent Messages")
-        (setq mu4e-get-mail-command "mbsync -a -c /home/iocanel/.config/mbsync/config")
+        (setq mu4e-get-mail-command "~/scripts/util/get-mail-and-index")
         (setq mu4e-update-interval 300)
 
         (setq mu4e-compose-context-policy 'ask-if-none
@@ -529,7 +547,7 @@
                            (mu4e-compose-signature           . t)))
                  ,(make-mu4e-context
                    :name "redhat"
-                   :enter-func (lambda () (mu4e-message "Switch to Yahoo"))
+                   :enter-func (lambda () (mu4e-message "Switch to ikanello@redhat.com"))
                    :match-func (lambda (msg)
                                  (when msg
                                    (string-match-p "^/ikanello@redhat.com" (mu4e-message-field msg :maildir))))
@@ -566,7 +584,7 @@
       #+BEGIN_SRC emacs-lisp
         (set-face-attribute 'mu4e-replied-face nil :inherit 'link :underline nil)
         (set-face-attribute 'mu4e-trashed-face nil :foreground "#555555")
-
+        (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
         (setq mu4e-headers-results-limit 1000000)
         ;; Why would I want to leave my message open after I've sent it?
         (setq message-kill-buffer-on-exit t)
@@ -710,7 +728,9 @@
          (projectile-run-eshell)
          (evil-window-set-height 12)
          (treemacs-projectile)
-         (other-window 1))
+         (other-window 1)
+         (goto-char (point-min))
+         )
 
        (advice-add 'projectile-switch-project :after 'ide-view-mode)
 
@@ -853,7 +873,7 @@
           (setq treemacs-change-root-without-asking t
                 treemacs-collapse-dirs              (if (executable-find "python") 3 0)
                 treemacs-file-event-delay           5000
-                treemacs-follow-after-init          nil
+                treemacs-follow-after-init          t
                 treemacs-follow-recenter-distance   0.1
                 treemacs-goto-tag-strategy          'refetch-index
                 treemacs-indentation                2
@@ -861,7 +881,7 @@
                 treemacs-is-never-other-window      nil
                 treemacs-never-persist              nil
                 treemacs-no-png-images              nil
-                treemacs-recenter-after-file-follow nil
+                treemacs-recenter-after-file-follow t
                 treemacs-recenter-after-tag-follow  nil
                 treemacs-show-hidden-files          nil
                 treemacs-silent-filewatch           nil
@@ -935,9 +955,22 @@
         (yas-reload-all))
 
       (setq yas-snippet-dirs (append yas-snippet-dirs
-                                     '("~/.config/yasnippets")))
+                                     '("~/.config/emacs/snippets")))
       ;; Use yas-indent-line fixed in yaml-mode. This fixes issues with parameter mirroring breaking indentation
       (setq yas-indent-line 'fixed)
+
+      ;; Add yasnippet support for all company backends
+      ;; https://github.com/syl20bnr/spacemacs/pull/179
+      (defvar company-mode/enable-yas t
+        "Enable yasnippet for all backends.")
+
+      (defun company-mode/backend-with-yas (backend)
+        (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+            backend
+          (append (if (consp backend) backend (list backend))
+                  '(:with company-yasnippet))))
+
+      (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
     #+END_SRC
 *** Version Control
 **** Magit
@@ -945,12 +978,15 @@
        (use-package magit
          :ensure t)
 
-       ;; Pull request integration
-       (use-package magit-gh-pulls
+       (use-package evil-magit
          :ensure t)
 
-       ;;Hook
-       (add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls)
+       (use-package magithub
+         :after magit
+         :config
+         (magithub-feature-autoinject t)
+         (setq magithub-clone-default-directory "~/workspace/src/github.com"))
+
        ;; Key bindings
        (global-set-key (kbd "C-c g s") 'magit-status)
        (global-set-key (kbd "C-c g p r") 'magit-gh-pulls-popup)
@@ -1078,7 +1114,8 @@
         (use-package ox-gfm :ensure t)
       #+END_SRC
 ** Development
-*** Flycheck
+*** Tools
+**** Flycheck
     #+BEGIN_SRC emacs-lisp
       (use-package flycheck
         :ensure t
@@ -1086,49 +1123,131 @@
         (add-hook 'prog-mode-hook (lambda () (flycheck-mode))))
 
     #+END_SRC
-*** Angular
+**** Realgud
+     #+BEGIN_SRC emacs-lisp
+       (use-package realgud
+         :ensure t)
+     #+END_SRC
+*** Languages and Frameworks
+**** Angular
     #+BEGIN_SRC emacs-lisp
       (use-package ng2-mode :ensure t)
     #+END_SRC
-*** Elisp    
-**** elsip-mode    
-     #+BEGIN_SRC emacs-lisp
-       (use-package lisp-mode
-         :init
-         (defconst lisp--prettify-symbols-alist
-           '(("lambda"  . ?λ)                  ; Shrink this
-             ("."       . ?•)))                ; Enlarge this
+**** Clojure
+     Most of the clojure configuration comes from: https://github.com/howardabrams/dot-files/blob/master/emacs-clojure.org
+***** clojure-mode
+      #+BEGIN_SRC emacs-lisp
+        (use-package clojure-mode
+          :ensure t
+          :init
+          (defconst clojure--prettify-symbols-alist
+            '(("fn"   . ?λ)))
+          :config
+          (add-hook 'clojure-mode-hook 'global-prettify-symbols-mode)
+          :bind (("C-c d f" . cider-code)
+                 ("C-c d g" . cider-grimoire)
+                 ("C-c d w" . cider-grimoire-web)
+                 ("C-c d c" . clojure-cheatsheet)
+                 ("C-c d d" . dash-at-point))
+          )
+      #+END_SRC
+***** cider
+      #+BEGIN_SRC emacs-lisp
+        (use-package cider
+          :ensure t
+          :commands (cider cider-connect cider-jack-in)
 
-         :bind (("C-c e i" . ielm))
+          :init
+          (setq cider-auto-select-error-buffer t
+                cider-repl-pop-to-buffer-on-connect nil
+                cider-repl-use-clojure-font-lock t
+                cider-repl-wrap-history t
+                cider-repl-history-size 1000
+                cider-show-error-buffer t
+                nrepl-hide-special-buffers t
+                ;; Stop error buffer from popping up while working in buffers other than the REPL:
+                nrepl-popup-stacktraces nil)
 
-         :config
-         (add-hook 'emacs-lisp-mode-hook 'global-prettify-symbols-mode)
-         (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-         ;(add-hook 'emacs-lisp-mode-hook 'activate-aggressive-indent)
+          ;; (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+          (add-hook 'cider-mode-hook 'company-mode)
 
-         ;; Bind some prefixes to a couple of mode maps:
-         (bind-keys :map emacs-lisp-mode-map
-                    :prefix-map lisp-find-map
-                    :prefix "C-h e"
-                    ("e" . view-echo-area-messages)
-                    ("f" . find-function)
-                    ("k" . find-function-on-key)
-                    ("l" . find-library)
-                    ("v" . find-variable)
-                    ("V" . apropos-value))
+          (add-hook 'cider-repl-mode-hook 'paredit-mode)
+          (add-hook 'cider-repl-mode-hook 'superword-mode)
+          (add-hook 'cider-repl-mode-hook 'company-mode)
+          (add-hook 'cider-test-report-mode 'jcf-soft-wrap)
 
-         (dolist (m (list emacs-lisp-mode-map lisp-interaction-mode-map))
-           (bind-keys :map m
-                      :prefix-map lisp-evaluation-map
-                      :prefix "C-c e"
-                      ("b" . eval-buffer)
-                      ("r" . eval-region)
-                      ("c" . eval-and-comment-output) ;; Defined below
-                      ("o" . eval-and-comment-output)
-                      ("d" . toggle-debug-on-error)
-                      ("f" . emacs-lisp-byte-compile-and-load))))
-     #+END_SRC
-**** hydra     
+          :bind (:map cider-mode-map
+                 ("C-c C-v C-c" . cider-send-and-evaluate-sexp)
+                 ("C-c C-p"     . cider-eval-print-last-sexp))
+        )
+      #+END_SRC
+***** paredit
+      #+BEGIN_SRC emacs-lisp
+        (use-package paredit
+          :ensure t
+          :bind ("M-^" . paredit-delete-indentation)
+          :bind ("C-^" . paredit-remove-newlines)
+          :init
+          (add-hook 'clojure-mode-hook 'paredit-mode))
+
+        (defun paredit-delete-indentation (&optional arg)
+          "Handle joining lines that end in a comment."
+          (interactive "*P")
+          (let (comt)
+            (save-excursion
+              (move-beginning-of-line (if arg 1 0))
+              (when (skip-syntax-forward "^<" (point-at-eol))
+                (setq comt (delete-and-extract-region (point) (point-at-eol)))))
+            (delete-indentation arg)
+            (when comt
+              (save-excursion
+                (move-end-of-line 1)
+                (insert " ")
+                (insert comt)))))
+
+        (defun paredit-remove-newlines ()
+          "Removes extras whitespace and newlines from the current point
+        to the next parenthesis."
+          (interactive)
+          (let ((up-to (point))
+                (from (re-search-forward "[])}]")))
+             (backward-char)
+             (while (> (point) up-to)
+               (paredit-delete-indentation))))
+
+      #+END_SRC
+***** flycheck
+      #+BEGIN_SRC emacs-lisp
+        (use-package flycheck-clojure
+          :ensure t
+          :init
+          (add-hook 'after-init-hook 'global-flycheck-mode)
+          :config
+          (use-package flycheck
+            :config
+            (flycheck-clojure-setup)))
+
+        (use-package flycheck-pos-tip
+          :ensure t
+          :config
+          (use-package flycheck
+            :config
+            (setq flycheck-display-errors-function 'flycheck-pos-tip-error-messages)))
+      #+END_SRC
+***** openscad
+      #+BEGIN_SRC emacs-lisp
+        (defun spit-scad-last-expression ()
+          (interactive)
+          (cider-interactive-eval
+           (format
+            "(require 'scad-clj.scad)
+              (spit \"repl.scad\"
+                    (scad-clj.scad/write-scad %s))"
+            (cider-last-sexp))))
+      #+END_SRC
+**** Elisp
+***** elsip-mode #+BEGIN_SRC emacs-lisp (use-package lisp-mode :init (defconst lisp--prettify-symbols-alist '(("lambda"  . ?λ)                  ; Shrink this ("."       . ?•)))                ; Enlarge this :bind (("C-c e i" . ielm)) :config (add-hook 'emacs-lisp-mode-hook 'global-prettify-symbols-mode) (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode) ;(add-hook 'emacs-lisp-mode-hook 'activate-aggressive-indent) ;; Bind some prefixes to a couple of mode maps: (bind-keys :map emacs-lisp-mode-map :prefix-map lisp-find-map :prefix "C-h e" ("e" . view-echo-area-messages) ("f" . find-function) ("k" . find-function-on-key) ("l" . find-library) ("v" . find-variable) ("V" . apropos-value)) (dolist (m (list emacs-lisp-mode-map lisp-interaction-mode-map)) (bind-keys :map m :prefix-map lisp-evaluation-map :prefix "C-c e" ("b" . eval-buffer) ("r" . eval-region) ("c" . eval-and-comment-output) ;; Defined below ("o" . eval-and-comment-output) ("d" . toggle-debug-on-error) ("f" . emacs-lisp-byte-compile-and-load)))) #+END_SRC
+***** hydra
      #+BEGIN_SRC emacs-lisp
        (defhydra elisp-hydra (:hint nil :exit t)
          ;; The '_' character is not displayed. This affects columns alignment.
@@ -1156,15 +1275,15 @@
 
        (evil-leader/set-key "l" 'elisp-hydra/body)
      #+END_SRC
-*** Go
-**** Go Mode
+**** Go
+***** Go Mode
      #+BEGIN_SRC emacs-lisp
        (use-package go-mode
          :ensure t)
        (require 'go-mode)
        (add-hook 'before-save-hook 'gofmt-before-save)
      #+END_SRC
-**** Completion
+***** Completion
 ***** Package
       #+BEGIN_SRC emacs-lisp
         (use-package company-go
@@ -1174,7 +1293,7 @@
                                     (set (make-local-variable 'company-backends) '(company-go))
                                     (company-mode))))
       #+END_SRC
-**** Depenendencies
+***** Depenendencies
      Install the following using from the command line:
      #+BEGIN_SRC shell
        go get -u -v github.com/nsf/gocode
@@ -1183,14 +1302,14 @@
        go get -u -v golang.org/x/tools/cmd/gorename
        go get -u -v golang.org/x/tools/cmd/goimports
      #+END_SRC
-**** Go guru
+***** Go guru
      #+BEGIN_SRC emacs-lisp
        (use-package go-guru
          :ensure t
          :commands go-guru-hl-identifier-mode
          :init (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode))
      #+END_SRC
-**** Goflymake
+***** Goflymake
      To install goflymake we first need to build the goflymake binary:
      #+BEGIN_SRC sh
        go get -u github.com/dougm/goflymake
@@ -1202,21 +1321,21 @@
        (require 'go-flymake)
        (require 'go-flycheck)
      #+END_SRC
-**** Go eldoc
+***** Go eldoc
      #+BEGIN_SRC emacs-lisp
        (use-package go-eldoc
          :ensure t
          :commands go-eldoc-setup
          :init (add-hook 'go-mode-hook 'go-eldoc-setup))
      #+END_SRC
-**** Go Tooling
+***** Go Tooling
      #+BEGIN_SRC emacs-lisp
        (use-package go-imports :ensure t)
        (use-package go-rename :ensure t)
        (use-package go-snippets :ensure t)
        (use-package go-projectile :ensure t)
      #+END_SRC
-**** Go Hydra
+***** Go Hydra
      #+BEGIN_SRC emacs-lisp
        (defhydra go-hydra (:hint nil :exit t)
          ;; The '_' character is not displayed. This affects columns alignment.
@@ -1242,8 +1361,8 @@
 
        (evil-leader/set-key "g" 'go-hydra/body)
      #+END_SRC
-*** Html
-**** emmet-mode
+**** Html
+***** emmet-mode
      #+BEGIN_SRC emacs-lisp
        (defun add-emmet-expand-to-smart-tab-completions ()
          ;; Add an entry for current major mode in
@@ -1262,7 +1381,7 @@
        (add-hook 'html-mode-hook 'add-emmet-expand-to-smart-tab-completions)
        (add-hook 'css-mode-hook 'add-emmet-expand-to-smart-tab-completions)
      #+END_SRC
-*** Java
+**** Java
 **** COMMENT Eclim
      #+BEGIN_SRC emacs-lisp
        (use-package eclim
@@ -1352,7 +1471,7 @@
      #+BEGIN_SRC emacs-lisp
        (use-package kotlin-mode :ensure t)
      #+END_SRC
-*** Javascript
+**** Javascript
     #+BEGIN_SRC emacs-lisp
       (use-package js2-mode
         :ensure t
@@ -1376,19 +1495,19 @@
       (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 
     #+END_SRC
-*** Python
-**** Packages
+**** Python
+***** Packages
      #+BEGIN_SRC emacs-lisp
        (use-package python-mode :ensure t)
        (use-package virtualenvwrapper :ensure t)
        (use-package pytest :ensure t)
 
      #+END_SRC
-**** py-flycheck
+***** py-flycheck
      #+BEGIN_SRC emacs-lisp
        (add-hook 'python-mode-hook (lambda () (flycheck-mode)))
      #+END_SRC
-**** pyenv
+***** pyenv
      #+BEGIN_SRC emacs-lisp
        (use-package pyenv-mode :ensure t)
 
@@ -1402,7 +1521,7 @@
        (add-hook 'projectile-after-switch-project-hook 'projectile-pyenv-mode-set)
 
      #+END_SRC
-**** anaconda-mode
+***** anaconda-mode
      #+BEGIN_SRC emacs-lisp
        (use-package anaconda-mode :ensure t)
        (use-package company-anaconda :ensure t)
@@ -1415,7 +1534,7 @@
          :ensure t
          :init (add-to-list 'company-backends 'company-anaconda))
      #+END_SRC
-**** jedi     
+***** jedi
      #+BEGIN_SRC emacs-lisp
        (use-package company-jedi :ensure t)
 
@@ -1424,14 +1543,14 @@
 
        (add-hook 'python-mode-hook 'add-company-jedi-to-backends)
      #+END_SRC
-**** Notes
+***** Notes
      Issues encountered in the past with *ob-ipython*.
-*** Protobuf
+**** Protobuf
     #+BEGIN_SRC emacs-lisp
       (use-package protobuf-mode :ensure t)
     #+END_SRC
-*** Typescript
-**** typescript-mode
+**** Typescript
+***** typescript-mode
      #+BEGIN_SRC emacs-lisp
        (defun setup-typescript-mode ()
          (interactive)
@@ -1451,7 +1570,7 @@
          :init
          (setup-typescript-mode))
      #+END_SRC
-**** tide
+***** tide
      #+BEGIN_SRC emacs-lisp
        (defun setup-tide-mode ()
          (interactive)
@@ -1470,23 +1589,468 @@
 
        (add-hook 'typescript-mode-hook
                  (lambda ()
-                   (setup-tide-mode)
-                   (add-hook 'before-save-hook 'tide-format-before-save nil t)))
+                   (setup-tide-mode)))
+                                               ;                   (add-hook 'before-save-hook 'tide-format-before-save nil t)))
 
      #+END_SRC
-**** tss
+***** tss
      #+BEGIN_SRC emacs-lisp
        (use-package tss :ensure t)
      #+END_SRC
-*** JSON
+**** JSON
     #+BEGIN_SRC emacs-lisp
       (use-package json-mode :ensure t)
       (use-package json-reformat :ensure t)
     #+END_SRC
-*** YAML
+**** YAML
     #+BEGIN_SRC emacs-lisp
       (use-package yaml-mode :ensure t)
     #+END_SRC
+*** Emacs IDE Mode
+    IDE-like functionality abstraction for common development modes.
+**** Hydra    
+     #+BEGIN_SRC emacs-lisp
+       (setq eide-function-alist '((eide-open-function . projectile-switch-project)
+                                   (eide-recent-function . projectile-recentf)
+                                   (eide-close-function . projectile-kill-buffers)
+                                   (eide-build-function . projectile-compile-project)
+                                   (eide-vcs-function . magit-status)
+                                   (eide-optimizie-imports-function . nil)
+                                   (eide-indent-function . evil-indent)
+                                   (eide-indent-region-function . nil)
+                                   (eide-copyright-function . nil)
+                                   (eide-references-function . nil)
+                                   (eide-declaration-function . nil)
+                                   (eide-back-function . nil)
+                                   (eide-grep-function . projectile-grep)
+                                   (eide-find-file-function . projectile-find-file)
+                                   (eide-find-variable-function . projectile-find-variable)
+                                   (eide-test-function . nil)
+                                   (eide-repl-view-function . nil)))
+       ;;Project
+       (defun eide-open()
+         "Open project"
+         (interactive)
+         (eide-back-push)
+         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+         )
+       (defun eide-recent-project()
+         "Recent project"
+         (interactive)
+         (eide-back-push)
+         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+         )
+       (defun eide-close()
+         "Close project"
+         (interactive)
+         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+         )
+       (defun eide-build()
+         "Build"
+         (interactive)
+         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+         )
+       (defun eide-vcs()
+         "Version Control"
+         (interactive)
+         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+         )
+
+
+       ;;Source
+       (defun eide-optimize-imports()
+         "Optimize Imports"
+         (interactive)
+         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+         )
+       (defun eide-indent()
+         "Indent"
+         (interactive)
+         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+         )
+       (defun eide-indent-region()
+         "Indent Region"
+         (interactive)
+         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+         )
+       (defun eide-copyright()
+         "Apply copyright"
+         (interactive)
+         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+         )
+
+       ;;Navigate
+       (defun eide-references()
+         "Find references"
+         (interactive)
+         (eide-back-push)
+         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+         )
+       (defun eide-declaration()
+         "Jump to declaration"
+         (interactive)
+         (eide-back-push)
+         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+         )
+       (defun eide-back()
+         "Jump back"
+         (interactive)
+         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+         )
+
+       ;;Search
+       (defun eide-grep()
+         "Grep"
+         (interactive)
+         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+         )
+
+       (defun eide-find-file()
+         "Find file"
+         (interactive)
+         (eide-back-push)
+         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+         )
+
+       (defun eide-find-variable()
+         "Find variable"
+         (interactive)
+         (eide-back-push)
+         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+         )
+
+       ;;Test
+       (defun eide-test()
+         "Runs tests"
+         (interactive)
+         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+         )
+
+       ;;Layout
+       (defun eide-repl ()
+         "Run a REPL"
+         (interactive)
+         (message (format "%s-function" this-command)) 
+         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+         )
+
+       ;;
+       ;;
+       ;; Language/Framework Modes
+
+       (defun meghanada-ide()
+         (setq eide-function-alist (delq (assoc 'eide-refernces-function eide-function-alist) eide-function-alist))
+         (setq eide-function-alist (delq (assoc 'eide-declaration-function eide-function-alist) eide-function-alist))
+         (setq eide-function-alist (delq (assoc 'eide-optimize-imports-function eide-function-alist) eide-function-alist))
+         (setq eide-function-alist (delq (assoc 'eide-indent-function eide-function-alist) eide-function-alist))
+
+         (add-to-list 'eide-function-alist '(eide-references-function . meghanada-reference))
+         (add-to-list 'eide-function-alist '(eide-declaration-function . meghanada-jump-declaration))
+         (add-to-list 'eide-function-alist '(eide-optimize-imports-function . meghanada-optimize-import))
+         )
+       (add-hook 'meghanada-mode-hook 'meghanada-ide)
+
+
+
+       (defun python-ide()
+         (setq eide-function-alist (delq (assoc 'eide-refernces-function eide-function-alist) eide-function-alist))
+         (setq eide-function-alist (delq (assoc 'eide-declaration-function eide-function-alist) eide-function-alist))
+         (setq eide-function-alist (delq (assoc 'eide-optimize-imports-function eide-function-alist) eide-function-alist))
+         (setq eide-function-alist (delq (assoc 'eide-indent-function eide-function-alist) eide-function-alist))
+
+         (add-to-list 'eide-function-alist '(eide-references-function . anaconda-mode-find-references))
+         (add-to-list 'eide-function-alist '(eide-declaration-function . anaconda-mode-find-definitions))
+         (add-to-list 'eide-function-alist '(eide-indent . python-indent))
+         )
+
+       (defun golang-ide()
+         (setq eide-function-alist (delq (assoc 'eide-refernces-function eide-function-alist) eide-function-alist))
+         (setq eide-function-alist (delq (assoc 'eide-declaration-function eide-function-alist) eide-function-alist))
+         (setq eide-function-alist (delq (assoc 'eide-optimize-imports-function eide-function-alist) eide-function-alist))
+         (setq eide-function-alist (delq (assoc 'eide-indent-function eide-function-alist) eide-function-alist))
+
+         (add-to-list 'eide-function-alist '(eide-references-function . go-guru-callers))
+         (add-to-list 'eide-function-alist '(eide-declaration-function . godef-jump))
+         (add-to-list 'eide-function-alist '(eide-optimize-imports . goimports))
+         (add-to-list 'eide-function-alist '(eide-indent . gofmt))
+         )
+
+       (defun elisp-ide()
+         (setq eide-function-alist (delq (assoc 'eide-refernces-function eide-function-alist) eide-function-alist))
+         (setq eide-function-alist (delq (assoc 'eide-declaration-function eide-function-alist) eide-function-alist))
+         (setq eide-function-alist (delq (assoc 'eide-optimize-imports-function eide-function-alist) eide-function-alist))
+         (setq eide-function-alist (delq (assoc 'eide-indent-function eide-function-alist) eide-function-alist))
+         ) 
+
+       (defun cider-jack-in-and-switch ()
+         (interactive)
+         (cider-jack-in)
+         (switch-to-buffer (get-buffer (format "*cider-repl %s*" (projectile-project-name))))
+         )
+
+       (defun clojure-ide ()
+         (interactive)
+         (setq eide-function-alist (delq (assoc 'eide-repl-view-function eide-function-alist) eide-function-alist))
+         (add-to-list 'eide-function-alist '(eide-repl-view-function . cider-jack-in-and-switch))
+         )
+       (add-hook 'clojure-mode-hook 'clojure-ide)
+       ;;
+       ;;
+       ;; Navigation Utils
+       ;;
+       (defstruct eide-buffer-point
+         buffer
+         line
+         column
+         )
+
+       (defvar eide-back-stack)
+       (defvar eide-forward-stack)
+       (defvar ignore-current-buffer)
+       (setq eide-back-stack ())
+       (setq eide-forward-stack ())
+       (setq ignore-current-buffer nil)
+
+       (defun eide-back-push()
+         (interactive)
+         (if ignore-current-buffer
+             (setq ignore-current-buffer nil)
+           (setq eide-back-stack (cons (make-eide-buffer-point :buffer (current-buffer) :line (line-number-at-pos (point)) :column (current-column)) eide-back-stack))))
+
+       (defun eide-back-pop()
+         (interactive)
+         (let ((p (car eide-back-stack)))
+           (setq eide-back-stack (cdr eide-back-stack))
+           p))
+
+       (defun eide-forward-push()
+         (interactive)
+         (if ignore-current-buffer
+             (setq ignore-current-buffer nil)
+           (setq eide-forward-stack (cons (make-eide-buffer-point :buffer (current-buffer) :line (line-number-at-pos (point)) :column (current-column)) eide-back-stack))))
+
+       (defun eide-forward-pop()
+         (interactive)
+         (let ((p (car eide-forward-stack)))
+           (setq eide-forward-stack (cdr eide-forward-stack))
+           p))
+
+       (defun eide-forget-current-buffer()
+         (interactive)
+         (let ((c (current-buffer)) (b (car eide-back-stack)) (f (car eide-forward-stack)))
+           (if (and b (equal c (eide-buffer-point-buffer b))) (eide-back-pop))
+           (if (and f (equal c (eide-buffer-point-buffer f))) (eide-forward-pop))
+           ) 
+         (setq ignore-current-buffer t))
+
+       (defun eide-jump-back()
+         (interactive)
+         (let ((p (eide-back-pop)))
+           (if p (progn
+                  (eide-forward-push)
+                  (switch-to-buffer (eide-buffer-point-buffer p))
+                  (goto-char (point-min))
+                  (forward-line (eide-buffer-point-line p))
+                  (move-to-column (eide-buffer-point-column p))
+                  (point))
+             )
+           )
+         ) 
+
+       (defun eide-jump-forward()
+         (interactive)
+         (let ((p (eide-forward-pop)))
+           (if p (progn
+                  (eide-back-push)
+                  (switch-to-buffer (eide-buffer-point-buffer p))
+                  (goto-char (point-min))
+                  (forward-line (eide-buffer-point-line p))
+                  (move-to-column (eide-buffer-point-column p))
+                  (point)
+                  )
+             )
+           )
+         )
+
+
+       ;;(advice-add 'switch-to-buffer :before 'eide-back-push)
+
+       ;;
+       ;;
+       ;;
+       ;; View Modes
+       ;;
+       (defun eide-project-open-view()
+         "Switches to a traditional IDE view for the buffer. (project tree, main buffer & terminal"
+         (interactive)
+         (eide-ide-view)
+         (magit-status)
+         )
+
+       (defun eide-ide-view()
+         "Switches to a traditional IDE view for the buffer. (project tree, main buffer & terminal"
+         (interactive)
+         (delete-other-windows-internal)
+         (split-and-follow-vertically)
+         (minimize-window)
+         (projectile-run-eshell)
+         (evil-window-set-height 12)
+         (treemacs-projectile)
+         (other-window 1)
+         (goto-char (point-min))
+         )
+
+       (defun eide-side-by-side-view()
+         "Open a new buffer from the project to the side for side by side view"
+         (interactive)
+         (delete-other-windows-internal)
+         (split-and-follow-horizontally)
+         ;; reduce the noise by switching to an untitled buffer
+         (eide-new-empty-buffer)
+         (projectile-find-file-dwim)
+         )
+
+       (defun eide-repl-view()
+         "Just like IDE view but with a REPL instead of a terminal (project tree, main buffer & repl)."
+         (interactive)
+         (delete-other-windows-internal)
+         (split-and-follow-vertically)
+         (minimize-window)
+         (eide-repl)
+         (evil-window-set-height 12)
+         (treemacs-projectile)
+         (other-window 1)
+         (goto-char (point-min))
+         )
+
+       (defun eide-terminal-view()
+         "Maximized terminal in the project root"
+         (interactive)
+         (delete-other-windows-internal)
+         (projectile-run-eshell)
+         )
+
+       (advice-add 'projectile-switch-project :after 'eide-project-open-view)
+
+
+       ;;
+       ;;
+       ;;
+       ;; Visitors
+       ;;
+
+       (defvar eide-project-visitors)
+       (setq eide-project-visitors ())
+
+       (defun eide-project-visit()
+         "Calls all registered visitors"
+         (interactive)
+         (let (v)
+           (dolist (v eide-project-visitors)
+             (funcall v (projectile-project-root)))
+           ) 
+         ) 
+       ;; Clojure
+       (defun eide-visitor-clojure (root)
+         (when (seq-filter (lambda (x) (equal "project.clj" x)) (directory-files root))
+           (clojure-ide))
+         ) 
+
+       (add-to-list 'eide-project-visitors 'eide-visitor-clojure)
+       (advice-add 'projectile-switch-project :after 'eide-project-visit)
+
+       (defvar eide-tab-width)
+       (setq eide-tab-width 4)
+       (defvar eide-use-tabs)
+       (setq eide-use-tabs nil)
+
+       ;;
+       ;;
+       ;;
+       ;; Toggles
+
+       (defun eide-toggle-tab-width ()
+         "Toggle between 2 and 4 space indentation."
+         (interactive)
+         (if (equal 4 eide-tab-width)
+             (setq eide-tab-width 2)
+           (setq eide-tab-width 4))
+
+         (setq tab-width eide-tab-width)
+         (message (format "Indentaion spaces: %s" eide-tab-width))
+         )
+
+       (defun eide-toggle-use-tabs ()
+         "Toggle between tabs and speacs"
+         (interactive)
+         (if eide-use-tabs
+             (setq eide-use-tabs nil) 
+           (setq eide-use-tabs t))
+
+         (setq indent-tabs-mode eide-use-tabs)
+         (if eide-use-tabs
+             (message "Use tabs: enabled.")
+           (message "Use tabs: disabled."))
+         )
+
+       ;;
+       ;;
+       ;;
+       ;; Helpers
+
+       (defun eide-new-empty-buffer()
+         "Just creates an empty buffer"
+         (let ((fl (make-temp-file "Untitled")))
+           (switch-to-buffer fl)))
+       ;; Hydra
+       (defhydra eide-hydra (:hint nil :exit t)
+         "
+               ^ Project      ^Source^                 ^Navigate^         ^Search^             ^Task^            ^Layout^
+               ^^^^^^-------------------------------------------------------------------------------------------------------
+                 _O_ open      _o_ optimize imports     _?_: declaration   _g_: grep             _r_: run/eval     _1_: ide
+                 _R_ recent    _i_ indent               _/_: references    _f_: find file        _t_: run test     _2_: side by side
+                 _C_ close     _r_ indent region        _<_: back          _v_: find variable                    _3_: repl 
+                 _B_ build     _I_ toggle tab width     _>_: forward                                           _0_: terminal 
+                 _V_ vcs       _T_ toggle use tabs      _._: set mark
+                               _@_ copyright
+                 "
+
+         ("O" eide-open)
+         ("R" eide-recent)
+         ("C" eide-close)
+         ("B" eide-build)
+         ("V" eide-vcs)
+
+         ("o" eide-optimize-imports)
+         ("i" eide-indent)
+         ("r" eide-indent-region)
+         ("I" eide-toggle-tab-width)
+         ("T" eide-toggle-use-tabs)
+         ("@" eide-copyright)
+
+         ("?" eide-declaration)
+         ("/" eide-references)
+         (">" eide-jump-forward)
+         ("<" eide-jump-back)
+         ("." eide-back-push)
+
+         ("g" eide-grep)
+         ("f" eide-find-file)
+         ("v" eide-find-variable)
+
+         ("r" eide-run-or-eval)
+         ("t" eide-test)
+
+         ("1" eide-ide-view)
+         ("2" eide-side-by-side-view)
+         ("3" eide-repl-view)
+         ("0" eide-terminal-view)
+         ("q" nil "quit"))
+
+       (evil-leader/set-key "i" 'eide-hydra/body)
+       (define-key evil-normal-state-map (kbd "C-i") 'meghanada-hydra/body)
+
+     #+END_SRC
 ** Operations
 *** Docker
     #+BEGIN_SRC emacs-lisp
