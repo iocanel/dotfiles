@@ -596,6 +596,7 @@
         (setq mu4e-context-policy 'pick-first)
         ;; Don't ask to quit... why is this the default?
         (setq mu4e-confirm-quit nil)
+        (setq mu4e-headers-visible-lines 25)
 
         (add-hook 'mu4e-view-mode-hook 'mu4e-mark-region-code)
         ;;; Show Smileys
