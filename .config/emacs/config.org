@@ -4,6 +4,10 @@
     #+BEGIN_SRC emacs-lisp
       (setq gc-cons-threshold 50000000)
     #+END_SRC
+*** Eval Path    
+    #+BEGIN_SRC emacs-lisp
+      (setq max-lisp-eval-depth 10000)
+    #+END_SRC
 ** General Settings
 *** Aliases
     #+BEGIN_SRC emacs-lisp
@@ -718,50 +722,6 @@
          (global-set-key (kbd "C-c p g") 'projectile-grep)
          :ensure t)
      #+END_SRC
-**** Hydra
-     #+BEGIN_SRC emacs-lisp
-       (defun ide-view-mode()
-         (interactive)
-         (delete-other-windows-internal)
-         (split-and-follow-vertically)
-         (minimize-window)
-         (projectile-run-eshell)
-         (evil-window-set-height 12)
-         (treemacs-projectile)
-         (other-window 1)
-         (goto-char (point-min))
-         )
-
-       (advice-add 'projectile-switch-project :after 'ide-view-mode)
-
-       (defhydra projectile-hydra (:hint nil :exit t)
-         ;; The '_' character is not displayed. This affects columns alignment.
-         ;; Remove s many spaces as needed to make up for the '_' deficit.
-         "
-                       ^Edit^                           ^Test or Task^                       ^Navigation^
-                       ^^^^^^-----------------------------------------------------------------------------------------------
-                        _R_: projectile-rename           _e_: projectile-run-eshell           _p_: projectile-switch-project
-                        _G_: magit-status                _i_: ide-view-mode                   _f_: projectile-find-file-dwim
-                                                                                          _g_: projectile-grep
-                                                                                          _d_: projectile-dired
-                                                                                          _r_: projectile-recentf
-                       "
-                                               ; Edit
-         ("R" projectile-rename)
-         ("G" magit-status)
-                                               ; Task
-         ("e" projectile-run-eshell)
-         ("i" ide-view-mode)
-                                               ; Navifation
-         ("p" projectile-switch-project)
-         ("f" projectile-find-file-dwim)
-         ("g" projectile-grep)
-         ("d" projectile-dired)
-         ("r" projectile-recentf)
-         ("q" nil "quit"))
-
-       (evil-leader/set-key "p" 'projectile-hydra/body) 
-     #+END_SRC
 *** Terminal
 **** Eshell
 ***** Package
@@ -1034,7 +994,14 @@
       #+END_SRC
 ** Modes
 *** Org Mode
-**** Package
+**** Agenda    
+     #+BEGIN_SRC emacs-lisp
+       (setq org-agenda-files (list "~/Documents/notes/gcal.org"
+                                    "~/Documents/notes/todo.org"
+                                    "~/Documents/notes/schedule.org"))
+
+     #+END_SRC
+**** Babel
      #+BEGIN_SRC emacs-lisp
        (use-package org
          :config
@@ -1044,9 +1011,25 @@
                                         (emacs-lisp . t)
                                         (python     . t))))
      #+END_SRC
-**** Evil    
+**** Caputure     
      #+BEGIN_SRC emacs-lisp
-       (use-package org-evil :ensure t)
+       (setq org-capture-templates
+             '(("a" "Appointment"
+                entry (file  "~/Documents/notes/gcal.org" ) "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
+               ("l" "Link"
+                entry (file+headline "~/Documents/notes/links.org" "Links") "* %? %^L %^g \n%T" :prepend t)
+               ("t" "To Do Item"
+                entry (file+headline "~/Documents/notes/todo.org" "To Do") "* TODO %?\n%u" :prepend t)
+               ("n" "Note"
+                entry (file+headline "~/Documents/notes/todo.org" "Notes") "* %?\n%u" :prepend t)
+               ("j" "Journal"
+                entry (file+datetree "~/Documents/notes/journal.org" "Journal") (file "~/.config/emacs/journal.orgtmpl"))
+               ))
+
+
+
+       (define-key global-map "\C-cc" 'org-capture)
+       (evil-leader/set-key "c" 'org-capture)
      #+END_SRC
 **** Code blocks
 ***** Edit code in a new window
@@ -1113,6 +1096,23 @@
       #+BEGIN_SRC emacs-lisp
         (use-package ox-gfm :ensure t)
       #+END_SRC
+**** Google Calendar     
+     #+BEGIN_SRC emacs-lisp
+        (let ((client-id (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show services/google/org-cal/iocanel@gmail.com/client-id")))
+              (client-secret (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show services/google/org-cal/iocanel@gmail.com/client-secret"))))
+
+       (use-package org-gcal
+         :ensure t
+         :config
+         (setq org-gcal-client-id client-id
+               org-gcal-client-secret client-secret
+               org-gcal-file-alist '(("iocanel@gmail.com" .  "~/Documents/notes/gcal.org"))))
+       )
+       (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
+       (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
+
+
+     #+END_SRC
 ** Development
 *** Tools
 **** Flycheck
@@ -1343,20 +1343,20 @@
          "
          ^Edit^                           ^Test or Task^                       ^Navigation^
          ^^^^^^-----------------------------------------------------------------------------------------------
-          _u_: go-remove-unused-imports    _P_: go-play-buffer                  _r_: go-guru-referrers
-          _F_: gofmt                       _R_: go-play-region                  _d_: go-guru-definition
-          _G_: magit-status
+          _u_: go-remove-unused-imports    _P_: go-play-buffer                  _/_: go-guru-referrers
+          _F_: gofmt                       _R_: go-play-region                  _?_: go-guru-definition
+          _V_: magit-status
          "
                                                ; Edit
          ("u" go-remove-unused-imports)
          ("F" gofmt)
-         ("G" magit-status)
+         ("V" magit-status)
                                                ; Task
          ("P" go-play-buffer)
          ("R" go-play-region)
                                                ; Navifation
-         ("r" go-guru-referrers)
-         ("d" go-guru-definition)
+         ("/" go-guru-referrers)
+         ("?" go-guru-definition)
          ("q" nil "quit"))
 
        (evil-leader/set-key "g" 'go-hydra/body)
@@ -1429,13 +1429,13 @@
           "
          ^Edit^                           ^Tast or Task^                       ^Navigation^
          ^^^^^^-----------------------------------------------------------------------------------------------
-          _f_: meghanada-compile-file      _m_: meghanada-restart               _r_: meghanada-reference
-          _c_: meghanada-compile-project   _t_: meghanada-run-task              _d_: meghanada-jump-declaration
-          _o_: meghanada-optimize-import   _j_: meghanada-run-junit-test-case   _b_: meghanada-back-jump
+          _f_: meghanada-compile-file      _m_: meghanada-restart               _/_: meghanada-reference
+          _c_: meghanada-compile-project   _t_: meghanada-run-task              _?_: meghanada-jump-declaration
+          _o_: meghanada-optimize-import   _j_: meghanada-run-junit-test-case   _<_: meghanada-back-jump
           _s_: meghanada-switch-test-case  _J_: meghanada-run-junit-class
           _v_: meghanada-local-variable    _R_: meghanada-run-junit-recent
           _i_: meghanada-import-all        _T_: meghanada-typeinfo
-          _G_: magit-status
+          _V_: magit-status
          "
                                                 ; Edit
           ("f" meghanada-compile-file)
@@ -1443,7 +1443,7 @@
           ("o" meghanada-optimize-import)
           ("v" meghanada-local-variable)
           ("i" meghanada-import-all)
-          ("G" magit-status)
+          ("V" magit-status)
 
                                                 ; Task
           ("s" meghanada-switch-test-case)
@@ -1455,9 +1455,9 @@
           ("R" meghanada-run-junit-recent)
           ("T" meghanada-typeinfo)
                                                 ; Navifation
-          ("r" meghanada-reference)
-          ("d" meghanada-jump-declaration)
-          ("b" meghanada-back-jump)
+          ("/" meghanada-reference)
+          ("?" meghanada-jump-declaration)
+          ("<" meghanada-back-jump)
           ("q" nil "quit"))
 
         (evil-leader/set-key "m" 'meghanada-hydra/body)
@@ -1610,7 +1610,31 @@
     IDE-like functionality abstraction for common development modes.
 **** Hydra    
      #+BEGIN_SRC emacs-lisp
-       (setq eide-function-alist '((eide-open-function . projectile-switch-project)
+       (defstruct eide-buffer-point
+         buffer
+         line
+         column
+         )
+
+       ; Back and Forth Navigation
+       (defvar eide-back-stack ())
+       (defvar eide-forward-stack ())
+       (defvar ignore-current-buffer nil)
+
+       ; Tabs and indentation
+       (defvar eide-tab-width 4)
+       (defvar eide-use-tabs nil)
+
+       ; View Toggles
+       (defvar eide-tree-enabled t)
+       (defvar eide-cli-enabled t)
+       (defvar eide-bottom-buffer-command 'projectile-run-eshell)
+
+       ; View
+       (defvar eide-current-view 'eide-ide-view)
+
+       ; Functions
+       (defvar eide-function-alist '((eide-open-function . projectile-switch-project)
                                    (eide-recent-function . projectile-recentf)
                                    (eide-close-function . projectile-kill-buffers)
                                    (eide-build-function . projectile-compile-project)
@@ -1626,7 +1650,8 @@
                                    (eide-find-file-function . projectile-find-file)
                                    (eide-find-variable-function . projectile-find-variable)
                                    (eide-test-function . nil)
-                                   (eide-repl-view-function . nil)))
+                                   (eide-repl-view-function . nil)
+                                   (eide-mode-hydra-function . nil)))
        ;;Project
        (defun eide-open()
          "Open project"
@@ -1730,10 +1755,15 @@
        (defun eide-repl ()
          "Run a REPL"
          (interactive)
-         (message (format "%s-function" this-command)) 
          (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
          )
 
+       (defun eide-mode-hydra ()
+         "Open the mode specific hydra"
+         (interactive)
+         (message (format "%s-function" this-command)) 
+         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+         )
        ;;
        ;;
        ;; Language/Framework Modes
@@ -1743,10 +1773,12 @@
          (setq eide-function-alist (delq (assoc 'eide-declaration-function eide-function-alist) eide-function-alist))
          (setq eide-function-alist (delq (assoc 'eide-optimize-imports-function eide-function-alist) eide-function-alist))
          (setq eide-function-alist (delq (assoc 'eide-indent-function eide-function-alist) eide-function-alist))
+         (setq eide-function-alist (delq (assoc 'eide-mode-hydra-function eide-function-alist) eide-function-alist))
 
          (add-to-list 'eide-function-alist '(eide-references-function . meghanada-reference))
          (add-to-list 'eide-function-alist '(eide-declaration-function . meghanada-jump-declaration))
          (add-to-list 'eide-function-alist '(eide-optimize-imports-function . meghanada-optimize-import))
+         (add-to-list 'eide-function-alist '(eide-mode-hydra-function . meghanada-hydra/body))
          )
        (add-hook 'meghanada-mode-hook 'meghanada-ide)
 
@@ -1760,7 +1792,7 @@
 
          (add-to-list 'eide-function-alist '(eide-references-function . anaconda-mode-find-references))
          (add-to-list 'eide-function-alist '(eide-declaration-function . anaconda-mode-find-definitions))
-         (add-to-list 'eide-function-alist '(eide-indent . python-indent))
+         (add-to-list 'eide-function-alist '(eide-indent-function . python-indent))
          )
 
        (defun golang-ide()
@@ -1768,11 +1800,13 @@
          (setq eide-function-alist (delq (assoc 'eide-declaration-function eide-function-alist) eide-function-alist))
          (setq eide-function-alist (delq (assoc 'eide-optimize-imports-function eide-function-alist) eide-function-alist))
          (setq eide-function-alist (delq (assoc 'eide-indent-function eide-function-alist) eide-function-alist))
+         (setq eide-function-alist (delq (assoc 'eide-mode-hydra-function eide-function-alist) eide-function-alist))
 
          (add-to-list 'eide-function-alist '(eide-references-function . go-guru-callers))
          (add-to-list 'eide-function-alist '(eide-declaration-function . godef-jump))
-         (add-to-list 'eide-function-alist '(eide-optimize-imports . goimports))
-         (add-to-list 'eide-function-alist '(eide-indent . gofmt))
+         (add-to-list 'eide-function-alist '(eide-optimize-imports-function . goimports))
+         (add-to-list 'eide-function-alist '(eide-indent-function . gofmt))
+         (add-to-list 'eide-function-alist '(eide-mode-hydra-function . go-hydra/body))
          )
 
        (defun elisp-ide()
@@ -1780,9 +1814,13 @@
          (setq eide-function-alist (delq (assoc 'eide-declaration-function eide-function-alist) eide-function-alist))
          (setq eide-function-alist (delq (assoc 'eide-optimize-imports-function eide-function-alist) eide-function-alist))
          (setq eide-function-alist (delq (assoc 'eide-indent-function eide-function-alist) eide-function-alist))
+         (setq eide-function-alist (delq (assoc 'eide-mode-hydra-function eide-function-alist) eide-function-alist))
+
+         (add-to-list 'eide-function-alist '(eide-mode-hydra-function . elisp-hydra/body))
          ) 
 
        (defun cider-jack-in-and-switch ()
+         "Jack in cider REPL and switch to the current projects REPL buffer."
          (interactive)
          (cider-jack-in)
          (switch-to-buffer (get-buffer (format "*cider-repl %s*" (projectile-project-name))))
@@ -1798,19 +1836,6 @@
        ;;
        ;; Navigation Utils
        ;;
-       (defstruct eide-buffer-point
-         buffer
-         line
-         column
-         )
-
-       (defvar eide-back-stack)
-       (defvar eide-forward-stack)
-       (defvar ignore-current-buffer)
-       (setq eide-back-stack ())
-       (setq eide-forward-stack ())
-       (setq ignore-current-buffer nil)
-
        (defun eide-back-push()
          (interactive)
          (if ignore-current-buffer
@@ -1890,12 +1915,16 @@
        (defun eide-ide-view()
          "Switches to a traditional IDE view for the buffer. (project tree, main buffer & terminal"
          (interactive)
+         (setq eide-current-view 'eide-ide-view)
          (delete-other-windows-internal)
-         (split-and-follow-vertically)
-         (minimize-window)
-         (projectile-run-eshell)
-         (evil-window-set-height 12)
-         (treemacs-projectile)
+         (if eide-cli-enabled
+             (progn
+               (split-and-follow-vertically)
+               (minimize-window)
+               (projectile-run-eshell)
+               (evil-window-set-height 12)))
+         (if eide-tree-enabled
+         (treemacs-projectile))
          (other-window 1)
          (goto-char (point-min))
          )
@@ -1913,12 +1942,14 @@
        (defun eide-repl-view()
          "Just like IDE view but with a REPL instead of a terminal (project tree, main buffer & repl)."
          (interactive)
+         (setq eide-current-view 'eide-repl-view)
          (delete-other-windows-internal)
          (split-and-follow-vertically)
          (minimize-window)
          (eide-repl)
          (evil-window-set-height 12)
-         (treemacs-projectile)
+         (if eide-tree-enabled
+         (treemacs-projectile))
          (other-window 1)
          (goto-char (point-min))
          )
@@ -1926,8 +1957,41 @@
        (defun eide-terminal-view()
          "Maximized terminal in the project root"
          (interactive)
+         (setq eide-current-view eide-terminal-view)
          (delete-other-windows-internal)
          (projectile-run-eshell)
+       )
+
+       ;;
+       ;;
+       ;; View Mode Helpers
+       (defun eide-toggle-tree ()
+         "Toggles the tree"
+         (interactive)
+         (if eide-tree-enabled
+             (progn
+               (setq eide-tree-enabled nil)      
+               (eide-refresh-view))
+           (progn
+             (setq eide-tree-enabled t)
+             (eide-refresh-view))))
+
+       (defun eide-toggle-cli ()
+         "Toggles the cli"
+         (interactive)
+         (if eide-cli-enabled
+             (progn
+               (setq eide-cli-enabled nil)      
+               (eide-refresh-view))
+           (progn
+             (setq eide-cli-enabled t)
+             (eide-refresh-view))))
+
+       (defun eide-refresh-view ()
+         "Refreshes the current view"
+         (interactive)
+         (message (format "Refreshing view: %s" eide-current-view))
+         (funcall eide-current-view)
          )
 
        (advice-add 'projectile-switch-project :after 'eide-project-open-view)
@@ -1959,10 +2023,6 @@
        (add-to-list 'eide-project-visitors 'eide-visitor-clojure)
        (advice-add 'projectile-switch-project :after 'eide-project-visit)
 
-       (defvar eide-tab-width)
-       (setq eide-tab-width 4)
-       (defvar eide-use-tabs)
-       (setq eide-use-tabs nil)
 
        ;;
        ;;
@@ -1993,6 +2053,7 @@
            (message "Use tabs: disabled."))
          )
 
+
        ;;
        ;;
        ;;
@@ -2005,14 +2066,15 @@
        ;; Hydra
        (defhydra eide-hydra (:hint nil :exit t)
          "
-               ^ Project      ^Source^                 ^Navigate^         ^Search^             ^Task^            ^Layout^
+               ^ Project      ^Source^                 ^Navigate^         ^Search^             ^Task^              ^Layout^
                ^^^^^^-------------------------------------------------------------------------------------------------------
-                 _O_ open      _o_ optimize imports     _?_: declaration   _g_: grep             _r_: run/eval     _1_: ide
-                 _R_ recent    _i_ indent               _/_: references    _f_: find file        _t_: run test     _2_: side by side
-                 _C_ close     _r_ indent region        _<_: back          _v_: find variable                    _3_: repl 
-                 _B_ build     _I_ toggle tab width     _>_: forward                                           _0_: terminal 
-                 _V_ vcs       _T_ toggle use tabs      _._: set mark
-                               _@_ copyright
+                 _O_ open      _o_ optimize imports     _?_: declaration   _g_: grep             _r_: run/eval        _0_: terminal
+                 _R_ recent    _i_ indent               _/_: references    _f_: find file        _u_: run unit test   _1_: ide            
+                 _C_ close     _r_ indent region        _<_: back          _v_: find variable                       _2_: side by side  
+                 _B_ build     _I_ toggle tab width     _>_: forward                                              _3_: repl             
+                 _V_ vcs       _T_ toggle use tabs      _._: set mark                                             _t_: toggle tree         
+                             _s_ insert snippet                                                               _c_: toggle cli
+                             _@_ copyright
                  "
 
          ("O" eide-open)
@@ -2026,6 +2088,7 @@
          ("r" eide-indent-region)
          ("I" eide-toggle-tab-width)
          ("T" eide-toggle-use-tabs)
+         ("s" company-yasnippet)
          ("@" eide-copyright)
 
          ("?" eide-declaration)
@@ -2039,17 +2102,19 @@
          ("v" eide-find-variable)
 
          ("r" eide-run-or-eval)
-         ("t" eide-test)
+         ("u" eide-test)
 
          ("1" eide-ide-view)
          ("2" eide-side-by-side-view)
          ("3" eide-repl-view)
          ("0" eide-terminal-view)
+         ("t" eide-toggle-tree) 
+         ("c" eide-toggle-cli) 
+         ("m" eide-mode-hydra "mode") 
          ("q" nil "quit"))
 
        (evil-leader/set-key "i" 'eide-hydra/body)
        (define-key evil-normal-state-map (kbd "C-i") 'meghanada-hydra/body)
-
      #+END_SRC
 ** Operations
 *** Docker
