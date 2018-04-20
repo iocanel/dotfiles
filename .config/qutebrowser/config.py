@@ -74,6 +74,7 @@ c.url.searchengines = {
         "sk": "https://www.skroutz.gr/search?keyphrase={}",
         "so": "https://stackoverflow.com/search?q={}",
         "tw": "https://twitter.com/search?src=typd&q={}",
+        "tv": "https://www.thingiverse.com/search?q={}",
         "w": "http://www.wikipedia.org/w/index.php?title=Special:Search&search={}",
         "yt": "https://www.youtube.com/results?search_query={}"
     }
