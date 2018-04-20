@@ -1047,13 +1047,17 @@
         (use-package ob-go :ensure t)
         (use-package ob-typescript :ensure t)
       #+END_SRC
+**** Evil
+     #+BEGIN_SRC emacs-lisp
+       (use-package org-evil :ensure t)
+     #+END_SRC
 **** Bullets
      To replace ascii asterisks with bullets:    
      #+BEGIN_SRC emacs-lisp
        (use-package org-bullets
          :ensure t
          :config
-         (add-hook 'org-mode-hook (lambda () (org-bullets-mode)))) 
+         (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
      #+END_SRC
 **** Presentaions
 ***** org-present
@@ -1617,42 +1621,47 @@
          column
          )
 
-       ; Back and Forth Navigation
+       ;; Back and Forth Navigation
        (defvar eide-back-stack ())
        (defvar eide-forward-stack ())
        (defvar ignore-current-buffer nil)
 
-       ; Tabs and indentation
+       ;; Tabs and indentation
        (defvar eide-tab-width 4)
        (defvar eide-use-tabs nil)
 
-       ; View Toggles
+       ;; View Toggles
        (defvar eide-tree-enabled t)
        (defvar eide-cli-enabled t)
+       (defvar eide-repl-enabled t)
        (defvar eide-bottom-buffer-command 'projectile-run-eshell)
 
-       ; View
+       ;; View
        (defvar eide-current-view 'eide-ide-view)
 
-       ; Functions
+       ;; Functions
        (defvar eide-function-alist '((eide-open-function . projectile-switch-project)
-                                   (eide-recent-function . projectile-recentf)
-                                   (eide-close-function . projectile-kill-buffers)
-                                   (eide-build-function . projectile-compile-project)
-                                   (eide-vcs-function . magit-status)
-                                   (eide-optimizie-imports-function . nil)
-                                   (eide-indent-function . evil-indent)
-                                   (eide-indent-region-function . nil)
-                                   (eide-copyright-function . nil)
-                                   (eide-references-function . nil)
-                                   (eide-declaration-function . nil)
-                                   (eide-back-function . nil)
-                                   (eide-grep-function . projectile-grep)
-                                   (eide-find-file-function . projectile-find-file)
-                                   (eide-find-variable-function . projectile-find-variable)
-                                   (eide-test-function . nil)
-                                   (eide-repl-view-function . nil)
-                                   (eide-mode-hydra-function . nil)))
+                                     (eide-recent-function . projectile-recentf)
+                                     (eide-close-function . projectile-kill-buffers)
+                                     (eide-build-function . projectile-compile-project)
+                                     (eide-vcs-function . magit-status)
+                                     (eide-optimizie-imports-function . nil)
+                                     (eide-indent-function . evil-indent)
+                                     (eide-indent-region-function . nil)
+                                     (eide-license-headers-function . nil)
+                                     (eide-references-function . nil)
+                                     (eide-declaration-function . nil)
+                                     (eide-back-function . nil)
+                                     (eide-grep-function . projectile-grep)
+                                     (eide-find-file-function . projectile-find-file)
+                                     (eide-find-variable-function . projectile-find-variable)
+                                     (eide-test-function . nil)
+                                     (eide-repl-view-function . nil)
+                                     (eide-mode-hydra-function . nil)))
+
+       ;; On Event Command Association List
+       (defvar eide-on-event-command-alist '())
+
        ;;Project
        (defun eide-open()
          "Open project"
@@ -1669,6 +1678,7 @@
        (defun eide-close()
          "Close project"
          (interactive)
+         (delete-other-windows-internal)
          (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
          )
        (defun eide-build()
@@ -1699,8 +1709,8 @@
          (interactive)
          (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
          )
-       (defun eide-copyright()
-         "Apply copyright"
+       (defun eide-license-headers()
+         "Apply license headers"
          (interactive)
          (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
          )
@@ -1728,8 +1738,15 @@
        (defun eide-grep()
          "Grep"
          (interactive)
-         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
-         )
+         (let (b (buffer-name (window-buffer)))
+           (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+           (other-window 1)
+           (while (and
+                   (not (equal "*grep*" (buffer-name (window-buffer))))
+                   (not (equal b (buffer-name (window-buffer)))))
+             (other-window 1))
+           ))
+
 
        (defun eide-find-file()
          "Find file"
@@ -1762,7 +1779,6 @@
        (defun eide-mode-hydra ()
          "Open the mode specific hydra"
          (interactive)
-         (message (format "%s-function" this-command)) 
          (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
          )
        ;;
@@ -1823,8 +1839,15 @@
        (defun cider-jack-in-and-switch ()
          "Jack in cider REPL and switch to the current projects REPL buffer."
          (interactive)
+         (add-hook 'cider-connected-hook 'eide-cider-on-connected)
          (cider-jack-in)
+         )
+
+       (defun eide-cider-on-connected()
+         (remove-hook 'cider-connected-hook 'eide-cider-on-connected)
          (switch-to-buffer (get-buffer (format "*cider-repl %s*" (projectile-project-name))))
+         (mapcar (lambda (a) (eval a))
+               (alist-get 'on-repl-connected eide-on-event-command-alist))
          )
 
        (defun clojure-ide ()
@@ -1873,12 +1896,12 @@
          (interactive)
          (let ((p (eide-back-pop)))
            (if p (progn
-                  (eide-forward-push)
-                  (switch-to-buffer (eide-buffer-point-buffer p))
-                  (goto-char (point-min))
-                  (forward-line (eide-buffer-point-line p))
-                  (move-to-column (eide-buffer-point-column p))
-                  (point))
+                   (eide-forward-push)
+                   (switch-to-buffer (eide-buffer-point-buffer p))
+                   (goto-char (point-min))
+                   (forward-line (eide-buffer-point-line p))
+                   (move-to-column (eide-buffer-point-column p))
+                   (point))
              )
            )
          ) 
@@ -1887,13 +1910,13 @@
          (interactive)
          (let ((p (eide-forward-pop)))
            (if p (progn
-                  (eide-back-push)
-                  (switch-to-buffer (eide-buffer-point-buffer p))
-                  (goto-char (point-min))
-                  (forward-line (eide-buffer-point-line p))
-                  (move-to-column (eide-buffer-point-column p))
-                  (point)
-                  )
+                   (eide-back-push)
+                   (switch-to-buffer (eide-buffer-point-buffer p))
+                   (goto-char (point-min))
+                   (forward-line (eide-buffer-point-line p))
+                   (move-to-column (eide-buffer-point-column p))
+                   (point)
+                   )
              )
            )
          )
@@ -1925,7 +1948,7 @@
                (projectile-run-eshell)
                (evil-window-set-height 12)))
          (if eide-tree-enabled
-         (treemacs-projectile))
+             (treemacs-projectile))
          (other-window 1)
          (goto-char (point-min))
          )
@@ -1945,15 +1968,33 @@
          (interactive)
          (setq eide-current-view 'eide-repl-view)
          (delete-other-windows-internal)
-         (split-and-follow-vertically)
-         (minimize-window)
-         (eide-repl)
-         (evil-window-set-height 12)
-         (if eide-tree-enabled
-         (treemacs-projectile))
-         (other-window 1)
-         (goto-char (point-min))
-         )
+                   (if eide-tree-enabled
+                       (treemacs-projectile))
+         (if eide-repl-enabled
+               (if (get-buffer (format "*cider-repl %s*" (projectile-project-name)))
+                   (progn
+                     (other-window 1)
+                     (split-and-follow-vertically)
+                     (switch-to-buffer (get-buffer (format "*cider-repl %s*" (projectile-project-name))))
+                     (goto-char (point-max))
+                     (evil-window-set-height 12)
+                     (other-window -1))
+                 (progn
+                   (other-window 1)
+                   (split-and-follow-vertically)
+                   (eide-new-empty-buffer)
+                   (evil-window-set-height 12)
+                   ;; The following commands need to get executed when eide-cider-on-connected is actually executed
+                   (setq eide-on-event-command-alist (delq (assoc 'on-repl-connected eide-on-event-command-alist) eide-on-event-command-alist))
+                   (add-to-list 'eide-on-event-command-alist '(on-repl-connected . (
+                                                                                    (other-window -1)
+                                                                                    (goto-char (point-min))
+                                                                                    )))
+                   (eide-repl)
+                   )))
+       )
+
+
 
        (defun eide-terminal-view()
          "Maximized terminal in the project root"
@@ -1961,7 +2002,8 @@
          (setq eide-current-view eide-terminal-view)
          (delete-other-windows-internal)
          (projectile-run-eshell)
-       )
+         )
+
 
        ;;
        ;;
@@ -1975,7 +2017,8 @@
                (eide-refresh-view))
            (progn
              (setq eide-tree-enabled t)
-             (eide-refresh-view))))
+             (eide-refresh-view)
+             )))
 
        (defun eide-toggle-cli ()
          "Toggles the cli"
@@ -1986,12 +2029,13 @@
                (eide-refresh-view))
            (progn
              (setq eide-cli-enabled t)
-             (eide-refresh-view))))
+             (eide-refresh-view)
+             (other-window 1)
+             (goto-char (point-max)))))
 
        (defun eide-refresh-view ()
          "Refreshes the current view"
          (interactive)
-         (message (format "Refreshing view: %s" eide-current-view))
          (funcall eide-current-view)
          )
 
@@ -2075,7 +2119,7 @@
                  _B_ build     _I_ toggle tab width     _>_: forward                                              _3_: repl             
                  _V_ vcs       _T_ toggle use tabs      _._: set mark                                             _t_: toggle tree         
                              _s_ insert snippet                                                               _c_: toggle cli
-                             _@_ copyright
+                             _l_ license headers 
                  "
 
          ("O" eide-open)
@@ -2090,7 +2134,7 @@
          ("I" eide-toggle-tab-width)
          ("T" eide-toggle-use-tabs)
          ("s" company-yasnippet)
-         ("@" eide-copyright)
+         ("l" eide-license-headers)
 
          ("?" eide-declaration)
          ("/" eide-references)
