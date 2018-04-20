@@ -130,10 +130,10 @@ bindsym $mod+Ctrl+r restart
 bindsym $mod+Ctrl+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # Screenshots
-bindsym --release $mod+Ctrl+p exec "scrot -s '/home/iocanel/photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
-bindsym --release Shift+Print exec "scrot -s '/home/iocanel/photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
-bindsym --release Print exec "scrot -m '/home/iocanel/photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
-bindsym --release $mod+Shift+Print exec "scrot -u -d 4 '/home/iocanel/photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
+bindsym --release $mod+Ctrl+p exec "scrot -s '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
+bindsym --release Shift+Print exec "scrot -s '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
+bindsym --release Print exec "scrot -m '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
+bindsym --release $mod+Shift+Print exec "scrot -u -d 4 '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
 
 # Screen Saver
 bindsym $mod+Shift+s exec toggle-screenlock
