@@ -1107,12 +1107,15 @@
       #+END_SRC
 ** Modes
 *** Org Mode
-**** Agenda    
+**** Agenda
      #+BEGIN_SRC emacs-lisp
-       (setq org-agenda-files (list "~/Documents/notes/gcal.org"
-                                    "~/Documents/notes/todo.org"
-                                    "~/Documents/notes/schedule.org"))
+              (setq org-agenda-files (list "~/Documents/notes/gcal.org"
+                                           "~/Documents/notes/todo.org"
+                                           "~/Documents/notes/schedule.org"
+                                           "~/Documents/notes/jira/"))
 
+              (define-key global-map "\C-ca" 'org-agenda)
+              (evil-leader/set-key "a" 'org-agenda)
      #+END_SRC
 **** Babel
      #+BEGIN_SRC emacs-lisp
@@ -1124,7 +1127,37 @@
                                         (emacs-lisp . t)
                                         (python     . t))))
      #+END_SRC
-**** Caputure     
+**** Bullets
+     To replace ascii asterisks with bullets:    
+     #+BEGIN_SRC emacs-lisp
+       (use-package org-bullets
+         :ensure t
+         :config
+         (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
+     #+END_SRC
+**** Blogging
+***** Installation
+      To install the org2blog plugin:
+      #+BEGIN_SRC emacs-lisp
+        (use-package org2blog :ensure t)
+      #+END_SRC
+***** Setup
+      #+BEGIN_SRC emacs-lisp
+        (let (blog-password)
+          (setq blog-password (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show websites/iocanel.com/iocanel@gmail.com")))
+          (setq org2blog/wp-blog-alist
+                `(("iocanel.com"
+                   :url "https://iocanel.com/xmlrpc.php"
+                   :username "iocanel@gmail.com"
+                   :password ,blog-password))))
+      #+END_SRC      
+***** Troubleshooting
+****** Symbol’s function definition is void: org-define-error
+       Issue and workaround can be found at: https://github.com/eschulte/epresent/issues/61
+       #+BEGIN_SRC emacs-lisp
+         (define-obsolete-function-alias 'org-define-error 'define-error)
+       #+END_SRC
+**** Capture
      #+BEGIN_SRC emacs-lisp
        (setq org-capture-templates
              '(("a" "Appointment"
@@ -1163,47 +1196,6 @@
      #+BEGIN_SRC emacs-lisp
        (use-package org-evil :ensure t)
      #+END_SRC
-**** Bullets
-     To replace ascii asterisks with bullets:    
-     #+BEGIN_SRC emacs-lisp
-       (use-package org-bullets
-         :ensure t
-         :config
-         (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
-     #+END_SRC
-**** Presentaions
-***** org-present
-      #+BEGIN_SRC emacs-lisp
-        ;; Seems missing at the moment
-        ;; (use-package org-present :ensure t)
-      #+END_SRC
-***** ox-reveal
-      #+BEGIN_SRC emacs-lisp
-        (use-package ox-reveal :ensure t)
-      #+END_SRC
-**** Blogging
-***** Installation
-      To install the org2blog plugin:
-      #+BEGIN_SRC emacs-lisp
-        (use-package org2blog :ensure t)
-      #+END_SRC
-***** Setup
-      #+BEGIN_SRC emacs-lisp
-        (let (blog-password)
-          (setq blog-password (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show websites/iocanel.com/iocanel@gmail.com")))
-          (setq org2blog/wp-blog-alist
-                `(("iocanel.com"
-                   :url "https://iocanel.com/xmlrpc.php"
-                   :username "iocanel@gmail.com"
-                   :password ,blog-password))))
-      #+END_SRC      
-***** Troubleshooting
-****** Symbol’s function definition is void: org-define-error
-       Issue and workaround can be found at: https://github.com/eschulte/epresent/issues/61
-       #+BEGIN_SRC emacs-lisp
-         (define-obsolete-function-alias 'org-define-error 'define-error)
-       #+END_SRC
-
 **** Export Formats
 ***** asciidoc
       #+BEGIN_SRC emacs-lisp
@@ -1213,7 +1205,7 @@
       #+BEGIN_SRC emacs-lisp
         (use-package ox-gfm :ensure t)
       #+END_SRC
-**** Google Calendar     
+**** Google Calendar
      #+BEGIN_SRC emacs-lisp
         (let ((client-id (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show services/google/org-cal/iocanel@gmail.com/client-id")))
               (client-secret (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show services/google/org-cal/iocanel@gmail.com/client-secret"))))
@@ -1230,6 +1222,36 @@
 
 
      #+END_SRC
+**** Jira     
+     #+BEGIN_SRC emacs-lisp
+       (defun org-jira-login()
+         (interactive)
+         (let ((jira-password (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show websites/jboss.org/iocanel"))))
+           (jiralib-login "iocanel" jira-password)))
+
+       (use-package org-jira
+         :ensure t
+         :config
+         (org-jira-login))
+
+       (setq jiralib-url "https://issues.jboss.org/")
+       (setq jiralib-user-login-name "iocanel")
+       (setq org-jira-working-dir "~/Documents/notes/jira")
+
+       ;(setq jiralib-subtask-types-cache '(("1" . "Bug")
+
+
+     #+END_SRC
+**** Presentations
+***** org-present
+      #+BEGIN_SRC emacs-lisp
+        ;; Seems missing at the moment
+        ;; (use-package org-present :ensure t)
+      #+END_SRC
+***** ox-reveal
+      #+BEGIN_SRC emacs-lisp
+        (use-package ox-reveal :ensure t)
+      #+END_SRC
 ** Development
 *** Tools
 **** Flycheck
