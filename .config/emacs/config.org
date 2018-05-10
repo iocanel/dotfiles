@@ -1776,8 +1776,10 @@
        ;; Functions
        (defvar eide-function-alist '((eide-open-function . projectile-switch-project)
                                      (eide-recent-function . projectile-recentf)
+                                     (eide-save-all-function . projectile-save-project-buffers)
                                      (eide-close-function . projectile-kill-buffers)
                                      (eide-build-function . projectile-compile-project)
+                                     (eide-run-or-eval-function . projectile-run-project)
                                      (eide-vcs-function . magit-status)
                                      (eide-optimizie-imports-function . nil)
                                      (eide-indent-function . evil-indent)
@@ -1791,7 +1793,7 @@
                                      (eide-find-variable-function . projectile-find-variable)
                                      (eide-test-function . nil)
                                      (eide-repl-view-function . nil)
-                                     (eide-mode-hydra-function . nil)))
+                                     (eide-mode-hydra-function . nil))) 
 
        ;; On Event Command Association List
        (defvar eide-on-event-command-alist '())
@@ -1807,6 +1809,11 @@
          "Recent project"
          (interactive)
          (eide-back-push)
+         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+         )
+       (defun eide-save-all()
+         "Save all project buffers"
+         (interactive)
          (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
          )
        (defun eide-close()
@@ -1896,7 +1903,13 @@
          (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
          )
 
-       ;;Test
+       ;;Task
+
+       (defun eide-run-or-eval ()
+         "Run the project"
+         (interactive)
+         (funcall  (alist-get (intern (format "%s-function" this-command)) eide-function-alist))
+         )
        (defun eide-test()
          "Runs tests"
          (interactive)
@@ -1920,6 +1933,8 @@
        ;; Language/Framework Modes
 
        (defun meghanada-ide()
+         "Enables java bindings"
+         (interactive)
          (setq eide-function-alist (delq (assoc 'eide-refernces-function eide-function-alist) eide-function-alist))
          (setq eide-function-alist (delq (assoc 'eide-declaration-function eide-function-alist) eide-function-alist))
          (setq eide-function-alist (delq (assoc 'eide-optimize-imports-function eide-function-alist) eide-function-alist))
@@ -1936,6 +1951,8 @@
 
 
        (defun python-ide()
+         "Enabled python bindings"
+         (interactive)
          (setq eide-function-alist (delq (assoc 'eide-refernces-function eide-function-alist) eide-function-alist))
          (setq eide-function-alist (delq (assoc 'eide-declaration-function eide-function-alist) eide-function-alist))
          (setq eide-function-alist (delq (assoc 'eide-optimize-imports-function eide-function-alist) eide-function-alist))
@@ -1947,6 +1964,9 @@
          )
 
        (defun golang-ide()
+         "Enabled golang bindings"
+         (interactive)
+         (go-set-project)
          (setq eide-function-alist (delq (assoc 'eide-refernces-function eide-function-alist) eide-function-alist))
          (setq eide-function-alist (delq (assoc 'eide-declaration-function eide-function-alist) eide-function-alist))
          (setq eide-function-alist (delq (assoc 'eide-optimize-imports-function eide-function-alist) eide-function-alist))
@@ -1954,13 +1974,15 @@
          (setq eide-function-alist (delq (assoc 'eide-mode-hydra-function eide-function-alist) eide-function-alist))
 
          (add-to-list 'eide-function-alist '(eide-references-function . go-guru-callers))
-         (add-to-list 'eide-function-alist '(eide-declaration-function . godef-jump))
+         (add-to-list 'eide-function-alist '(eide-declaration-function . godef-jump-other-window))
          (add-to-list 'eide-function-alist '(eide-optimize-imports-function . goimports))
          (add-to-list 'eide-function-alist '(eide-indent-function . gofmt))
          (add-to-list 'eide-function-alist '(eide-mode-hydra-function . go-hydra/body))
          )
 
        (defun elisp-ide()
+         "Enabled elisp bindings"
+         (interactive)
          (setq eide-function-alist (delq (assoc 'eide-refernces-function eide-function-alist) eide-function-alist))
          (setq eide-function-alist (delq (assoc 'eide-declaration-function eide-function-alist) eide-function-alist))
          (setq eide-function-alist (delq (assoc 'eide-optimize-imports-function eide-function-alist) eide-function-alist))
@@ -1981,13 +2003,20 @@
          (remove-hook 'cider-connected-hook 'eide-cider-on-connected)
          (switch-to-buffer (get-buffer (format "*cider-repl %s*" (projectile-project-name))))
          (mapcar (lambda (a) (eval a))
-               (alist-get 'on-repl-connected eide-on-event-command-alist))
+                 (alist-get 'on-repl-connected eide-on-event-command-alist))
+         )
+
+       (defun eide-run-clojure-project ()
+         (async-shell-command "lein run")
          )
 
        (defun clojure-ide ()
          (interactive)
          (setq eide-function-alist (delq (assoc 'eide-repl-view-function eide-function-alist) eide-function-alist))
          (add-to-list 'eide-function-alist '(eide-repl-view-function . cider-jack-in-and-switch))
+
+         (setq eide-function-alist (delq (assoc 'eide-run-or-eval-function eide-function-alist) eide-function-alist))
+         (add-to-list 'eide-function-alist '(eide-run-or-eval-function . eide-run-clojure-project))
          )
        (add-hook 'clojure-mode-hook 'clojure-ide)
        ;;
@@ -2102,31 +2131,31 @@
          (interactive)
          (setq eide-current-view 'eide-repl-view)
          (delete-other-windows-internal)
-                   (if eide-tree-enabled
-                       (treemacs-projectile))
+         (if eide-tree-enabled
+             (treemacs-projectile))
          (if eide-repl-enabled
-               (if (get-buffer (format "*cider-repl %s*" (projectile-project-name)))
-                   (progn
-                     (other-window 1)
-                     (split-and-follow-vertically)
-                     (switch-to-buffer (get-buffer (format "*cider-repl %s*" (projectile-project-name))))
-                     (goto-char (point-max))
-                     (evil-window-set-height 12)
-                     (other-window -1))
+             (if (get-buffer (format "*cider-repl %s*" (projectile-project-name)))
                  (progn
                    (other-window 1)
                    (split-and-follow-vertically)
-                   (eide-new-empty-buffer)
+                   (switch-to-buffer (get-buffer (format "*cider-repl %s*" (projectile-project-name))))
+                   (goto-char (point-max))
                    (evil-window-set-height 12)
-                   ;; The following commands need to get executed when eide-cider-on-connected is actually executed
-                   (setq eide-on-event-command-alist (delq (assoc 'on-repl-connected eide-on-event-command-alist) eide-on-event-command-alist))
-                   (add-to-list 'eide-on-event-command-alist '(on-repl-connected . (
-                                                                                    (other-window -1)
-                                                                                    (goto-char (point-min))
-                                                                                    )))
-                   (eide-repl)
-                   )))
-       )
+                   (other-window -1))
+               (progn
+                 (other-window 1)
+                 (split-and-follow-vertically)
+                 (eide-new-empty-buffer)
+                 (evil-window-set-height 12)
+                 ;; The following commands need to get executed when eide-cider-on-connected is actually executed
+                 (setq eide-on-event-command-alist (delq (assoc 'on-repl-connected eide-on-event-command-alist) eide-on-event-command-alist))
+                 (add-to-list 'eide-on-event-command-alist '(on-repl-connected . (
+                                                                                  (other-window -1)
+                                                                                  (goto-char (point-min))
+                                                                                  )))
+                 (eide-repl)
+                 )))
+         )
 
 
 
@@ -2249,15 +2278,16 @@
                ^^^^^^-------------------------------------------------------------------------------------------------------
                  _O_ open      _o_ optimize imports     _?_: declaration   _g_: grep             _r_: run/eval        _0_: terminal
                  _R_ recent    _i_ indent               _/_: references    _f_: find file        _u_: run unit test   _1_: ide            
-                 _C_ close     _r_ indent region        _<_: back          _v_: find variable                       _2_: side by side  
-                 _B_ build     _I_ toggle tab width     _>_: forward                                              _3_: repl             
-                 _V_ vcs       _T_ toggle use tabs      _._: set mark                                             _t_: toggle tree         
-                             _s_ insert snippet                                                               _c_: toggle cli
+                 _S_ save all  _r_ indent region        _<_: back          _v_: find variable                       _2_: side by side  
+                 _C_ close     _I_ toggle tab width     _>_: forward                                              _3_: repl             
+                 _B_ build     _T_ toggle use tabs      _._: set mark                                             _t_: toggle tree         
+                 _V_ vcs       _s_ insert snippet                                                               _c_: toggle cli
                              _l_ license headers 
                  "
 
          ("O" eide-open)
          ("R" eide-recent)
+         ("S" eide-save-all)
          ("C" eide-close)
          ("B" eide-build)
          ("V" eide-vcs)
