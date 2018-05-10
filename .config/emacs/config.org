@@ -757,16 +757,15 @@
                     (add-to-list 'eshell-visual-commands "tail")
                     (add-to-list 'eshell-visual-commands "top")))
       #+END_SRC
-      #+BEGIN_SRC emacs-lisp
-      #+END_SRC
 ***** Aliases
       #+BEGIN_SRC emacs-lisp
         (add-hook 'eshell-mode-hook (lambda ()
+                                      (eshell/alias "cls" "clear-scrollback")
                                       (eshell/alias "ls" "TERM=ansi ls --color=always $*")
                                       (eshell/alias "e" "find-file $1")
                                       (eshell/alias "ff" "find-file $1")
-                                      (eshell/alias "emacs" "find-file $1")
-                                      (eshell/alias "vi" "find-file $1")
+                                      (eshell/alias "emacs" "find-file-other-window $1")
+                                      (eshell/alias "vi" "find-file-other-window $1")
                                       (eshell/alias "ee" "find-file-other-window $1")
 
                                       (eshell/alias "gd" "magit-diff-unstaged")
@@ -818,9 +817,11 @@
 ***** Autosuggest
       #+BEGIN_SRC emacs-lisp
         (use-package esh-autosuggest
-          :ensure t)
-        (add-hook 'eshell-mode-hook (lambda ()
-                                      (setq-local esh-autosuggest-mode 1)))
+        :hook (eshell-mode . esh-autosuggest-mode)
+          ;; If you have use-package-hook-name-suffix set to nil, uncomment and use the
+          ;; line below instead:
+        ;; :hook (eshell-mode-hook . esh-autosuggest-mode)
+        :ensure t)
       #+END_SRC
 **** Mutli-term
      #+BEGIN_SRC emacs-lisp
