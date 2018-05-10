@@ -4,7 +4,7 @@
     #+BEGIN_SRC emacs-lisp
       (setq gc-cons-threshold 50000000)
     #+END_SRC
-*** Eval Path    
+*** Eval Path
     #+BEGIN_SRC emacs-lisp
       (setq max-lisp-eval-depth 10000)
     #+END_SRC
@@ -381,7 +381,7 @@
        (set-face-attribute 'cursor "#ff0000")
      #+END_SRC
 **** Custom colors
-     #+BEGIN_SRC emacs-lisp      
+     #+BEGIN_SRC emacs-lisp
        (defun darkside()
          "Use dark background"
          (interactive)
@@ -481,7 +481,7 @@
 *** Completion
 ** Tools
 *** Browser
-**** Package    
+**** Package
      #+BEGIN_SRC emacs-lisp
        (use-package eww
          :ensure t)
@@ -523,6 +523,14 @@
        (evil-leader/set-key "e" 'eww-hydra/body)
        (add-hook 'eww-after-render-hook 'eww-hydra/body)
 
+     #+END_SRC
+**** Custom     
+     #+BEGIN_SRC emacs-lisp
+       (defun xdg-open (url &rest ignore)
+         "Calls xdg-open"
+           (async-shell-command (format "xdg-open %s" (url-encode-url url))))
+
+       ;;(setq browse-url-browser-function 'xdg-open)
      #+END_SRC
 *** Email     
 **** mu4e
@@ -927,6 +935,15 @@
        (evil-leader/set-key "t" 'treemacs-hydra/body)
 
      #+END_SRC
+*** COMMENT Sidebar
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'load-path "~/.local/share/icons-in-terminal/") ;; If it's not already done
+      (add-to-list 'load-path "~/workspace/src/github.com/sebastiencs/sidebar.el")
+      (require 'sidebar)
+      (global-set-key (kbd "C-x C-f") 'sidebar-open)
+      (global-set-key (kbd "C-x C-a") 'sidebar-buffers-open)
+
+    #+END_SRC
 *** Snippets
     #+BEGIN_SRC emacs-lisp
       (use-package yasnippet
@@ -1450,7 +1467,7 @@
          :commands go-guru-hl-identifier-mode
          :init (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode))
      #+END_SRC
-***** Goflymake
+***** COMMENT Goflymake
      To install goflymake we first need to build the goflymake binary:
      #+BEGIN_SRC sh
        go get -u github.com/dougm/goflymake
