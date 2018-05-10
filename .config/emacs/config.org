@@ -393,6 +393,18 @@
        (darkside)
        ;; Let's hide the ugly vertical border
        (set-face-foreground 'vertical-border (face-background 'vertical-border))
+
+       (defun laptop-mode()
+         "Modify theme for latpop use"
+         (interactive)
+         (set-face-attribute 'default nil :height 75)
+         )
+
+       (defun desktop-mode()
+         "Modify theme for latpop use"
+         (interactive)
+         (set-face-attribute 'default nil :height 100)
+         )
      #+END_SRC
 *** Status Line
 **** COMMENT powerline
