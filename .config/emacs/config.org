@@ -13,6 +13,14 @@
     #+BEGIN_SRC emacs-lisp
       (defalias 'yes-or-no-p 'y-or-n-p)
     #+END_SRC
+*** Auth Sources
+**** Password Store
+     #+BEGIN_SRC emacs-lisp
+       (use-package auth-source-pass
+         :ensure t
+         :config
+         (auth-source-pass-enable))
+     #+END_SRC
 *** Autosave and Backup
     #+BEGIN_SRC emacs-lisp
       (setq make-backup-files nil) ; stop creating backup~ files
