@@ -4,11 +4,11 @@ LIST_PASS=`pass show secrets/passbridge/list-pass`
 SHOW_PASS_DETAILS=`pass show secrets/passbridge/show-pass-details`
 
 for extension in ".com" ".org" ".net" ".io" ".gr" ".cy"; do
-    for site in `$LIST_PASS | awk -F " |/" '{print $2}' | grep $extension | sort | uniq`; do
+    for site in `$LIST_PASS | awk -F "/" '{print $2}' | awk -F " " '{print $1}' | grep $extension | sort | uniq`; do
 	if [ -n  "$site" ]; then
 	    for username in `$SHOW_PASS_DETAILS -x $site | grep Username | awk -F " " '{print $2}' | sort | uniq`; do
 		password=`$SHOW_PASS_DETAILS  $site | grep -A1 "Username: $username" | grep Password | awk -F " " '{print $2}' | sort | uniq`
-		#echo "$password" | pass insert -f -e websites/${site}/${username}
+		echo "$password" | pass insert -f -e websites/${site}/${username}
 		echo "echo \"$password\" | pass insert -f -e websites/${site}/${username}"
 	    done
 	fi
