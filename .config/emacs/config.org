@@ -954,6 +954,97 @@
 
       (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
     #+END_SRC
+*** Stack Exchange    
+**** Package
+    #+BEGIN_SRC emacs-lisp
+      (use-package sx
+        :ensure t
+        :config
+        (bind-keys :prefix "C-c s"
+                   :prefix-map my-sx-map
+                   :prefix-docstring "Global keymap for SX."
+                   ("q" . sx-tab-all-questions)
+                   ("i" . sx-inbox)
+                   ("o" . sx-open-link)
+                   ("u" . sx-tab-unanswered-my-tags)
+                   ("a" . sx-ask)
+                   ("s" . sx-search)))
+
+    #+END_SRC
+**** Evil Configuration
+***** Questions
+      #+BEGIN_SRC emacs-lisp
+        (define-minor-mode sx-evil-question-mode
+          "Overrides SX related keys for question mode"
+          :global nil)
+
+        (defvar sx-evil-question-map (make-sparse-keymap "sx-evil-question-map")
+          "Override all major and minor mode keys")
+
+        (add-to-list 'emulation-mode-map-alists
+                     `((sx-evil-question-mode . ,sx-evil-question-map)))
+
+
+        (define-key sx-evil-question-map (kbd "<RET>") 'sx-display)
+        (define-key sx-evil-question-map "a" 'sx-answer)
+        (define-key sx-evil-question-map "c" 'sx-comment)
+        (define-key sx-evil-question-map "O" 'sx-question-list--interactive-order-prompt)
+        (define-key sx-evil-question-map "*" 'sx-star)
+        (define-key sx-evil-question-map "e" 'sx-edit)
+        (define-key sx-evil-question-map "d" 'sx-downvote)
+        (define-key sx-evil-question-map "u" 'sx-upvote)
+        (define-key sx-evil-question-map "q" 'quit-window)
+
+        (evil-make-intercept-map sx-evil-question-map)
+        (add-hook 'sx-question-mode-hook 'sx-evil-question-mode)
+      #+END_SRC
+***** Question List
+      #+BEGIN_SRC emacs-lisp
+        (define-minor-mode sx-evil-question-list-mode
+          "Overrides SX related keys for question list mode"
+          :global nil)
+
+        (defvar sx-evil-question-list-map (make-sparse-keymap "sx-evil-question-list-map")
+          "Override all major and minor mode keys")
+
+        (add-to-list 'emulation-mode-map-alists
+                     `((sx-evil-question-list-mode . ,sx-evil-question-list-map)))
+        (define-key sx-evil-question-list-map (kbd "<RET>") 'sx-display)
+        (define-key sx-evil-question-list-map "a" 'sx-ask)
+        (define-key sx-evil-question-list-map "h" 'sx-question-list-hide)
+        (define-key sx-evil-question-list-map "m" 'sx-question--mark-read)
+        (define-key sx-evil-question-list-map "S" 'sx-search)
+        (define-key sx-evil-question-list-map "s" 'sx-question-list-switch-site)
+        (define-key sx-evil-question-list-map "t" 'sx-tab-switch)
+        (define-key sx-evil-question-list-map "v" 'sx-visit-externally)
+        (define-key sx-evil-question-list-map "q" 'quit-window)
+
+        (evil-make-intercept-map sx-evil-question-list-map)
+        (add-hook 'sx-question-list-mode-hook 'sx-evil-question-list-mode)
+
+      #+END_SRC
+***** Inbox
+      #+BEGIN_SRC emacs-lisp
+        (define-minor-mode sx-evil-inbox-mode
+          "Overrides SX related keys for inbox mode"
+          :global nil)
+
+        (defvar sx-evil-inbox-map (make-sparse-keymap "sx-evil-inbox-map")
+          "Override all major and minor mode keys")
+
+        (add-to-list 'emulation-mode-map-alists
+                     `((sx-evil-inbox-mode . ,sx-evil-inbox-map)))
+        (define-key sx-evil-inbox-map (kbd "<RET>") 'sx-display)
+        (define-key sx-evil-inbox-map "v" 'sx-visit-externally)
+        (define-key sx-evil-inbox-map "q" 'quit-window)
+
+        (evil-make-intercept-map sx-evil-inbox-map)
+        (add-hook 'sx-inbox-mode-hook 'sx-evil-inbox-mode)
+
+      #+END_SRC
+
+     #+BEGIN_SRC emacs-lisp
+     #+END_SRC
 *** Version Control
 **** Magit
      #+BEGIN_SRC emacs-lisp
