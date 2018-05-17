@@ -1587,7 +1587,8 @@
                       ;; meghanada-mode on
                       (meghanada-mode t)
                       (flycheck-mode +1)
-                      (setq c-basic-offset 2)
+                      ;; Setting c-basic-offset here breaks idee functionality of toggling 2/4 space identation.
+                      ;(setq c-basic-offset 2)
                       ;; use code format (disable it for now as it can become really annoying).
                       ;;(add-hook 'before-save-hook 'meghanada-code-beautify-before-save)))
                       )))
