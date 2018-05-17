@@ -1772,7 +1772,19 @@
     #+BEGIN_SRC emacs-lisp
       (use-package yaml-mode :ensure t)
     #+END_SRC
-*** Emacs IDE Mode
+*** idee
+    #+BEGIN_SRC emacs-lisp
+      (message "Loading IDEE")
+            (use-package idee :load-path "~/workspace/src/github.com/iocanel/idee/") 
+            (use-package idee-evil :load-path "~/workspace/src/github.com/iocanel/idee/") 
+            (use-package idee-clojure :load-path "~/workspace/src/github.com/iocanel/idee/") 
+            (use-package idee-elisp :load-path "~/workspace/src/github.com/iocanel/idee/") 
+            (use-package idee-golang :load-path "~/workspace/src/github.com/iocanel/idee/") 
+            (use-package idee-meghanada :load-path "~/workspace/src/github.com/iocanel/idee/") 
+            (use-package idee-python :load-path "~/workspace/src/github.com/iocanel/idee/") 
+      (message "Loaded IDEE")
+    #+END_SRC
+*** COMMENT Emacs IDE Mode
     IDE-like functionality abstraction for common development modes.
 **** Hydra    
      #+BEGIN_SRC emacs-lisp
