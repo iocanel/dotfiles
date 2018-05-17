@@ -668,12 +668,8 @@
      #+END_SRC
 **** Preview
      #+BEGIN_SRC emacs-lisp
-       (use-package preview
-         :commands LaTeX-preview-setup
-         :init
-         (progn
-           (setq-default preview-scale 1.4
-                         preview-scale-function '(lambda () (* (/ 10.0 (preview-document-pt)) preview-scale)))))
+       (use-package latex-preview-pane
+         :ensure t)
      #+END_SRC
 **** Autofill
      #+BEGIN_SRC emacs-lisp
