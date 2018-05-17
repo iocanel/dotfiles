@@ -1252,10 +1252,6 @@
        (setq jiralib-url "https://issues.jboss.org/")
        (setq jiralib-user-login-name "iocanel")
        (setq org-jira-working-dir "~/Documents/notes/jira")
-
-       ;(setq jiralib-subtask-types-cache '(("1" . "Bug")
-
-
      #+END_SRC
 **** Presentations
 ***** org-present
