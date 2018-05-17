@@ -528,11 +528,11 @@
      #+BEGIN_SRC emacs-lisp
        (defun xdg-open (url &rest ignore)
          "Calls xdg-open"
-           (async-shell-command (format "xdg-open %s" (url-encode-url url))))
+         (call-process-shell-command (format "xdg-open %s&" (url-encode-url url)) nil 0))
 
-       ;;(setq browse-url-browser-function 'xdg-open)
+       (setq browse-url-browser-function 'xdg-open)
      #+END_SRC
-*** Email     
+*** Email
 **** mu4e
 ***** package
       #+BEGIN_SRC emacs-lisp
