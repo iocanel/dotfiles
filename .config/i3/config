@@ -134,7 +134,7 @@ bindsym $mod+Ctrl+r restart
 bindsym $mod+Ctrl+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # Screenshots
-bindsym --release $mod+Ctrl+p exec "scrot -s '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
+bindsym --release $mod+Shift+p exec "scrot -s '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
 bindsym --release Shift+Print exec "scrot -s '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
 bindsym --release Print exec "scrot -m '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
 bindsym --release $mod+Shift+Print exec "scrot -u -d 4 '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
@@ -149,10 +149,11 @@ bindsym $mod+Shift+m exec toggle-monitor
 bindsym $mod+Shift+e exec restart-emacsd
 
 # Bluetooth Manager
-bindsym --release $mod+Ctrl+b exec toggle-blueman-applet
+bindsym --release $mod+Shift+b exec toggle-blueman-applet
 
 #Network Manager
-bindsym --release $mod+Ctrl+n exec toggle-nm-applet
+bindsym --release $mod+Shift+n exec toggle-nm-applet
+
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
