@@ -1266,6 +1266,31 @@
        (setq jiralib-url "https://issues.jboss.org/")
        (setq jiralib-user-login-name "iocanel")
        (setq org-jira-working-dir "~/Documents/notes/jira")
+
+       (defhydra org-jira-hydra (:hint nil :exit t)
+         ;; The '_' character is not displayed. This affects columns alignment.
+         ;; Remove s many spaces as needed to make up for the '_' deficit.
+         "
+                ^Actions^           ^Issue^               
+                ^^^^^^-----------------------------------------------------------------------------------------------
+                 _L_ist issues      _u_pdate issue        
+                 _C_reate issue     update _c_omment
+                                  _b_rowse issue
+                                  _r_efresh issue
+                                  _p_rogress issue
+                "
+         ("L" org-jira-get-issues)
+         ("C" org-jira-create-issue)
+
+         ("u" org-jira-update-issue)
+         ("c" org-jira-update-comment)
+         ("b" org-jira-browse-issue)
+         ("r" org-jira-refresh-issue)
+         ("p" org-jira-progress-issue)
+
+         ("q" nil "quit"))
+
+       (evil-leader/set-key "j" 'org-jira-hydra/body)
      #+END_SRC
 **** Presentations
 ***** org-present
