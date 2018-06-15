@@ -640,12 +640,18 @@
       #+END_SRC
 ***** bookmarks
       #+BEGIN_SRC emacs-lisp
-        (setq mu4e-bookmarks
-              '(("flag:unread AND NOT flag:trashed AND NOT maildir:\"/Archived\"" "Unread messages" ?u)
-                ("date:today" "Today's messages" ?t)
-                ("date:7d..now" "Last 7 days" ?w)
-                ("date:30d..now AND mime:text/calendar" "Events" ?e)
-                ("not flag:list AND date:30d..now AND (to:iocanel or ikanello)" "Personal" ?p)))
+                (setq mu4e-bookmarks
+                      '(
+                        ("date:2d..now AND flag:unread and NOT flag:trashed AND not flag:list AND date:30d..now AND (to:iocanel or ikanello)" "Must read" ?r)
+                        ("flag:unread AND NOT flag:trashed AND NOT maildir:\"/Archived\"" "Unread messages" ?U)
+                        ("date:2d..now AND flag:unread AND NOT flag:trashed AND NOT maildir:\"/Archived\"" "Recent unread messages" ?u)
+                        ("mime:text/calendar" "Events" ?E)
+                        ("date:30d..now AND mime:text/calendar" "Recent Events" ?e)
+                        ("not flag:list AND date:30d..now AND (to:iocanel or ikanello)" "Personal" ?P)
+                        ("date:2d..now AND not flag:list AND date:30d..now AND (to:iocanel or ikanello)" "Recent Personal" ?p)
+                        ("date:today" "Today's messages" ?t)
+                        ("date:7d..now" "Last 7 days" ?w)
+                        ))
       #+END_SRC
 *** LaTex
 **** Package
