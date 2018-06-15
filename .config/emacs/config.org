@@ -1606,12 +1606,48 @@
 
        (add-hook 'java-mode-hook (lambda () (eclim-mode 1)))
      #+END_SRC
-**** Maven     
+**** Language Server
+     #+BEGIN_SRC emacs-lisp
+       (use-package lsp-mode
+         :ensure t)
+
+       (use-package lsp-ui
+         :hook (lsp-mode . lsp-ui-mode)
+         :ensure t)
+
+       (use-package company-lsp
+         :ensure t
+         :init (add-to-list 'company-backends 'company-lsp))
+
+     #+END_SRC
+***** COMMENT Java
+      #+BEGIN_SRC emacs-lisp
+        (use-package lsp-java
+          :init
+          (setq lsp-java-organize-imports nil
+                lsp-java-save-action-organize-imports nil)
+
+          :ensure t)
+
+        (add-hook 'java-mode-hook #'lsp-java-enable)
+      #+END_SRC
+***** IntelliJ
+      #+BEGIN_SRC emacs-lisp
+        (use-package lsp-intellij
+          :ensure t)
+
+        ;(setq company-lsp-enable-snippet t
+        ;      company-lsp-cache-candidates t)
+        ;(push 'company-lsp company-backends)
+        ; (add-hook 'java-mode-hook #'lsp-intellij-enable)
+      #+END_SRC
+
+**** Maven
      #+BEGIN_SRC emacs-lisp
        (add-to-list 'load-path "~/workspace/src/github.com/m0smith/maven-pom-mode/maven-pom-mode.el")
        (load "~/workspace/src/github.com/m0smith/maven-pom-mode/maven-pom-mode.el") 
-     #+END_SRC
-**** Meghanada
+     #+END_SRC     
+**** COMMENT Meghanada
 ***** Package
       #+BEGIN_SRC emacs-lisp
         (use-package meghanada
