@@ -607,6 +607,13 @@
         (use-package mu4e-alert
           :ensure t)
 
+        (setq mu4e-alert-interesting-mail-query
+              (concat
+               "flag:unread"
+               " and not flag:list"
+               " and not flag:trashed"
+               " and (to:iocanel or ikanello)"))
+
         (mu4e-alert-set-default-style 'libnotify)
         (add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
 
