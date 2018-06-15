@@ -961,14 +961,17 @@
       (use-package yasnippet
         :ensure t
         :init
+        (setq yas-snippet-dirs
+              '("~/.emacs.d/snippets"                 ;; personal snippets
+                "~/.config/emacs/snippets"
+                "~/.config/emacs/templates"
+                ))
         (yas-global-mode)
         :config
         (use-package yasnippet-snippets
           :ensure t)
         (yas-reload-all))
 
-      (setq yas-snippet-dirs (append yas-snippet-dirs
-                                     '("~/.config/emacs/snippets")))
       ;; Use yas-indent-line fixed in yaml-mode. This fixes issues with parameter mirroring breaking indentation
       (setq yas-indent-line 'fixed)
 
