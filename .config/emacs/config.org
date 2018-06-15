@@ -777,20 +777,22 @@
       #+END_SRC
 ***** Aliases
       #+BEGIN_SRC emacs-lisp
-        (add-hook 'eshell-mode-hook (lambda ()
-                                      (eshell/alias "cls" "clear-scrollback")
-                                      (eshell/alias "ls" "TERM=ansi ls --color=always $*")
-                                      (eshell/alias "e" "find-file $1")
-                                      (eshell/alias "ff" "find-file $1")
-                                      (eshell/alias "emacs" "find-file-other-window $1")
-                                      (eshell/alias "vi" "find-file-other-window $1")
-                                      (eshell/alias "ee" "find-file-other-window $1")
+                (add-hook 'eshell-mode-hook (lambda ()
+                                              (eshell/alias "cls" "clear-scrollback")
+                                              (eshell/alias "d" "dired $1")
+                                              (eshell/alias "e" "find-file $1")
+                                              (eshell/alias "ee" "find-file-other-window $1")
+                                              (eshell/alias "emacs" "find-file-other-window $1")
+                                              (eshell/alias "ff" "find-file $1")
+                                              (eshell/alias "gd" "magit-diff-unstaged")
+                                              (eshell/alias "gds" "magit-diff-staged")
+                                              (eshell/alias "ll" "ls -AlohG --color=always $*")
+                                              (eshell/alias "ls" "TERM=ansi ls --color=always $*")
+                                              (eshell/alias "mci" "mvn clean install")
+                                              (eshell/alias "vi" "find-file-other-window $1")
 
-                                      (eshell/alias "gd" "magit-diff-unstaged")
-                                      (eshell/alias "gds" "magit-diff-staged")
-                                      (eshell/alias "d" "dired $1")
 
-                                      (eshell/alias "ll" "ls -AlohG --color=always $*")))
+        ))
       #+END_SRC
 ***** Prompt
       #+BEGIN_SRC emacs-lisp
