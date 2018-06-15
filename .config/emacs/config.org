@@ -1157,6 +1157,9 @@
          :config
          (org-babel-do-load-languages 'org-babel-load-languages
                                       '((shell      . t)
+                                        (groovy     . t)
+                                        (java       . t)
+                                        (clojure    . t)
                                         (js         . t)
                                         (emacs-lisp . t)
                                         (python     . t))))
