@@ -1897,6 +1897,80 @@
        (use-package kubernetes-tramp :ensure t)
      #+END_SRC
 **** Custom Functions
+***** Buffer Actions
+      #+BEGIN_SRC emacs-lisp
+        (defun kubernetes-create-from-region(start end)
+          "Pass the selected region to kubectl/oc create."
+          (interactive "r")
+          (let ((tmp-filename (kubernetes--tmp-resource-name)))
+            (write-region start end tmp-filename)
+            (find-file-noselect tmp-filename)
+            (call-process-shell-command (format "oc create -f %s"  tmp-filename))))
+
+        (defun kubernetes-create-from-buffer()
+          "Pass the current to kubectl/oc create."
+          (interactive)
+          (call-process-shell-command (format "oc create -f %s"  buffer-file-name)))
+
+        (defun kubernetes-create-dwim(start end)
+          "Pass the selected region or currnent buffer (if region not active) to kubectl/oc create."
+          (interactive "r")
+          (if (region-active-p)
+              (kubernetes-create-from-region start end)
+            (kubernetes-create-from-buffer)
+            )
+          )
+
+        (defun kubernetes-delete-from-buffer()
+          "Pass the current to kubectl/oc delete."
+          (interactive)
+          (call-process-shell-command (format "oc delete -f %s"  buffer-file-name)))
+
+        (defun kubernetes-delete-from-region(start end)
+          "Pass the selected region to kubectl/oc delete"
+          (interactive "r")
+          (let ((tmp-filename (kubernetes--tmp-resource-name)))
+            (write-region start end tmp-filename)
+            (find-file-noselect tmp-filename)
+            (call-process-shell-command (format "oc delete -f %s"  tmp-filename))))
+
+        (defun kubernetes-delete-dwim(start end)
+          "Pass the selected region or currnent buffer (if region not active) to kubectl/oc delete."
+          (interactive "r")
+          (if (region-active-p)
+              (kubernetes-delete-from-region start end)
+            (kubernetes-delete-from-buffer)
+            )
+          )
+
+        (defun kubernetes-replace-from-buffer()
+          "Pass the current buffer to kubectl/oc create."
+          (interactive)
+          (call-process-shell-command (format "oc replace -f %s"  buffer-file-name)))
+
+        (defun kubernetes-replace-from-region(start end)
+          "Pass the selected region to kubectl/oc create."
+          (interactive "r")
+          (let ((tmp-filename (kubernetes--tmp-resource-name)))
+            (write-region start end tmp-filename)
+            (find-file-noselect tmp-filename)
+            (call-process-shell-command (format "oc replace -f %s"  tmp-filename))))
+
+        (defun kubernetes-replace-dwim(start end)
+          "Pass the selected region or currnent buffer (if region not active) to kubectl/oc replace."
+          (interactive "r")
+          (if (region-active-p)
+              (kubernetes-replace-from-region start end)
+            (kubernetes-replace-from-buffer)
+            )
+          )
+
+        (defun kubernetes--tmp-resource-name()
+          "Create a temporary kubernetes resource file."
+          (concat temporary-file-directory "kubernetes-" (format "%06x-%06x" (random (expt 16 6)) (random (expt 16 6))))
+        )
+      #+END_SRC
+***** Debug Java Application
      #+BEGIN_SRC emacs-lisp
        (defun kubernetes-java-debug (point)
          "Portforwards port 5005 of the selected pod."
@@ -1921,22 +1995,32 @@
      #+END_SRC
 **** Hydra
      #+BEGIN_SRC emacs-lisp
-       (defhydra kubernetes-hydra ()
-         "Kubernetes"
-         ("o" kubernetes-overview "overview")
-         ("C" kubernetes-create-from-buffer "create")
-         ("D" kubernetes-delete-from-buffer "delete")
-         ("R" kubernetes-replace-from-buffer "replace")
-         ("e" kubernetes-exec-into "exec")
-         ("l" kubernetes-logs-follow "logs")
-         ("d" kubernetes-mark-for-delete "mark for delete")
-         ("x" kubernetes-execute-marks "execute marks")
-         ("p" kubernetes-portforward "portforward")
-         ("q" nil "quit")
-         )
+       (defhydra kubernetes-hydra (:hint nil :exit t)
+                ;; The '_' character is not displayed. This affects columns alignment.
+                ;; Remove s many spaces as needed to make up for the '_' deficit.
+                "
+             ^Kubernetes Dashboard^                          ^Buffer^                              ^Resource^
+                       ^^^^^^---------------------------------------------------------------------------------------------------
+                        _o_: Overview                        _C_: create dwim                      _d_: delete
+                        _r_: Refresh now                     _D_: delete dwim                      _e_: exec
+                        _x_: Execute all marks               _R_: replace dwim                     _l_: log
+                                                                                               _p_: portforward
+                       "
+                ("o" kubernetes-overview)
+                ("r" kubernetes-refresh)
+                ("C" kubernetes-create-dwim)
+                ("D" kubernetes-delete-dwim)
+                ("R" kubernetes-replace-dwim)
+                ("e" kubernetes-exec-into)
+                ("l" kubernetes-logs-follow)
+                ("d" kubernetes-mark-for-delete)
+                ("x" kubernetes-execute-marks)
+                ("p" kubernetes-portforward)
+                ("q" nil "quit")
+                )
 
-       (evil-leader/set-key "k" 'kubernetes-hydra/body)
-       (define-key evil-normal-state-map (kbd "C-k") 'kubernetes-hydra/body)
+              (evil-leader/set-key "k" 'kubernetes-hydra/body)
+              (define-key evil-normal-state-map (kbd "C-k") 'kubernetes-hydra/body)
      #+END_SRC
 *** Jenkins
 **** Pipeline from buffer
