@@ -354,6 +354,7 @@
          :init
          (setq linum-relative-current-symbol ""))
 
+       (evil-leader/set-key "r" 'linum-relative-toggle)
        ;; We don't want this on non programming modes
        (add-hook 'prog-mode-hook (lambda () (linum-relative-mode)))
      #+END_SRC
