@@ -1287,32 +1287,120 @@
        (setq jiralib-url "https://issues.jboss.org/")
        (setq jiralib-user-login-name "iocanel")
        (setq org-jira-working-dir "~/Documents/notes/jira")
-
-       (defhydra org-jira-hydra (:hint nil :exit t)
-         ;; The '_' character is not displayed. This affects columns alignment.
-         ;; Remove s many spaces as needed to make up for the '_' deficit.
-         "
-                ^Actions^           ^Issue^               
-                ^^^^^^-----------------------------------------------------------------------------------------------
-                 _L_ist issues      _u_pdate issue        
-                 _C_reate issue     update _c_omment
-                                  _b_rowse issue
-                                  _r_efresh issue
-                                  _p_rogress issue
-                "
-         ("L" org-jira-get-issues)
-         ("C" org-jira-create-issue)
-
-         ("u" org-jira-update-issue)
-         ("c" org-jira-update-comment)
-         ("b" org-jira-browse-issue)
-         ("r" org-jira-refresh-issue)
-         ("p" org-jira-progress-issue)
-
-         ("q" nil "quit"))
-
-       (evil-leader/set-key "j" 'org-jira-hydra/body)
      #+END_SRC
+***** customizations
+      #+BEGIN_SRC emacs-lisp
+        (defvar org-jira-selected-board nil)
+        (defvar org-jira-boards-cache ())
+        (defvar org-jira-sprint-by-board-cache ())
+
+        (defun org-jira-list-boards()
+          "List all boards."
+          (unless org-jira-boards-cache
+            (setq org-jira-boards-cache (jiralib--agile-call-sync "/rest/agile/1.0/board" 'values))
+            )
+          org-jira-boards-cache)
+
+        (defun org-jira-get-board()
+          "Select a board if one not already selected."
+          (unless org-jira-selected-board
+            (setq org-jira-selected-board (org-jira-board-completing-read)))
+            org-jira-selected-board
+          )
+
+        (defun org-jira-select-board()
+          "Select a board."
+          (interactive)
+         (setq org-jira-selected-board (org-jira-board-completing-read))
+        )
+
+        (defun org-jira-board-completing-read()
+          "Select a board by name."
+          (interactive)
+          (let* ((boards (org-jira-list-boards))
+                 (board-names (mapcar #'(lambda (a) (cdr (assoc 'name a))) boards))
+                 (board-name (completing-read "Choose board:" board-names)))
+            (car (seq-filter #'(lambda (a) (equal (cdr (assoc 'name a)) board-name)) boards)))
+          )
+
+        (defun org-jira-get-project-boards(project-id)
+          "Find the board of the project."
+          )
+
+        (defun org-jira-get-sprints-by-board(board-id &optional filter)
+          "List all sprints by BOARD-ID."
+          (interactive)
+          (let ((board-sprints-cache (cdr (assoc board-id org-jira-sprint-by-board-cache))))
+            (unless board-sprints-cache
+              (setq board-sprints-cache (jiralib--agile-call-sync (format "/rest/agile/1.0/board/%s/sprint" board-id)'values)))
+
+            (add-to-list 'org-jira-sprint-by-board-cache `(,board-id . ,board-sprints-cache))
+            (if filter
+                (seq-filter filter board-sprints-cache)
+              board-sprints-cache))
+          )
+
+        (defun org-jira--active-sprint-p(sprint)
+          "Predicate that checks if SPRINT is active."
+          (not (assoc 'completeDate sprint))
+          )
+
+
+        (defun org-jira-sprint-completing-read(board-id)
+          "Select an active sprint by name."
+          (let* ((sprints (org-jira-get-sprints-by-board board-id 'org-jira--active-sprint-p))
+                 (sprint-names (mapcar #'(lambda (a) (cdr (assoc 'name a))) sprints))
+                 (sprint-name (completing-read "Choose sprint:" sprint-names)))
+            (car (seq-filter #'(lambda (a) (equal (cdr (assoc 'name a)) sprint-name)) sprints))))
+
+        (defun org-jira-move-issue-to-sprint(issue-id sprint-id)
+          "Move issue with ISSUE-ID to sprint with SPRINT-ID."
+                (jiralib--rest-call-it (format "/rest/agile/1.0/sprint/%s/issue" sprint-id) :type "POST" :data (format "{\"issues\": [\"%s\"]}" issue-id)))
+
+        (defun org-jira-assign-current-issue-to-sprint()
+          "Move the selected issue to an active sprint."
+          (interactive)
+          (let* ((issue-id (org-jira-parse-issue-id))
+                 (board-id (cdr (assoc 'id (org-jira-get-board))))
+                 (sprint-id (cdr (assoc 'id (org-jira-sprint-completing-read board-id)))))
+
+            (org-jira-move-issue-to-sprint issue-id sprint-id)))
+
+        (jiralib-get-users "SB")
+        (org-jira-list-boards)
+      #+END_SRC
+***** hydra
+      #+BEGIN_SRC emacs-lisp
+
+        (defhydra org-jira-hydra (:hint nil :exit t)
+          ;; The '_' character is not displayed. This affects columns alignment.
+          ;; Remove s many spaces as needed to make up for the '_' deficit.
+          "
+                 ^Actions^           ^Issue^              ^Buffer^ 
+                 ^^^^^^-----------------------------------------------------------------------------------------------
+                  _L_ist issues      _u_pdate issue       _R_efresh issues in buffer 
+                  _C_reate issue     update _c_omment
+                                   assign _s_print
+                                   _b_rowse issue
+                                   _r_efresh issue
+                                   _p_rogress issue
+                 "
+          ("L" org-jira-get-issues)
+          ("C" org-jira-create-issue)
+          ("R" org-jira-refresh-issues-in-buffer)
+
+          ("u" org-jira-update-issue)
+          ("c" org-jira-update-comment)
+          ("b" org-jira-browse-issue)
+          ("s" org-jira-assign-current-issue-to-sprint)
+          ("r" org-jira-refresh-issue)
+          ("p" org-jira-progress-issue)
+
+          ("q" nil "quit"))
+
+        (evil-leader/set-key "j" 'org-jira-hydra/body)
+      #+END_SRC
+
 **** Presentations
 ***** org-present
       #+BEGIN_SRC emacs-lisp
