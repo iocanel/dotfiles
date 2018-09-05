@@ -25,12 +25,15 @@
 #emacs
 !.config/emacs
 !.config/emacs/init.el
+!.config/emacs/quickmarks.el
 !.config/emacs/config.org
 !.config/emacs/bookmarks
 !.config/emacs/themes
 !.config/emacs/themes/**
 !.config/emacs/snippets
 !.config/emacs/snippets/**
+!.config/emacs/templates
+!.config/emacs/templates/**
 !.emacs.d
 !.emacs.d/bookmarks
 
