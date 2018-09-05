@@ -56,6 +56,7 @@
         (setq ido-create-new-buffer 'always)
         (setq ido-everywhere t)
         (ido-mode 1)
+        ;(setq completing-read-function 'ido-completing-read)
       #+END_SRC
 ***** Smex      
       #+BEGIN_SRC emacs-lisp
@@ -130,6 +131,7 @@
      The extensions are going to be installed exactly where needed.
 ***** Package
       #+BEGIN_SRC emacs-lisp
+        (require 'cl)
         (use-package company
           :ensure t
           :init
@@ -236,8 +238,8 @@
     #+END_SRC
 *** Transparency
     #+BEGIN_SRC emacs-lisp
-      (set-frame-parameter (selected-frame) 'alpha '(95 . 80))
-      (add-to-list 'default-frame-alist '(alpha . (95. 80)))
+      (set-frame-parameter (selected-frame) 'alpha '(85 . 70))
+      (add-to-list 'default-frame-alist '(alpha . (85. 70)))
     #+END_SRC
 *** Windows
 **** Switching
@@ -378,6 +380,27 @@
          :ensure t
          :init
          (rainbow-delimiters-mode 1))
+
+
+       (custom-set-faces
+        ;; custom-set-faces was added by Custom.
+        ;; If you edit it by hand, you could mess it up, so be careful.
+        ;; Your init file should contain only one such instance.
+        ;; If there is more than one, they won't work right.
+
+        '(rainbow-delimiters-depth-1-face ((t (:foreground "#e78779")))) ;; red
+        '(rainbow-delimiters-depth-2-face ((t (:foreground "#a9b6c1")))) ;; white
+        '(rainbow-delimiters-depth-3-face ((t (:foreground "#528369")))) ;; green
+        '(rainbow-delimiters-depth-4-face ((t (:foreground "#c57632")))) ;; yellow
+        '(rainbow-delimiters-depth-5-face ((t (:foreground "#3e86a0")))) ;; blue
+        '(rainbow-delimiters-depth-6-face ((t (:foreground "#e78779")))) ;; red
+        '(rainbow-delimiters-depth-7-face ((t (:foreground "#a9b6c1")))) ;; white
+        '(rainbow-delimiters-depth-8-face ((t (:foreground "#528369")))) ;; green
+        '(rainbow-delimiters-depth-9-face ((t (:foreground "#c57632")))) ;; yellow
+        '(rainbow-delimiters-unmatched-face ((t (:background "red"))))
+        )
+
+       (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
      #+END_SRC     
 **** Visual fill column
      #+BEGIN_SRC emacs-lisp
@@ -554,8 +577,17 @@
           :load-path "/usr/share/emacs/site-lisp/mu4e/"
           )
 
+        (use-package org-mu4e
+          :load-path "/usr/share/emacs/site-lisp/mu4e/"
+          )
+
+        ;;store link to message if in header view, not to header query
+        (setq org-mu4e-link-query-in-headers-mode nil)
+
         (use-package evil-mu4e
           :ensure t)
+
+        (evil-leader/set-key "m" 'mu4e)
       #+END_SRC
 ***** account info
       #+BEGIN_SRC emacs-lisp
@@ -658,6 +690,12 @@
                     (visual-fill-column-mode)
                     (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
                     (visual-line-mode)))
+
+        (defun no-auto-fill ()
+          "Turn off auto-fill-mode."
+          (auto-fill-mode -1))
+
+        (add-hook 'mu4e-compose-mode-hook #'no-auto-fill)
       #+END_SRC
 ***** bookmarks
       #+BEGIN_SRC emacs-lisp
@@ -765,7 +803,7 @@
      #+BEGIN_SRC emacs-lisp
        (use-package projectile
          :config
-         (projectile-global-mode)
+         ;;(projectile-global-mode)
          (setq projectile-completion-system 'ido)
          (setq projectile-use-git-grep t)
          (setq projectile-switch-project-action 'projectile-dired)
@@ -1001,7 +1039,7 @@
 
       (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
     #+END_SRC
-*** Stack Exchange    
+*** Stack Exchange
 **** Package
     #+BEGIN_SRC emacs-lisp
       (use-package sx
@@ -1105,6 +1143,7 @@
          :after magit
          :config
          (magithub-feature-autoinject t)
+         (setq magithub-api-timeout 30)
          (setq magithub-clone-default-directory "~/workspace/src/github.com"))
 
        ;; Key bindings
@@ -1156,13 +1195,14 @@
 *** Org Mode
 **** Agenda
      #+BEGIN_SRC emacs-lisp
-              (setq org-agenda-files (list "~/Documents/notes/gcal.org"
-                                           "~/Documents/notes/todo.org"
-                                           "~/Documents/notes/schedule.org"
-                                           "~/Documents/notes/jira/"))
+       (require 'org-agenda)
+       (setq org-agenda-files (list "~/Documents/notes/gcal.org"
+                                    "~/Documents/notes/todo.org"
+                                    "~/Documents/notes/schedule.org"
+                                    "~/Documents/notes/jira/"))
 
-              (define-key global-map "\C-ca" 'org-agenda)
-              (evil-leader/set-key "a" 'org-agenda)
+       (define-key global-map "\C-ca" 'org-agenda)
+       (evil-leader/set-key "a" 'org-agenda)
      #+END_SRC
 **** Babel
      #+BEGIN_SRC emacs-lisp
@@ -1210,16 +1250,11 @@
 **** Capture
      #+BEGIN_SRC emacs-lisp
        (setq org-capture-templates
-             '(("a" "Appointment"
-                entry (file  "~/Documents/notes/gcal.org" ) "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
-               ("l" "Link"
-                entry (file+headline "~/Documents/notes/links.org" "Links") "* %? %^L %^g \n%T" :prepend t)
-               ("t" "To Do Item"
-                entry (file+headline "~/Documents/notes/todo.org" "To Do") "* TODO %?\n%u" :prepend t)
-               ("n" "Note"
-                entry (file+headline "~/Documents/notes/todo.org" "Notes") "* %?\n%u" :prepend t)
-               ("j" "Journal"
-                entry (file+datetree "~/Documents/notes/journal.org" "Journal") (file "~/.config/emacs/journal.orgtmpl"))
+             '(("a" "Appointment" entry (file  "~/Documents/notes/gcal.org" ) "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
+               ("l" "Link" entry (file+headline "~/Documents/notes/links.org" "Links") "* %? %^L %^g \n%T" :prepend t)
+               ("t" "To Do Item" entry (file+headline "~/Documents/notes/todo.org" "To Do") "* TODO %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n" :prepend t)
+               ("n" "Note" entry (file+headline "~/Documents/notes/todo.org" "Notes") "* %?\n%u" :prepend t)
+               ("j" "Journal" entry (file+datetree "~/Documents/notes/journal.org" "Journal") (file "~/.config/emacs/journal.orgtmpl"))
                ))
 
 
@@ -1244,7 +1279,20 @@
       #+END_SRC
 **** Evil
      #+BEGIN_SRC emacs-lisp
-       (use-package org-evil :ensure t)
+       (use-package evil-org
+         :ensure t
+         :after org
+         :config
+         (add-hook 'org-mode-hook 'evil-org-mode)
+         (add-hook 'evil-org-mode-hook
+                   (lambda ()
+                     (evil-org-set-key-theme)))
+         (require 'evil-org-agenda)
+         (evil-org-agenda-set-keys))
+
+       ;;Open org-links in evil mode
+       (define-key global-map "\C-co" 'evil-org-open-links)
+       (evil-leader/set-key "o" 'evil-org-open-links)
      #+END_SRC
 **** Export Formats
 ***** asciidoc
@@ -1269,10 +1317,12 @@
        )
        (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
        (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
-
-
+     #+END_SRC
+     
+     If token expires it is you'll start having http 400 errors. To fix just do a simple: org-gcal-refresh-token!
      #+END_SRC
 **** Jira     
+***** package     
      #+BEGIN_SRC emacs-lisp
        (defun org-jira-login()
          (interactive)
@@ -1291,15 +1341,29 @@
 ***** customizations
       #+BEGIN_SRC emacs-lisp
         (defvar org-jira-selected-board nil)
+        (defvar org-jira-selected-sprint nil)
+        (defvar org-jira-selected-epic nil)
+
         (defvar org-jira-boards-cache ())
         (defvar org-jira-sprint-by-board-cache ())
+        (defvar org-jira-epic-by-board-cache ())
 
+        ;;
+        ;; Boards
+        ;;
         (defun org-jira-list-boards()
           "List all boards."
           (unless org-jira-boards-cache
             (setq org-jira-boards-cache (jiralib--agile-call-sync "/rest/agile/1.0/board" 'values))
             )
           org-jira-boards-cache)
+
+        (defun org-jira-get-board-id()
+          "Select a board if one not already selected."
+          (unless org-jira-selected-board
+            (setq org-jira-selected-board (org-jira-board-completing-read)))
+            (cdr (assoc 'id org-jira-selected-board))
+          )
 
         (defun org-jira-get-board()
           "Select a board if one not already selected."
@@ -1323,6 +1387,9 @@
             (car (seq-filter #'(lambda (a) (equal (cdr (assoc 'name a)) board-name)) boards)))
           )
 
+        ;;
+        ;; Sprint
+        ;;
         (defun org-jira-get-project-boards(project-id)
           "Find the board of the project."
           )
@@ -1457,9 +1524,9 @@
 
         ;;
         ;; Populate caches
-        ;; 
-        (jiralib-get-users "SB")
-        (org-jira-list-boards)
+
+        ;;(jiralib-get-users "SB")
+       ;; (org-jira-list-boards)
       #+END_SRC
 ***** hydra
       #+BEGIN_SRC emacs-lisp
@@ -1824,7 +1891,7 @@
          :init (add-to-list 'company-backends 'company-lsp))
 
      #+END_SRC
-***** COMMENT Java
+***** Java
       #+BEGIN_SRC emacs-lisp
         (use-package lsp-java
           :init
@@ -1833,29 +1900,34 @@
 
           :ensure t)
 
-        (add-hook 'java-mode-hook #'lsp-java-enable)
+        ;(add-hook 'java-mode-hook #'lsp-java-enable)
       #+END_SRC
-***** IntelliJ
+***** COMMENT IntelliJ
       #+BEGIN_SRC emacs-lisp
-        (use-package lsp-intellij
-          :ensure t)
 
-        ;(setq company-lsp-enable-snippet t
-        ;      company-lsp-cache-candidates t)
-        ;(push 'company-lsp company-backends)
-        ; (add-hook 'java-mode-hook #'lsp-intellij-enable)
+        (use-package lsp-intellij :load-path "~/workspace/src/github.com/Ruin0x11/lsp-intellij") 
+
+        ;; Since we use the source, we can comment out the actual package.
+        ;;(use-package lsp-intellij :ensure t)
       #+END_SRC
 
+**** COMMENT Debug Server
+     #+BEGIN_SRC emacs-lisp
+       (use-package dap-mode :load-path "~/workspace/src/github.com/yyoncho/dap-mode") 
+       (use-package dap-ui :load-path "~/workspace/src/github.com/yyoncho/dap-mode") 
+       (use-package dap-java :load-path "~/workspace/src/github.com/yyoncho/dap-mode") 
+     #+END_SRC
 **** Maven
      #+BEGIN_SRC emacs-lisp
        (add-to-list 'load-path "~/workspace/src/github.com/m0smith/maven-pom-mode/maven-pom-mode.el")
        (load "~/workspace/src/github.com/m0smith/maven-pom-mode/maven-pom-mode.el") 
      #+END_SRC     
-**** COMMENT Meghanada
+**** Meghanada
 ***** Package
       #+BEGIN_SRC emacs-lisp
-        (use-package meghanada
+        (use-package meghanada 
           :ensure t
+          :load-path "~/workspace/src/github.com/mopemope/meghanada-emacs/"
           :init
           (setq meghanada-java-path "java")
           (setq meghanada-maven-path "mvn")
@@ -1910,7 +1982,7 @@
           ("<" meghanada-back-jump)
           ("q" nil "quit"))
 
-        (evil-leader/set-key "m" 'meghanada-hydra/body)
+        (evil-leader/set-key "M" 'meghanada-hydra/body)
         (define-key evil-normal-state-map (kbd "C-z") 'meghanada-hydra/body)
       #+END_SRC
 **** Groovy
@@ -2066,9 +2138,13 @@
       (use-package idee-java :load-path "~/workspace/src/github.com/iocanel/idee/") 
       (use-package idee-python :load-path "~/workspace/src/github.com/iocanel/idee/") 
 
+      (use-package idee-maven :load-path "~/workspace/src/github.com/iocanel/idee/")
       (use-package idee-spring :load-path "~/workspace/src/github.com/iocanel/idee/") 
-;;      (use-package idee-meghanada :load-path "~/workspace/src/github.com/iocanel/idee/") 
-      (use-package idee-lsp-intellij :load-path "~/workspace/src/github.com/iocanel/idee/") 
+
+      (use-package meghanada :load-path "~/workspace/src/github.com/mopemope/meghanada-emacs/") 
+      (use-package idee-meghanada :load-path "~/workspace/src/github.com/iocanel/idee/") 
+      ;(use-package idee-lsp-intellij :load-path "~/workspace/src/github.com/iocanel/idee/") 
+      ;(use-package idee-lsp-java :load-path "~/workspace/src/github.com/iocanel/idee/") 
     #+END_SRC
 ** Operations
 *** Docker
@@ -2077,7 +2153,7 @@
       (use-package docker-tramp :ensure t)
       (use-package dockerfile-mode :ensure t)
     #+END_SRC
-*** Kubermetes
+*** Kubernetes
 **** Plugins
      #+BEGIN_SRC emacs-lisp
        (use-package kubernetes :load-path "~/workspace/src/github.com/chrisbarrett/kubernetes-el")
