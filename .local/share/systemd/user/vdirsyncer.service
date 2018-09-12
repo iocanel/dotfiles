@@ -4,7 +4,7 @@ Documentation=man:vdirsyncer(1)
 
 [Service]
 Type=oneshot
-ExecStart=/home/iocanel/.virtualenvs/bin/vdirsyncer
+ExecStart=/home/iocanel/.virtualenvs/bin/vdirsyncer sync
 
 [Install]
 WantedBy=default.target
