@@ -1134,6 +1134,8 @@
 **** Magit
      #+BEGIN_SRC emacs-lisp
        (use-package magit
+         :config
+         (setq ediff-multiframe nil)
          :ensure t)
 
        (use-package evil-magit
