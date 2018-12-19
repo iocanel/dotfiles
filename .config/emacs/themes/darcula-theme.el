@@ -80,7 +80,7 @@
                          :underline nil :slant normal :weight normal
                          :width normal :foundry nil))))
  '(cursor ((t (:foreground "#042028" :background "#708183"))))
- '(error ((t (:inherit 'default :underline (:style wave :color "red")))))
+ '(error ((t (:inherit 'default :foreground "red" :underline (:style wave :color "red")))))
  '(compilation-error ((t (:inherit 'default :foreground "red" :underline "red"))))
  '(scala-font-lock:var-face ((t (:foreground "#9876aa" :underline (:style wave :color "yellow") :inherit 'font-lock-variable-name-face))))
  '(sbt:error ((t (:inherit 'default :foreground "red"))))
@@ -92,7 +92,7 @@
                                         ;for a construct that is peculiar, or that greatly changes the meaning of other text.
  '(font-lock-function-name-face ((t (:foreground "#fec66c" :inherit 'default))))
                                         ;for the name of a function being defined or declared.
- '(font-lock-variable-name-face ((t (:inherit 'default))))
+ '(font-lock-variable-name-face ((t (:inherit 'default ))))
                                         ;for the name of a variable being defined or declared.
  '(font-lock-keyword-face ((t (:foreground "#cc7832" :inherit 'default))))
                                         ;for a keyword with special syntactic significance, like ‘for’ and ‘if’ in C.
@@ -108,17 +108,43 @@
                                         ;for the names of built-in functions.
  '(font-lock-preprocessor-face ((t (:inherit 'font-lock-builtin-face))))
                                         ;for preprocessor commands.
- '(font-lock-string-face ((t (:foreground "#a6c25c" :inherit 'default))))
+ '(font-lock-string-face ((t (:foreground "#629755" :inherit 'default))))
                                         ;for string constants.
- '(font-lock-doc-face ((t (:foreground "#629755" :inherit 'font-lock-comment-face))))
+ '(font-lock-doc-face ((t (:foreground "#a6c25c" :inherit 'font-lock-comment-face))))
                                         ;for documentation strings in the code.
  '(font-lock-negation-char-face ((t (:underline (:color foreground-color :style line) :inherit 'default))))
                                         ;for easily-overlooked negation characters.
+
+ '(treemacs-root-face  ((t (:foreground "#708183" :weight bold :height 125 :inherit 'font-lock-constant-face))))
+                                        ;for treemacs project root
+
+ '(ivy-current-match ((t (:inherit 'highlight :foreground "orange" ))))
+                                        ;for ivy/swiper highlight
+ '(ivy-minibuffer-match-face-1 ((t (:foreground "#629755"))))
+ '(ivy-minibuffer-match-face-2 ((t (:foreground "#629755"))))
+ '(ivy-minibuffer-match-face-3 ((t (:foreground "#629755"))))
+ '(ivy-minibuffer-match-face-4 ((t (:foreground "#629755"))))
+
  '(flymake-errline ((t (:inherit 'error))))
  '(flymake-warnline ((t (:inherit 'warning))))
+
+ '(flycheck-fringe-error ((t (:inherit 'error))))
+ '(flymake-fringe-warning ((t (:inherit 'warning))))
+
+ '(rainbow-delimiters-depth-1-face ((t (:foreground "#e78779"))))
+ '(rainbow-delimiters-depth-2-face ((t (:foreground "#a9b6c1"))))
+ '(rainbow-delimiters-depth-3-face ((t (:foreground "#528369"))))
+ '(rainbow-delimiters-depth-4-face ((t (:foreground "#c57632"))))
+ '(rainbow-delimiters-depth-5-face ((t (:foreground "#3e86a0"))))
+ '(rainbow-delimiters-depth-6-face ((t (:foreground "#e78779"))))
+ '(rainbow-delimiters-depth-7-face ((t (:foreground "#a9b6c1"))))
+ '(rainbow-delimiters-depth-8-face ((t (:foreground "#528369"))))
+ '(rainbow-delimiters-depth-9-face ((t (:foreground "#c57632"))))
+ '(rainbow-delimiters-unmatched-face ((t (:background "red"))))
+
  '(escape-glyph ((((background dark)) (:foreground "cyan")) (((type pc)) (:foreground "magenta")) (t (:foreground "brown"))))
  '(minibuffer-prompt ((t (:weight bold :slant normal :underline nil :inverse-video nil :foreground "#259185"))))
- '(highlight ((t (:background "#000000")))) ;; custom highlight to be more clear original value #0a2832"
+ '(highlight ((t (:background "#0a2030")))) ;; custom highlight to be more clear original value #0a2832"
  '(region ((t (:weight normal :slant normal :underline nil :inverse-video t :foreground "#465a61" :background "#042028"))))
  '(shadow ((t (:foreground "#465a61"))))
  '(secondary-selection ((t (:background "#0a2832"))))
