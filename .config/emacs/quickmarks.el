@@ -29,15 +29,19 @@
                          (qutebrowser . https://qutebrowser.org)
                          (ranger . https://github.com/ranger/ranger)
                          ;; work
+                         (ap4k . https://github.com/ap4k/ap4k)
+                         (arquillian-cube . https://github.com/arquillian/arquillian-cube)
                          (dagger . https://github.com/square/dagger)
                          (docker . https://docker.io)
                          (fabric8 . https://fabric8.io)
                          (fabric8\ maven\ plugin . https://maven.fabric8.io)
+                         (fabric8-maven-plugin . https://maven.fabric8.io)
                          (gradle . https://gradle.org)
                          (grails . https://grails.org)
                          (istio . https://istio.io)
                          (kotlin . https://kotlinlang.org)
                          (kubernetes . https://kubernetes.io)
+                         (metaparticle . https://metaparticle.io)
                          (maven . https://maven.apache.org)
                          (microsoft\ sql\ server . https://www.microsoft.com/en-us/sql-server/sql-server-2017)
                          (micronaut . http://micronaut.io)
@@ -57,6 +61,9 @@
                          ;; kubernetes/openshift resources
                          (DeploymentConfig . https://docs.openshift.com/enterprise/3.0/dev_guide/deployments.html)
                          (Route . https://docs.openshift.com/enterprise/3.0/dev_guide/routes.html)
+                         ;; People
+                         (Brendand\ Burns . https://twitter.com/brendandburns)
+                         (Rolland\ Huss . https://ro14nd.de/about)
                          )
       )
 

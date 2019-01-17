@@ -60,6 +60,12 @@
     (beacon-mode 1)
   )
 #+END_SRC
+*** Browser
+
+#+BEGIN_SRC emacs-lisp
+  (setq browse-url-browser-function 'browse-url-generic
+        browse-url-generic-program "chrome")
+#+END_SRC
 *** Buffers
     Use ibuffer instead of the default buffer list.
     #+BEGIN_SRC emacs-lisp
@@ -519,6 +525,11 @@
          (interactive)
          (set-face-attribute 'default nil :height 100)
          )
+       (defun presenetation-mode()
+         "Modify theme for presentations use"
+         (interactive)
+         (set-face-attribute 'default nil :height 150)
+         )
      #+END_SRC
 *** Status Line
 **** COMMENT powerline
@@ -630,7 +641,7 @@
        (add-hook 'eww-after-render-hook 'eww-hydra/body)
 
      #+END_SRC
-**** Custom     
+**** COMMENT Custom     
      #+BEGIN_SRC emacs-lisp
        (defun xdg-open (url &rest ignore)
          "Calls xdg-open"
@@ -667,7 +678,7 @@
         (use-package evil-mu4e
           :ensure t)
 
-        (evil-leader/set-key "m" 'mu4e)
+        (evil-leader/set-key "a m" 'mu4e)
       #+END_SRC
 ***** account info
       #+BEGIN_SRC emacs-lisp
@@ -928,23 +939,21 @@
 #+END_SRC
 ***** Aliases
       #+BEGIN_SRC emacs-lisp
-                (add-hook 'eshell-mode-hook (lambda ()
-                                              (eshell/alias "cls" "ehsell/clear")
-                                              (eshell/alias "clear" "eshell/clear")
-                                              (eshell/alias "d" "dired $1")
-                                              (eshell/alias "e" "find-file $1")
-                                              (eshell/alias "ee" "find-file-other-window $1")
-                                              (eshell/alias "emacs" "find-file-other-window $1")
-                                              (eshell/alias "ff" "find-file $1")
-                                              (eshell/alias "gd" "magit-diff-unstaged")
-                                              (eshell/alias "gds" "magit-diff-staged")
-                                              (eshell/alias "ll" "ls -AlohG --color=always $*")
-                                              (eshell/alias "ls" "TERM=ansi ls --color=always $*")
-                                              (eshell/alias "mci" "mvn clean install")
-                                              (eshell/alias "vi" "find-file-other-window $1")
-
-
-        ))
+        (add-hook 'eshell-mode-hook (lambda ()
+                                      (eshell/alias "cls" "eshell/clear")
+                                      (eshell/alias "clear" "eshell/clear")
+                                      (eshell/alias "d" "dired $1")
+                                      (eshell/alias "e" "find-file $1")
+                                      (eshell/alias "ee" "find-file-other-window $1")
+                                      (eshell/alias "emacs" "find-file-other-window $1")
+                                      (eshell/alias "ff" "find-file $1")
+                                      (eshell/alias "gd" "magit-diff-unstaged")
+                                      (eshell/alias "gds" "magit-diff-staged")
+                                      (eshell/alias "ll" "ls -AlohG --color=always $*")
+                                      (eshell/alias "ls" "TERM=ansi ls --color=always $*")
+                                      (eshell/alias "mci" "mvn clean install")
+                                      (eshell/alias "vi" "find-file-other-window $1")
+                                      ))
       #+END_SRC
 ***** Prompt
       #+BEGIN_SRC emacs-lisp
@@ -1243,13 +1252,13 @@
        (use-package evil-magit
          :ensure t)
 
-       (use-package magithub
-         :after magit
-         :ensure t
-         :config
-         (magithub-feature-autoinject t)
-         (setq magithub-api-timeout 30)
-         (setq magithub-clone-default-directory "~/workspace/src/github.com"))
+       ;;(use-package magithub
+       ;;  :after magit
+       ;;  :ensure t
+       ;;  :config
+       ;;  (magithub-feature-autoinject t)
+       ;;  (setq magithub-api-timeout 30)
+       ;;  (setq magithub-clone-default-directory "~/workspace/src/github.com"))
 
        ;; Key bindings
        (global-set-key (kbd "C-c g s") 'magit-status)
@@ -1301,13 +1310,14 @@
 **** Agenda
      #+BEGIN_SRC emacs-lisp
        (require 'org-agenda)
-       (setq org-agenda-files (list "~/Documents/notes/gcal.org"
+       (setq org-agenda-files (list "~/Documents/calendars/personal.org"
+                                    "~/Documents/calendars/work.org"
                                     "~/Documents/notes/todo.org"
                                     "~/Documents/notes/schedule.org"
                                     "~/Documents/notes/jira/"))
 
        (define-key global-map "\C-ca" 'org-agenda)
-       (evil-leader/set-key "a" 'org-agenda)
+       (evil-leader/set-key "a a" 'org-agenda)
      #+END_SRC
 **** Babel
      #+BEGIN_SRC emacs-lisp
@@ -1410,23 +1420,31 @@
         (use-package ox-gfm :ensure t)
       #+END_SRC
 **** Google Calendar
-     #+BEGIN_SRC emacs-lisp
-        (let ((client-id (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show services/google/org-cal/iocanel@gmail.com/client-id")))
-              (client-secret (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show services/google/org-cal/iocanel@gmail.com/client-secret"))))
+I need to deal with two problems:
 
-       (use-package org-gcal
-         :ensure t
-         :config
-         (setq org-gcal-client-id client-id
-               org-gcal-client-secret client-secret
-               org-gcal-file-alist '(("iocanel@gmail.com" .  "~/Documents/notes/gcal.org"))))
-       )
+1) my work account can't be controlled from my personal account.
+2) org-gcal doesn't support multiple accounts yet.
+
+So I controlling my personal calendar from my work calendar and I configure org-gcal to work with my work calendar.
+     #+BEGIN_SRC emacs-lisp
+       (let ((client-id (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show services/google/vdirsyncer/ikanello@redhat.com/client-id")))
+             (secret (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show services/google/vdirsyncer/ikanello@redhat.com/secret"))))
+
+         (use-package org-gcal
+           :load-path "~/workspace/src/github.com/iocanel/org-gcal.el/"
+           :ensure t)
+
+           (setq org-gcal-client-id client-id
+                 org-gcal-client-secret secret
+                 org-gcal-file-alist '(("iocanel@gmail.com" .  "~/Documents/calendars/personal.org")
+                                       ("ikanello@redhat.com" . "~/Documents/calendars/work.org")))
+           )
        (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
        (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
+
+
      #+END_SRC
-     
      If token expires it is you'll start having http 400 errors. To fix just do a simple: org-gcal-refresh-token!
-     #+END_SRC
 **** Indent
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook (lambda () (org-indent-mode)))
@@ -1701,6 +1719,9 @@
                     (flyspell-mode 1)
                     (org-present-read-write)))
 
+
+        (evil-leader/set-key "p s" 'org-present)
+        (evil-leader/set-key "p q" 'org-present-quit)
         (define-key org-present-mode-keymap (kbd "C-c l") 'org-present-next)
         (define-key org-present-mode-keymap (kbd "C-c h") 'org-present-prev)
       #+END_SRC
@@ -2051,7 +2072,6 @@
 ***** Java
       #+BEGIN_SRC emacs-lisp
         (use-package lsp-java
-          :load-path "~/workspace/src/github.com/emacs-lsp/lsp-java"
           :init
           (setq lsp-java-organize-imports nil
                 lsp-java-save-action-organize-imports nil
@@ -2063,7 +2083,7 @@
                  (java-mode . lsp)
                  (java-mode . flycheck-mode)
                  (java-mode . company-mode)
-                 ;(java-mode . lsp-ui-mode)
+                 (java-mode . lsp-ui-mode)
                  )
           :ensure t)
 
@@ -2171,7 +2191,7 @@
           ("q" nil "quit"))
 
         (evil-leader/set-key "M" 'meghanada-hydra/body)
-        (define-key evil-normal-state-map (kbd "C-z") 'meghanada-hydra/body)
+        ;(define-key evil-normal-state-map (kbd "C-z") 'meghanada-hydra/body)
       #+END_SRC
 **** Groovy
      #+BEGIN_SRC emacs-lisp
