@@ -1,0 +1,11 @@
+;;; File: emacs-format-file
+;;; Stan Warford
+;;; 17 May 2006
+
+(require editorconfig)
+
+(defun emacs-format-function ()
+   "Format the whole buffer."
+   (editorconfig-format-buffer)
+   (save-buffer)
+)

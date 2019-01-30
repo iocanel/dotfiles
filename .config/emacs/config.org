@@ -1,5 +1,14 @@
 * My Emacs configuration
 ** Internal Settings
+*** Byte compile on startup
+#+begin_src emacs-lisp
+  (defun byte-recompile-emacs-d()
+    (interactive)
+    "Byte compile everything under emacs.d."
+    (byte-recompile-directory (expand-file-name "~/.emacs.d") 0))
+
+  (add-hook 'emacs-startup-hook 'byte-recompile-emacs-d)
+#+end_src
 *** Garbage collection
     #+BEGIN_SRC emacs-lisp
       (setq gc-cons-threshold most-positive-fixnum
@@ -12,6 +21,11 @@
     #+BEGIN_SRC emacs-lisp
       (setq max-lisp-eval-depth 10000)
     #+END_SRC
+*** El get
+#+begin_src emacs-lisp
+(use-package el-get
+:ensure t)
+#+end_src
 ** General Settings
 *** Aliases
     #+BEGIN_SRC emacs-lisp
@@ -61,7 +75,6 @@
   )
 #+END_SRC
 *** Browser
-
 #+BEGIN_SRC emacs-lisp
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "chrome")
@@ -196,9 +209,12 @@
         :ensure t
         :config
         (dashboard-setup-startup-hook)
-        (setq dahboard-items `((recents . 10)))
+        (setq dahboard-items `((recents . 10)
+                               (agenda . 10)
+                               (projects . 5)))
         (setq dahboard-banner-logo-title "Emacs")
-        (setq initial-buffer-choice 'dashboard-refresh-buffer)
+        (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+        ;(setq initial-buffer-choice 'dashboard-refresh-buffer)
         )
     #+END_SRC
 *** Evil Mode
@@ -219,18 +235,16 @@
     #+END_SRC
 *** Flyspell 
     #+BEGIN_SRC emacs-lisp
+      (defun flyspell-enable()
+        (flyspell-mode 1)) 
+
+      (defun flyspell-disable()
+        (flyspell-mode -1))
+
       (use-package flyspell
         :ensure t
         :diminish flyspell-mode
-        :init
-        (add-hook 'prog-mode-hook 'flyspell-prog-mode)
-
-        (dolist (hook '(text-mode-hook org-mode-hook))
-          (add-hook hook (lambda () (flyspell-mode 1))))
-
-        (dolist (hook '(change-log-mode-hook log-edit-mode-hook org-agenda-mode-hook))
-          (add-hook hook (lambda () (flyspell-mode -1))))
-
+        :hook ((prog-mode org-mode) . flyspell-enable)
         :config
         (setq ispell-program-name "/usr/bin/aspell"
               ispell-local-dictionary "en_US"
@@ -277,7 +291,36 @@
         :ensure t
         :bind ("M-y" . popup-kill-ring))
     #+END_SRC
-*** Swiwper
+*** Shackles
+#+begin_src emacs-lisp
+  (use-package shackle
+    :ensure t
+    :config
+   (setq shackle-lighter "")
+      (setq shackle-select-reused-windows nil) ; default nil
+      (setq shackle-default-alignment 'below) ; default below
+      (setq shackle-default-size 0.4) ; default 0.5
+
+      (setq shackle-rules
+            ;; CONDITION(:regexp)            :select     :inhibit-window-quit   :size+:align|:other     :same|:popup
+            '((compilation-mode              :select nil                                               )
+              ("*undo-tree*"                                                    :size 0.05 :align right)
+              ("*Shell Command Output*"      :select nil                                               )
+              ("\\*Async Shell.*\\*" :regexp t :ignore t                                                 )
+              (occur-mode                    :select nil                                   :align t    )
+              ("*Help*"                      :select t   :inhibit-window-quit t :other t               )
+              ("*Completions*"                                                  :size 0.3  :align t    )
+              ("*Messages*"                  :select nil :inhibit-window-quit t :other t               )
+              ("\\*[Wo]*Man.*\\*"    :regexp t :select t   :inhibit-window-quit t :other t               )
+              ("\\*poporg.*\\*"      :regexp t :select t                          :other t               )
+              ("\\`\\*helm.*?\\*\\'"   :regexp t                                    :size 0.3  :align t    )
+              ("*Calendar*"                  :select t                          :size 0.3  :align below)
+              ("*info*"                      :select t   :inhibit-window-quit t                         :same t)
+              ))
+
+      (shackle-mode 1))
+#+end_src
+*** Swiper
     #+BEGIN_SRC emacs-lisp
       (use-package swiper
         :bind ("C-s" . 'swiper)
@@ -303,7 +346,7 @@
      #+BEGIN_SRC emacs-lisp
        (use-package ace-window :bind  ("M-o" . 'ace-window))
      #+END_SRC
-**** Splitting     
+**** Splitting
      #+BEGIN_SRC emacs-lisp
        (defun split-and-follow-horizontally ()
          (interactive)
@@ -326,7 +369,11 @@
       (use-package which-key
         :ensure t
         :init
-        (which-key-mode))
+        :config
+        (setq which-key-idle-delay 1))
+
+       (evil-leader/set-key "w" 'which-key-mode)
+
     #+END_SRC  
 ** UI
 *** Layout
@@ -412,11 +459,9 @@
      #+BEGIN_SRC emacs-lisp
        (use-package linum-relative
          :ensure t
-         :hook (prog-mode . linum-relative-mode)
-         :init
-         (setq linum-relative-current-symbol "")
+         :hook ((prog-mode maven-pom-mode org-mode) . linum-relative-mode))
 
-       (evil-leader/set-key "r" 'linum-relative-toggle))
+       (evil-leader/set-key "r" 'linum-relative-toggle)
      #+END_SRC
 **** Sudo edit
      This allows editing files that require root access.
@@ -436,8 +481,7 @@
        (use-package smartparens
          :ensure t
          :config
-         (smartparens-global-mode)
-         )
+         (smartparens-global-mode))
 
        (use-package evil-smartparens
          :ensure t)
@@ -447,9 +491,9 @@
      #+BEGIN_SRC emacs-lisp
        (use-package rainbow-delimiters
          :ensure t
+         :hook (prog-mode . rainbow-delimiters-mode)
          :init
          (rainbow-delimiters-mode 1))
-
 
        (custom-set-faces
         ;; custom-set-faces was added by Custom.
@@ -468,8 +512,6 @@
         '(rainbow-delimiters-depth-9-face ((t (:foreground "#c57632")))) ;; yellow
         '(rainbow-delimiters-unmatched-face ((t (:background "red"))))
         )
-
-       (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
      #+END_SRC     
 **** Rainbow mode
 #+BEGIN_SRC emacs-lisp
@@ -480,6 +522,7 @@
 **** Visual fill column
      #+BEGIN_SRC emacs-lisp
        (use-package visual-fill-column
+         :hook (visual-line-mode . visual-fill-column-mode)
          :ensure t)
      #+END_SRC
 *** Theme
@@ -596,14 +639,23 @@
        (setq powerline-arrow-shape 'arrow)
      #+END_SRC     
 *** Completion
-** Tools
+** Tool
+*** Anki
+**** editor
+#+begin_src emacs-lisp
+  (use-package anki-editor
+    :ensure t
+    :defer t)
+#+end_src
 *** Browser
 **** Package
      #+BEGIN_SRC emacs-lisp
        (use-package eww
+         :defer t
          :ensure t)
 
        (use-package eww-lnum
+         :defer t
          :ensure t)
      #+END_SRC
 **** Hydra
@@ -641,7 +693,7 @@
        (add-hook 'eww-after-render-hook 'eww-hydra/body)
 
      #+END_SRC
-**** COMMENT Custom     
+**** COMMENT Custom
      #+BEGIN_SRC emacs-lisp
        (defun xdg-open (url &rest ignore)
          "Calls xdg-open"
@@ -649,16 +701,17 @@
 
        (setq browse-url-browser-function 'xdg-open)
      #+END_SRC
-*** demo-it     
+*** demo-it
 #+BEGIN_SRC emacs-lisp
   (use-package demo-it
+    :defer t
     :ensure t)
 
-  (evil-leader/set-key "d s" 'demo-it-start)
-  (evil-leader/set-key "d e" 'demo-it-end)
-  (evil-leader/set-key "d p" 'demo-it-step)
-  (evil-leader/set-key "d q" 'demo-it-presentation-quit)
-  (evil-leader/set-key "d a" 'demo-it-presentation-advance)
+  (evil-leader/set-key "a d s" 'demo-it-start)
+  (evil-leader/set-key "a d e" 'demo-it-end)
+  (evil-leader/set-key "a d p" 'demo-it-step)
+  (evil-leader/set-key "a d q" 'demo-it-presentation-quit)
+  (evil-leader/set-key "a d a" 'demo-it-presentation-advance)
 #+END_SRC
 *** Email
 **** mu4e
@@ -769,6 +822,10 @@
         ;; Don't ask to quit... why is this the default?
         (setq mu4e-confirm-quit nil)
         (setq mu4e-headers-visible-lines 25)
+        ;; convert org mode to HTML automatically
+        (setq org-mu4e-convert-to-html t)
+
+        (defalias 'org-mail 'org-mu4e-compose-org-mode)
 
         (add-hook 'mu4e-view-mode-hook 'mu4e-mark-region-code)
                 ;;; Show Smileys
@@ -917,15 +974,15 @@
 **** Eshell
 ***** Package
       #+BEGIN_SRC emacs-lisp
-        (use-package eshell :ensure t)
-      #+END_SRC
-***** Visual commands
-      #+BEGIN_SRC emacs-lisp
-        (add-hook 'eshell-mode-hook
-                  (lambda ()
-                    (add-to-list 'eshell-visual-commands "ssh")
-                    (add-to-list 'eshell-visual-commands "tail")
-                    (add-to-list 'eshell-visual-commands "top")))
+        (use-package eshell 
+          :defer t
+          :ensure t
+          :hook (eshell-mode . (lambda ()
+                                 (progn
+                                   (add-to-list 'eshell-visual-commands "ssh")
+                                   (add-to-list 'eshell-visual-commands "tail")
+                                   (add-to-list 'eshell-visual-commands "top"))))
+          )
       #+END_SRC
 ***** Utils
 #+BEGIN_SRC emacs-lisp
@@ -988,7 +1045,7 @@
                                         (propertize (pwd-shorten-dirs (pwd-replace-home (eshell/pwd))) 'face `(:foreground "#528369"))
                                         (propertize "\n" 'face `(:foreground "#c57632"))
                                         (propertize " $ " 'face `(:foreground "#c57632")))))
-        (setq eshell-highlight-prompt t):1
+        (setq eshell-highlight-prompt t)
       #+End_SRC
 ***** Disable highlighting
       #+BEGIN_SRC emacs-lisp
@@ -999,9 +1056,6 @@
       #+BEGIN_SRC emacs-lisp
         (use-package esh-autosuggest
         :hook (eshell-mode . esh-autosuggest-mode)
-          ;; If you have use-package-hook-name-suffix set to nil, uncomment and use the
-          ;; line below instead:
-        ;; :hook (eshell-mode-hook . esh-autosuggest-mode)
         :ensure t)
       #+END_SRC
 **** Mutli-term
@@ -1307,11 +1361,16 @@
       #+END_SRC
 ** Modes
 *** Org Mode
+#+begin_src emacs-lisp
+(setq org-modules '(org-w3m org-bbdb org-bibtex org-docview org-gnus org-info org-irc org-mhe org-rmail org-eww org-learn))
+#+end_src
 **** Agenda
      #+BEGIN_SRC emacs-lisp
        (require 'org-agenda)
        (setq org-agenda-files (list "~/Documents/calendars/personal.org"
                                     "~/Documents/calendars/work.org"
+                                    "~/Documents/notes/personal.org"
+                                    "~/Documents/notes/work.org"
                                     "~/Documents/notes/todo.org"
                                     "~/Documents/notes/schedule.org"
                                     "~/Documents/notes/jira/"))
@@ -1366,15 +1425,35 @@
 **** Capture
      #+BEGIN_SRC emacs-lisp
        (setq org-capture-templates
-             '(("a" "Appointment" entry (file  "~/Documents/notes/gcal.org" ) "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
+             '(
                ("l" "Link" entry (file+headline "~/Documents/notes/links.org" "Links") "* %? %^L %^g \n%T" :prepend t)
-               ("t" "To Do Item" entry (file+headline "~/Documents/notes/todo.org" "To Do") "* TODO %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n" :prepend t)
                ("n" "Note" entry (file+headline "~/Documents/notes/todo.org" "Notes") "* %?\n%u" :prepend t)
                ("j" "Journal" entry (file+datetree "~/Documents/notes/journal.org" "Journal") (file "~/.config/emacs/journal.orgtmpl"))
+
+               ("c" "Calendar")
+               ("cw" "Work Event" entry (file  "~/Documents/calendars/work.org" ) "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
+               ("cp" "Personal Event" entry (file  "~/Documents/calendars/work.org" ) "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
+
+               ("t" "To Do")
+               ("tw" "Work To Do Item" entry (file+headline "~/Documents/notes/work.org" "To Do") "* TODO %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n" :prepend t)
+               ("tp" "Personal To Do Item" entry (file+headline "~/Documents/notes/personal.org" "To Do") "* TODO %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n" :prepend t)
+
+               ("f" "Flashcards")
+               ("fh" "History") 
+               ("fhf" "History facts"  entry (file+headline "~/Documents/flashcards/history.org" "History") "* Fact :drill:\n %t\n %^{The fact}\n")
+               ("fhq" "History questions"  entry (file+headline "~/Documents/flashcards/history.org" "History") "* Question :drill:\n %t\n %^{The question} \n** Answer: \n%^{The answer}")
+               ("fm" "Maths")
+               ("fmf" "Math facts"  entry (file+headline "~/Documents/flashcards/maths.org" "Maths") "* Fact :drill:\n %t\n %^{The fact}\n")
+               ("fmq" "Math questions"  entry (file+headline "~/Documents/flashcards/maths.org" "Maths") "* Question :drill:\n %t\n %^{The question} \n** Answer: \n%^{The answer}")
+               ("fc" "Computer Science")
+               ("fcf" "Computer Science facts"  entry (file+headline "~/Documents/flashcards/computer-science.org" "Computer Science") "* Fact :drill:\n %t\n %^{The fact}\n")
+               ("fcq" "Computer Science questions"  entry (file+headline "~/Documents/flashcards/computer-science.org" "Computer Science") "* Question :drill:\n %t\n %^{The question} \n** Answer: \n%^{The answer}")
+               ("fs" "Sports")
+               ("fsf" "Sports facts"  entry (file+headline "~/Documents/flashcards/sprots.org" "Sports") "* Fact :drill:\n %t\n %^{The fact}\n")
+               ("fsq" "Sports questions"  entry (file+headline "~/Documents/flashcards/sprots.org" "Sports") "* Question :drill:\n %t\n %^{The question} \n** Answer: \n%^{The answer}")
+               ("fl" "Languages")
+               ("fls" "Spanish"  entry (file+headline "~/Documents/flashcards/languages/spanish.org" "Spanish") "* Question :drill:\n %t\n %^{The question} \n** Answer: \n%^{The answer}")
                ))
-
-
-
        (define-key global-map "\C-cc" 'org-capture)
        (evil-leader/set-key "c" 'org-capture)
      #+END_SRC
@@ -1393,6 +1472,22 @@
         (use-package ob-go :ensure t)
         (use-package ob-typescript :ensure t)
       #+END_SRC
+**** Drill
+#+begin_src emacs-lisp
+  ;;This is an org-drill fork that contains the fix for the `Invalid match tag: ""`.
+   
+  ;; Only install the package if missing
+  (when (require 'org-drill nil 'noerror)
+    (el-get-bundle iocanel/org-drill)
+
+    ;; We also need some dependencies
+    (el-get-bundle org-learn
+      :url "https://raw.githubusercontent.com/tkf/org-mode/master/contrib/lisp/org-learn.el")
+    )
+
+  (require 'org-learn)
+  (require 'org-drill)
+#+end_src
 **** Evil
      #+BEGIN_SRC emacs-lisp
        (use-package evil-org
@@ -1757,6 +1852,10 @@ So I controlling my personal calendar from my work calendar and I configure org-
       #+BEGIN_SRC emacs-lisp
         (use-package ox-reveal :ensure t)
       #+END_SRC
+**** Templates
+      #+BEGIN_SRC emacs-lisp
+        (setq org-structure-template-alist  '(("a" . "export ascii") ("c" . "center") ("C" . "comment") ("e" . "example") ("E" . "export") ("h" . "export html") ("l" . "export latex") ("q" . "quote") ("s" . "src") ("v" . "verse")))
+      #+END_SRC
 ** Development
 *** Tools
 **** Flycheck
@@ -2035,7 +2134,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
        (add-hook 'css-mode-hook 'add-emmet-expand-to-smart-tab-completions)
      #+END_SRC
 **** Java
-**** COMMENT Eclim
+***** COMMENT Eclim
      #+BEGIN_SRC emacs-lisp
        (use-package eclim
          :ensure t
@@ -2055,7 +2154,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
 
        (add-hook 'java-mode-hook (lambda () (eclim-mode 1)))
      #+END_SRC
-**** Language Server
+***** Language Server
      #+BEGIN_SRC emacs-lisp
        (use-package lsp-mode
          :ensure t)
@@ -2069,7 +2168,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
          :init (add-to-list 'company-backends 'company-lsp))
 
      #+END_SRC
-***** Java
+****** Java
       #+BEGIN_SRC emacs-lisp
         (use-package lsp-java
           :init
@@ -2093,7 +2192,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
         (evil-leader/set-key "u o" 'lsp-java-organize-imports)
         (evil-leader/set-key "u u" 'lsp-java-update-project-configuration)
       #+END_SRC
-***** COMMENT IntelliJ
+****** COMMENT IntelliJ
       #+BEGIN_SRC emacs-lisp
 
         (use-package lsp-intellij :load-path "~/workspace/src/github.com/Ruin0x11/lsp-intellij") 
@@ -2102,8 +2201,8 @@ So I controlling my personal calendar from my work calendar and I configure org-
         ;;(use-package lsp-intellij :ensure t)
       #+END_SRC
 
-**** Debug Server
-***** Dap Melpa
+***** Debug Server
+****** Dap Melpa
      #+BEGIN_SRC emacs-lisp
        (use-package dap-mode
          :ensure t :after lsp-mode
@@ -2113,8 +2212,9 @@ So I controlling my personal calendar from my work calendar and I configure org-
 
        (use-package dap-java :after (lsp-java))
 
+       (evil-leader/set-key "d" 'dap-hydra)
      #+END_SRC
-***** COMMENT Dap Local
+****** COMMENT Dap Local
 #+BEGIN_SRC 
 (use-package dap-mode :load-path "~/workspace/src/github.com/yyoncho/dap-mode"
   :after lsp-mode
@@ -2124,13 +2224,13 @@ So I controlling my personal calendar from my work calendar and I configure org-
 (use-package dap-java :load-path "~/workspace/src/github.com/yyoncho/dap-mode"
   :after lsp-java) 
 #+END_SRC
-**** Maven
+***** Maven
      #+BEGIN_SRC emacs-lisp
        (add-to-list 'load-path "~/workspace/src/github.com/m0smith/maven-pom-mode/maven-pom-mode.el")
        (load "~/workspace/src/github.com/m0smith/maven-pom-mode/maven-pom-mode.el") 
      #+END_SRC     
-**** Meghanada
-***** Package
+***** Meghanada
+****** Package
       #+BEGIN_SRC emacs-lisp
                 (use-package meghanada 
                   :ensure t
@@ -2153,7 +2253,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
                               )
         ;;))
       #+END_SRC
-***** Hydra
+****** Hydra
       #+BEGIN_SRC emacs-lisp
         (defhydra meghanada-hydra (:hint nil :exit t)
           "
@@ -2197,6 +2297,25 @@ So I controlling my personal calendar from my work calendar and I configure org-
      #+BEGIN_SRC emacs-lisp
        (use-package groovy-mode :ensure t)
      #+END_SRC
+**** Logo
+***** COMMENT Installation
+#+begin_src sh
+  wget http://ftp.de.debian.org/debian/pool/main/u/ucblogo/ucblogo_5.5.orig.tar.gz
+  tar xf ucblogo_5.5.orig.tar.gz
+  cp -r ucblogo-5.5/emacs/ ~/.emacs.d/logo
+  cp -r ucblogo-5.5/helpfiles/ ~/.emacs.d/logo/
+  cp -r ucblogo-5.5/docs/ ~/.emacs.d/logo/
+#+end_src
+***** Mode
+#+begin_src emacs-lisp
+  (add-to-list 'load-path "~/.emacs.d/logo")
+  (autoload 'logo-mode "logo")
+  (setq auto-mode-alist (append '(("\\.lgo?$" . logo-mode)) auto-mode-alist))
+  (setq logo-binary-name "/usr/bin/logo")
+  (setq logo-tutorial-path "~/.emacs.d/logo/")
+  (setq logo-help-path "~/.emacs.d/logo/helpfiles/")
+  (setq logo-info-file "~/.emacs.d/logo/docs/ucblogo.info")
+#+end_src
 **** Kotlin
      #+BEGIN_SRC emacs-lisp
        (use-package kotlin-mode :ensure t)

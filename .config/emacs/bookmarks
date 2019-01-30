@@ -1,8 +1,13 @@
-;;;; Emacs Bookmark Format Version 1 ;;;;
+;;;; Emacs Bookmark Format Version 1 ;;;; -*- coding: utf-8-emacs -*- 
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("org-capture-last-stored"
+(("sundrio"
+ (filename . "~/Documents/sundrio/")
+ (front-context-string . "Documents\n  drwx")
+ (rear-context-string . "96 Feb 27  2018 ")
+ (position . 239))
+("org-capture-last-stored"
  (filename . "~/Documents/notes/todo.org")
  (front-context-string . "** TODO Review H")
  (rear-context-string . "* Today\n* To Do\n")
@@ -33,7 +38,7 @@
  (rear-context-string)
  (position . 1))
 ("darcula-theme.el"
- (filename . "~/.config/emacs/darcula-theme.el")
+ (filename . "~/.config/emacs/themes/")
  (front-context-string . ";;; darcula-them")
  (rear-context-string)
  (position . 1))

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+function enableDoom() { 
+	unlink ~/.emacs.d
+	ln -s ~/.emacs.doom.d ~/.emacs.d
+}
+
+function restoreEmacs() {
+	unlink ~/.emacs.d
+	ln -s ~/.emacs.custom.d ~/.emacs.d
+}
+
+pkill emacs
+trap restoreEmacs EXIT
+enableDoom
+/usr/bin/emacs $*
