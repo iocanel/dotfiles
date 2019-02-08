@@ -291,7 +291,7 @@
         :ensure t
         :bind ("M-y" . popup-kill-ring))
     #+END_SRC
-*** Shackles
+*** Shackes
 #+begin_src emacs-lisp
   (use-package shackle
     :ensure t
@@ -304,9 +304,10 @@
       (setq shackle-rules
             ;; CONDITION(:regexp)            :select     :inhibit-window-quit   :size+:align|:other     :same|:popup
             '((compilation-mode              :select nil                                               )
-              ("*undo-tree*"                                                    :size 0.05 :align right)
+              ("\\*undo-tree\\*"      :regexp t                                 :size 0.05 :align right)
               ("*Shell Command Output*"      :select nil                                               )
-              ("\\*Async Shell.*\\*" :regexp t :ignore t                                                 )
+              ("\\*Async Shell.*\\*" :regexp t :ignore t                                               )
+              ("\\*Slack.*"   :regexp t      :select nil                                               )
               (occur-mode                    :select nil                                   :align t    )
               ("*Help*"                      :select t   :inhibit-window-quit t :other t               )
               ("*Completions*"                                                  :size 0.3  :align t    )
@@ -316,9 +317,9 @@
               ("\\`\\*helm.*?\\*\\'"   :regexp t                                    :size 0.3  :align t    )
               ("*Calendar*"                  :select t                          :size 0.3  :align below)
               ("*info*"                      :select t   :inhibit-window-quit t                         :same t)
-              ))
+              )))
 
-      (shackle-mode 1))
+      (shackle-mode 1)
 #+end_src
 *** Swiper
     #+BEGIN_SRC emacs-lisp
@@ -459,7 +460,8 @@
      #+BEGIN_SRC emacs-lisp
        (use-package linum-relative
          :ensure t
-         :hook ((prog-mode maven-pom-mode org-mode) . linum-relative-mode))
+         :hook ((prog-mode maven-pom-mode) . linum-relative-mode)
+         )
 
        (evil-leader/set-key "r" 'linum-relative-toggle)
      #+END_SRC
@@ -640,6 +642,11 @@
      #+END_SRC     
 *** Completion
 ** Tool
+*** Alert
+#+begin_src emacs-lisp 
+  (use-package alert
+    :ensure t)
+#+end_src
 *** Anki
 **** editor
 #+begin_src emacs-lisp
@@ -1203,6 +1210,63 @@
 
       (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
     #+END_SRC
+*** Slack
+#+begin_src emacs-lisp
+    (use-package slack
+      :ensure t
+      :commands (slack-start)
+      :init
+      (setq slack-buffer-emojify t) ;; if you want to enable emoji, default nil
+      (setq slack-prefer-current-team t)
+      (setq slack-modeline t)
+      :config
+
+      (slack-register-team
+       :name "springcloud"
+       :token (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show websites/slack/springcloud.slack.com/token"))
+       :subscribed-channels '(spring-cloud-k8s))
+
+      (slack-register-team
+       :name "obsidian-toaster"
+       :token (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show websites/slack/obsidian-toaster.slack.com/token"))
+       :modeline-enabled t
+       :modeline-name "springboot"
+       :subscribed-channels '(springboot))
+
+      (evil-define-key 'normal slack-info-mode-map
+        ",u" 'slack-room-update-messages)
+      (evil-define-key 'normal slack-mode-map
+        ",c" 'slack-buffer-kill
+        ",ra" 'slack-message-add-reaction
+        ",rr" 'slack-message-remove-reaction
+        ",rs" 'slack-message-show-reaction-users
+        ",pl" 'slack-room-pins-list
+        ",pa" 'slack-message-pins-add
+        ",pr" 'slack-message-pins-remove
+        ",mm" 'slack-message-write-another-buffer
+        ",me" 'slack-message-edit
+        ",md" 'slack-message-delete
+        ",u" 'slack-room-update-messages
+        ",2" 'slack-message-embed-mention
+        ",3" 'slack-message-embed-channel
+        "\C-n" 'slack-buffer-goto-next-message
+        "\C-p" 'slack-buffer-goto-prev-message)
+       (evil-define-key 'normal slack-edit-message-mode-map
+        ",k" 'slack-message-cancel-edit
+        ",s" 'slack-message-send-from-buffer
+        ",2" 'slack-message-embed-mention
+        ",3" 'slack-message-embed-channel))
+
+  (add-to-list
+   'alert-user-configuration
+   '(((:message . "@iocanel\\|Ioannis")
+      (:title . "\\(2-springboot\\|spring-cloud-k8s\\)")
+      (:category . "slack"))
+     libnotify nil))
+
+   (evil-leader/set-key "a s" 'slack-start)
+
+#+end_src
 *** Stack Exchange
 **** Package
     #+BEGIN_SRC emacs-lisp
@@ -1362,7 +1426,7 @@
 ** Modes
 *** Org Mode
 #+begin_src emacs-lisp
-(setq org-modules '(org-w3m org-bbdb org-bibtex org-docview org-gnus org-info org-irc org-mhe org-rmail org-eww org-learn))
+(setq org-modules '(org-w3m org-bbdb org-bibtex org-docview org-gnus org-info org-irc org-mhe org-rmail org-eww))
 #+end_src
 **** Agenda
      #+BEGIN_SRC emacs-lisp
@@ -1475,18 +1539,20 @@
 **** Drill
 #+begin_src emacs-lisp
   ;;This is an org-drill fork that contains the fix for the `Invalid match tag: ""`.
-   
+
   ;; Only install the package if missing
   (when (require 'org-drill nil 'noerror)
     (el-get-bundle iocanel/org-drill)
-
-    ;; We also need some dependencies
-    (el-get-bundle org-learn
-      :url "https://raw.githubusercontent.com/tkf/org-mode/master/contrib/lisp/org-learn.el")
+    (require 'org-drill)
     )
 
-  (require 'org-learn)
-  (require 'org-drill)
+  ;; We also need some dependencies
+  (when (require 'org-learn nil 'noerror)
+    (el-get-bundle org-learn
+      :url "https://raw.githubusercontent.com/tkf/org-mode/master/contrib/lisp/org-learn.el")
+    (require 'org-learn)
+    )
+
 #+end_src
 **** Evil
      #+BEGIN_SRC emacs-lisp
@@ -2175,7 +2241,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
           (setq lsp-java-organize-imports nil
                 lsp-java-save-action-organize-imports nil
                 lsp--workspace "~/workspace/lsp/"
-                lsp-java-auto-build t
+                lsp-java-auto-build nil
                 lsp-auto-configure t
                 lsp-inhibit-message t)
           :hook (
@@ -2570,13 +2636,13 @@ So I controlling my personal calendar from my work calendar and I configure org-
 ***** Debug Java Application
      #+BEGIN_SRC emacs-lisp
        (defun kubernetes-portforward (point)
-         "Portforwards port 5005 of the selected pod."
+         "Portforwards port f the selected pod."
          (interactive "d")
          (when-let (s (get-text-property point 'kubernetes-copy))
            (kill-new s)
 
            ;; Print a user-friendly message for feedback.
-           (let ((n-lines 1) (first-line nil))
+           (let ((n-lines 1) (first-line nil) (port (read-number "Choose port to debug:")))
              (with-temp-buffer
                (insert s)
                (goto-char (point-min))
@@ -2586,7 +2652,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
              (let ((ellipsized (kubernetes-utils-ellipsize first-line 70)))
                (if (< 1 n-lines)
                    (message "Copied %s lines, starting with: %s" n-lines ellipsized)
-                 (async-shell-command (format "%s %s %s" "kubectl port-forward"  ellipsized "5005:5005"))
+                 (async-shell-command (format "%s %s %s" "kubectl port-forward"  ellipsized (format "%s:%s" port poert)))
                  (message "Portforwarding: %s" ellipsized)
                  )))))
      #+END_SRC
@@ -2708,3 +2774,4 @@ So I controlling my personal calendar from my work calendar and I configure org-
      
      
      
+> 
