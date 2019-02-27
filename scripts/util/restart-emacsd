@@ -1,9 +1,12 @@
 #!/bin/zsh
 
+unlink ~/.emacs.d
+ln -s ~/.emacs.custom.d ~/.emacs.d
+
 export MAGICK_OCL_DEVICE=OFF 
 
 # Attempt to shutdown gracefully
-emacsclient -e "(kill-emacs)"
+emacsclient -e "(save-buffers-kill-emacs)"
 
 # Forcefully kill daemon if still alive.
 PID=`ps -aef | grep emacs | grep daemon | awk -F " " '{print $2}'`

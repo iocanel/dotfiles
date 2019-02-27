@@ -244,7 +244,9 @@
       (use-package flyspell
         :ensure t
         :diminish flyspell-mode
-        :hook ((prog-mode org-mode) . flyspell-enable)
+        :hook (
+               (prog-mode . flyspell-prog-mode)
+               (org-mode . flyspell-enable))
         :config
         (setq ispell-program-name "/usr/bin/aspell"
               ispell-local-dictionary "en_US"
@@ -291,7 +293,7 @@
         :ensure t
         :bind ("M-y" . popup-kill-ring))
     #+END_SRC
-*** Shackes
+*** Shacke
 #+begin_src emacs-lisp
   (use-package shackle
     :ensure t
@@ -302,21 +304,19 @@
       (setq shackle-default-size 0.4) ; default 0.5
 
       (setq shackle-rules
-            ;; CONDITION(:regexp)            :select     :inhibit-window-quit   :size+:align|:other     :same|:popup
-            '((compilation-mode              :select nil                                               )
-              ("\\*undo-tree\\*"      :regexp t                                 :size 0.05 :align right)
-              ("*Shell Command Output*"      :select nil                                               )
-              ("\\*Async Shell.*\\*" :regexp t :ignore t                                               )
-              ("\\*Slack.*"   :regexp t      :select nil                                               )
-              (occur-mode                    :select nil                                   :align t    )
-              ("*Help*"                      :select t   :inhibit-window-quit t :other t               )
-              ("*Completions*"                                                  :size 0.3  :align t    )
-              ("*Messages*"                  :select nil :inhibit-window-quit t :other t               )
-              ("\\*[Wo]*Man.*\\*"    :regexp t :select t   :inhibit-window-quit t :other t               )
-              ("\\*poporg.*\\*"      :regexp t :select t                          :other t               )
-              ("\\`\\*helm.*?\\*\\'"   :regexp t                                    :size 0.3  :align t    )
-              ("*Calendar*"                  :select t                          :size 0.3  :align below)
-              ("*info*"                      :select t   :inhibit-window-quit t                         :same t)
+            ;; CONDITION(:regexp)        :regexp nil :select nil :inhibit-window-quit nil :size 0.01 :align|:other :same|:popup
+            '(("\\*undo-tree\\*"         :regexp t                                        :size 0.3 :align below                   )
+              ("*Shell Command Output*"              :select nil                                                                   )
+              ("\\*Async Shell.*\\*"     :regexp t   :ignore t                                                                     )
+              ("\\*Slack.*"              :regexp t   :select nil                          :size 0.3  :align t                      )
+              ("*Help*"                              :select t   :inhibit-window-quit t              :other t                      )
+              ("*Completions*"                                                            :size 0.3  :align t                      )
+              ("*Messages*"                          :select nil :inhibit-window-quit t              :other t                      )
+              ("\\*[Wo]*Man.*\\*"        :regexp t   :select t   :inhibit-window-quit t              :other t                      )
+              ("\\*poporg.*\\*"          :regexp t   :select t                                       :other t                      )
+              ("\\`\\*helm.*?\\*\\'"     :regexp t                                        :size 0.3  :align t                      )
+              ("*Calendar*"                          :select t                            :size 0.3  :align below                  )
+              ("*info*"                              :select t   :inhibit-window-quit t                            :same t         )
               )))
 
       (shackle-mode 1)
@@ -563,6 +563,7 @@
          "Modify theme for latpop use"
          (interactive)
          (set-face-attribute 'default nil :height 75)
+         (set-face-attribute 'treemacs-root-face nil :height 90)
          )
 
        (defun desktop-mode()
@@ -2236,20 +2237,22 @@ So I controlling my personal calendar from my work calendar and I configure org-
      #+END_SRC
 ****** Java
       #+BEGIN_SRC emacs-lisp
+        (defun iocanel/lsp-java-actions()
+          "A function that fans out to all functions required when using java-mode."
+          (lsp)
+          (flycheck-mode)
+          (company-mode)
+          (lsp-ui-mode))
+
         (use-package lsp-java
           :init
-          (setq lsp-java-organize-imports nil
-                lsp-java-save-action-organize-imports nil
-                lsp--workspace "~/workspace/lsp/"
-                lsp-java-auto-build nil
-                lsp-auto-configure t
-                lsp-inhibit-message t)
-          :hook (
-                 (java-mode . lsp)
-                 (java-mode . flycheck-mode)
-                 (java-mode . company-mode)
-                 (java-mode . lsp-ui-mode)
-                 )
+          (setq lsp-java-save-action-organize-imports nil
+                lsp--cur-workspace "~/workspace/lsp/"
+                lsp-java-auto-build t
+                lsp-java-import-gradle-enabled nil
+                lsp-inhibit-message t
+                lsp-java-completion-guess-arguments t)
+          :hook (java-mode . iocanel/lsp-java-actions)
           :ensure t)
 
         (use-package lsp-java-treemacs :after (treemacs))
@@ -2257,6 +2260,8 @@ So I controlling my personal calendar from my work calendar and I configure org-
         (evil-leader/set-key "u a" 'lsp-ui-sideline-apply-code-actions)
         (evil-leader/set-key "u o" 'lsp-java-organize-imports)
         (evil-leader/set-key "u u" 'lsp-java-update-project-configuration)
+
+
       #+END_SRC
 ****** COMMENT IntelliJ
       #+BEGIN_SRC emacs-lisp
@@ -2541,9 +2546,9 @@ So I controlling my personal calendar from my work calendar and I configure org-
       (use-package idee-spring :load-path "~/workspace/src/github.com/iocanel/idee/") 
 
       (use-package meghanada :load-path "~/workspace/src/github.com/mopemope/meghanada-emacs/") 
-      (use-package idee-meghanada :load-path "~/workspace/src/github.com/iocanel/idee/") 
+      ;(use-package idee-meghanada :load-path "~/workspace/src/github.com/iocanel/idee/") 
       ;(use-package idee-lsp-intellij :load-path "~/workspace/src/github.com/iocanel/idee/") 
-      (use-package idee-lsp-java :load-path "~/workspace/src/github.com/iocanel/idee/") 
+      (use-package idee-lsp-java :load-path "~/workspace/src/github.com/iocanel/idee/")
     #+END_SRC
 ** Operations
 *** Docker
@@ -2774,4 +2779,3 @@ So I controlling my personal calendar from my work calendar and I configure org-
      
      
      
-> 
