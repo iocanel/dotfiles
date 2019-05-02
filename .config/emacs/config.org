@@ -2,12 +2,14 @@
 ** Internal Settings
 *** Byte compile on startup
 #+begin_src emacs-lisp
-  (defun byte-recompile-emacs-d()
+  (defun iocanel/byte-recompile-emacs-d()
     (interactive)
     "Byte compile everything under emacs.d."
     (byte-recompile-directory (expand-file-name "~/.emacs.d") 0))
-
-  (add-hook 'emacs-startup-hook 'byte-recompile-emacs-d)
+#+end_src
+**** COMMENT Hook Registration
+#+begin_src emacs-lisp
+   (add-hook 'emacs-startup-hook 'iocanel/byte-recompile-emacs-d)
 #+end_src
 *** Garbage collection
     #+BEGIN_SRC emacs-lisp
@@ -15,16 +17,23 @@
             gc-cons-percentage 0.6)
 
       (add-hook 'emacs-startup-hook (lambda () (setq gc-cons-threshold 16777216
-                                      gc-cons-percentage 0.1 )))
+                                      gc-cons-percentage 0.1)))
     #+END_SRC
 *** Eval Path
     #+BEGIN_SRC emacs-lisp
       (setq max-lisp-eval-depth 10000)
     #+END_SRC
-*** El get
+*** COMMENT El get
 #+begin_src emacs-lisp
-(use-package el-get
-:ensure t)
+(use-package el-get)
+#+end_src
+*** Emacs via gotty
+#+begin_src emacs-lisp
+  (defun iocanel/gotty-emacs()
+    (interactive)
+    "Run emacs in gotty."
+    (async-shell-command "gotty -a localhost -p  8181 emacs"))
+  ;;(add-hook 'emacs-startup-hook 'iocanel/gotty-emacs)
 #+end_src
 ** General Settings
 *** Aliases
@@ -35,15 +44,16 @@
 **** Password Store
      #+BEGIN_SRC emacs-lisp
        (use-package auth-source-pass
-         :ensure t
          :config
          (auth-source-pass-enable))
      #+END_SRC
 *** Autosave and Backup
     #+BEGIN_SRC emacs-lisp
       (use-package real-auto-save
-        :ensure t
-        :hook (prog-mode . real-auto-save-mode)
+        :config
+        (setq real-auto-save-interval 1)
+        :hook (text-mode . real-auto-save-mode)
+              (prog-mode . real-auto-save-mode)
               (snippet-mode . (lambda () (real-auto-save-mode -1))))
 
       (setq backup-directory-alist `(("." . "~/.emacs.d/backups/")))
@@ -57,6 +67,15 @@
             `((".*" "~/.emacs.d/autosaves/" t)))
       (setq create-lockfiles nil)
     #+END_SRC
+**** Recovery diff
+Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when-emacs-suggests-to-recover-this-file
+#+begin_src emacs-lisp
+  (defun iocanel/autosave-diff ()
+    "Compare the current modified buffer with the autosaved version."
+    (interactive)
+    (let ((diff-switches "-u")) ;; unified diff
+      (diff (buffer-file-name) (make-auto-save-file-name))))
+#+end_src
 *** Auto Revert
 #+BEGIN_SRC emacs-lisp
 (global-auto-revert-mode 1)
@@ -64,17 +83,19 @@
 *** Avy
     #+BEGIN_SRC emacs-lisp
       (use-package avy
+        :straight (avy :type git :host github :repo "abo-abo/avy")
         :bind ("M-s" . 'avy-goto-char))
     #+END_SRC
+*** Async Await
+#+begin_src emacs-lisp
+  (use-package async-await)
+#+end_src
 *** Beacon
 #+BEGIN_SRC emacs-lisp
-  (use-package beacon
-    :ensure t
-    :init 
-    (beacon-mode 1)
-  )
+  (use-package beacon)
 #+END_SRC
 *** Browser
+**** Settings
 #+BEGIN_SRC emacs-lisp
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "chrome")
@@ -98,7 +119,7 @@
         (ido-mode 1)
         ;(setq completing-read-function 'ido-completing-read)
       #+END_SRC
-***** Smex      
+***** COMMENT Smex      
       #+BEGIN_SRC emacs-lisp
         (use-package smex :bind (("M-x" . 'smex) ( "M-X" . 'smex-major-mode-commands)))
       #+END_SRC
@@ -106,11 +127,10 @@
 ****** Package
        #+BEGIN_SRC emacs-lisp
          (use-package ido-vertical-mode
-           :ensure t
            :init
            (ido-vertical-mode 1))
        #+END_SRC
-****** Colors
+****** COMMENT Colors
        #+BEGIN_SRC emacs-lisp
          (setq ido-use-faces t)
          (set-face-attribute 'ido-vertical-first-match-face nil
@@ -146,8 +166,7 @@
        #+END_SRC
 **** Ivy
 #+BEGIN_SRC emacs-lisp
-  (use-package flx
-    :ensure t)
+  (use-package flx)
 
   (use-package ivy
     :after flx
@@ -159,14 +178,12 @@
     :config
     (ivy-mode 1))
 
-  (use-package counsel
-    :ensure t)
+  (use-package counsel)
 
 #+END_SRC
 **** Smart Tab
      #+BEGIN_SRC emacs-lisp
        (use-package smart-tab
-         :ensure t
          :init
          (progn
            (setq hippie-expand-try-functions-list '(yas-hippie-try-expand
@@ -190,7 +207,6 @@
       #+BEGIN_SRC emacs-lisp
         (require 'cl)
         (use-package company
-          :ensure t
           :init
           (add-hook 'after-init-hook 'global-company-mode))
       #+END_SRC
@@ -203,29 +219,30 @@
         (setq company-tooltip-align-annotations t)           ; aligns annotation to the right hand side
         (setq company-dabbrev-downcase nil)                  ; don't downcase
       #+END_SRC
+*** COMMENT Compilation
+#+begin_src emacs-lisp 
+  (setq compilation-shell-minor-mode t)
+#+end_src
 *** Dashboard
     #+BEGIN_SRC emacs-lisp
       (use-package dashboard
-        :ensure t
+        :init
         :config
+        (setq dashboard-items `((recents . 5)
+                                (projects . 5)
+                                (agenda . 10)))
+        (setq dashboard-banner-logo-title "")
+        (setq dashboard-startup-banner "~/.config/emacs/emacs-1.png")
         (dashboard-setup-startup-hook)
-        (setq dahboard-items `((recents . 10)
-                               (agenda . 10)
-                               (projects . 5)))
-        (setq dahboard-banner-logo-title "Emacs")
-        (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-        ;(setq initial-buffer-choice 'dashboard-refresh-buffer)
-        )
+        (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*"))))
     #+END_SRC
 *** Evil Mode
     #+BEGIN_SRC emacs-lisp
       (use-package evil
-        :ensure t
         :init
         (evil-mode 1))
 
       (use-package evil-leader
-        :ensure t
         :config
         (evil-leader/set-leader "<SPC>")
         (global-evil-leader-mode))
@@ -233,6 +250,22 @@
       ;; Fix issue with undo granularity (See: https://github.com/syl20bnr/spacemacs/issues/2675)
       (setq evil-want-fine-undo nil)
     #+END_SRC
+*** File Manager
+**** Dired Narrow
+#+begin_src emacs-lisp
+  (use-package dired-narrow
+    :bind (:map dired-mode-map 
+                ("C-c C-n" . dired-narrow)
+                ("C-c C-f" . dired-narrow-fuzzy)
+                ("C-c C-N" . dired-narrow-regexp)))
+#+end_src
+**** Dired Subtree
+#+begin_src emacs-lisp
+(use-package dired-subtree
+    :bind (:map dired-mode-map 
+                ("<tab>" . dired-subtree-toggle)
+                ("<backtab>" . dired-subtree-cycle)))
+#+end_src
 *** Flyspell 
     #+BEGIN_SRC emacs-lisp
       (defun flyspell-enable()
@@ -242,7 +275,6 @@
         (flyspell-mode -1))
 
       (use-package flyspell
-        :ensure t
         :diminish flyspell-mode
         :hook (
                (prog-mode . flyspell-prog-mode)
@@ -259,8 +291,8 @@
     #+END_SRC
 *** Hydra
     #+BEGIN_SRC emacs-lisp
-      (use-package hydra
-        :ensure t)
+      (use-package lv)
+      (use-package hydra)
     #+END_SRC
 *** Identation
     #+BEGIN_SRC emacs-lisp
@@ -280,23 +312,28 @@
 *** Mark multiple
     #+BEGIN_SRC emacs-lisp
       (use-package mark-multiple
-        :ensure t
         :bind ("C-c m" . 'mark-next-like-this))
 
       (use-package expand-region
-        :ensure t
         :bind ("C-q" . 'er/expand-region))
     #+END_SRC
+*** Multiple cursors
+#+begin_src emacs-lisp
+  (use-package multiple-cursors
+    :bind (("C-S-c C-S-c" . mc/edit-lines)
+           ("C->" . mc/mark-next-like-this)
+           ("C-<" . mc/mark-previous-like-this)
+           ("C-c C-<" . mc/mark-all-like-this)))
+#+end_src
 *** Popup kill ring
     #+BEGIN_SRC emacs-lisp
       (use-package popup-kill-ring
-        :ensure t
         :bind ("M-y" . popup-kill-ring))
     #+END_SRC
-*** Shacke
+*** Shackle
 #+begin_src emacs-lisp
   (use-package shackle
-    :ensure t
+    
     :config
    (setq shackle-lighter "")
       (setq shackle-select-reused-windows nil) ; default nil
@@ -368,7 +405,6 @@
 *** Which Key
     #+BEGIN_SRC emacs-lisp
       (use-package which-key
-        :ensure t
         :init
         :config
         (setq which-key-idle-delay 1))
@@ -376,6 +412,40 @@
        (evil-leader/set-key "w" 'which-key-mode)
 
     #+END_SRC  
+*** COMMENT Xwidgets
+#+begin_src emacs-lisp
+  ;; Configuration source: https://www.reddit.com/r/emacs/comments/4srze9/watching_youtube_inside_emacs_25
+  ;; make these keys behave like normal browser
+  (define-key xwidget-webkit-mode-map [mouse-4] 'xwidget-webkit-scroll-down)
+  (define-key xwidget-webkit-mode-map [mouse-5] 'xwidget-webkit-scroll-up)
+  (define-key xwidget-webkit-mode-map (kbd "<up>") 'xwidget-webkit-scroll-down)
+  (define-key xwidget-webkit-mode-map (kbd "<down>") 'xwidget-webkit-scroll-up)
+  (define-key xwidget-webkit-mode-map (kbd "M-w") 'xwidget-webkit-copy-selection-as-kill)
+  (define-key xwidget-webkit-mode-map (kbd "C-c") 'xwidget-webkit-copy-selection-as-kill)
+
+  ;; adapt webkit according to window configuration chagne automatically
+  ;; without this hook, every time you change your window configuration,
+  ;; you must press 'a' to adapt webkit content to new window size
+  (add-hook 'window-configuration-change-hook (lambda ()
+                             (when (equal major-mode 'xwidget-webkit-mode)
+                               (xwidget-webkit-adjust-size-dispatch))))
+
+  ;; by default, xwidget reuses previous xwidget window,
+  ;; thus overriding your current website, unless a prefix argument
+  ;; is supplied
+  ;;
+  ;; This function always opens a new website in a new window
+  (defun xwidget-browse-url-no-reuse (url &optional sessoin)
+    (interactive (progn
+                   (require 'browse-url)
+                   (browse-url-interactive-arg "xwidget-webkit URL: ")))
+    (xwidget-webkit-browse-url url t))
+
+  ;; make xwidget default browser
+  (setq browse-url-browser-function (lambda (url session)
+                                      (other-window 1)
+                                      (xwidget-browse-url-no-reuse url)))
+#+end_src
 ** UI
 *** Layout
     #+BEGIN_SRC emacs-lisp
@@ -387,7 +457,7 @@
 **** winum
      #+BEGIN_SRC emacs-lisp
        (use-package winum
-         :ensure t
+         
          :init
          (setq winum-keymap
                (let ((map (make-sparse-keymap)))
@@ -443,8 +513,7 @@
 **** Editorconfig
      #+BEGIN_SRC emacs-lisp
        (use-package editorconfig
-         :hook (prog-mode . editorconfig-mode)
-         :ensure t)
+         :hook (prog-mode . editorconfig-mode))
      #+END_SRC
 **** Highlight line
      #+BEGIN_SRC emacs-lisp
@@ -453,15 +522,12 @@
 **** Highlight parenthesis
 #+BEGIN_SRC emacs-lisp
   (use-package highlight-parentheses
-    :ensure t
     :hook (prog-mode . highlight-parentheses-mode))
 #+END_SRC
 **** Line numbers
      #+BEGIN_SRC emacs-lisp
        (use-package linum-relative
-         :ensure t
-         :hook ((prog-mode maven-pom-mode) . linum-relative-mode)
-         )
+         :hook ((prog-mode maven-pom-mode) . linum-relative-mode))
 
        (evil-leader/set-key "r" 'linum-relative-toggle)
      #+END_SRC
@@ -470,7 +536,6 @@
 
      #+BEGIN_SRC emacs-lisp
        (use-package sudo-edit
-         :ensure t
          :bind ("s-e" . sudo-edit))
      #+END_SRC
      The plugin plays extremely well with a custom su wrapper that combines su with passwordless sudo.
@@ -481,18 +546,15 @@
 **** Smart parenthesis
      #+BEGIN_SRC emacs-lisp
        (use-package smartparens
-         :ensure t
          :config
          (smartparens-global-mode))
 
-       (use-package evil-smartparens
-         :ensure t)
+       (use-package evil-smartparens)
      #+END_SRC
 **** Rainbow delimeters
      To be able to match parenthesis etc:
      #+BEGIN_SRC emacs-lisp
        (use-package rainbow-delimiters
-         :ensure t
          :hook (prog-mode . rainbow-delimiters-mode)
          :init
          (rainbow-delimiters-mode 1))
@@ -512,32 +574,49 @@
         '(rainbow-delimiters-depth-7-face ((t (:foreground "#a9b6c1")))) ;; white
         '(rainbow-delimiters-depth-8-face ((t (:foreground "#528369")))) ;; green
         '(rainbow-delimiters-depth-9-face ((t (:foreground "#c57632")))) ;; yellow
-        '(rainbow-delimiters-unmatched-face ((t (:background "red"))))
-        )
+        '(rainbow-delimiters-unmatched-face ((t (:background "red")))))
      #+END_SRC     
 **** Rainbow mode
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-mode
-    :hook (prog-mode . rainbow-mode)
-    :delight)
+    :hook (prog-mode . rainbow-mode))
 #+END_SRC
 **** Visual fill column
      #+BEGIN_SRC emacs-lisp
        (use-package visual-fill-column
-         :hook (visual-line-mode . visual-fill-column-mode)
-         :ensure t)
+         :hook (visual-line-mode . visual-fill-column-mode))
      #+END_SRC
 *** Theme
+**** COMMENT Darcula
     #+BEGIN_SRC emacs-lisp
       (load "~/.config/emacs/themes/darcula-theme.el")
     #+END_SRC
+**** Doom
+#+begin_src emacs-lisp
+
+  (use-package all-the-icons)
+
+  (use-package doom-themes)
+
+  (load-theme 'doom-tomorrow-night t)
+
+  (use-package doom-modeline
+        :init
+        (setq doom-modeline-buffer-file-name-style 'truncate-upto-project
+              doom-modeline-icon t
+              doom-modeline-major-mode-icon t
+              doom-modeline-major-mode-color-icon t
+              doom-modeline-mu4e t)
+        :hook (after-init . doom-modeline-mode ))
+
+#+end_src
 **** COMMENT Custor cursor
      #+BEGIN_SRC emacs-lisp
        (setq-default cursor-type 'bar)
        (set-cursor-color "#ff0000")
        (set-face-attribute 'cursor "#ff0000")
      #+END_SRC
-**** Custom colors
+**** COMMENT Custom colors
      #+BEGIN_SRC emacs-lisp
        (defun darkside()
          "Use dark background"
@@ -558,30 +637,30 @@
        (darkside)
        ;; Let's hide the ugly vertical border
        (set-face-foreground 'vertical-border (face-background 'vertical-border))
-
-       (defun laptop-mode()
-         "Modify theme for latpop use"
-         (interactive)
-         (set-face-attribute 'default nil :height 75)
-         (set-face-attribute 'treemacs-root-face nil :height 90)
-         )
-
-       (defun desktop-mode()
-         "Modify theme for latpop use"
-         (interactive)
-         (set-face-attribute 'default nil :height 100)
-         )
-       (defun presenetation-mode()
-         "Modify theme for presentations use"
-         (interactive)
-         (set-face-attribute 'default nil :height 150)
-         )
      #+END_SRC
-*** Status Line
+**** Size and modes
+#+begin_src emacs-lisp
+  (defun laptop-mode()
+    "Modify theme for latpop use"
+    (interactive)
+    (set-face-attribute 'default nil :height 75)
+    (set-face-attribute 'treemacs-root-face nil :height 90))
+
+  (defun desktop-mode()
+    "Modify theme for latpop use"
+    (interactive)
+    (set-face-attribute 'default nil :height 100))
+
+  (defun presenetation-mode()
+    "Modify theme for presentations use"
+    (interactive)
+    (set-face-attribute 'default nil :height 150))
+
+#+end_src
+**** Status Line
 **** COMMENT powerline
      #+BEGIN_SRC emacs-lisp
-       (use-package powerline
-         :ensure t)
+       (use-package powerline)
 
        (require 'powerline)
        (powerline-center-theme)
@@ -589,7 +668,7 @@
      #+END_SRC
 **** COMMENT smartline
      #+BEGIN_SRC emacs-lisp
-       (use-package smart-mode-line-powerline-theme	  :ensure t
+       (use-package smart-mode-line-powerline-theme	  
          :after powerline
          :after smart-mode-line
          :config
@@ -597,10 +676,10 @@
          (sml/apply-theme 'dark))
 
      #+END_SRC
-**** spaceline
+**** COMMENT spaceline
      #+BEGIN_SRC emacs-lisp
        (use-package spaceline
-         :ensure t
+         
          :init
          (progn
            (require 'spaceline-config)
@@ -617,8 +696,7 @@
            (spaceline-toggle-projectile-root-on)
            (spaceline-toggle-version-control-on)
            (spaceline-toggle-python-pyenv-on)
-           (spaceline-spacemacs-theme)
-           ))
+           (spaceline-spacemacs-theme)))
      #+END_SRC
 **** COMMENT Customization
      #+BEGIN_SRC emacs-lisp
@@ -636,7 +714,12 @@
                            :box nil)
        (set-face-attribute 'mode-line-buffer-id-inactive nil
                            :background  "#262626"
-                           :foreground  "#555555"
+                           :foreground  "#262626"
+                           :box nil)
+
+       (set-face-attribute 'powerline-inactive1 nil
+                           :background  "#262626"
+                           :foreground  "#262626"
                            :box nil)
 
        (setq powerline-arrow-shape 'arrow)
@@ -645,26 +728,22 @@
 ** Tool
 *** Alert
 #+begin_src emacs-lisp 
-  (use-package alert
-    :ensure t)
+  (use-package alert)
 #+end_src
 *** Anki
 **** editor
 #+begin_src emacs-lisp
   (use-package anki-editor
-    :ensure t
     :defer t)
 #+end_src
 *** Browser
 **** Package
      #+BEGIN_SRC emacs-lisp
        (use-package eww
-         :defer t
-         :ensure t)
+         :defer t)
 
        (use-package eww-lnum
-         :defer t
-         :ensure t)
+         :defer t)
      #+END_SRC
 **** Hydra
      #+BEGIN_SRC emacs-lisp
@@ -712,8 +791,7 @@
 *** demo-it
 #+BEGIN_SRC emacs-lisp
   (use-package demo-it
-    :defer t
-    :ensure t)
+    :defer t)
 
   (evil-leader/set-key "a d s" 'demo-it-start)
   (evil-leader/set-key "a d e" 'demo-it-end)
@@ -726,18 +804,15 @@
 ***** package
       #+BEGIN_SRC emacs-lisp
         (use-package mu4e
-          :load-path "/usr/share/emacs/site-lisp/mu4e/"
-          )
+          :straight (mu4e :type git :host github :repo "djcb/mu"))
 
         (use-package org-mu4e
-          :load-path "/usr/share/emacs/site-lisp/mu4e/"
-          )
+          :straight (org-mu4e :type git :host github :repo "djcb/mu"))
 
         ;;store link to message if in header view, not to header query
         (setq org-mu4e-link-query-in-headers-mode nil)
 
-        (use-package evil-mu4e
-          :ensure t)
+        (use-package evil-mu4e)
 
         (evil-leader/set-key "a m" 'mu4e)
       #+END_SRC
@@ -792,10 +867,9 @@
                            (mu4e-sent-messages-behavior      . delete)
                            (mu4e-compose-signature           .  t)))))
       #+END_SRC
-***** alerts
+***** COMMENT alerts
       #+BEGIN_SRC emacs-lisp
-        (use-package mu4e-alert
-          :ensure t)
+        (use-package mu4e-alert)
 
         (setq mu4e-alert-interesting-mail-query
               (concat
@@ -874,14 +948,13 @@
                 ("date:2d..now AND not flag:list AND date:30d..now AND (to:iocanel or ikanello)" "Recent Personal" ?p)
                 ("date:today" "Today's messages" ?t)
                 ("date:7d..now" "Last 7 days" ?w)
-                ("from:Connect2Go" "Home events" ?h)
-                ))
+                ("from:Connect2Go" "Home events" ?h)))
       #+END_SRC
 *** LaTex
 **** Package
      #+BEGIN_SRC emacs-lisp
        (use-package auctex
-         :ensure t
+         
          :mode ("\\.tex\\'" . latex-mode)
          :commands (latex-mode LaTeX-mode plain-tex-mode)
          :init
@@ -898,8 +971,7 @@
      #+END_SRC
 **** Preview
      #+BEGIN_SRC emacs-lisp
-       (use-package latex-preview-pane
-         :ensure t)
+       (use-package latex-preview-pane)
      #+END_SRC
 **** Autofill
      #+BEGIN_SRC emacs-lisp
@@ -975,22 +1047,13 @@
          (setq projectile-switch-project-action 'projectile-dired)
          (global-set-key (kbd "C-c p o") 'projectile-switch-project)
          (global-set-key (kbd "C-c p f") 'projectile-find-file)
-         (global-set-key (kbd "C-c p g") 'projectile-grep)
-         :ensure t)
+         (global-set-key (kbd "C-c p g") 'projectile-grep))
      #+END_SRC
 *** Terminal
 **** Eshell
 ***** Package
       #+BEGIN_SRC emacs-lisp
-        (use-package eshell 
-          :defer t
-          :ensure t
-          :hook (eshell-mode . (lambda ()
-                                 (progn
-                                   (add-to-list 'eshell-visual-commands "ssh")
-                                   (add-to-list 'eshell-visual-commands "tail")
-                                   (add-to-list 'eshell-visual-commands "top"))))
-          )
+        (use-package eshell)
       #+END_SRC
 ***** Utils
 #+BEGIN_SRC emacs-lisp
@@ -1000,9 +1063,19 @@
     (let ((inhibit-read-only t))
       (erase-buffer)))
 
+  (defun eshell/compilation-mode () 
+    "Enable compilation mode"
+    (interactive)
+    ;; compilation shell mode doesn't work properly so it needs a nudge every now and then
+    (compilation-shell-minor-mode -1)
+    (compilation-shell-minor-mode 1))
+
+  (global-set-key (kbd "C-c k") 'eshell/compilation-mode)
+  (add-hook 'eshell-post-command-hook 'eshell/compilation-mode)
+
   (global-set-key (kbd "C-c l") 'eshell/clear)
 #+END_SRC
-***** Aliases
+***** Aliases 
       #+BEGIN_SRC emacs-lisp
         (add-hook 'eshell-mode-hook (lambda ()
                                       (eshell/alias "cls" "eshell/clear")
@@ -1017,9 +1090,16 @@
                                       (eshell/alias "ll" "ls -AlohG --color=always $*")
                                       (eshell/alias "ls" "TERM=ansi ls --color=always $*")
                                       (eshell/alias "mci" "mvn clean install")
-                                      (eshell/alias "vi" "find-file-other-window $1")
-                                      ))
+                                      (eshell/alias "vi" "find-file-other-window $1")))
       #+END_SRC
+***** Visuals
+#+begin_src emacs-lisp
+        (add-hook 'eshell-mode-hook (lambda ()
+                                   (add-to-list 'eshell-visual-commands "ssh")
+                                   (add-to-list 'eshell-visual-commands "tail")
+                                   (add-to-list 'eshell-visual-commands "top")))
+
+#+end_src
 ***** Prompt
       #+BEGIN_SRC emacs-lisp
         (defun pwd-replace-home (pwd)
@@ -1063,12 +1143,15 @@
 ***** Auto suggest
       #+BEGIN_SRC emacs-lisp
         (use-package esh-autosuggest
-        :hook (eshell-mode . esh-autosuggest-mode)
-        :ensure t)
+        :hook (eshell-mode . esh-autosuggest-mode))
       #+END_SRC
+***** COMMENT Compilation Mode
+#+begin_src emacs-lisp
+  (add-hook 'shell-mode-hook 'compilation-shell-minor-mode)
+#+end_src
 **** Mutli-term
      #+BEGIN_SRC emacs-lisp
-       (use-package multi-term :ensure t)
+       (use-package multi-term)
        (defvar multi-term-program "/bin/zsh")
      #+END_SRC
 **** Ansi-term
@@ -1085,16 +1168,10 @@
 *** Treemacs
     #+BEGIN_SRC emacs-lisp
       (use-package treemacs
-        :ensure t
         :defer t
-        :init
-        (with-eval-after-load 'winum
-          (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+        :bind ("M-0" . 'treemacs-select-window)
         :config
         (progn
-          (use-package treemacs-evil
-            :ensure t
-            :demand t)
           (setq treemacs-change-root-without-asking t
                 treemacs-collapse-dirs              (if (executable-find "python") 3 0)
                 treemacs-file-event-delay           5000
@@ -1103,60 +1180,142 @@
                 treemacs-goto-tag-strategy          'refetch-index
                 treemacs-indentation                2
                 treemacs-indentation-string         " "
+                treemacs-max-git-entries            5000
                 treemacs-is-never-other-window      nil
                 treemacs-never-persist              nil
-                treemacs-no-png-images              t
+                treemacs-no-png-images              t 
                 treemacs-recenter-after-file-follow t
                 treemacs-recenter-after-tag-follow  nil
-                treemacs-show-hidden-files          nil
+                treemacs-show-hidden-files          t
                 treemacs-silent-filewatch           nil
                 treemacs-silent-refresh             nil
                 treemacs-sorting                    'alphabetic-desc
                 treemacs-tag-follow-cleanup         t
                 treemacs-tag-follow-delay           1.5
-                treemacs-width                      35)
-
-
-          (set-face-attribute 'treemacs-git-modified-face nil
-                              :weight 'bold
-                              :foreground "#528639")
-          (set-face-attribute 'treemacs-git-conflict-face nil
-                              :weight 'bold
-                              :foreground "#528639")
+                treemacs-width                      30)
           (treemacs-follow-mode t)
           (treemacs-filewatch-mode t)
-          (treemacs-git-mode 'simple) ;;an alternative is (treemacs-git-mode 'extended) which is currently slow for large projects.
-          ))
+          (treemacs-fringe-indicator-mode t)
+          ;;an alternative is (treemacs-git-mode 'extended) which is currently slow for large projects.))
+          (treemacs-git-mode 'extended)))
+
+      (use-package treemacs-evil :demand t)
       (use-package treemacs-projectile
         :defer t
-        :ensure t
         :config
         (setq treemacs-header-function #'treemacs-projectile-create-header))
 
-      (defun git-p (name path)
-        (equal name ".git")
-        )
+      (defun iocanel/git-p (name path)
+        (equal name ".git"))
 
-      (setq treemacs-ignored-file-predicates '(git-p))
-
+      (setq treemacs-ignored-file-predicates '(iocanel/git-p))
     #+END_SRC
+**** Utilities
+#+begin_src emacs-lisp
+  (defun iocanel/project-root-dir (buffer)
+    "Find the project root of the specified buffer."
+    (cond ((or (not buffer) (equal "/" buffer)) nil)
+          ((projectile-project-p buffer) buffer)
+          (t (iocanel/project-root-dir (file-name-directory (directory-file-name buffer))))))
+
+    (defun iocanel/kill-non-project-buffers ()
+      "Kill all buffers that don't belong to a project."
+      (interactive)
+      (let ((buffers (buffer-list (selected-frame))))
+        (dolist (buf buffers)
+          (with-current-buffer buf
+            (let* ((buf-name (buffer-name buf))
+                   (buf-path (buffer-file-name buf))
+                   (project-root (iocanel/project-root-dir buf-path)))
+                  (if (not project-root)
+                  (message "Current buffer: %s is part of: %s. " buf-name project-root))
+              (when (and (null (projectile-project-p))
+                        (not (string-match "^\*" buf-name)))
+                  (message "Killing buffer: %s" buf-name)
+                  ;;(kill-buffer buf)
+                  ))))))
+
+    (defun iocanel/treemacs-collapse-dir-toggle ()
+      "Toggle value of treemacs-collapse-dir between 3 0."
+      (interactive)
+      (if (= treemacs-collapse-dirs 0)
+          (setq treemacs-collapse-dirs 3)
+        (setq treemacs-collapse-dirs 0))
+      (treemacs-refresh))
+
+    (defun iocanel/treemacs-create-and-switch-to-workspace ()
+      "Create and switch to a new treemacs workspace."
+      (interactive)
+      (let* ((workspace (treemacs-do-create-workspace))
+             (selected (car (cdr workspace))))
+        (setf (treemacs-current-workspace) selected)))
+
+    (defun iocanel/treemacs-switch-to-project-workspace ()
+      "Select a different workspace for treemacs."
+      (interactive)
+      (pcase (treemacs-do-switch-workspace)
+        ('only-one-workspace
+         (treemacs-pulse-on-failure "There are no other workspaces to select."))
+        (`(success ,workspace)
+         (let ((window-visible? nil)
+               (buffer-exists? nil))
+           (pcase (treemacs-current-visibility)
+             ('visible
+              (setq window-visible? t
+                    buffer-exists? t))
+             ('exists
+              (setq buffer-exists? t)))
+           (when window-visible?
+             (delete-window (treemacs-get-local-window)))
+           (when buffer-exists?
+             (kill-buffer (treemacs-get-local-buffer)))
+           (when buffer-exists?
+             (let ((treemacs-follow-after-init nil)
+                   (treemacs-follow-mode nil))
+               (treemacs-select-window)))
+           (when (not window-visible?)
+             (bury-buffer)))
+         (treemacs-pulse-on-success "Selected workspace %s."
+           (propertize (treemacs-workspace->name workspace))
+           (iocanel/treemacs-open-project-workspace workspace)
+           ))))
+
+    (defun iocanel/treemacs-open-project-workspace (workspace)
+      "Open the first project of the workspace."
+      (let* ((selected workspace)
+             (name (treemacs-project->name selected))
+             (project (treemacs-project->path selected))
+             (path (treemacs-project->path (car project))))
+        (message (format "Swith to project: %s path:%s" name path))
+        (projectile-switch-project-by-name path)
+        (idee-refresh-view)
+        (projectile-invalidate-cache nil)))
+
+#+end_src
 **** Hydra
      #+BEGIN_SRC emacs-lisp
        (defhydra treemacs-hydra (:hint nil :exit t)
          ;; The '_' character is not displayed. This affects columns alignment.
          ;; Remove s many spaces as needed to make up for the '_' deficit.
          "
-                ^Toggles^                           ^Windows^                              ^Navigation^
-                ^^^^^^---------------------------------------------------------------------------------------------------
-                 _t_: treemacs-toggle                _s_: treemacs-select-window            _b_: treemacs-bookmark
-                 _p_: treemacs-projectile-toggle     _d_: treemacs-delete-other-windows     _f_: treemaces-find-file
-                 _d_: treemacs-toggle-show-dot-files                                      _T_: treemacs-find-tag
-                 _g_: magit-status
-                "
+                ^Workspaces^             ^Toggles^                 ^Windows^                     ^Navigation^
+                ^^^^^^-----------------------------------------------------------------------------------------
+                _N_: new workspace       _t_: tree view toggle     _s_: select window            _b_: bookmark
+                _S_: switch workspace    _p_: projectile toggle    _d_: delete other windows     _f_: find file
+                _R_: remove workspace    _d_: show hidden files                                  _T_: find tag
+                _E_: edit workspace      _c_: collapse dirs
+                _F_: finish edit         _g_: magit
+               "
                                                ; Toggles
+         ("N" iocanel/treemacs-create-and-switch-to-workspace)
+         ("R" treemacs-remove-workspace)
+         ("S" iocanel/treemacs-switch-to-project-workspace)
+         ("E" treemacs-edit-workspaces)
+         ("F" treemacs-finish-edit)
          ("t" treemacs-toggle)
          ("p" treemacs-projectile-toggle)
          ("d" treemacs-toggle-show-dot-files)
+         ("c" iocanel/treemacs-collapse-dir-toggle)
          ("g" magit-status)
                                                ; Windows
          ("s" treemacs-select-window)
@@ -1165,10 +1324,9 @@
          ("b" treemacs-bookmark)
          ("f" treemacs-find-file)
          ("T" treemacs-find-tag)
-         ("q" nil "quit")) 
+         ("q" nil "quit"))
 
        (evil-leader/set-key "t" 'treemacs-hydra/body)
-
      #+END_SRC
 *** COMMENT Sidebar
     #+BEGIN_SRC emacs-lisp
@@ -1182,17 +1340,14 @@
 *** Snippets
     #+BEGIN_SRC emacs-lisp
       (use-package yasnippet
-        :ensure t
         :init
         (setq yas-snippet-dirs
               '("~/.emacs.d/snippets"                 ;; personal snippets
                 "~/.config/emacs/snippets"
-                "~/.config/emacs/templates"
-                ))
+                "~/.config/emacs/templates"))
         (yas-global-mode)
         :config
-        (use-package yasnippet-snippets
-          :ensure t)
+        (use-package yasnippet-snippets)
         (yas-reload-all))
 
       ;; Use yas-indent-line fixed in yaml-mode. This fixes issues with parameter mirroring breaking indentation
@@ -1211,17 +1366,15 @@
 
       (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
     #+END_SRC
-*** Slack
-#+begin_src emacs-lisp
+*** Slack#+begin_src emacs-lisp
+    #+BEGIN_SRC emacs-lisp
     (use-package slack
-      :ensure t
       :commands (slack-start)
       :init
       (setq slack-buffer-emojify t) ;; if you want to enable emoji, default nil
       (setq slack-prefer-current-team t)
       (setq slack-modeline t)
       :config
-
       (slack-register-team
        :name "springcloud"
        :token (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show websites/slack/springcloud.slack.com/token"))
@@ -1272,7 +1425,6 @@
 **** Package
     #+BEGIN_SRC emacs-lisp
       (use-package sx
-        :ensure t
         :config
         (bind-keys :prefix "C-c s"
                    :prefix-map my-sx-map
@@ -1283,7 +1435,6 @@
                    ("u" . sx-tab-unanswered-my-tags)
                    ("a" . sx-ask)
                    ("s" . sx-search)))
-
     #+END_SRC
 **** Evil Configuration
 ***** Questions
@@ -1365,30 +1516,32 @@
        (use-package magit
          :config
          (setq ediff-multiframe nil)
-         (setq-default ediff-window-setup-function 'ediff-setup-windows-plain)
-         :ensure t)
+         (setq-default ediff-window-setup-function 'ediff-setup-windows-plain))
 
-       (use-package evil-magit
-         :ensure t)
-
-       ;;(use-package magithub
-       ;;  :after magit
-       ;;  :ensure t
-       ;;  :config
-       ;;  (magithub-feature-autoinject t)
-       ;;  (setq magithub-api-timeout 30)
-       ;;  (setq magithub-clone-default-directory "~/workspace/src/github.com"))
+       (use-package evil-magit)
 
        ;; Key bindings
        (global-set-key (kbd "C-c g s") 'magit-status)
-       (global-set-key (kbd "C-c g p r") 'magit-gh-pulls-popup)
      #+END_SRC
+**** Forge
+#+begin_src emacs-lisp
+       (use-package forge
+         :straight (forge :type git :host github :repo "magit/forge"))
+
+  ;; Let's overide the way that handle the token
+  (defun ghub--token (host username package &optional nocreate forge)
+    (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string (format "pass show %s/%s" host username))))
+#+end_src
+**** Orgit
+#+begin_src emacs-lisp
+(use-package orgit
+         :straight (orgit :type git :host github :repo "magit/orgit" :branch "forge"))
+#+end_src
 **** Git timemachine
      Allows you a buffer to move back in time (previous commits)
 ***** Package     
       #+BEGIN_SRC emacs-lisp
         (use-package git-timemachine
-          :ensure t
           :config
           (global-set-key (kbd "C-c g t") 'git-timemachine-toggle))
       #+END_SRC
@@ -1411,18 +1564,18 @@
 **** Git gutter
      Displays marks on the left bar about changes since last commit.
      #+BEGIN_SRC emacs-lisp
-       (use-package git-gutter-fringe :ensure t)
+       (use-package git-gutter-fringe)
        ;; We don't want this on non programming modes
        (add-hook 'prog-mode-hook (lambda () (git-gutter-mode)))
      #+END_SRC
 **** Github
 ***** Github Pull Request
       #+BEGIN_SRC emacs-lisp
-        (use-package github-pullrequest :ensure t)
+        (use-package github-pullrequest)
       #+END_SRC
 ***** Github Issues
       #+BEGIN_SRC emacs-lisp
-        (use-package github-issues :ensure t)
+        (use-package github-issues)
       #+END_SRC
 ** Modes
 *** Org Mode
@@ -1460,7 +1613,7 @@
      To replace ascii asterisks with bullets:    
      #+BEGIN_SRC emacs-lisp
        (use-package org-bullets
-         :ensure t
+         
          :config
          (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
      #+END_SRC
@@ -1468,7 +1621,7 @@
 ***** Installation
       To install the org2blog plugin:
       #+BEGIN_SRC emacs-lisp
-        (use-package org2blog :ensure t)
+        (use-package org2blog)
       #+END_SRC
 ***** Setup
       #+BEGIN_SRC emacs-lisp
@@ -1494,16 +1647,21 @@
                ("l" "Link" entry (file+headline "~/Documents/notes/links.org" "Links") "* %? %^L %^g \n%T" :prepend t)
                ("n" "Note" entry (file+headline "~/Documents/notes/todo.org" "Notes") "* %?\n%u" :prepend t)
                ("j" "Journal" entry (file+datetree "~/Documents/notes/journal.org" "Journal") (file "~/.config/emacs/journal.orgtmpl"))
+               ("s" "Status Roll" entry (file+datetree "~/Documents/notes/status-roll.org" "Status Roll") (file "~/.config/emacs/status-roll.orgtmpl"))
 
                ("c" "Calendar")
-               ("cw" "Work Event" entry (file  "~/Documents/calendars/work.org" ) "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
-               ("cp" "Personal Event" entry (file  "~/Documents/calendars/work.org" ) "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
+               ("cw" "Work Event" entry (file  "~/Documents/calendars/work.org") "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
+               ("cp" "Personal Event" entry (file  "~/Documents/calendars/personal.org") "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
 
                ("t" "To Do")
                ("tw" "Work To Do Item" entry (file+headline "~/Documents/notes/work.org" "To Do") "* TODO %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n" :prepend t)
                ("tp" "Personal To Do Item" entry (file+headline "~/Documents/notes/personal.org" "To Do") "* TODO %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n" :prepend t)
 
+
                ("f" "Flashcards")
+               ("fe" "Emacs") 
+               ("fef" "Emacs facts"  entry (file+headline "~/Documents/flashcards/emacs.org" "Emacs") "* Fact :drill:\n %t\n %^{The fact}\n")
+               ("feq" "Emacs questions"  entry (file+headline "~/Documents/flashcards/emacs.org" "Emacs") "* Question :drill:\n %t\n %^{The question} \n** Answer: \n%^{The answer}")
                ("fh" "History") 
                ("fhf" "History facts"  entry (file+headline "~/Documents/flashcards/history.org" "History") "* Fact :drill:\n %t\n %^{The fact}\n")
                ("fhq" "History questions"  entry (file+headline "~/Documents/flashcards/history.org" "History") "* Question :drill:\n %t\n %^{The question} \n** Answer: \n%^{The answer}")
@@ -1516,9 +1674,11 @@
                ("fs" "Sports")
                ("fsf" "Sports facts"  entry (file+headline "~/Documents/flashcards/sprots.org" "Sports") "* Fact :drill:\n %t\n %^{The fact}\n")
                ("fsq" "Sports questions"  entry (file+headline "~/Documents/flashcards/sprots.org" "Sports") "* Question :drill:\n %t\n %^{The question} \n** Answer: \n%^{The answer}")
+               ("fn" "Nutrition") 
+               ("fnf" "Nutrition facts"  entry (file+headline "~/Documents/flashcards/nutrition.org" "Nutrition") "* Fact :drill:\n %t\n %^{The fact}\n")
+               ("fnq" "Nutrition questions"  entry (file+headline "~/Documents/flashcards/nutrition.org" "Nutrition") "* Question :drill:\n %t\n %^{The question} \n** Answer: \n%^{The answer}")
                ("fl" "Languages")
-               ("fls" "Spanish"  entry (file+headline "~/Documents/flashcards/languages/spanish.org" "Spanish") "* Question :drill:\n %t\n %^{The question} \n** Answer: \n%^{The answer}")
-               ))
+               ("fls" "Spanish"  entry (file+headline "~/Documents/flashcards/languages/spanish.org" "Spanish") "* Question :drill:\n %t\n %^{The question} \n** Answer: \n%^{The answer}")))
        (define-key global-map "\C-cc" 'org-capture)
        (evil-leader/set-key "c" 'org-capture)
      #+END_SRC
@@ -1534,31 +1694,24 @@
       #+END_SRC
 ***** Babel packs
       #+BEGIN_SRC emacs-lisp
-        (use-package ob-go :ensure t)
-        (use-package ob-typescript :ensure t)
+        (use-package ob-go)
+        (use-package ob-typescript)
       #+END_SRC
 **** Drill
 #+begin_src emacs-lisp
-  ;;This is an org-drill fork that contains the fix for the `Invalid match tag: ""`.
-
-  ;; Only install the package if missing
-  (when (require 'org-drill nil 'noerror)
-    (el-get-bundle iocanel/org-drill)
-    (require 'org-drill)
-    )
-
-  ;; We also need some dependencies
-  (when (require 'org-learn nil 'noerror)
-    (el-get-bundle org-learn
-      :url "https://raw.githubusercontent.com/tkf/org-mode/master/contrib/lisp/org-learn.el")
-    (require 'org-learn)
-    )
+      ;;This is an org-drill fork that contains the fixes:
+      ;; 1. for the `Invalid match tag: ""`.
+      ;; 2. missing org-learn
+      (use-package org-drill
+                :straight (org-drill :type git :host github :repo "iocanel/org-drill")
+                :config
+                (setq org-drill-scope 'directory))
 
 #+end_src
 **** Evil
      #+BEGIN_SRC emacs-lisp
        (use-package evil-org
-         :ensure t
+         
          :after org
          :config
          (add-hook 'org-mode-hook 'evil-org-mode)
@@ -1575,11 +1728,11 @@
 **** Export Formats
 ***** asciidoc
       #+BEGIN_SRC emacs-lisp
-        (use-package ox-asciidoc :ensure t)
+        (use-package ox-asciidoc)
       #+END_SRC
 ***** markdown
       #+BEGIN_SRC emacs-lisp
-        (use-package ox-gfm :ensure t)
+        (use-package ox-gfm)
       #+END_SRC
 **** Google Calendar
 I need to deal with two problems:
@@ -1593,16 +1746,14 @@ So I controlling my personal calendar from my work calendar and I configure org-
              (secret (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show services/google/vdirsyncer/ikanello@redhat.com/secret"))))
 
          (use-package org-gcal
-           :load-path "~/workspace/src/github.com/iocanel/org-gcal.el/"
-           :ensure t)
+           :load-path "~/workspace/src/github.com/iocanel/org-gcal.el/")
 
            (setq org-gcal-client-id client-id
                  org-gcal-client-secret secret
                  org-gcal-file-alist '(("iocanel@gmail.com" .  "~/Documents/calendars/personal.org")
-                                       ("ikanello@redhat.com" . "~/Documents/calendars/work.org")))
-           )
-       (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
-       (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
+                                       ("ikanello@redhat.com" . "~/Documents/calendars/work.org"))))
+       (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync)))
+       (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync)))
 
 
      #+END_SRC
@@ -1620,7 +1771,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
            (jiralib-login "iocanel" jira-password)))
 
        (use-package org-jira
-         :ensure t
+         
          :config
          (org-jira-login))
 
@@ -1630,193 +1781,178 @@ So I controlling my personal calendar from my work calendar and I configure org-
      #+END_SRC
 ***** customizations
       #+BEGIN_SRC emacs-lisp
-        (defvar org-jira-selected-board nil)
-        (defvar org-jira-selected-sprint nil)
-        (defvar org-jira-selected-epic nil)
+                 (defvar org-jira-selected-board nil)
+                 (defvar org-jira-selected-sprint nil)
+                 (defvar org-jira-selected-epic nil)
 
-        (defvar org-jira-boards-cache ())
-        (defvar org-jira-sprint-by-board-cache ())
-        (defvar org-jira-epic-by-board-cache ())
+                 (defvar org-jira-boards-cache ())
+                 (defvar org-jira-sprint-by-board-cache ())
+                 (defvar org-jira-epic-by-board-cache ())
 
-        ;;
-        ;; Boards
-        ;;
-        (defun org-jira-list-boards()
-          "List all boards."
-          (unless org-jira-boards-cache
-            (setq org-jira-boards-cache (jiralib--agile-call-sync "/rest/agile/1.0/board" 'values))
-            )
-          org-jira-boards-cache)
+                 ;;
+                 ;; Boards
+                 ;;
+                 (defun org-jira-list-boards()
+                   "List all boards."
+                   (unless org-jira-boards-cache
+                     (setq org-jira-boards-cache (jiralib--agile-call-sync "/rest/agile/1.0/board" 'values)))
+                   org-jira-boards-cache)
 
-        (defun org-jira-get-board-id()
-          "Select a board if one not already selected."
-          (unless org-jira-selected-board
-            (setq org-jira-selected-board (org-jira-board-completing-read)))
-            (cdr (assoc 'id org-jira-selected-board))
-          )
+                 (defun org-jira-get-board-id()
+                   "Select a board if one not already selected."
+                   (unless org-jira-selected-board
+                     (setq org-jira-selected-board (org-jira-board-completing-read)))
+                     (cdr (assoc 'id org-jira-selected-board)))
 
-        (defun org-jira-get-board()
-          "Select a board if one not already selected."
-          (unless org-jira-selected-board
-            (setq org-jira-selected-board (org-jira-board-completing-read)))
-            org-jira-selected-board
-          )
+                 (defun org-jira-get-board()
+                   "Select a board if one not already selected."
+                   (unless org-jira-selected-board
+                     (setq org-jira-selected-board (org-jira-board-completing-read)))
+                     org-jira-selected-board)
 
-        (defun org-jira-select-board()
-          "Select a board."
-          (interactive)
-         (setq org-jira-selected-board (org-jira-board-completing-read))
-        )
+                 (defun org-jira-select-board()
+                   "Select a board."
+                   (interactive)
+                  (setq org-jira-selected-board (org-jira-board-completing-read)))
 
-        (defun org-jira-board-completing-read()
-          "Select a board by name."
-          (interactive)
-          (let* ((boards (org-jira-list-boards))
-                 (board-names (mapcar #'(lambda (a) (cdr (assoc 'name a))) boards))
-                 (board-name (completing-read "Choose board:" board-names)))
-            (car (seq-filter #'(lambda (a) (equal (cdr (assoc 'name a)) board-name)) boards)))
-          )
+                 (defun org-jira-board-completing-read()
+                   "Select a board by name."
+                   (interactive)
+                   (let* ((boards (org-jira-list-boards))
+                          (board-names (mapcar #'(lambda (a) (cdr (assoc 'name a))) boards))
+                          (board-name (completing-read "Choose board:" board-names)))
+                     (car (seq-filter #'(lambda (a) (equal (cdr (assoc 'name a)) board-name)) boards))))
 
-        ;;
-        ;; Sprint
-        ;;
-        (defun org-jira-get-project-boards(project-id)
-          "Find the board of the project."
-          )
+                 ;;
+                 ;; Sprint
+                 ;;
+                 (defun org-jira-get-project-boards(project-id)
+                   "Find the board of the project.")
 
-        (defun org-jira-get-sprints-by-board(board-id &optional filter)
-          "List all sprints by BOARD-ID."
-          (interactive)
-          (let ((board-sprints-cache (cdr (assoc board-id org-jira-sprint-by-board-cache))))
-            (unless board-sprints-cache
-              (setq board-sprints-cache (jiralib--agile-call-sync (format "/rest/agile/1.0/board/%s/sprint" board-id)'values)))
+                 (defun org-jira-get-sprints-by-board(board-id &optional filter)
+                   "List all sprints by BOARD-ID."
+                   (interactive)
+                   (let ((board-sprints-cache (cdr (assoc board-id org-jira-sprint-by-board-cache))))
+                     (unless board-sprints-cache
+                       (setq board-sprints-cache (jiralib--agile-call-sync (format "/rest/agile/1.0/board/%s/sprint" board-id)'values)))
 
-            (add-to-list 'org-jira-sprint-by-board-cache `(,board-id . ,board-sprints-cache))
-            (if filter
-                (seq-filter filter board-sprints-cache)
-              board-sprints-cache))
-          )
+                     (add-to-list 'org-jira-sprint-by-board-cache `(,board-id . ,board-sprints-cache))
+                     (if filter
+                         (seq-filter filter board-sprints-cache)
+                       board-sprints-cache)))
 
-        (defun org-jira--active-sprint-p(sprint)
-          "Predicate that checks if SPRINT is active."
-          (not (assoc 'completeDate sprint))
-          )
+                 (defun org-jira--active-sprint-p(sprint)
+                   "Predicate that checks if SPRINT is active."
+                   (not (assoc 'completeDate sprint)))
 
 
-        (defun org-jira-sprint-completing-read(board-id)
-          "Select an active sprint by name."
-          (let* ((sprints (org-jira-get-sprints-by-board board-id 'org-jira--active-sprint-p))
-                 (sprint-names (mapcar #'(lambda (a) (cdr (assoc 'name a))) sprints))
-                 (sprint-name (completing-read "Choose sprint:" sprint-names)))
-            (car (seq-filter #'(lambda (a) (equal (cdr (assoc 'name a)) sprint-name)) sprints))))
+                 (defun org-jira-sprint-completing-read(board-id)
+                   "Select an active sprint by name."
+                   (let* ((sprints (org-jira-get-sprints-by-board board-id 'org-jira--active-sprint-p))
+                          (sprint-names (mapcar #'(lambda (a) (cdr (assoc 'name a))) sprints))
+                          (sprint-name (completing-read "Choose sprint:" sprint-names)))
+                     (car (seq-filter #'(lambda (a) (equal (cdr (assoc 'name a)) sprint-name)) sprints))))
 
-        (defun org-jira-move-issue-to-sprint(issue-id sprint-id)
-          "Move issue with ISSUE-ID to sprint with SPRINT-ID."
-                (jiralib--rest-call-it (format "/rest/agile/1.0/sprint/%s/issue" sprint-id) :type "POST" :data (format "{\"issues\": [\"%s\"]}" issue-id)))
+                 (defun org-jira-move-issue-to-sprint(issue-id sprint-id)
+                   "Move issue with ISSUE-ID to sprint with SPRINT-ID."
+                         (jiralib--rest-call-it (format "/rest/agile/1.0/sprint/%s/issue" sprint-id) :type "POST" :data (format "{\"issues\": [\"%s\"]}" issue-id)))
 
-        (defun org-jira-assign-current-issue-to-sprint()
-          "Move the selected issue to an active sprint."
-          (interactive)
-          (let* ((issue-id (org-jira-parse-issue-id))
-                 (board-id (cdr (assoc 'id (org-jira-get-board))))
-                 (sprint-id (cdr (assoc 'id (org-jira-sprint-completing-read board-id)))))
+                 (defun org-jira-assign-current-issue-to-sprint()
+                   "Move the selected issue to an active sprint."
+                   (interactive)
+                   (let* ((issue-id (org-jira-parse-issue-id))
+                          (board-id (cdr (assoc 'id (org-jira-get-board))))
+                          (sprint-id (cdr (assoc 'id (org-jira-sprint-completing-read board-id)))))
 
-            (org-jira-move-issue-to-sprint issue-id sprint-id)))
+                     (org-jira-move-issue-to-sprint issue-id sprint-id)))
 
-        (defun org-jira-get-sprint-id()
-          "Select a sprint id if one not already selected."
-          (unless org-jira-selected-sprint
-            (setq org-jira-selected-sprint (org-jira-sprint-completing-read)))
-            (cdr (assoc 'id org-jira-selected-sprint))
-          )
+                 (defun org-jira-get-sprint-id()
+                   "Select a sprint id if one not already selected."
+                   (unless org-jira-selected-sprint
+                     (setq org-jira-selected-sprint (org-jira-sprint-completing-read)))
+                     (cdr (assoc 'id org-jira-selected-sprint)))
 
-        (defun org-jira-get-sprint()
-          "Select a sprint if one not already selected."
-          (unless org-jira-selected-sprint
-            (setq org-jira-selected-sprint (org-jira-select-sprint)))
-            org-jira-selected-sprint
-          )
+                 (defun org-jira-get-sprint()
+                   "Select a sprint if one not already selected."
+                   (unless org-jira-selected-sprint
+                     (setq org-jira-selected-sprint (org-jira-select-sprint)))
+                     org-jira-selected-sprint)
 
-        (defun org-jira-select-sprint()
-          "Select a sprint."
-          (interactive)
-         (setq org-jira-selected-sprint (org-jira-sprint-completing-read (org-jira-get-board-id)))
-        )
-        ;;
-        ;; Epics
-        ;;
+                 (defun org-jira-select-sprint()
+                   "Select a sprint."
+                   (interactive)
+                  (setq org-jira-selected-sprint (org-jira-sprint-completing-read (org-jira-get-board-id))))
+                 ;;
+                 ;; Epics
+                 ;;
 
-        (defun org-jira-get-epics-by-board(board-id &optional filter)
-          "List all epics by BOARD-ID."
-          (interactive)
-          (let ((board-epics-cache (cdr (assoc board-id org-jira-epic-by-board-cache))))
-            (unless board-epics-cache
-              (setq board-epics-cache (jiralib--agile-call-sync (format "/rest/agile/1.0/board/%s/epic" board-id)'values)))
+                 (defun org-jira-get-epics-by-board(board-id &optional filter)
+                   "List all epics by BOARD-ID."
+                   (interactive)
+                   (let ((board-epics-cache (cdr (assoc board-id org-jira-epic-by-board-cache))))
+                     (unless board-epics-cache
+                       (setq board-epics-cache (jiralib--agile-call-sync (format "/rest/agile/1.0/board/%s/epic" board-id)'values)))
 
-            (add-to-list 'org-jira-epic-by-board-cache `(,board-id . ,board-epics-cache))
-            (if filter
-                (seq-filter filter board-epics-cache)
-              board-epics-cache))
-          )
+                     (add-to-list 'org-jira-epic-by-board-cache `(,board-id . ,board-epics-cache))
+                     (if filter
+                         (seq-filter filter board-epics-cache)
+                       board-epics-cache)))
 
-        (defun org-jira--active-epic-p(epic)
-          "Predicate that checks if EPIC is active."
-          (not (equal (assoc 'done epic) 'false))
-          )
+                 (defun org-jira--active-epic-p(epic)
+                   "Predicate that checks if EPIC is active."
+                   (not (equal (assoc 'done epic) 'false)))
 
 
-        (defun org-jira-epic-completing-read(board-id)
-          "Select an active epic by name."
-          (let* ((epics (org-jira-get-epics-by-board board-id 'org-jira--active-epic-p))
-                 (epic-names (mapcar #'(lambda (a) (cdr (assoc 'name a))) epics))
-                 (epic-name (completing-read "Choose epic:" epic-names)))
-            (car (seq-filter #'(lambda (a) (equal (cdr (assoc 'name a)) epic-name)) epics))))
+                 (defun org-jira-epic-completing-read(board-id)
+                   "Select an active epic by name."
+                   (let* ((epics (org-jira-get-epics-by-board board-id 'org-jira--active-epic-p))
+                          (epic-names (mapcar #'(lambda (a) (cdr (assoc 'name a))) epics))
+                          (epic-name (completing-read "Choose epic:" epic-names)))
+                     (car (seq-filter #'(lambda (a) (equal (cdr (assoc 'name a)) epic-name)) epics))))
 
-        (defun org-jira-move-issue-to-epic(issue-id epic-id)
-          "Move issue with ISSUE-ID to epic with SPRINT-ID."
-                (jiralib--rest-call-it (format "/rest/agile/1.0/epic/%s/issue" epic-id) :type "POST" :data (format "{\"issues\": [\"%s\"]}" issue-id)))
+                 (defun org-jira-move-issue-to-epic(issue-id epic-id)
+                   "Move issue with ISSUE-ID to epic with SPRINT-ID."
+                         (jiralib--rest-call-it (format "/rest/agile/1.0/epic/%s/issue" epic-id) :type "POST" :data (format "{\"issues\": [\"%s\"]}" issue-id)))
 
-        (defun org-jira-assign-current-issue-to-epic()
-          "Move the selected issue to an active epic."
-          (interactive)
-          (let* ((issue-id (org-jira-parse-issue-id))
-                 (board-id (cdr (assoc 'id (org-jira-get-board))))
-                 (epic-id (cdr (assoc 'id (org-jira-epic-completing-read board-id)))))
+                 (defun org-jira-assign-current-issue-to-epic()
+                   "Move the selected issue to an active epic."
+                   (interactive)
+                   (let* ((issue-id (org-jira-parse-issue-id))
+                          (board-id (cdr (assoc 'id (org-jira-get-board))))
+                          (epic-id (cdr (assoc 'id (org-jira-epic-completing-read board-id)))))
 
-            (org-jira-move-issue-to-epic issue-id epic-id)))
+                     (org-jira-move-issue-to-epic issue-id epic-id)))
 
-        (defun org-jira-get-epic-id()
-          "Select a epic id if one not already selected."
-          (unless org-jira-selected-epic
-            (setq org-jira-selected-epic (org-jira-epic-completing-read)))
-            (cdr (assoc 'id org-jira-selected-epic))
-          )
+                 (defun org-jira-get-epic-id()
+                   "Select a epic id if one not already selected."
+                   (unless org-jira-selected-epic
+                     (setq org-jira-selected-epic (org-jira-epic-completing-read)))
+                     (cdr (assoc 'id org-jira-selected-epic)))
 
-        (defun org-jira-get-epic()
-          "Select a epic if one not already selected."
-          (unless org-jira-selected-epic
-            (setq org-jira-selected-epic (org-jira-select-epic)))
-            org-jira-selected-epic
-          )
+                 (defun org-jira-get-epic()
+                   "Select a epic if one not already selected."
+                   (unless org-jira-selected-epic
+                     (setq org-jira-selected-epic (org-jira-select-epic)))
+                     org-jira-selected-epic)
 
-        (defun org-jira-select-epic()
-          "Select a epic."
-          (interactive)
-         (setq org-jira-selected-epic (org-jira-epic-completing-read (org-jira-get-board-id)))
-        )
+                 (defun org-jira-select-epic()
+                   "Select a epic."
+                   (interactive)
+                  (setq org-jira-selected-epic (org-jira-epic-completing-read (org-jira-get-board-id))))
 
-        (defun org-jira-create-issue-with-defaults()
-          "Create an issue and assign to default sprint and epic."
-          (org-jira-create-issue)
-          (org-jira-move-issue-to-epic)
-          (org-jira-move-issue-to-sprint)
-          )
+                 (defun org-jira-create-issue-with-defaults()
+                   "Create an issue and assign to default sprint and epic."
+                   (org-jira-create-issue)
+                   (org-jira-move-issue-to-epic)
+                   (org-jira-move-issue-to-sprint))
 
-        ;;
-        ;; Populate caches
+                 ;;
+                 ;; Populate caches
+                (async-start (progn
+                 ;;              (jiralib-get-users "SB")
+                 ;;              (org-jira-list-boards)
+                ))
 
-        ;;(jiralib-get-users "SB")
-       ;; (org-jira-list-boards)
       #+END_SRC
 ***** hydra
       #+BEGIN_SRC emacs-lisp
@@ -1861,8 +1997,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
 **** Presentations
 ***** org-present
       #+BEGIN_SRC emacs-lisp
-        (use-package org-present
-          :ensure t)
+        (use-package org-present)
 
         (add-hook 'org-present-mode-hook
                   (lambda ()
@@ -1887,16 +2022,15 @@ So I controlling my personal calendar from my work calendar and I configure org-
         (define-key org-present-mode-keymap (kbd "C-c l") 'org-present-next)
         (define-key org-present-mode-keymap (kbd "C-c h") 'org-present-prev)
       #+END_SRC
-***** org-tree-slide
+***** COMMENT org-tree-slide
 #+BEGIN_SRC emacs-lisp
   (use-package org-tree-slide
     :config
     (setq org-tree-slide-header nil
-          org-tree-slide-title nil)
-    :ensure t)
+          org-tree-slide-title nil))
 
   (use-package moom
-    :ensure t
+    
     :config
     (setq moom-frame-width-single 200))
 
@@ -1917,7 +2051,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
 #+END_SRC
 ***** ox-reveal
       #+BEGIN_SRC emacs-lisp
-        (use-package ox-reveal :ensure t)
+        (use-package ox-reveal)
       #+END_SRC
 **** Templates
       #+BEGIN_SRC emacs-lisp
@@ -1928,26 +2062,25 @@ So I controlling my personal calendar from my work calendar and I configure org-
 **** Flycheck
     #+BEGIN_SRC emacs-lisp
       (use-package flycheck
-        :ensure t
+        
         :init (setq flycheck-indication-mode 'right-fringe)
         :hook (prog-mode . flycheck-mode))
     #+END_SRC
 **** Realgud
      #+BEGIN_SRC emacs-lisp
-       (use-package realgud
-         :ensure t)
+       (use-package realgud)
      #+END_SRC
 *** Languages and Frameworks
 **** Angular
     #+BEGIN_SRC emacs-lisp
-      (use-package ng2-mode :ensure t)
+      (use-package ng2-mode)
     #+END_SRC
 **** Clojure
      Most of the clojure configuration comes from: https://github.com/howardabrams/dot-files/blob/master/emacs-clojure.org
 ***** clojure-mode
       #+BEGIN_SRC emacs-lisp
         (use-package clojure-mode
-          :ensure t
+          
           :init
           (defconst clojure--prettify-symbols-alist
             '(("fn"   . ?λ)))
@@ -1957,13 +2090,12 @@ So I controlling my personal calendar from my work calendar and I configure org-
                  ("C-c d g" . cider-grimoire)
                  ("C-c d w" . cider-grimoire-web)
                  ("C-c d c" . clojure-cheatsheet)
-                 ("C-c d d" . dash-at-point))
-          )
+                 ("C-c d d" . dash-at-point)))
       #+END_SRC
 ***** cider
       #+BEGIN_SRC emacs-lisp
         (use-package cider
-          :ensure t
+          
           :commands (cider cider-connect cider-jack-in)
 
           :init
@@ -1987,13 +2119,12 @@ So I controlling my personal calendar from my work calendar and I configure org-
 
           :bind (:map cider-mode-map
                  ("C-c C-v C-c" . cider-send-and-evaluate-sexp)
-                 ("C-c C-p"     . cider-eval-print-last-sexp))
-        )
+                 ("C-c C-p"     . cider-eval-print-last-sexp)))
       #+END_SRC
 ***** paredit
       #+BEGIN_SRC emacs-lisp
         (use-package paredit
-          :ensure t
+          
           :bind ("M-^" . paredit-delete-indentation)
           :bind ("C-^" . paredit-remove-newlines)
           :init
@@ -2028,7 +2159,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
 ***** flycheck
       #+BEGIN_SRC emacs-lisp
         (use-package flycheck-clojure
-          :ensure t
+          
           :init
           (add-hook 'after-init-hook 'global-flycheck-mode)
           :config
@@ -2037,7 +2168,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
             (flycheck-clojure-setup)))
 
         (use-package flycheck-pos-tip
-          :ensure t
+          
           :config
           (use-package flycheck
             :config
@@ -2087,8 +2218,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
 **** Go
 ***** Go Mode
      #+BEGIN_SRC emacs-lisp
-       (use-package go-mode
-         :ensure t)
+       (use-package go-mode)
        (require 'go-mode)
        (add-hook 'before-save-hook 'gofmt-before-save)
      #+END_SRC
@@ -2096,7 +2226,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
 ***** Package
       #+BEGIN_SRC emacs-lisp
         (use-package company-go
-          :ensure t
+          
           :init
           (add-hook 'go-mode-hook (lambda ()
                                     (set (make-local-variable 'company-backends) '(company-go))
@@ -2114,7 +2244,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
 ***** Go guru
      #+BEGIN_SRC emacs-lisp
        (use-package go-guru
-         :ensure t
+         
          :commands go-guru-hl-identifier-mode
          :init (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode))
      #+END_SRC
@@ -2133,16 +2263,16 @@ So I controlling my personal calendar from my work calendar and I configure org-
 ***** Go eldoc
      #+BEGIN_SRC emacs-lisp
        (use-package go-eldoc
-         :ensure t
+         
          :commands go-eldoc-setup
          :init (add-hook 'go-mode-hook 'go-eldoc-setup))
      #+END_SRC
 ***** Go Tooling
      #+BEGIN_SRC emacs-lisp
-       (use-package go-imports :ensure t)
-       (use-package go-rename :ensure t)
-       (use-package go-snippets :ensure t)
-       (use-package go-projectile :ensure t)
+       (use-package go-imports)
+       (use-package go-rename)
+       (use-package go-snippets)
+       (use-package go-projectile)
      #+END_SRC
 ***** Go Treemacs Settings     
       #+BEGIN_SRC emacs-lisp
@@ -2150,8 +2280,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
           (let ((vendor (and (equal "vendor" name) (file-exists-p (format "%s/glide.yml" (file-name-directory path))))))
             ;; Debugging Message
             ;;(message (format "%s - %s" path vendor))
-            vendor)
-          ) 
+            vendor)) 
         (add-to-list 'treemacs-ignored-file-predicates 'golang-vendor-p)
       #+END_SRC
 ***** Go Hydra
@@ -2190,7 +2319,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
          (add-to-list 'smart-tab-completion-functions-alist
                       (cons major-mode #'emmet-expand-yas)))
 
-       (use-package emmet-mode :ensure t
+       (use-package emmet-mode 
          :commands (emmet-mode emmet-expand-line)
          :hook (sgml-mode css-mode)
          :init
@@ -2201,40 +2330,28 @@ So I controlling my personal calendar from my work calendar and I configure org-
        (add-hook 'css-mode-hook 'add-emmet-expand-to-smart-tab-completions)
      #+END_SRC
 **** Java
-***** COMMENT Eclim
-     #+BEGIN_SRC emacs-lisp
-       (use-package eclim
-         :ensure t
-         :config 
-         (use-package company-emacs-eclim
-           :ensure t
-           :config
-           (company-emacs-eclim-setup)))
-
-       (setq
-        ;; Use another eclimd executable
-        eclimd-executable "/usr/lib/eclipse/eclimd"
-        ;; Specify the workspace to use by default
-        eclimd-default-workspace "/home/iocanel/workspace/eclipse/default"
-        ;; Whether or not to block emacs until eclimd is ready
-        eclimd-wait-for-process t)
-
-       (add-hook 'java-mode-hook (lambda () (eclim-mode 1)))
-     #+END_SRC
 ***** Language Server
      #+BEGIN_SRC emacs-lisp
-       (use-package lsp-mode
-         :ensure t)
+       (use-package lsp-mode)
 
        (use-package lsp-ui
          :hook (lsp-mode . lsp-ui-mode)
-         :ensure t)
+         :config
+         (setq lsp-ui-sideline-show-hover nil))
 
        (use-package company-lsp
-         :ensure t
+         
          :init (add-to-list 'company-backends 'company-lsp))
 
      #+END_SRC
+****** Utilities
+#+begin_src emacs-lisp
+(defun iocanel/lsp-workspace-clear ()
+  "Wipe lsp workspace."
+  (interactive)
+  (setq lsp--session (make-lsp-session)) 
+  (lsp-restart-workspace))
+#+end_src
 ****** Java
       #+BEGIN_SRC emacs-lisp
         (defun iocanel/lsp-java-actions()
@@ -2248,14 +2365,13 @@ So I controlling my personal calendar from my work calendar and I configure org-
           :init
           (setq lsp-java-save-action-organize-imports nil
                 lsp--cur-workspace "~/workspace/lsp/"
-                lsp-java-auto-build t
+                lsp-java-auto-build nil
                 lsp-java-import-gradle-enabled nil
                 lsp-inhibit-message t
                 lsp-java-completion-guess-arguments t)
-          :hook (java-mode . iocanel/lsp-java-actions)
-          :ensure t)
+          :hook (java-mode . iocanel/lsp-java-actions))
 
-        (use-package lsp-java-treemacs :after (treemacs))
+        (require 'lsp-java-treemacs)
 
         (evil-leader/set-key "u a" 'lsp-ui-sideline-apply-code-actions)
         (evil-leader/set-key "u o" 'lsp-java-organize-imports)
@@ -2269,19 +2385,19 @@ So I controlling my personal calendar from my work calendar and I configure org-
         (use-package lsp-intellij :load-path "~/workspace/src/github.com/Ruin0x11/lsp-intellij") 
 
         ;; Since we use the source, we can comment out the actual package.
-        ;;(use-package lsp-intellij :ensure t)
+        ;;(use-package lsp-intellij)
       #+END_SRC
 
 ***** Debug Server
 ****** Dap Melpa
      #+BEGIN_SRC emacs-lisp
        (use-package dap-mode
-         :ensure t :after lsp-mode
+          :after lsp-mode
          :config
          (dap-mode t)
          (dap-ui-mode t))
 
-       (use-package dap-java :after (lsp-java))
+       (require 'dap-java)
 
        (evil-leader/set-key "d" 'dap-hydra)
      #+END_SRC
@@ -2300,11 +2416,11 @@ So I controlling my personal calendar from my work calendar and I configure org-
        (add-to-list 'load-path "~/workspace/src/github.com/m0smith/maven-pom-mode/maven-pom-mode.el")
        (load "~/workspace/src/github.com/m0smith/maven-pom-mode/maven-pom-mode.el") 
      #+END_SRC     
-***** Meghanada
+***** COMMENT Meghanada
 ****** Package
       #+BEGIN_SRC emacs-lisp
                 (use-package meghanada 
-                  :ensure t
+                  
                   :load-path "~/workspace/src/github.com/mopemope/meghanada-emacs/"
                   :init
                   (setq meghanada-java-path "java")
@@ -2366,7 +2482,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
       #+END_SRC
 **** Groovy
      #+BEGIN_SRC emacs-lisp
-       (use-package groovy-mode :ensure t)
+       (use-package groovy-mode)
      #+END_SRC
 **** Logo
 ***** COMMENT Installation
@@ -2389,12 +2505,12 @@ So I controlling my personal calendar from my work calendar and I configure org-
 #+end_src
 **** Kotlin
      #+BEGIN_SRC emacs-lisp
-       (use-package kotlin-mode :ensure t)
+       (use-package kotlin-mode)
      #+END_SRC
 **** Javascript
     #+BEGIN_SRC emacs-lisp
       (use-package js2-mode
-        :ensure t
+        
         :init
         (setq js-basic-indent 2)
         (setq-default js2-basic-indent 2
@@ -2409,8 +2525,11 @@ So I controlling my personal calendar from my work calendar and I configure org-
                 (lambda ()
                   (push '("function" . ?ƒ) prettify-symbols-alist)))
 
-      (add-hook 'js2-mode-hook
-                (lambda () (flycheck-select-checker "javascript-eslint")))
+      ;; This seems to be broken:
+      ;; `flycheck-may-use-checker: Wrong type argument: symbolp, "javascript-eslint"`
+      ;; ... so let's disable for now
+      ;;(add-hook 'js2-mode-hook
+      ;;          (lambda () (flycheck-select-checker "javascript-eslint")))
 
       (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 
@@ -2418,9 +2537,9 @@ So I controlling my personal calendar from my work calendar and I configure org-
 **** Python
 ***** Packages
      #+BEGIN_SRC emacs-lisp
-       (use-package python-mode :ensure t)
-       (use-package virtualenvwrapper :ensure t)
-       (use-package pytest :ensure t)
+       (use-package python-mode)
+       (use-package virtualenvwrapper)
+       (use-package pytest)
 
      #+END_SRC
 ***** py-flycheck
@@ -2429,7 +2548,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
      #+END_SRC
 ***** pyenv
      #+BEGIN_SRC emacs-lisp
-       (use-package pyenv-mode :ensure t)
+       (use-package pyenv-mode)
 
        (defun projectile-pyenv-mode-set ()
          "Set pyenv version matching project name."
@@ -2443,20 +2562,20 @@ So I controlling my personal calendar from my work calendar and I configure org-
      #+END_SRC
 ***** anaconda-mode
      #+BEGIN_SRC emacs-lisp
-       (use-package anaconda-mode :ensure t)
-       (use-package company-anaconda :ensure t)
+       (use-package anaconda-mode)
+       (use-package company-anaconda)
 
        (add-hook 'python-mode-hook 'anaconda-mode)
        (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
 
 
        (use-package company-anaconda
-         :ensure t
+         
          :init (add-to-list 'company-backends 'company-anaconda))
      #+END_SRC
 ***** jedi
      #+BEGIN_SRC emacs-lisp
-       (use-package company-jedi :ensure t)
+       (use-package company-jedi)
 
        (defun add-company-jedi-to-backends ()
          (add-to-list 'company-backends 'company-jedi))
@@ -2467,7 +2586,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
      Issues encountered in the past with *ob-ipython*.
 **** Protobuf
     #+BEGIN_SRC emacs-lisp
-      (use-package protobuf-mode :ensure t)
+      (use-package protobuf-mode)
     #+END_SRC
 **** Typescript
 ***** typescript-mode
@@ -2485,7 +2604,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
            (message compile-command)))
 
        (use-package typescript-mode
-         :ensure t
+         
          :mode "\\.ts\\'"
          :init
          (setup-typescript-mode))
@@ -2504,8 +2623,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
          ;; `M-x package-install [ret] company`
          (company-mode +1))
 
-       (use-package tide
-         :ensure t)
+       (use-package tide)
 
        (add-hook 'typescript-mode-hook
                  (lambda ()
@@ -2515,54 +2633,50 @@ So I controlling my personal calendar from my work calendar and I configure org-
      #+END_SRC
 ***** tss
      #+BEGIN_SRC emacs-lisp
-       (use-package tss :ensure t)
+       (use-package tss)
      #+END_SRC
 **** JSON
     #+BEGIN_SRC emacs-lisp
-      (use-package json-mode :ensure t)
-      (use-package json-reformat :ensure t)
+      (use-package json-mode)
+      (use-package json-reformat)
     #+END_SRC
 **** YAML
     #+BEGIN_SRC emacs-lisp
-      (use-package yaml-mode :ensure t)
+      (use-package yaml-mode)
     #+END_SRC
 **** UML
 ***** WSD mode
 #+BEGIN_SRC emacs-lisp
-  (use-package wsd-mode
-    :ensure t)
+  (use-package wsd-mode)
 #+END_SRC
 *** idee
     #+BEGIN_SRC emacs-lisp
-      (use-package idee :load-path "~/workspace/src/github.com/iocanel/idee/") 
-      (use-package idee-evil :load-path "~/workspace/src/github.com/iocanel/idee/") 
-      (use-package idee-clojure :load-path "~/workspace/src/github.com/iocanel/idee/") 
-      (use-package idee-elisp :load-path "~/workspace/src/github.com/iocanel/idee/") 
-      (use-package idee-golang :load-path "~/workspace/src/github.com/iocanel/idee/") 
-      (use-package idee-java :load-path "~/workspace/src/github.com/iocanel/idee/") 
-      (use-package idee-python :load-path "~/workspace/src/github.com/iocanel/idee/") 
-
-      (use-package idee-maven :load-path "~/workspace/src/github.com/iocanel/idee/")
-      (use-package idee-spring :load-path "~/workspace/src/github.com/iocanel/idee/") 
-
-      (use-package meghanada :load-path "~/workspace/src/github.com/mopemope/meghanada-emacs/") 
-      ;(use-package idee-meghanada :load-path "~/workspace/src/github.com/iocanel/idee/") 
-      ;(use-package idee-lsp-intellij :load-path "~/workspace/src/github.com/iocanel/idee/") 
-      (use-package idee-lsp-java :load-path "~/workspace/src/github.com/iocanel/idee/")
+      (use-package idee :straight (idee :host github :repo "iocanel/idee"))
+      (require 'idee-evil)
+      (require 'idee-clojure)
+      (require 'idee-golang)
+      (require 'idee-java)
+      (require 'idee-lsp-java)
+      (require 'idee-javascript)
+      (require 'idee-python)
+      (require 'idee-maven)
+      (require 'idee-spring)
+      (require 'idee-quarkus)
+      (require 'idee-dap)
     #+END_SRC
 ** Operations
 *** Docker
     #+BEGIN_SRC emacs-lisp
-      (use-package docker :ensure t)
-      (use-package docker-tramp :ensure t)
-      (use-package dockerfile-mode :ensure t)
+      (use-package docker)
+      (use-package docker-tramp)
+      (use-package dockerfile-mode)
     #+END_SRC
 *** Kubernetes
 **** Plugins
      #+BEGIN_SRC emacs-lisp
        (use-package kubernetes :load-path "~/workspace/src/github.com/chrisbarrett/kubernetes-el")
        (use-package kubernetes-evil :load-path "~/workspace/src/github.com/chrisbarrett/kubernetes-el")
-       (use-package kubernetes-tramp :ensure t)
+       (use-package kubernetes-tramp)
      #+END_SRC
 **** Custom Functions
 ***** Buffer Actions
@@ -2585,9 +2699,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
           (interactive "r")
           (if (region-active-p)
               (kubernetes-create-from-region start end)
-            (kubernetes-create-from-buffer)
-            )
-          )
+            (kubernetes-create-from-buffer)))
 
         (defun kubernetes-delete-from-buffer()
           "Pass the current to kubectl/oc delete."
@@ -2607,9 +2719,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
           (interactive "r")
           (if (region-active-p)
               (kubernetes-delete-from-region start end)
-            (kubernetes-delete-from-buffer)
-            )
-          )
+            (kubernetes-delete-from-buffer)))
 
         (defun kubernetes-replace-from-buffer()
           "Pass the current buffer to kubectl/oc create."
@@ -2629,14 +2739,11 @@ So I controlling my personal calendar from my work calendar and I configure org-
           (interactive "r")
           (if (region-active-p)
               (kubernetes-replace-from-region start end)
-            (kubernetes-replace-from-buffer)
-            )
-          )
+            (kubernetes-replace-from-buffer)))
 
         (defun kubernetes--tmp-resource-name()
           "Create a temporary kubernetes resource file."
-          (concat temporary-file-directory "kubernetes-" (format "%06x-%06x" (random (expt 16 6)) (random (expt 16 6))))
-        )
+          (concat temporary-file-directory "kubernetes-" (format "%06x-%06x" (random (expt 16 6)) (random (expt 16 6)))))
       #+END_SRC
 ***** Debug Java Application
      #+BEGIN_SRC emacs-lisp
@@ -2658,8 +2765,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
                (if (< 1 n-lines)
                    (message "Copied %s lines, starting with: %s" n-lines ellipsized)
                  (async-shell-command (format "%s %s %s" "kubectl port-forward"  ellipsized (format "%s:%s" port poert)))
-                 (message "Portforwarding: %s" ellipsized)
-                 )))))
+                 (message "Portforwarding: %s" ellipsized))))))
      #+END_SRC
 **** Hydra
      #+BEGIN_SRC emacs-lisp
@@ -2684,8 +2790,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
                 ("d" kubernetes-mark-for-delete)
                 ("x" kubernetes-execute-marks)
                 ("p" kubernetes-portforward)
-                ("q" nil "quit")
-                )
+                ("q" nil "quit"))
 
               (evil-leader/set-key "k" 'kubernetes-hydra/body)
               (define-key evil-normal-state-map (kbd "C-k") 'kubernetes-hydra/body)
