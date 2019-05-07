@@ -119,10 +119,6 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
         (ido-mode 1)
         ;(setq completing-read-function 'ido-completing-read)
       #+END_SRC
-***** COMMENT Smex      
-      #+BEGIN_SRC emacs-lisp
-        (use-package smex :bind (("M-x" . 'smex) ( "M-X" . 'smex-major-mode-commands)))
-      #+END_SRC
 ***** Vertical Mode
 ****** Package
        #+BEGIN_SRC emacs-lisp
@@ -166,21 +162,35 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
        #+END_SRC
 **** Ivy
 #+BEGIN_SRC emacs-lisp
-  (use-package flx)
+      (use-package flx)
 
-  (use-package ivy
-    :after flx
-    :init
-    (setq ivy-use-virtual-buffers t
-          ivy-re-builders-alist '((swiper . regexp-quote)
-                                  (t . ivy--regex-fuzzy))
-          completing-read-function 'ivy-completing-read)
-    :config
-    (ivy-mode 1))
+      (use-package ivy
+        :after flx
+        :init
+        (setq ivy-use-virtual-buffers t
+              ivy-re-builders-alist '((swiper . regexp-quote)
+                                      (t . ivy--regex-fuzzy))
+              completing-read-function 'ivy-completing-read)
+        :config
+        (ivy-mode 1))
 
-  (use-package counsel)
+    (use-package counsel
+      :bind ("M-x" . 'counsel-M-x))
 
 #+END_SRC
+***** amx
+      #+BEGIN_SRC emacs-lisp
+                (use-package amx 
+                  :config
+                  (setq amx-prompt-string "⌘")) 
+      #+END_SRC
+***** post frame
+#+begin_src emacs-lisp
+    (use-package ivy-posframe
+      :config  (setq ivy-display-function #'ivy-posframe-display-at-frame-center)
+               (ivy-posframe-enable)
+      :straight (ivy-posframe :type git :host github :repo "tumashu/ivy-posframe"))
+#+end_src
 **** Smart Tab
      #+BEGIN_SRC emacs-lisp
        (use-package smart-tab
