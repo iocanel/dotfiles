@@ -371,10 +371,19 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
 *** Swiper
     #+BEGIN_SRC emacs-lisp
       (use-package swiper
-        :bind ("C-s" . 'swiper)
+        :bind ("C-s" . 'swiper-with-selection)
         :custom
         (swiper-action-recenter t))
+
+      (defun swiper-with-selection (start end)
+        "Swiper variation that uses selected text as initial input."
+        (interactive "r")
+        (if (use-region-p)
+            (swiper (buffer-substring start end))
+          (swiper)))
     #+END_SRC
+    
+
 *** Screenshots
 #+BEGIN_SRC emacs-lisp
   (defun screenshot ()
