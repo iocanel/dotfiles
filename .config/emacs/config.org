@@ -205,6 +205,17 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
                (ivy-posframe-enable)
       :straight (ivy-posframe :type git :host github :repo "tumashu/ivy-posframe"))
 #+end_src
+**** Helm
+#+begin_src emacs-lisp
+  (use-package helm)
+  (use-package helm-ag
+    :config
+    (setq helm-ag-command-option "-u"))
+
+  (use-package helm-projectile
+    :config
+    (setq helm-ag-insert-at-point 'symbol))
+#+end_src
 **** Smart Tab
      #+BEGIN_SRC emacs-lisp
        (use-package smart-tab
