@@ -1,4 +1,18 @@
 * My Emacs configuration
+  (use-package all-the-icons)
+  (use-package doom-themes)
+  (use-package doom-modeline
+        :init
+        (setq doom-modeline-buffer-file-name-style 'truncate-upto-project
+              doom-modeline-icon t
+              doom-modeline-major-mode-icon t
+              doom-modeline-major-mode-color-icon t
+              doom-modeline-lsp t
+              doom-modeline-column-zero-based t)
+         :hook (after-init . doom-modeline-mode ))
+
+  (load-theme 'doom-one t)
+#+end_src
 ** Internal Settings
 *** Byte compile on startup
 #+begin_src emacs-lisp
