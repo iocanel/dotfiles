@@ -1,0 +1,5 @@
+#!/bin/bash
+
+DESIRED_STATE=$1
+KEYBOARD_ID=`xinput list | grep "AT Translated" | awk -F "id=" '{print $2}'`
+toggle-device $KEYBOARD_ID $DESIRED_STATE

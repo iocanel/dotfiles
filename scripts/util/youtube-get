@@ -1,0 +1,21 @@
+#!/bin/bash
+
+
+ERROR_PATH=$(mktemp /tmp/youtube.XXXXXXXXXX)
+TITLE=`youtube-dl --get-title $1 2> $ERROR_PATH`
+if [ -n "$TITLE" ]; then
+	ICON_URL=`youtube-dl --get-thumbnail $1`
+	ICON_PATH=$(mktemp /tmp/youtube.XXXXXXXXXX)
+	curl -s $ICON_URL > $ICON_PATH
+	convert $ICON_PATH -resize 200 $ICON_PATH
+	notify-send -u low -i $ICON_PATH -a "youtube" "Scheduled: $TITLE"
+	youtube-dl $1 -o "/home/iocanel/Downloads/Youtube/%(title)s" --write-thumbnail
+	if [ $? -eq 0 ]; then
+		notify-send -u normal -i $ICON_PATH -a "youtube" "Completed: $TITLE"
+	else
+		notify-send -u critical -i $ICON_PATH -a "youtube" "Failed: $TITLE" 
+	fi
+else
+	ERROR_MESSAGE=`cat $ERROR_PATH`
+	notify-send -u critical -a "youtube" "$ERROR_MESSAGE"
+fi

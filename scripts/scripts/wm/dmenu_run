@@ -1,0 +1,6 @@
+#!/bin/zsh
+if [ -f "$HOME/bin/dmenu_path" ]; then
+        $HOME/bin/dmenu_path | dmenu "$@" | ${SHELL:-"/bin/zsh"} &
+else    
+        dmenu_path | dmenu "$@" | ${SHELL:-"/bin/zsh"} &
+fi

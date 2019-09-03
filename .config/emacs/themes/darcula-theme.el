@@ -115,8 +115,15 @@
  '(font-lock-negation-char-face ((t (:underline (:color foreground-color :style line) :inherit 'default))))
                                         ;for easily-overlooked negation characters.
 
- '(treemacs-root-face  ((t (:foreground "#708183" :weight bold :height 125 :inherit 'font-lock-constant-face))))
+ '(treemacs-root-face  ((t (:foreground "#cc7832" :weight bold :height 125 :inherit 'font-lock-constant-face))))
                                         ;for treemacs project root
+
+  (set-face-attribute 'treemacs-git-modified-face nil
+                      :weight 'bold
+                      :foreground "#528639")
+  (set-face-attribute 'treemacs-git-conflict-face nil
+                      :weight 'bold
+                      :foreground "#528639")
 
  '(ivy-current-match ((t (:inherit 'highlight :foreground "orange" ))))
                                         ;for ivy/swiper highlight

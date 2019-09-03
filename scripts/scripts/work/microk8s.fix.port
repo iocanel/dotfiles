@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# define our new port number
+API_PORT=8443
+
+# update kube-apiserver args with the new port
+echo "Updating api server"
+echo "--insecure-port=$API_PORT" | sudo tee -a /var/snap/microk8s/current/args/kube-apiserver 
+
+# tell other services about the new port
+echo "Update the rest of the services"
+sudo sed -i "s/:8080/:$API_PORT/" /var/snap/microk8s/current/args/* 
+
+# create new, updated copies of our kubeconfig for kubelet and kubectl to use
+#mkdir -p ~/.kube && microk8s.config | sed "s/:8080/:$API_PORT/" | sudo tee /var/snap/microk8s/current/kubelet.config > ~/.kube/microk8s.config
+
+# tell kubelet about the new kubeconfig
+echo "Tell kubelt about the kubeconfig"
+sudo sed -i 's#${SNAP}/configs/kubelet.config#${SNAP_DATA}/kubelet.config#' /var/snap/microk8s/current/args/kubelet
+
+# disable and enable the microk8s snap to restart all services
+sudo snap disable microk8s && sudo snap enable microk8s

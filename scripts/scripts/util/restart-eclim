@@ -1,0 +1,15 @@
+#!/bin/zsh
+
+PID=`ps -aef | grep eclimd | grep java | awk -F " " '{print $2}'`
+
+if [ -n "$PID" ]; then
+  kill -9 $PID
+  sleep 5
+fi
+
+source ~/.zshenv
+/usr/lib/eclipse/eclimd -b -f ~/.config/eclim/eclimrc
+
+# Send notification and switch to namespace
+notify-send -a "Eclim" -u "normal" -i /usr/share/icons/hicolor/48x48/apps/eclipse.png "Restarted" "Eclim daemon has been restarted"
+

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+#if invoked from terminal just delegate
+if [ ! -z "$COLORTERM" ]; then
+	/usr/bin/alsamixer
+else
+	urxvt -name alsamixer -e /usr/bin/alsamixer
+fi

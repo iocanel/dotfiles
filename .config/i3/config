@@ -33,6 +33,7 @@ floating_modifier $mod
 # start a terminal
 #bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+Return exec urxvt --title terminal
+bindsym $mod+Enter exec urxvt --title terminal
 
 
 # kill focused window
@@ -138,6 +139,7 @@ bindsym --release $mod+Shift+p exec "scrot -s '/home/iocanel/Photos/screenshots/
 bindsym --release Shift+Print exec "scrot -s '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
 bindsym --release Print exec "scrot -m '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
 bindsym --release $mod+Shift+Print exec "scrot -u -d 4 '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
+bindsym --release Ctrl+Shift+p exec "imgur-screenshot -w"
 
 # Screen Saver
 bindsym $mod+Shift+s exec toggle-screenlock
@@ -148,12 +150,19 @@ bindsym $mod+Shift+m exec toggle-monitor
 #Emacs Daemon
 bindsym $mod+Shift+e exec restart-emacsd
 
+#Temporary workaround for auto resolving idea file cache conflicts
+bindsym $mod+Shift+w exec file-cache-conflict-resolve
+
 # Bluetooth Manager
 bindsym --release $mod+Shift+b exec toggle-blueman-applet
 
 #Network Manager
 bindsym --release $mod+Shift+n exec toggle-nm-applet
 
+#Yapt
+bindsym $mod+y exec yapt -t
+
+bindsym $mod+Shift+y exec yapt -r
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -186,6 +195,7 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
+#  tray_output primary
   workspace_buttons yes
   mode dock #or hide
   modifier $mod
@@ -210,12 +220,8 @@ hide_edge_borders both
 # Assing applications to workspaces
 assign [class="^Urxvt$" instance="^mutt$"] 1
 assign [class="Emacs"] 2
-assign [class="Chromium"] 3
+assign [class="Chrome"] 3
 assign [class="qutebrowser"] 3
-assign [class="jetbrains-idea"] 4
-assign [class="^Urxvt$" instance="^weechat$"] 5
-assign [class="^Urxvt$" instance="^mutt$"] 6
-assign [class="^Urxvt$" instance="^ranger$"] 7
 
 #Autostart programs
 
@@ -229,25 +235,25 @@ exec --no-startup-id "setxkbmap -model pc105 -layout us,gr -option grp:alt_shift
 exec --no-startup-id "autocutsel"
 
 exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
-exec --no-startup-id /usr/bin/emacs --daemon
-exec --no-startup-id xautolock -time 10 -locker 'lock-screen'
+#exec --no-startup-id /usr/bin/emacs --daemon
+exec --no-startup-id xautolock -time 30 -locker 'lock-screen'
+exec --no-startup-id /usr/bin/compton -b
+exec --no-startup-id ~/scripts/util/toggle-camera off
+#exec --no-startup-id ~/scripts/util/toggle-keyboard off
 
 # Applications
 exec --no-startup-id i3-msg 'workspace 1; exec urxvt --title terminal'
-exec --no-startup-id i3-msg 'workspace 2; exec urxvt --title emacs -name emacs -e emacs'
+#exec --no-startup-id i3-msg 'workspace 2; exec urxvt --title emacs -name emacs -e emacs'
 exec --no-startup-id i3-msg 'workspace 3; exec qutebrowser'
-exec --no-startup-id i3-msg 'workspace 5; exec urxvt --title weecahat -name weechat -e weechat'
-exec --no-startup-id i3-msg 'workspace 6; exec urxvt --title mutt -name mutt -e mutt'
-exec --no-startup-id i3-msg 'workspace 7; exec urxvt --title ranger -name ranger -e ranger'
+exec --no-startup-id i3-msg 'workspace 5; exec wavebox'
 
 # Bind to workspace
 bindsym $mod+1 workspace 1; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title terminal' ) -eq 2 ] && urxvt --title terminal
-bindsym $mod+2 workspace 2; exec [ $( ps -eo cmd | grep -c '[e]macsclient -c' ) -eq 2 ] && emacsclient -c
+bindsym $mod+2 workspace 2;
+#bindsym $mod+2 workspace 2; # exec [ $( ps -eo cmd | grep -c '[e]macsclient -c' ) -eq 2 ] && emacsclient -c
 bindsym $mod+3 workspace 3; exec [ $( ps -eo cmd | grep -c '[q]utebrowser' ) -eq 2 ] && qutebrowser
-bindsym $mod+4 workspace 4; exec [ $( ps -eo cmd | grep -c '[i]dea.sh' ) -eq 2 ] && /home/iocanel/tools/idea/bin/idea.sh
-bindsym $mod+5 workspace 5; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title weechat -name weechat' ) -eq 2 ] && urxvt --title weechat -name -e weechat
-bindsym $mod+6 workspace 6; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title mutt -name mutt' ) -eq 2 ] && urxvt --title mutt -name mutt -e neomutt
-bindsym $mod+7 workspace 7; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title ranger -name ranger' ) -eq 2 ] && urxvt --title ranger -name ranger -e ranger
+bindsym $mod+5 workspace 5;
+#bindsym $mod+5 workspace 5; exec [ $( ps -eo cmd | grep -c '[w]avebox' ) -eq 2 ] && wavebox
 bindsym $mod+8 workspace 8
 bindsym $mod+9 workspace 9
 bindsym $mod+0 workspace 10

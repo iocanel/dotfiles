@@ -1,0 +1,65 @@
+#!/bin/bash
+JOB="dev"
+CONFIG_XML="/tmp/jenkins-job.xml"
+
+PIPELINE=`cat $1`
+
+read -r -d '' HEADER << __HEADER__ 
+<?xml version="1.0" encoding="UTF-8"?><flow-definition plugin="workflow-job@2.3">
+  <actions/>
+  <description/>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.9">
+    <script>
+__HEADER__
+
+read -r -d '' FOOTER << __FOOTER__ 
+    </script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+</flow-definition>
+__FOOTER__
+
+echo "$HEADER" > /tmp/jenkins-job.xml
+echo "$PIPELINE" >> /tmp/jenkins-job.xml
+echo "$FOOTER" >> /tmp/jenkins-job.xml
+
+curl -X POST http://jenkins.minikube.io/job/$JOB/config.xml --data-binary "@$CONFIG_XML" 2> /dev/null
+BUILD_ID=`curl -X GET http://jenkins.minikube.io/job/$JOB/api/json 2> /dev/null | jq '.nextBuildNumber'`
+QUEUE_ITEM_URL=`curl -i http://jenkins.minikube.io/job/dev/build 2> /dev/null | grep Location | cut -d " " -f2`
+echo "Starting Job:$JOB with Build number: $BUILD_ID"
+
+#Wait until the build is up and running
+echo -n "Waiting"
+while true; do
+	STATUS_CODE=`curl --write-out %{http_code} --silent --output /dev/null  http://jenkins.minikube.io/job/$JOB/$BUILD_ID/api/json`
+	if [[ $STATUS_CODE -eq 404 ]]; then
+		echo -n "."
+		sleep 2
+	else
+		break
+	fi
+done
+echo ""
+
+TOTAL_LINES=0
+# Loop forever (or at least until the build is over) and get the logs
+while true; do
+	RUNNING=`curl -X GET http://jenkins.minikube.io/job/$JOB/$BUILD_ID/api/json 2> /dev/null | jq '.building'`
+	TEXT=`curl -s http://jenkins.minikube.io/job/$JOB/$BUILD_ID/consoleText 2> /dev/null`
+	TO_DISPLAY=`echo "$TEXT" | tail -n +$(($TOTAL_LINES+1))`
+	if [ "$TO_DISPLAY" == "" ];then
+		continue;
+	fi
+	echo "$TO_DISPLAY"
+	PRINTED_LINES=`echo "$TO_DISPLAY" | wc -l`
+	TOTAL_LINES=$(($TOTAL_LINES + $PRINTED_LINES))
+
+	if [ "$RUNNING" == "true" ]; then
+		sleep 2
+	else
+		break
+	fi
+done

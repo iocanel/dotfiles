@@ -1,0 +1,25 @@
+#!/bin/bash
+
+source $(grab github.com/shellib/cli)
+
+function usage() {
+    echo "Usage: dvd-rip <title>"
+    echo "Options:"
+    echo ""
+    echo "\t\t--track\t\t The dvd track to rip."
+    echo "\t\t--audio-track\t\t The dvd audio track to rip."
+    echo ""
+    echo "To find the the desired track and audio track values, you can use acidip."
+}
+TITLE=$1
+TRACK=$(or $(readopt --track $*) 1)
+AUDIO_TRACK=$(or $(readopt --audio-track $*) 7)
+AUDIO_ID=$((127 + AUDIO_TRACK))
+
+if [ -z "$TITLE" ]; then
+	usage
+	exit 1
+fi
+
+echo "Riping ${TRACK} with ${AUDIO_ID} to  ${HOME}/Rip/${TITLE}.avi ..."
+mencoder dvd://${TRACK} -dvd-device /dev/sr0 -ovc lavc -lavcopts vcodec=mpeg4:vhq:vbitrate="1600":aspect=16/9 -oac mp3lame -alang Greek -aid ${AUDIO_ID} -lameopts br=128:vol=6 -nosub -o ${HOME}/Rip/${TITLE}.avi

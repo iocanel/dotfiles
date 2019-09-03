@@ -1,0 +1,15 @@
+#!/bin/bash
+
+echo "Checking out master branch."
+git checkout master
+
+echo "Copying tags:"
+git branch | grep -v "*" | while read branch
+do
+    TMP_DIR=$(mktemp -d /tmp/XXXXXXXXXX)
+    echo "        $branch -> $TMP_DIR"
+    git clone --shared --branch $branch file://$(pwd)  $TMP_DIR
+    cp -r $TMP_DIR $branch
+    rm -rf $branch/.git*
+done
+

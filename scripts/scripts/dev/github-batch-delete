@@ -1,0 +1,13 @@
+#!/bin/bash
+
+source $(grab github.com/shellib/cli)
+
+repositories=$(readopt --repositories)
+user=$(or $(readopt --user*) "iocanel")
+
+token=`pass show github/$user/token`
+
+if [ -f $repositories ]; then
+  while read r;do echo "deleting $r"; curl -XDELETE -H "Authorization: token $token" "https://api.github.com/repos/$user/$r ";done < $repositories
+fi
+

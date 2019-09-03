@@ -1,0 +1,12 @@
+#!/bin/bash
+
+TOKEN_ID=OATH290580B9
+SECRET=`pass show services/redhat.com/token/$TOKEN_ID/secret`
+PIN=`pass show services/redhat.com/token/$TOKEN_ID/pin`
+COUNTER=`cat $HOME/Documents/.otp-counter`
+COUNTER=$((COUNTER+1))
+echo $COUNTER > $HOME/Documents/.otp-counter
+TOKEN=`otp -m hotp -s $SECRET -c $COUNTER | tail -n1`
+PASSWORD="${PIN}${TOKEN}"
+echo -n $PASSWORD | xclip
+clipdel -d $PASSWORD

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+DEVICE=$1
+DESIRED_STATE=$2
+STATE=$(xinput list-props "$DEVICE" | grep "Device Enabled" | grep -o "[01]$")
+if [ "$DESIRED_STATE" == "on" ]; then
+  xinput --enable "$DEVICE"
+elif [ "$DESIRED_STATE" == "off" ]; then
+  xinput --disable "$DEVICE"
+elif [ $STATE == '1' ]; then
+  xinput --disable "$DEVICE"
+else
+  xinput --enable "$DEVICE"
+fi

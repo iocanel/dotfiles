@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Kill Java
+#pkill java
+
+# Cleanup Projects
+rm -rf ~/f2f-demo*
+
+# Cleanup backups
+rm ~/.emacs.d/backups/\!home\!iocanel\!f2f-demo*
+
+# Cleanup workspace 
+rm -rf ~/.emacs.d/workspace/*
+
+cp ~/.emacs.d/projectile-bookmarks.eld.before ~/.emacs.d/projectile-bookmarks.eld

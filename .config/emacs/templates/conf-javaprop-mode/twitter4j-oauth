@@ -1,0 +1,8 @@
+# contributor: Ioannis Canellos <iocanel@gmail.com>
+# name: Twitter4j OAuth properties
+# key: twitter4j-oauth
+# --
+oauth.consumerKey=${1:`(s-trim (shell-command-to-string "pass show services/twitter/iocanel-dev/api-key"))`}
+oauth.consumerSecret=${2:`(s-trim (shell-command-to-string "pass show services/twitter/iocanel-dev/api-key-secret"))`}
+oauth.accessToken=${3:`(s-trim (shell-command-to-string "pass show services/twitter/iocanel-dev/access-token"))`}
+oauth.accessTokenSecret=${4:`(s-trim (shell-command-to-string "pass show services/twitter/iocanel-dev/access-token-secret"))`}

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+source $(grab github.com/shellib/cli)
+
+user=$(or $(readopt --user*) "iocanel")
+token=`pass show github/$user/token`
+
+curl -XGET -H "Authorization: token $token" "https://api.github.com/users/iocanel/repos?type=all"
+
+

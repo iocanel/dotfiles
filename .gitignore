@@ -1,5 +1,6 @@
 *
 !.gitignore
+!update-dotfiles.sh
 
 #general
 !.config

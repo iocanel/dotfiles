@@ -1,0 +1,6 @@
+#!/bin/bash
+
+TOKEN=`pass show github/iocanel/access_token`
+INPUT_FILE=$1
+
+while read r;do curl -XDELETE -H 'Authorization: token $TOKEN'  "https://api.github.com/repos/$r ";done < $1

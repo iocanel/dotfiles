@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if pgrep -x "xautolock" > /dev/null
+then
+        notify-send -a "Screensaver" -u "normal" "Enabled" "Screensaver already enabled"
+else
+	nohup xautolock -time 10 -locker i3lock 2> /dev/null &
+        notify-send -a "Screensaver" -u "normal" "Enabled" "Screensaver successfully enabled"
+fi

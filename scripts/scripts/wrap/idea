@@ -1,0 +1,3 @@
+#!/bin/bash
+
+$HOME/tools/idea/bin/idea.sh

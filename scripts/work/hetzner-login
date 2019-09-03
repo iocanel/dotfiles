@@ -1,0 +1,3 @@
+#!/bin/bash
+
+oc login https://195.201.87.126:8443 --username=iocanel --password=`pass show services/redhat.com/hetzner/iocanel`

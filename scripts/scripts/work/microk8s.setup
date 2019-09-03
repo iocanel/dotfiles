@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cp $HOME/.kube/config $HOME/.kube/config.pre.microk8s
+microk8s.config -l > $HOME/.kube/config
+alias docker=microk8s.docker

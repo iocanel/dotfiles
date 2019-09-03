@@ -1,0 +1,9 @@
+#!/bin/bash
+
+PROJECT=ambient-polymer-231816
+ZONE=europe-west1-b
+CLUSTER=demo-cluster-1
+gcloud config set project $PROJECT
+gcloud config set compute/zone $ZONE
+gcloud container clusters create $CLUSTER
+gcloud container clusters get-credentials $CLUSTER

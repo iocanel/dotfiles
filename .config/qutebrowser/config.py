@@ -56,12 +56,12 @@ c.statusbar.hide = True
 
 # Search engines
 c.url.searchengines = {
-        "DEFAULT": "https://duckduckgo.com/?q={}",
-        "g": "https://www.google.com/search?q={}",
+        "DEFAULT": "https://www.google.com/search?q={}",
+        "bd": "https://duckduckgo.com/?q={}",
         "a": "https://www.google.com/search?q={}",
         "am": "https://www.amazon.com/s/field-keywords={}",
         "amu": "https://www.amazon.co.uk/s/field-keywords={}",
-        "amd": "https://www.amazon.co.de/s/field-keywords={}",
+        "amd": "https://www.amazon.de/s/field-keywords={}",
         "at": "http://www.athinorama.gr/search/default.aspx?q={}",
         "eb": "https://www.ebay.co.uk/sch/i.html?_nkw={}&_sacat=0",
         "aw": "https://wiki.archlinux.org/index.php?search={}",
@@ -81,3 +81,4 @@ c.url.searchengines = {
 
 # Keybindings
 config.bind('<Ctrl-p>', 'spawn --userscript qute-pass') 
+config.bind('<Ctrl-y>', 'spawn youtube-get {url}') 

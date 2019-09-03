@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if pgrep -x "blueman-applet" > /dev/null
+then
+	pkill blueman-applet
+else
+	nohup blueman-applet 2> /dev/null &
+fi

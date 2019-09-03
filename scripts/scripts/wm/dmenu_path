@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+# Custom dmenu_path that picks up path entries from .config/dmenu/menu or defaults to the global dmenu_path
+#
+
+if [ -f "$HOME/.config/dmenu/menu" ]; then
+	cat $HOME/.config/dmenu/menu
+	exit
+fi

@@ -1,0 +1,8 @@
+#!/bin/zsh
+
+#if invoked from terminal just delegate
+if [ -n "$COLORTERM" ]; then
+	/usr/bin/neomutt -F ~/.config/mutt/muttrc
+else
+	urxvt -name mutt -e /usr/bin/neomutt -F ~/.config/mutt/muttrc
+fi

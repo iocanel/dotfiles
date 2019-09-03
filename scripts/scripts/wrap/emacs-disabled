@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Workaround for:
+# emacs: magick/cache.c:306: AddOpenCLEvent: Assertion `cache_info->opencl != (OpenCLCacheInfo *) NULL' failed. 
+export MAGICK_OCL_DEVICE=OFF 
+
+if [ "$1" == "--daemon" ] || [ "$1" == "--version" ] || [ "$1" == "-Q" ] || [ "$1" == "--script" ] || [ "$1" == "--load" ] || [ "$1" == "--quick" ] || [ "$1" == "--batch" ] || [ "$1" == "--execute" ]; then
+EMACS_USER_DIRECTORY=~/.emacs.d  /usr/bin/emacs $*  
+elif [ -n "$COLORTERM" ] || [ "$TERM" == "xterm-256color" ]; then
+  #if invoked from terminal just delegate
+  /usr/bin/emacsclient -t $*
+else
+  /usr/bin/emacsclient -c $*
+fi

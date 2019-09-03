@@ -1,0 +1,10 @@
+#!/bin/bash
+
+kind=$1
+
+if [ -z "$kind" ]; then
+  SUCCESS_WAV=`ls ~/.wavs/*notification*.wav | shuf | head -n 1`
+else
+  SUCCESS_WAV=`ls ~/.wavs/*notification-$kind*.wav | shuf | head -n 1`
+fi
+mplayer $SUCCESS_WAV > /dev/null

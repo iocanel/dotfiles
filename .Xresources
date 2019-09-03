@@ -1,3 +1,4 @@
+URxvt*saveLines: 200000
 URxvt*scrollBar:         false
 URxvt*scrollBar_right:   false
 

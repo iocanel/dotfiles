@@ -1,0 +1,19 @@
+#!/bin/bash
+
+
+function get-file-cache-conflict-window {
+    xdotool search "File Cache Conflict" 2> /dev/null
+}
+
+function return-to-workspace {
+    xdotool key --clearmodifiers Super_L+2
+}
+
+window=$(get-file-cache-conflict-window)
+if [ -n "$window" ]; then
+    echo "Switching to window $window."
+    xdotool windowactivate --sync $window
+    sleep 0.1
+    xdotool key --clearmodifiers space
+    return-to-workspace
+fi

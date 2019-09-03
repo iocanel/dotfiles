@@ -1,4 +1,8 @@
 * My Emacs configuration
+** Quickstart
+Here goes changes that need to take effect as soon as possible.
+*** Doom
+#+begin_src emacs-lisp
   (use-package all-the-icons)
   (use-package doom-themes)
   (use-package doom-modeline
@@ -14,7 +18,17 @@
   (load-theme 'doom-one t)
 #+end_src
 ** Internal Settings
-*** Byte compile on startup
+*** Timing startup time
+#+begin_src emacs-lisp
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs ready in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
+#+end_src
+*** COMMENT Byte compile on startup
 #+begin_src emacs-lisp
   (defun iocanel/byte-recompile-emacs-d()
     (interactive)
@@ -25,22 +39,10 @@
 #+begin_src emacs-lisp
    (add-hook 'emacs-startup-hook 'iocanel/byte-recompile-emacs-d)
 #+end_src
-*** Garbage collection
-    #+BEGIN_SRC emacs-lisp
-      (setq gc-cons-threshold most-positive-fixnum
-            gc-cons-percentage 0.6)
-
-      (add-hook 'emacs-startup-hook (lambda () (setq gc-cons-threshold 16777216
-                                      gc-cons-percentage 0.1)))
-    #+END_SRC
 *** Eval Path
     #+BEGIN_SRC emacs-lisp
       (setq max-lisp-eval-depth 10000)
     #+END_SRC
-*** COMMENT El get
-#+begin_src emacs-lisp
-(use-package el-get)
-#+end_src
 *** Emacs via gotty
 #+begin_src emacs-lisp
   (defun iocanel/gotty-emacs()
@@ -65,7 +67,7 @@
     #+BEGIN_SRC emacs-lisp
       (use-package real-auto-save
         :config
-        (setq real-auto-save-interval 1)
+        (setq real-auto-save-interval 10)
         :hook (text-mode . real-auto-save-mode)
               (prog-mode . real-auto-save-mode)
               (snippet-mode . (lambda () (real-auto-save-mode -1))))
@@ -102,11 +104,11 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
     #+END_SRC
 *** Async Await
 #+begin_src emacs-lisp
-  (use-package async-await)
+  (use-package async-await :defer t)
 #+end_src
-*** Beacon
+*** COMMENT Beacon
 #+BEGIN_SRC emacs-lisp
-  (use-package beacon)
+  (use-package beacon :defer t)
 #+END_SRC
 *** Browser
 **** Settings
@@ -176,21 +178,24 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
        #+END_SRC
 **** Ivy
 #+BEGIN_SRC emacs-lisp
-      (use-package flx)
+  (use-package flx :defer t)
 
-      (use-package ivy
-        :after flx
-        :init
-        (setq ivy-use-virtual-buffers t
-              ivy-re-builders-alist '((swiper . regexp-quote)
-                                      (t . ivy--regex-fuzzy))
-              completing-read-function 'ivy-completing-read)
-        :config
-        (ivy-mode 1))
+  (use-package ivy
+    :after flx
+    :init
+    (setq ivy-use-virtual-buffers t
+          ivy-re-builders-alist '((swiper . regexp-quote)
+                                  (t . ivy--regex-fuzzy))
+          completing-read-function 'ivy-completing-read)
+    :config
+    (ivy-mode 1))
 
-    (use-package counsel
-      :bind ("M-x" . 'counsel-M-x))
+  (use-package counsel
+    :bind ("M-x" . 'counsel-M-x))
 
+  (defun read-string (prompt &optional initial-input history default-value inherit-input-method)
+  "Read a string"
+  (ivy-read prompt nil :initial-input initial-input :history history :def default-value))
 #+END_SRC
 ***** amx
       #+BEGIN_SRC emacs-lisp
@@ -222,13 +227,12 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
          :init
          (progn
            (setq hippie-expand-try-functions-list '(yas-hippie-try-expand
-                                                    try-complete-file-name-partially
+                                                    try-complete-file-name-partially))
                                                ;try-expand-dabbrev
                                                ;try-expand-dabbrev-visible
                                                ;try-expand-dabbrev-all-buffers
                                                ;try-complete-lisp-symbol-partially
                                                ;try-complete-lisp-symbol
-                                                    ))
            (setq smart-tab-debug t)
            (setq smart-tab-user-provided-completion-function 'company-complete)
            (setq smart-tab-using-hippie-expand t)
@@ -240,7 +244,6 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
      The extensions are going to be installed exactly where needed.
 ***** Package
       #+BEGIN_SRC emacs-lisp
-        (require 'cl)
         (use-package company
           :init
           (add-hook 'after-init-hook 'global-company-mode))
@@ -271,6 +274,10 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
         (dashboard-setup-startup-hook)
         (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*"))))
     #+END_SRC
+*** Exit confirmation
+#+begin_src emacs-lisp
+(setq confirm-kill-emacs 'y-or-n-p)
+#+end_src
 *** Evil Mode
     #+BEGIN_SRC emacs-lisp
       (use-package evil
@@ -286,6 +293,19 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
       (setq evil-want-fine-undo nil)
     #+END_SRC
 *** File Manager
+**** Auto revert
+To enable auto revert on dired buffers.
+#+begin_src emacs-lisp
+  (setq dired-auto-revert-buffer t)
+  (add-hook 'dired-mode 'auto-revert-mode)
+          (add-hook 'maven-pom-mode 'auto-revert-mode)
+#+end_src
+**** COMMENT Dired Plus
+#+begin_src emacs-lisp
+  (use-package dired+			;
+    :config
+    (diredp-toggle-find-file-reuse-dir 1))
+#+end_src
 **** Dired Narrow
 #+begin_src emacs-lisp
   (use-package dired-narrow
@@ -301,6 +321,25 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
                 ("<tab>" . dired-subtree-toggle)
                 ("<backtab>" . dired-subtree-cycle)))
 #+end_src
+**** Misc configuration
+***** Copy target DWIM
+Select the copy destination when 2 dired buffers are visible.
+#+begin_src emacs-lisp
+  (setq dired-dwim-target t)
+#+end_src
+***** Expand All
+#+begin_src emacs-lisp
+  (defun iocanel/dired-expand-all ()
+    (interactive)
+    "Expand all subtrees in the dired buffer."
+    (let ((has-more t))
+      (while has-more
+        (condition-case ex
+            (progn
+              (dired-next-dirline 1)
+              (dired-subtree-toggle))
+            ('error (setq has-more nil))))))
+#+end_src
 *** Flyspell 
     #+BEGIN_SRC emacs-lisp
       (defun flyspell-enable()
@@ -310,9 +349,9 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
         (flyspell-mode -1))
 
       (use-package flyspell
+        :defer 10
         :diminish flyspell-mode
-        :hook (
-               (prog-mode . flyspell-prog-mode)
+        :hook ((prog-mode . flyspell-prog-mode)
                (org-mode . flyspell-enable))
         :config
         (setq ispell-program-name "/usr/bin/aspell"
@@ -329,10 +368,30 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
       (use-package lv)
       (use-package hydra)
     #+END_SRC
-*** Identation
+*** Indentation
     #+BEGIN_SRC emacs-lisp
       (setq-default indent-tabs-mode nil)
     #+END_SRC
+**** Aggresive Indent Mode
+#+begin_src emacs-lisp
+  (use-package aggressive-indent
+    :hook (emacs-lisp-mode. aggressive-indent-mode))
+#+end_src
+*** iedit
+#+begin_src emacs-lisp
+  (use-package iedit
+    :bind ("C-;" . 'evil-iedit-state/iedit-mode))
+
+  ;; From spacemacs
+  (use-package evil-iedit-state
+      :commands (evil-iedit-state evil-iedit-state/iedit-mode)
+      :init
+      (progn
+        (setq iedit-current-symbol-default t
+              iedit-only-at-symbol-boundaries t
+              iedit-toggle-key-default nil)
+        (evil-leader/set-key "se" 'evil-iedit-state/iedit-mode)))
+#+end_src
 *** Key Bindings
 **** Escape for cancel
      #+BEGIN_SRC emacs-lisp
@@ -365,7 +424,7 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
       (use-package popup-kill-ring
         :bind ("M-y" . popup-kill-ring))
     #+END_SRC
-*** Shackle
+*** COMMENT Shackle
 #+begin_src emacs-lisp
   (use-package shackle
     
@@ -400,15 +459,15 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
         :custom
         (swiper-action-recenter t))
 
-      (defun swiper-with-selection (start end)
+      (defun swiper-with-selection (&optional start end)
         "Swiper variation that uses selected text as initial input."
-        (interactive "r")
+        (interactive (if (use-region-p) (list (region-beginning) (region-end))))
         (if (use-region-p)
             (swiper (buffer-substring start end))
-          (swiper)))
+          (swiper))
+        (keyboard-escape-quit))
     #+END_SRC
     
-
 *** Screenshots
 #+BEGIN_SRC emacs-lisp
   (defun screenshot ()
@@ -491,17 +550,10 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
                                       (xwidget-browse-url-no-reuse url)))
 #+end_src
 ** UI
-*** Layout
-    #+BEGIN_SRC emacs-lisp
-      (tool-bar-mode -1)
-      (menu-bar-mode -1)
-      (scroll-bar-mode -1)
-    #+END_SRC      
 *** Windows
-**** winum
+**** COMMENT winum
      #+BEGIN_SRC emacs-lisp
        (use-package winum
-         
          :init
          (setq winum-keymap
                (let ((map (make-sparse-keymap)))
@@ -630,30 +682,20 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
        (use-package visual-fill-column
          :hook (visual-line-mode . visual-fill-column-mode))
      #+END_SRC
+*** Frames
+**** COMMENT One on one
+#+begin_src emacs-lisp
+  (use-package oneonone
+    :init (setq 1on1-minibuffer-frame-flag t
+                1on1-*Help*-frame-flag t)
+    :config (1on1-emacs))
+
+#+end_src
 *** Theme
 **** COMMENT Darcula
     #+BEGIN_SRC emacs-lisp
       (load "~/.config/emacs/themes/darcula-theme.el")
     #+END_SRC
-**** Doom
-#+begin_src emacs-lisp
-
-  (use-package all-the-icons)
-
-  (use-package doom-themes)
-
-  (load-theme 'doom-tomorrow-night t)
-
-  (use-package doom-modeline
-        :init
-        (setq doom-modeline-buffer-file-name-style 'truncate-upto-project
-              doom-modeline-icon t
-              doom-modeline-major-mode-icon t
-              doom-modeline-major-mode-color-icon t
-              doom-modeline-mu4e t)
-        :hook (after-init . doom-modeline-mode ))
-
-#+end_src
 **** COMMENT Custor cursor
      #+BEGIN_SRC emacs-lisp
        (setq-default cursor-type 'bar)
@@ -693,12 +735,20 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
   (defun desktop-mode()
     "Modify theme for latpop use"
     (interactive)
-    (set-face-attribute 'default nil :height 100))
+    (set-face-attribute 'default nil :height 100)
+    (set-face-attribute 'treemacs-root-face nil :height 115))
+
+  (defun comf-mode()
+    "Modify theme for comfortable use"
+    (interactive)
+    (set-face-attribute 'default nil :height 120)
+    (set-face-attribute 'treemacs-root-face nil :height 130))
 
   (defun presenetation-mode()
     "Modify theme for presentations use"
     (interactive)
-    (set-face-attribute 'default nil :height 150))
+    (set-face-attribute 'default nil :height 150)
+    (set-face-attribute 'treemacs-root-face nil :height 160))
 
 #+end_src
 **** Status Line
@@ -770,7 +820,7 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
      #+END_SRC     
 *** Completion
 ** Tool
-*** Alert
+*** COMMENT Alert
 #+begin_src emacs-lisp 
   (use-package alert)
 #+end_src
@@ -781,7 +831,7 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
     :defer t)
 #+end_src
 *** Browser
-**** Package
+**** COMMENT Package
      #+BEGIN_SRC emacs-lisp
        (use-package eww
          :defer t)
@@ -832,6 +882,10 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
 
        (setq browse-url-browser-function 'xdg-open)
      #+END_SRC
+*** COMMENT Command Log
+#+begin_src emacs-lisp
+(use-package command-log-mode)
+#+end_src
 *** demo-it
 #+BEGIN_SRC emacs-lisp
   (use-package demo-it
@@ -843,7 +897,7 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
   (evil-leader/set-key "a d q" 'demo-it-presentation-quit)
   (evil-leader/set-key "a d a" 'demo-it-presentation-advance)
 #+END_SRC
-*** Email
+*** COMMENT Email
 **** mu4e
 ***** package
       #+BEGIN_SRC emacs-lisp
@@ -998,7 +1052,6 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
 **** Package
      #+BEGIN_SRC emacs-lisp
        (use-package auctex
-         
          :mode ("\\.tex\\'" . latex-mode)
          :commands (latex-mode LaTeX-mode plain-tex-mode)
          :init
@@ -1040,7 +1093,7 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
                       (mapcar #'(lambda (cmd) (list (concat "\\\\" cmd) 'ispell-tex-arg-end)) schnouki/ispell-tex-skip-alists))
               (cadr ispell-tex-skip-alists)))
      #+END_SRC
-**** Synchronize with Evince
+**** COMMENT Synchronize with Evince
      #+BEGIN_SRC emacs-lisp
        (defun synctex/un-urlify (fname-or-url)
          "A trivial function that replaces a prefix of file:/// with just /."
@@ -1085,19 +1138,32 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
        (use-package projectile
          :config
          (projectile-global-mode)
-         (setq projectile-completion-system 'ivy)
-         (setq projectile-enable-caching t)
-         (setq projectile-use-git-grep t)
-         (setq projectile-switch-project-action 'projectile-dired)
+         (setq projectile-completion-system 'ivy
+               projectile-enable-caching t
+               projectile-use-git-grep t
+               projectile-globally-ignored-file-suffixes '(".elc" ".class" ".pyc" ".o")
+               projectile-ignored-projects '("~/" "/tmp")
+               projectile-kill-buffers-filter 'kill-only-files
+               projectile-files-cache-expire 604800 ; expire after a week
+               projectile-sort-order 'recentf
+               projectile-switch-project-action 'projectile-dired)
+         (global-set-key (kbd "C-x b") 'projectile-switch-to-buffer)
          (global-set-key (kbd "C-c p o") 'projectile-switch-project)
          (global-set-key (kbd "C-c p f") 'projectile-find-file)
          (global-set-key (kbd "C-c p g") 'projectile-grep))
      #+END_SRC
+*** Plural 
+#+begin_src emacs-lisp
+(use-package plural)
+#+end_src
 *** Terminal
 **** Eshell
 ***** Package
       #+BEGIN_SRC emacs-lisp
-        (use-package eshell)
+        (use-package eshell
+          :config
+          (setq eshell-buffer-maximum-lines 100000
+                eshell-history-size 100000))
       #+END_SRC
 ***** Utils
 #+BEGIN_SRC emacs-lisp
@@ -1115,7 +1181,7 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
     (compilation-shell-minor-mode 1))
 
   (global-set-key (kbd "C-c k") 'eshell/compilation-mode)
-  (add-hook 'eshell-post-command-hook 'eshell/compilation-mode)
+  ;(add-hook 'eshell-post-command-hook 'eshell/compilation-mode)
 
   (global-set-key (kbd "C-c l") 'eshell/clear)
 #+END_SRC
@@ -1134,17 +1200,19 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
                                       (eshell/alias "ll" "ls -AlohG --color=always $*")
                                       (eshell/alias "ls" "TERM=ansi ls --color=always $*")
                                       (eshell/alias "mci" "mvn clean install")
-                                      (eshell/alias "vi" "find-file-other-window $1")))
+                                      (eshell/alias "vi" "find-file-other-window $1")
+                                      (eshell/alias "kc" "kubectl $*")))
       #+END_SRC
 ***** Visuals
 #+begin_src emacs-lisp
         (add-hook 'eshell-mode-hook (lambda ()
                                    (add-to-list 'eshell-visual-commands "ssh")
                                    (add-to-list 'eshell-visual-commands "tail")
+                                   (add-to-list 'eshell-visual-commands "docker")
                                    (add-to-list 'eshell-visual-commands "top")))
 
 #+end_src
-***** Prompt
+***** COMMENT Prompt
       #+BEGIN_SRC emacs-lisp
         (defun pwd-replace-home (pwd)
           "Replace home in PWD with tilde (~) character."
@@ -1189,16 +1257,21 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
         (use-package esh-autosuggest
         :hook (eshell-mode . esh-autosuggest-mode))
       #+END_SRC
+***** COMMENT Aweshell
+#+begin_src emacs-lisp
+  (use-package aweshell
+        :straight (aweshell :type git :host github :repo "manateelazycat/aweshell"))
+#+end_src
 ***** COMMENT Compilation Mode
 #+begin_src emacs-lisp
   (add-hook 'shell-mode-hook 'compilation-shell-minor-mode)
 #+end_src
-**** Mutli-term
+**** COMMENT Mutli-term
      #+BEGIN_SRC emacs-lisp
        (use-package multi-term)
        (defvar multi-term-program "/bin/zsh")
      #+END_SRC
-**** Ansi-term
+**** COMMENT Ansi-term
      #+BEGIN_SRC emacs-lisp
        (defvar my-term-shell "/bin/zsh")
        (defadvice ansi-term (before force-zsh)
@@ -1212,45 +1285,48 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
 *** Treemacs
     #+BEGIN_SRC emacs-lisp
       (use-package treemacs
-        :defer t
-        :bind ("M-0" . 'treemacs-select-window)
-        :config
-        (progn
-          (setq treemacs-change-root-without-asking t
-                treemacs-collapse-dirs              (if (executable-find "python") 3 0)
-                treemacs-file-event-delay           5000
-                treemacs-follow-after-init          t
-                treemacs-follow-recenter-distance   0.1
-                treemacs-goto-tag-strategy          'refetch-index
-                treemacs-indentation                2
-                treemacs-indentation-string         " "
-                treemacs-max-git-entries            5000
-                treemacs-is-never-other-window      nil
-                treemacs-never-persist              nil
-                treemacs-no-png-images              t 
-                treemacs-recenter-after-file-follow t
-                treemacs-recenter-after-tag-follow  nil
-                treemacs-show-hidden-files          t
-                treemacs-silent-filewatch           nil
-                treemacs-silent-refresh             nil
-                treemacs-sorting                    'alphabetic-desc
-                treemacs-tag-follow-cleanup         t
-                treemacs-tag-follow-delay           1.5
-                treemacs-width                      30)
-          (treemacs-follow-mode t)
-          (treemacs-filewatch-mode t)
-          (treemacs-fringe-indicator-mode t)
-          ;;an alternative is (treemacs-git-mode 'extended) which is currently slow for large projects.))
-          (treemacs-git-mode 'extended)))
+	:defer t
+	:bind ("M-0" . 'treemacs-select-window)
+	:hook (treemacs-mode . (lambda () (setq mode-line-format nil)))
+	:config
+	(progn
+	  (doom-themes-treemacs-config)
+	  (setq 
+		treemacs-change-root-without-asking t
+		treemacs-collapse-dirs              (if (executable-find "python") 3 0)
+		treemacs-file-event-delay           5000
+		treemacs-follow-after-init          t
+		treemacs-follow-recenter-distance   0.1
+		treemacs-goto-tag-strategy          'refetch-index
+		treemacs-indentation                2
+		treemacs-indentation-string         " "
+		treemacs-max-git-entries            5000
+		treemacs-is-never-other-window      nil
+		treemacs-no-png-images              nil 
+		treemacs-recenter-after-file-follow t
+		treemacs-recenter-after-tag-follow  nil
+		treemacs-show-hidden-files          nil 
+		treemacs-silent-filewatch           t
+		treemacs-silent-refresh             t
+		treemacs-sorting                    'alphabetic-desc
+		treemacs-tag-follow-cleanup         t
+		treemacs-tag-follow-delay           1.5
+		treemacs-persist-file              (f-join user-emacs-directory ".cache" "treemacs-persist") 
+		treemacs-width                      30)))
+	  ;(treemacs-follow-mode t)
+	  ;(treemacs-filewatch-mode t)
+	  ;(treemacs-fringe-indicator-mode t)
+	  ;;an alternative is (treemacs-git-mode 'extended) which is currently slow for large projects.))
+	  ;(treemacs-git-mode 'extended)))
 
       (use-package treemacs-evil :demand t)
       (use-package treemacs-projectile
-        :defer t
-        :config
-        (setq treemacs-header-function #'treemacs-projectile-create-header))
+	:defer t
+	:config
+	(setq treemacs-header-function #'treemacs-projectile-create-header))
 
       (defun iocanel/git-p (name path)
-        (equal name ".git"))
+	(equal name ".git"))
 
       (setq treemacs-ignored-file-predicates '(iocanel/git-p))
     #+END_SRC
@@ -1278,100 +1354,7 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
                   (message "Killing buffer: %s" buf-name)
                   ;;(kill-buffer buf)
                   ))))))
-
-    (defun iocanel/treemacs-collapse-dir-toggle ()
-      "Toggle value of treemacs-collapse-dir between 3 0."
-      (interactive)
-      (if (= treemacs-collapse-dirs 0)
-          (setq treemacs-collapse-dirs 3)
-        (setq treemacs-collapse-dirs 0))
-      (treemacs-refresh))
-
-    (defun iocanel/treemacs-create-and-switch-to-workspace ()
-      "Create and switch to a new treemacs workspace."
-      (interactive)
-      (let* ((workspace (treemacs-do-create-workspace))
-             (selected (car (cdr workspace))))
-        (setf (treemacs-current-workspace) selected)))
-
-    (defun iocanel/treemacs-switch-to-project-workspace ()
-      "Select a different workspace for treemacs."
-      (interactive)
-      (pcase (treemacs-do-switch-workspace)
-        ('only-one-workspace
-         (treemacs-pulse-on-failure "There are no other workspaces to select."))
-        (`(success ,workspace)
-         (let ((window-visible? nil)
-               (buffer-exists? nil))
-           (pcase (treemacs-current-visibility)
-             ('visible
-              (setq window-visible? t
-                    buffer-exists? t))
-             ('exists
-              (setq buffer-exists? t)))
-           (when window-visible?
-             (delete-window (treemacs-get-local-window)))
-           (when buffer-exists?
-             (kill-buffer (treemacs-get-local-buffer)))
-           (when buffer-exists?
-             (let ((treemacs-follow-after-init nil)
-                   (treemacs-follow-mode nil))
-               (treemacs-select-window)))
-           (when (not window-visible?)
-             (bury-buffer)))
-         (treemacs-pulse-on-success "Selected workspace %s."
-           (propertize (treemacs-workspace->name workspace))
-           (iocanel/treemacs-open-project-workspace workspace)
-           ))))
-
-    (defun iocanel/treemacs-open-project-workspace (workspace)
-      "Open the first project of the workspace."
-      (let* ((selected workspace)
-             (name (treemacs-project->name selected))
-             (project (treemacs-project->path selected))
-             (path (treemacs-project->path (car project))))
-        (message (format "Swith to project: %s path:%s" name path))
-        (projectile-switch-project-by-name path)
-        (idee-refresh-view)
-        (projectile-invalidate-cache nil)))
-
 #+end_src
-**** Hydra
-     #+BEGIN_SRC emacs-lisp
-       (defhydra treemacs-hydra (:hint nil :exit t)
-         ;; The '_' character is not displayed. This affects columns alignment.
-         ;; Remove s many spaces as needed to make up for the '_' deficit.
-         "
-                ^Workspaces^             ^Toggles^                 ^Windows^                     ^Navigation^
-                ^^^^^^-----------------------------------------------------------------------------------------
-                _N_: new workspace       _t_: tree view toggle     _s_: select window            _b_: bookmark
-                _S_: switch workspace    _p_: projectile toggle    _d_: delete other windows     _f_: find file
-                _R_: remove workspace    _d_: show hidden files                                  _T_: find tag
-                _E_: edit workspace      _c_: collapse dirs
-                _F_: finish edit         _g_: magit
-               "
-                                               ; Toggles
-         ("N" iocanel/treemacs-create-and-switch-to-workspace)
-         ("R" treemacs-remove-workspace)
-         ("S" iocanel/treemacs-switch-to-project-workspace)
-         ("E" treemacs-edit-workspaces)
-         ("F" treemacs-finish-edit)
-         ("t" treemacs-toggle)
-         ("p" treemacs-projectile-toggle)
-         ("d" treemacs-toggle-show-dot-files)
-         ("c" iocanel/treemacs-collapse-dir-toggle)
-         ("g" magit-status)
-                                               ; Windows
-         ("s" treemacs-select-window)
-         ("d" treemacs-delete-other-windows)
-                                               ; Navifation
-         ("b" treemacs-bookmark)
-         ("f" treemacs-find-file)
-         ("T" treemacs-find-tag)
-         ("q" nil "quit"))
-
-       (evil-leader/set-key "t" 'treemacs-hydra/body)
-     #+END_SRC
 *** COMMENT Sidebar
     #+BEGIN_SRC emacs-lisp
       (add-to-list 'load-path "~/.local/share/icons-in-terminal/") ;; If it's not already done
@@ -1379,7 +1362,6 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
       (require 'sidebar)
       (global-set-key (kbd "C-x C-f") 'sidebar-open)
       (global-set-key (kbd "C-x C-a") 'sidebar-buffers-open)
-
     #+END_SRC
 *** Snippets
     #+BEGIN_SRC emacs-lisp
@@ -1388,11 +1370,12 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
         (setq yas-snippet-dirs
               '("~/.emacs.d/snippets"                 ;; personal snippets
                 "~/.config/emacs/snippets"
-                "~/.config/emacs/templates"))
-        (yas-global-mode)
-        :config
-        (use-package yasnippet-snippets)
-        (yas-reload-all))
+                "~/.config/emacs/templates")
+              yas-prompt-functions '(yas-ido-prompt))
+  
+        :hook ((text-mode prog-mode org-mode eshell-mode) . yas-minor-mode))
+
+        (use-package yasnippet-snippets :defer t)
 
       ;; Use yas-indent-line fixed in yaml-mode. This fixes issues with parameter mirroring breaking indentation
       (setq yas-indent-line 'fixed)
@@ -1410,8 +1393,8 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
 
       (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
     #+END_SRC
-*** Slack#+begin_src emacs-lisp
-    #+BEGIN_SRC emacs-lisp
+*** COMMENT Slack
+#+begin_src emacs-lisp
     (use-package slack
       :commands (slack-start)
       :init
@@ -1465,7 +1448,7 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
    (evil-leader/set-key "a s" 'slack-start)
 
 #+end_src
-*** Stack Exchange
+*** COMMENT Stack Exchange
 **** Package
     #+BEGIN_SRC emacs-lisp
       (use-package sx
@@ -1575,8 +1558,38 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
   ;; Let's overide the way that handle the token
   (defun ghub--token (host username package &optional nocreate forge)
     (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string (format "pass show %s/%s" host username))))
+
 #+end_src
+**** COMMENT Check pull request status
+This is currently work in prgoress.
+It's inspired by:
+And goes like this:
+#+begin_src emacs-lisp
+(defun github-get-prs ()
+  (let ((repo (ghub-get "<my-repository>"))
+        (user "<my-username>"))
+    (defun ref-to-status (ref)
+      (list ref
+            (with-timeout (3 "failure")
+              (cdr (assoc 'state (ghubp-get-repos-owner-repo-commits-ref-status repo ref))))))
+    (mapcar
+     #'ref-to-status
+     (mapcar
+      (lambda (pr) (cdr (assoc 'ref (assoc 'head pr))))
+      (-filter
+       (lambda (pr) (s-equals-p user (cdr (assoc 'login (assoc 'user pr)))))
+       (ghubp-unpaginate (ghubp-get-repos-owner-repo-pulls repo)))))))
+#+end_src
+Possible improvements:
+
+- integration with projectile (enable on project open etc)
+- auto detect repository
+- auto detect username?
+
 **** Orgit
+Orgit adds supports for usign `org-links` with magit buffers.
+This is really useful for capturing github issues, pull requests and so on.
+
 #+begin_src emacs-lisp
 (use-package orgit
          :straight (orgit :type git :host github :repo "magit/orgit" :branch "forge"))
@@ -1621,6 +1634,11 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
       #+BEGIN_SRC emacs-lisp
         (use-package github-issues)
       #+END_SRC
+**** Browse at remote
+#+begin_src emacs-lisp
+  (use-package browse-at-remote)
+(global-set-key (kbd "C-c g g") 'browse-at-remote)
+#+end_src
 ** Modes
 *** Org Mode
 #+begin_src emacs-lisp
@@ -1657,26 +1675,26 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
      To replace ascii asterisks with bullets:    
      #+BEGIN_SRC emacs-lisp
        (use-package org-bullets
-         
-         :config
-         (add-hook 'org-mode-hook (lambda () (org-bullets-mode))))
+         :hook (org-mode . org-bullets-mode))
      #+END_SRC
 **** Blogging
 ***** Installation
-      To install the org2blog plugin:
+To install the org2blog plugin:
       #+BEGIN_SRC emacs-lisp
         (use-package org2blog)
       #+END_SRC
 ***** Setup
       #+BEGIN_SRC emacs-lisp
-        (let (blog-password)
-          (setq blog-password (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show websites/iocanel.com/iocanel@gmail.com")))
+        (defun iocanel/org2blog-init ()
           (setq org2blog/wp-use-sourcecode-shortcode t)
           (setq org2blog/wp-blog-alist
                 `(("iocanel.com"
                    :url "https://iocanel.com/xmlrpc.php"
                    :username "iocanel@gmail.com"
-                   :password ,blog-password))))
+                   :password ,(replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show websites/iocanel.com/iocanel@gmail.com"))))))
+
+        (add-hook 'emacs-startup-hook 'iocanel/org2blog-init)
+
       #+END_SRC      
 ***** Troubleshooting
 ****** Symbol’s function definition is void: org-define-error
@@ -1702,6 +1720,7 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
                ("tp" "Personal To Do Item" entry (file+headline "~/Documents/notes/personal.org" "To Do") "* TODO %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n" :prepend t)
 
 
+               ("q" "Quotes" entry (file+headline "~/Documents/notes/quotes.org" "Quotes") "* %?\n%u" :prepend t)
                ("f" "Flashcards")
                ("fe" "Emacs") 
                ("fef" "Emacs facts"  entry (file+headline "~/Documents/flashcards/emacs.org" "Emacs") "* Fact :drill:\n %t\n %^{The fact}\n")
@@ -1716,8 +1735,8 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
                ("fcf" "Computer Science facts"  entry (file+headline "~/Documents/flashcards/computer-science.org" "Computer Science") "* Fact :drill:\n %t\n %^{The fact}\n")
                ("fcq" "Computer Science questions"  entry (file+headline "~/Documents/flashcards/computer-science.org" "Computer Science") "* Question :drill:\n %t\n %^{The question} \n** Answer: \n%^{The answer}")
                ("fs" "Sports")
-               ("fsf" "Sports facts"  entry (file+headline "~/Documents/flashcards/sprots.org" "Sports") "* Fact :drill:\n %t\n %^{The fact}\n")
-               ("fsq" "Sports questions"  entry (file+headline "~/Documents/flashcards/sprots.org" "Sports") "* Question :drill:\n %t\n %^{The question} \n** Answer: \n%^{The answer}")
+               ("fsf" "Sports facts"  entry (file+headline "~/Documents/flashcards/sports.org" "Sports") "* Fact :drill:\n %t\n %^{The fact}\n")
+               ("fsq" "Sports questions"  entry (file+headline "~/Documents/flashcards/sports.org" "Sports") "* Question :drill:\n %t\n %^{The question} \n** Answer: \n%^{The answer}")
                ("fn" "Nutrition") 
                ("fnf" "Nutrition facts"  entry (file+headline "~/Documents/flashcards/nutrition.org" "Nutrition") "* Fact :drill:\n %t\n %^{The fact}\n")
                ("fnq" "Nutrition questions"  entry (file+headline "~/Documents/flashcards/nutrition.org" "Nutrition") "* Question :drill:\n %t\n %^{The question} \n** Answer: \n%^{The answer}")
@@ -1743,27 +1762,26 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
       #+END_SRC
 **** Drill
 #+begin_src emacs-lisp
-      ;;This is an org-drill fork that contains the fixes:
-      ;; 1. for the `Invalid match tag: ""`.
-      ;; 2. missing org-learn
-      (use-package org-drill
-                :straight (org-drill :type git :host github :repo "iocanel/org-drill")
-                :config
-                (setq org-drill-scope 'directory))
-
+  ;;This is an org-drill fork that contains the fixes:
+  ;; 1. for the `Invalid match tag: ""`.
+  ;; 2. missing org-learn
+  (use-package org-drill
+            :straight (org-drill :type git :host github :repo "iocanel/org-drill")
+            :config
+            (setq org-drill-scope 'directory))
 #+end_src
 **** Evil
      #+BEGIN_SRC emacs-lisp
        (use-package evil-org
-         
          :after org
-         :config
-         (add-hook 'org-mode-hook 'evil-org-mode)
-         (add-hook 'evil-org-mode-hook
-                   (lambda ()
-                     (evil-org-set-key-theme)))
-         (require 'evil-org-agenda)
-         (evil-org-agenda-set-keys))
+         :hook ((org-mode . evil-org-mode)
+                (evil-org-mode . (lambda () (evil-org-set-key-theme)))
+                (agenda-mode . (evil-org-agenda-set-keys))))
+       ;  :config
+       ;  (add-hook 'org-mode-hook 'evil-org-mode)
+       ;  (add-hook 'evil-org-mode-hook (lambda () (evil-org-set-key-theme)))
+       ;  (require 'evil-org-agenda)
+       ;  (evil-org-agenda-set-keys))
 
        ;;Open org-links in evil mode
        (define-key global-map "\C-co" 'evil-org-open-links)
@@ -1778,7 +1796,7 @@ Inspired by https://emacs.stackexchange.com/questions/3776/how-to-view-diff-when
       #+BEGIN_SRC emacs-lisp
         (use-package ox-gfm)
       #+END_SRC
-**** Google Calendar
+**** COMMENT Google Calendar
 I need to deal with two problems:
 
 1) my work account can't be controlled from my personal account.
@@ -1786,27 +1804,30 @@ I need to deal with two problems:
 
 So I controlling my personal calendar from my work calendar and I configure org-gcal to work with my work calendar.
      #+BEGIN_SRC emacs-lisp
-       (let ((client-id (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show services/google/vdirsyncer/ikanello@redhat.com/client-id")))
-             (secret (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show services/google/vdirsyncer/ikanello@redhat.com/secret"))))
-
-         (use-package org-gcal
-           :load-path "~/workspace/src/github.com/iocanel/org-gcal.el/")
-
-           (setq org-gcal-client-id client-id
-                 org-gcal-client-secret secret
-                 org-gcal-file-alist '(("iocanel@gmail.com" .  "~/Documents/calendars/personal.org")
-                                       ("ikanello@redhat.com" . "~/Documents/calendars/work.org"))))
-       (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync)))
-       (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync)))
+       (use-package org-gcal
+         :straight (org-gcal :type git :host github :repo "iocanel/org-gcal.el"))
 
 
+       (defun iocanel/org-gcal-init ()
+                 (setq org-gcal-client-id (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show services/google/vdirsyncer/ikanello@redhat.com/client-id"))
+                       org-gcal-client-secret (replace-regexp-in-string "\n\\'" ""  (shell-command-to-string "pass show services/google/vdirsyncer/ikanello@redhat.com/secret"))
+                       org-gcal-file-alist '(("iocanel@gmail.com" .  "~/Documents/calendars/personal.org")
+                                             ("ikanello@redhat.com" . "~/Documents/calendars/work.org"))))
+
+       (add-hook 'emacs-startup-hook 'iocanel/org-gcal-init)
      #+END_SRC
      If token expires it is you'll start having http 400 errors. To fix just do a simple: org-gcal-refresh-token!
+***** COMMENT Calendar Hooks
+At the moment running org-gcal-sync after agenda and capture has a high chance to mess with my current buffer
+#+begin_src emacs-lisp
+       (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync)))
+       (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync)))
+#+end_src
 **** Indent
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook (lambda () (org-indent-mode)))
 #+END_SRC
-**** Jira
+**** COMMENT Jira
 ***** package
      #+BEGIN_SRC emacs-lisp
        (defun org-jira-login()
@@ -2110,16 +2131,16 @@ So I controlling my personal calendar from my work calendar and I configure org-
         :init (setq flycheck-indication-mode 'right-fringe)
         :hook (prog-mode . flycheck-mode))
     #+END_SRC
-**** Realgud
+**** COMMENT Realgud
      #+BEGIN_SRC emacs-lisp
        (use-package realgud)
      #+END_SRC
 *** Languages and Frameworks
-**** Angular
+**** COMMENT Angular
     #+BEGIN_SRC emacs-lisp
       (use-package ng2-mode)
     #+END_SRC
-**** Clojure
+**** COMMENT Clojure
      Most of the clojure configuration comes from: https://github.com/howardabrams/dot-files/blob/master/emacs-clojure.org
 ***** clojure-mode
       #+BEGIN_SRC emacs-lisp
@@ -2139,7 +2160,6 @@ So I controlling my personal calendar from my work calendar and I configure org-
 ***** cider
       #+BEGIN_SRC emacs-lisp
         (use-package cider
-          
           :commands (cider cider-connect cider-jack-in)
 
           :init
@@ -2230,7 +2250,29 @@ So I controlling my personal calendar from my work calendar and I configure org-
             (cider-last-sexp))))
       #+END_SRC
 **** Elisp
-***** elsip-mode #+BEGIN_SRC emacs-lisp (use-package lisp-mode :init (defconst lisp--prettify-symbols-alist '(("lambda"  . ?λ)                  ; Shrink this ("."       . ?•)))                ; Enlarge this :bind (("C-c e i" . ielm)) :config (add-hook 'emacs-lisp-mode-hook 'global-prettify-symbols-mode) (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode) ;(add-hook 'emacs-lisp-mode-hook 'activate-aggressive-indent) ;; Bind some prefixes to a couple of mode maps: (bind-keys :map emacs-lisp-mode-map :prefix-map lisp-find-map :prefix "C-h e" ("e" . view-echo-area-messages) ("f" . find-function) ("k" . find-function-on-key) ("l" . find-library) ("v" . find-variable) ("V" . apropos-value)) (dolist (m (list emacs-lisp-mode-map lisp-interaction-mode-map)) (bind-keys :map m :prefix-map lisp-evaluation-map :prefix "C-c e" ("b" . eval-buffer) ("r" . eval-region) ("c" . eval-and-comment-output) ;; Defined below ("o" . eval-and-comment-output) ("d" . toggle-debug-on-error) ("f" . emacs-lisp-byte-compile-and-load)))) #+END_SRC
+***** COMMENT elsip-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package lisp-mode 
+    :init (defconst lisp--prettify-symbols-alist '(("lambda"  . ?λ)))
+    :bind (("C-c e i" . ielm))
+    :hook (emacs-lisp-mode . (global-prettify-symbols-mode turn-on-eldoc-mode activate-aggresive-indent))
+    :config
+    (bind-keys :map emacs-lisp-mode-map :prefix-map lisp-find-map :prefix "C-h e"
+               ("e" . view-echo-area-messages)
+               ("f" . find-function)
+               ("k" . find-function-on-key)
+               ("l" . find-library)
+               ("v" . find-variable)
+               ("V" . apropos-value))
+    (dolist (m (list emacs-lisp-mode-map lisp-interaction-mode-map))
+      (bind-keys :map m :prefix-map lisp-evaluation-map :prefix "C-c e"
+                 ("b" . eval-buffer)
+                 ("r" . eval-region)
+                 ("c" . eval-and-comment-output)
+                 ("o" . eval-and-comment-output)
+                 ("d" . toggle-debug-on-error)
+                 ("f" . emacs-lisp-byte-compile-and-load)))) 
+#+END_SRC
 ***** hydra
      #+BEGIN_SRC emacs-lisp
        (defhydra elisp-hydra (:hint nil :exit t)
@@ -2315,7 +2357,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
      #+BEGIN_SRC emacs-lisp
        (use-package go-imports)
        (use-package go-rename)
-       (use-package go-snippets)
+;       (use-package go-snippets)
        (use-package go-projectile)
      #+END_SRC
 ***** Go Treemacs Settings     
@@ -2376,16 +2418,16 @@ So I controlling my personal calendar from my work calendar and I configure org-
 **** Java
 ***** Language Server
      #+BEGIN_SRC emacs-lisp
-       (use-package lsp-mode)
+              (use-package lsp-mode)
 
-       (use-package lsp-ui
-         :hook (lsp-mode . lsp-ui-mode)
-         :config
-         (setq lsp-ui-sideline-show-hover nil))
+              (use-package lsp-ui
+                :hook (lsp-mode . lsp-ui-mode)
+                :config
+                (setq lsp-ui-sideline-show-hover nil
+                      lsp-ui-doc-enable nil))
 
-       (use-package company-lsp
-         
-         :init (add-to-list 'company-backends 'company-lsp))
+              (use-package company-lsp
+                :init (add-to-list 'company-backends 'company-lsp))
 
      #+END_SRC
 ****** Utilities
@@ -2398,29 +2440,31 @@ So I controlling my personal calendar from my work calendar and I configure org-
 #+end_src
 ****** Java
       #+BEGIN_SRC emacs-lisp
-        (defun iocanel/lsp-java-actions()
-          "A function that fans out to all functions required when using java-mode."
-          (lsp)
-          (flycheck-mode)
-          (company-mode)
-          (lsp-ui-mode))
+                (defun iocanel/lsp-java-actions()
+                  "A function that fans out to all functions required when using java-mode."
+                  (lsp)
+                  (flycheck-mode)
+                  (company-mode)
+                  (lsp-ui-mode))
 
-        (use-package lsp-java
-          :init
-          (setq lsp-java-save-action-organize-imports nil
-                lsp--cur-workspace "~/workspace/lsp/"
-                lsp-java-auto-build nil
-                lsp-java-import-gradle-enabled nil
-                lsp-inhibit-message t
-                lsp-java-completion-guess-arguments t)
-          :hook (java-mode . iocanel/lsp-java-actions))
+                (use-package lsp-java
+                  :init
+                  (setq lsp-java-vmargs '("-noverify" "-Xmx2G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication")
+                        lsp-java-save-action-organize-imports nil
+                        lsp-java-maven-download-sources t
+                        lsp-java-autobuild-enabled nil
+                        lsp-java-import-gradle-enabled nil
+                        lsp-inhibit-message t
+                        lsp-java-format-on-type-enabled t
+                        lsp-java-completion-guess-arguments t
+                        lsp-java-completion-overwrite nil)
+                  :hook (java-mode . iocanel/lsp-java-actions))
 
-        (require 'lsp-java-treemacs)
+                ;(require 'lsp-java-treemacs)
 
-        (evil-leader/set-key "u a" 'lsp-ui-sideline-apply-code-actions)
-        (evil-leader/set-key "u o" 'lsp-java-organize-imports)
-        (evil-leader/set-key "u u" 'lsp-java-update-project-configuration)
-
+                (evil-leader/set-key "u a" 'lsp-ui-sideline-apply-code-actions)
+                (evil-leader/set-key "u o" 'lsp-java-organize-imports)
+                (evil-leader/set-key "u u" 'lsp-java-update-project-configuration)
 
       #+END_SRC
 ****** COMMENT IntelliJ
@@ -2528,8 +2572,8 @@ So I controlling my personal calendar from my work calendar and I configure org-
      #+BEGIN_SRC emacs-lisp
        (use-package groovy-mode)
      #+END_SRC
-**** Logo
-***** COMMENT Installation
+**** COMMENT Logo
+***** Installation
 #+begin_src sh
   wget http://ftp.de.debian.org/debian/pool/main/u/ucblogo/ucblogo_5.5.orig.tar.gz
   tar xf ucblogo_5.5.orig.tar.gz
@@ -2554,7 +2598,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
 **** Javascript
     #+BEGIN_SRC emacs-lisp
       (use-package js2-mode
-        
+        :hook (js-mode . (lambda () (push '("function" . ?ƒ) prettify-symbols-alist)))
         :init
         (setq js-basic-indent 2)
         (setq-default js2-basic-indent 2
@@ -2565,20 +2609,15 @@ So I controlling my personal calendar from my work calendar and I configure org-
                       js2-indent-on-enter-key t
                       js2-global-externs (list "window" "module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON" "jQuery" "$")))
 
-      (add-hook 'js2-mode-hook
-                (lambda ()
-                  (push '("function" . ?ƒ) prettify-symbols-alist)))
-
       ;; This seems to be broken:
       ;; `flycheck-may-use-checker: Wrong type argument: symbolp, "javascript-eslint"`
       ;; ... so let's disable for now
       ;;(add-hook 'js2-mode-hook
       ;;          (lambda () (flycheck-select-checker "javascript-eslint")))
 
-      (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-
+        (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
     #+END_SRC
-**** Python
+**** COMMENT Python
 ***** Packages
      #+BEGIN_SRC emacs-lisp
        (use-package python-mode)
@@ -2628,7 +2667,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
      #+END_SRC
 ***** Notes
      Issues encountered in the past with *ob-ipython*.
-**** Protobuf
+**** COMMENT Protobuf
     #+BEGIN_SRC emacs-lisp
       (use-package protobuf-mode)
     #+END_SRC
@@ -2648,31 +2687,21 @@ So I controlling my personal calendar from my work calendar and I configure org-
            (message compile-command)))
 
        (use-package typescript-mode
-         
          :mode "\\.ts\\'"
-         :init
-         (setup-typescript-mode))
+         :hook (ts-mode . setup-typescript-mode))
      #+END_SRC
 ***** tide
      #+BEGIN_SRC emacs-lisp
-       (defun setup-tide-mode ()
-         (interactive)
-         (tide-setup)
-         (flycheck-mode +1)
-         (setq flycheck-check-syntax-automatically '(save mode-enabled))
-         (eldoc-mode +1)
-         (tide-hl-identifier-mode +1)
-         ;; company is an optional dependency. You have to
-         ;; install it separately via package-install
-         ;; `M-x package-install [ret] company`
-         (company-mode +1))
+       (use-package tide
+         :hook (typescript-mode . (lambda ()
+                                    ((tide-setup)
+                                     (setq flycheck-check-syntax-automatically '(save mode-enabled))
+                                     (company-mode + 1)
+                                     (flycheck-mode +1)
+                                     (eldoc-mode +1)
+                                     (tide-hl-identifier-mode +1)))))
 
-       (use-package tide)
-
-       (add-hook 'typescript-mode-hook
-                 (lambda ()
-                   (setup-tide-mode)))
-                                               ;                   (add-hook 'before-save-hook 'tide-format-before-save nil t)))
+       ;                   (add-hook 'before-save-hook 'tide-format-before-save nil t)))
 
      #+END_SRC
 ***** tss
@@ -2688,26 +2717,11 @@ So I controlling my personal calendar from my work calendar and I configure org-
     #+BEGIN_SRC emacs-lisp
       (use-package yaml-mode)
     #+END_SRC
-**** UML
+**** COMMENT UML
 ***** WSD mode
 #+BEGIN_SRC emacs-lisp
   (use-package wsd-mode)
 #+END_SRC
-*** idee
-    #+BEGIN_SRC emacs-lisp
-      (use-package idee :straight (idee :host github :repo "iocanel/idee"))
-      (require 'idee-evil)
-      (require 'idee-clojure)
-      (require 'idee-golang)
-      (require 'idee-java)
-      (require 'idee-lsp-java)
-      (require 'idee-javascript)
-      (require 'idee-python)
-      (require 'idee-maven)
-      (require 'idee-spring)
-      (require 'idee-quarkus)
-      (require 'idee-dap)
-    #+END_SRC
 ** Operations
 *** Docker
     #+BEGIN_SRC emacs-lisp
@@ -2718,9 +2732,12 @@ So I controlling my personal calendar from my work calendar and I configure org-
 *** Kubernetes
 **** Plugins
      #+BEGIN_SRC emacs-lisp
-       (use-package kubernetes :load-path "~/workspace/src/github.com/chrisbarrett/kubernetes-el")
-       (use-package kubernetes-evil :load-path "~/workspace/src/github.com/chrisbarrett/kubernetes-el")
+       (use-package kubernetes)
+      (use-package kubernetes-evil)
        (use-package kubernetes-tramp)
+;       (use-package kubernetes :load-path "~/workspace/src/github.com/chrisbarrett/kubernetes-el")
+;       (use-package kubernetes-evil :load-path "~/workspace/src/github.com/chrisbarrett/kubernetes-el")
+;       (use-package kubernetes-tramp)
      #+END_SRC
 **** Custom Functions
 ***** Buffer Actions
@@ -2798,7 +2815,10 @@ So I controlling my personal calendar from my work calendar and I configure org-
            (kill-new s)
 
            ;; Print a user-friendly message for feedback.
-           (let ((n-lines 1) (first-line nil) (port (read-number "Choose port to debug:")))
+           (let ((n-lines 1)
+                 (first-line nil)
+                 (local-port (read-number "Choose local port:"))
+                 (remote-port (read-number "Choose port to debug:")))
              (with-temp-buffer
                (insert s)
                (goto-char (point-min))
@@ -2808,7 +2828,7 @@ So I controlling my personal calendar from my work calendar and I configure org-
              (let ((ellipsized (kubernetes-utils-ellipsize first-line 70)))
                (if (< 1 n-lines)
                    (message "Copied %s lines, starting with: %s" n-lines ellipsized)
-                 (async-shell-command (format "%s %s %s" "kubectl port-forward"  ellipsized (format "%s:%s" port poert)))
+                 (async-shell-command (format "%s %s %s" "kubectl port-forward"  ellipsized (format "%s:%s" local-port remote-port)))
                  (message "Portforwarding: %s" ellipsized))))))
      #+END_SRC
 **** Hydra
@@ -2826,9 +2846,9 @@ So I controlling my personal calendar from my work calendar and I configure org-
                        "
                 ("o" kubernetes-overview)
                 ("r" kubernetes-refresh)
-                ("C" kubernetes-create-dwim)
-                ("D" kubernetes-delete-dwim)
-                ("R" kubernetes-replace-dwim)
+                ("C" idee-kubernetes-create-dwim)
+                ("D" idee-kubernetes-delete-dwim)
+                ("R" idee-kubernetes-replace-dwim)
                 ("e" kubernetes-exec-into)
                 ("l" kubernetes-logs-follow)
                 ("d" kubernetes-mark-for-delete)
@@ -2921,10 +2941,42 @@ So I controlling my personal calendar from my work calendar and I configure org-
      #+BEGIN_SRC emacs-lisp
        (add-to-list 'auto-mode-alist '("Jenkinsfile" . groovy-mode))
      #+END_SRC
-     
+** IDEE
+    #+BEGIN_SRC emacs-lisp
+      (use-package queue)
 
-    
+      (use-package idee :straight (idee :host github :repo "iocanel/idee"))
+      (require 'idee-evil)
+;      (require 'idee-clojure)
+;      (require 'idee-golang)
+      (require 'idee-java)
+      (require 'idee-lsp-java)
+;      (require 'idee-javascript)
+;      (require 'idee-python)
+      (require 'idee-maven)
+      (require 'idee-spring)
+      (require 'idee-quarkus)
+      (require 'idee-dap)
+      (require 'idee-treemacs)
+      (require 'idee-eshell)
+      (require 'idee-docker)
+      (require 'idee-kubernetes)
+    #+END_SRC
+** Work
+*** Update CVEs
+#+begin_src emacs-lisp
 
-     
-     
-     
+  (defun check-cves ()
+    "Update the list of CVE issues"
+    (interactive)
+    (shell-command "/home/iocanel/scripts/work/collect-cve.sh ~/Documents/work/cve.org")
+    (find-file "~/Documents/work/cve.org"))
+#+end_src
+**** COMMENT Vterm
+Let's try and use vterm.
+It doesn't seem to be really close to what I am looking for, but lets keep it around and maybe revisit in the future.
+#+begin_src emacs-lisp
+  (add-to-list 'load-path "~/workspace/src/github.com/akermu/emacs-libvterm")
+  (let (vterm-install)
+    (require 'vterm))
+#+end_src

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+#We use a wrapper script instead of an alias, cause aliases are not inherited.
+sudo /usr/bin/su $*

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+#
+# Track all remote branches that are not present locally.
+# Credits: https://stackoverflow.com/questions/67699/how-to-clone-all-remote-branches-in-git
+#
+for branch in $(git branch --all | grep '^\s*remotes' | egrep --invert-match '(:?HEAD|master)$'); do
+    git branch --track "${branch##*/}" "$branch"
+done
