@@ -1,0 +1,8 @@
+#!/bin/bash
+
+EMAIL=$1
+PREFIX=${2:-snowdrop/gpg-keys}
+
+echo "Exporting gpg key for $EMAIL into $PREFIX/$EMAIL"
+gpg --armor --export $EMAIL | pass insert -f -m $PREFIX/$EMAIL
+

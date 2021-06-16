@@ -1,0 +1,10 @@
+#!/bin/bash
+
+DEPENDENCY=$1
+
+git log | grep "prepare release" -B4 | grep commit | cut -d " " -f2 | while read commit
+do
+  release=`git log | grep $commit -A4 | grep maven-release-plugin | awk -F " " '{print $NF}'`
+  version=`git show $commit:pom.xml | grep "<${DEPENDENCY}.version>" | awk -F ">|<" '{print $3}'`
+  echo "Release: $release $DEPENDENCY $version"
+done

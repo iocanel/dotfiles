@@ -15,6 +15,7 @@ TITLE=$1
 TRACK=$(or $(readopt --track $*) 1)
 AUDIO_TRACK=$(or $(readopt --audio-track $*) 7)
 AUDIO_ID=$((127 + AUDIO_TRACK))
+DEVICE=$(or $(readopt --dvd-device $*) /dev/sr0)
 
 if [ -z "$TITLE" ]; then
 	usage
@@ -22,4 +23,4 @@ if [ -z "$TITLE" ]; then
 fi
 
 echo "Riping ${TRACK} with ${AUDIO_ID} to  ${HOME}/Rip/${TITLE}.avi ..."
-mencoder dvd://${TRACK} -dvd-device /dev/sr0 -ovc lavc -lavcopts vcodec=mpeg4:vhq:vbitrate="1600":aspect=16/9 -oac mp3lame -alang Greek -aid ${AUDIO_ID} -lameopts br=128:vol=6 -nosub -o ${HOME}/Rip/${TITLE}.avi
+mencoder dvd://${TRACK} -dvd-device ${DEVICE} -ovc lavc -lavcopts vcodec=mpeg4:vhq:vbitrate="2000":aspect=16/9 -oac mp3lame -alang Greek -aid ${AUDIO_ID} -lameopts br=128:vol=10 -nosub -o ${HOME}/Rip/${TITLE}.avi

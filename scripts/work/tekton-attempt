@@ -1,0 +1,22 @@
+#!/bin/bash
+
+kubectl delete ns iocanel
+kubectl delete pv spring-boot-with-tekton-example
+kubectl create ns iocanel
+kubectl config set-context --current --namespace=iocanel
+#kubectl create secret docker-registry regcred --docker-server=https://index.docker.io/v1 --docker-username=iocanel --docker-password=`pass show websites/docker.com/iocanel` --docker-email=iocanel@gmail.com
+kubectl create secret generic regcred --from-file=.dockerconfigjson=/home/iocanel/.docker/config.json --type=kubernetes.io/dockerconfigjson
+mvn clean package -Ptekton
+#kubectl apply -f target/classes/META-INF/dekorate/tekton-pipeline.yml
+#kubectl apply -f target/classes/META-INF/dekorate/tekton-pipeline-run.yml
+
+kubectl apply -f target/classes/META-INF/dekorate/tekton-task.yml
+kubectl apply -f target/classes/META-INF/dekorate/tekton-task-run.yml
+
+#tkn pipeline start spring-boot-with-tekton-example
+#echo "Running pipelinerun: $PIPELINE_RUN"
+#PIPELINE_RUN=`tkn pipelinerun list | grep -v NAME | awk -F " " '{print $1}'`
+#tkn pipelinerun logs $PIPELINE_RUN -f -n iocanel
+
+TASK_RUN=`tkn taskrun list | grep -v NAME | awk -F " " '{print $1}'`
+tkn taskrun logs $TASK_RUN -f -n iocanel

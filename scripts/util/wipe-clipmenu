@@ -1,0 +1,8 @@
+ID=`id -u`
+USER=`whoami`
+for i in /run/user/${ID}/clipmenu.*; do
+pushd $i
+rm *
+popd
+done
+rm -rf /run/user/1000/clipmenu.*.${USER}/*

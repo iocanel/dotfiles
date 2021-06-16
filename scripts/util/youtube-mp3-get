@@ -10,7 +10,7 @@ if [ -n "$TITLE" ]; then
 	curl -s $ICON_URL > $ICON_PATH
 	convert $ICON_PATH -resize 200 $ICON_PATH
 	notify-send -u low -i $ICON_PATH -a "youtube" "Scheduled: $TITLE"
-	youtube-dl $1 -o "/home/iocanel/Downloads/Youtube/%(title)s" --write-thumbnail
+  youtube-dl -x --audio-format mp3 $1 -o "/home/iocanel/Downloads/Youtube/%(title)s.%(ext)s" 
 	if [ $? -eq 0 ]; then
 		notify-send -u normal -i $ICON_PATH -a "youtube" "Completed: $TITLE"
 	else

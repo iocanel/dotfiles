@@ -1,0 +1,13 @@
+#!/bin/bash
+
+kubectl delete ns iocanel
+kubectl delete pv spring-boot-with-tekton-example
+kubectl create ns iocanel
+kubectl config set-context --current --namespace=iocanel
+mvn clean package -Ptekton
+
+kubectl apply -f target/classes/META-INF/dekorate/tekton-task.yml
+kubectl apply -f target/classes/META-INF/dekorate/tekton-task-run.yml
+
+TASK_RUN=`tkn taskrun list | grep -v NAME | awk -F " " '{print $1}'`
+tkn taskrun logs $TASK_RUN -f -n iocanel

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+HOST=https://api.cluster-athens-65cc.athens-65cc.example.opentlc.com:6443
+oc login $HOST --username=`pass show services/redhat.com/rhpds-workshop/username` --password=`pass show services/redhat.com/rhpds-workshop/password`

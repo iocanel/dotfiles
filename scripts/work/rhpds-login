@@ -1,0 +1,5 @@
+#!/bin/bash
+
+#HOST=https://api.shared-rhpds.rhpds.openshift.opentlc.com:6443
+HOST=https://api.cluster-athens-4032.athens-4032.example.opentlc.com:6443
+oc login $HOST --username=`pass show services/redhat.com/rhpds/username` --password=`pass show services/redhat.com/rhpds/password`

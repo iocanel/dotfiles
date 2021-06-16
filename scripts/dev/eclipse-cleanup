@@ -1,0 +1,5 @@
+#!/bin/bash
+
+find . -iname "*.project" -exec rm -rf {} \;
+find . -iname "*.settings" -exec rm -rf {} \;
+find . -iname "*.classpath" -exec rm -rf {} \;

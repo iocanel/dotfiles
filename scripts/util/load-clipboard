@@ -1,0 +1,27 @@
+#!/bin/bash
+TMP_DIR=`mktemp -d`
+cat $1 | (
+  I=0;
+  echo -n "" > $TMP_DIR/file$I;
+  while read line; 
+  do
+    if [ "$line" == '---' ];
+    then 
+      echo "" >> $TMP_DIR/file$I;
+      I=$[I+1];
+      echo -n "" > $TMP_DIR/file$I;
+    else
+      echo $line >> $TMP_DIR/file$I;
+    fi;
+  done;
+)
+
+for i in $TMP_DIR/*; do
+  CONTENT=`cat  $i`
+  if [[ ! -z $CONTENT ]]; then 
+    echo "Loading $i"
+    cat $i 
+    sleep 1
+    cat $i | xclip 
+  fi
+done

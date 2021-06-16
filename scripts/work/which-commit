@@ -1,0 +1,11 @@
+#!/bin/bash
+
+TARGET_FILE=pom.xml
+TARGET_DEPENDENCY=$1
+TARGET_VERSION=$2
+
+if [ -n "$TARGET_VERSION" ]; then
+    git blame $TARGET_FILE | grep "<${TARGET_DEPENDENCY}.version>${TARGET_VERSION}"
+else
+    git blame $TARGET_FILE | grep "<${TARGET_DEPENDENCY}.version>"
+fi

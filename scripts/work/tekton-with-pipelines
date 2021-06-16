@@ -1,0 +1,14 @@
+#!/bin/bash
+
+echo "Deleting namespace"
+kubectl delete ns iocanel
+kubectl delete pv spring-boot-with-tekton-example
+echo "Creating new namespace"
+kubectl create ns iocanel
+kubectl config set-context --current --namespace=iocanel
+mvn clean package -Ptekton
+kubectl apply -f target/classes/META-INF/dekorate/tekton-pipeline.yml
+kubectl apply -f target/classes/META-INF/dekorate/tekton-pipeline-run.yml
+
+PIPELINE_RUN=`tkn pipelinerun list | grep -v NAME | awk -F " " '{print $1}'`
+tkn pipelinerun logs $PIPELINE_RUN -f -n iocanel

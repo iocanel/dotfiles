@@ -1,0 +1,5 @@
+#!/bin/bash
+
+kubectl delete ns iocanel
+kubectl create ns iocanel
+kubectl config set-context --current --namespace=iocanel

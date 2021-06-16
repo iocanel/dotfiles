@@ -1,0 +1,5 @@
+#!/bin/bash
+
+SELECTED_NAMESPACE=`kubectl get namespaces | grep -v NAME | awk  '{print $1}' | dmenu -p "Choose namespace"`
+KUBE_OUT=`kubectl config set-context --current --namespace=$SELECTED_NAMESPACE`
+notify-send -u normal -a "Kubernetes" "$KUBE_OUT"

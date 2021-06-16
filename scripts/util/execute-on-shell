@@ -1,0 +1,29 @@
+#!/bin/sh
+
+#
+# Grabs the selected text and apply it to kubernetes using `kubectl`.
+# 
+# OS: Linux
+# Requirements: xsel, notify-send
+#
+# Bind this to a key of your choice. 
+# Example (i3):
+# bindsym $mod+Shift+a exec ~/scripts/k8s/kube-apply-from-clipboard
+
+
+set +e
+
+TEMP_FILE=$(mktemp /tmp/execute.XXXXXX)
+xsel -p -o -n > $TEMP_FILE
+CMD=`cat $TEMP_FILE`
+OUT=`eval $CMD 2> ${TEMP_FILE}.err`
+ERR=`cat ${TEMP_FILE}.err`
+if [ $? -eq 0 ]; then
+ notify-send -u normal -a  "# $CMD" "
+
+$OUT"
+else
+ notify-send -u critical -a "# $CMD" "
+
+$ERR"
+fi

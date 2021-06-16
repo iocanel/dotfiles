@@ -1,0 +1,58 @@
+#!/bin/bash
+
+KNATIVE_VERSION=v0.6.0
+CURRENT=`oc project | awk -F"\"" '{print $2}'`
+PROJECT=${1-$CURRENT}
+
+echo "Project: $PROJECT"
+# Enable admission controller webhooks
+# The configuration stanzas below look weird and are just to workaround for:
+# https://bugzilla.redhat.com/show_bug.cgi?id=1635918
+minishift openshift config set --target=kube --patch '{
+    "admissionConfig": {
+        "pluginConfig": {
+            "ValidatingAdmissionWebhook": {
+                "configuration": {
+                    "apiVersion": "apiserver.config.k8s.io/v1alpha1",
+                    "kind": "WebhookAdmission",
+                    "kubeConfigFile": "/dev/null"
+                }
+            },
+            "MutatingAdmissionWebhook": {
+                "configuration": {
+                    "apiVersion": "apiserver.config.k8s.io/v1alpha1",
+                    "kind": "WebhookAdmission",
+                    "kubeConfigFile": "/dev/null"
+                }
+            }
+        }
+    }
+}'
+
+# wait until the kube-apiserver is restarted
+until oc login -u system:admin; do sleep 10; done;
+	
+sleep 20;
+
+oc project $PROJECT
+oc adm policy add-scc-to-user privileged -z default
+oc label namespace $PROJECT istio-injection=enabled
+
+#Installing Istio
+curl -s https://raw.githubusercontent.com/knative/docs/master/docs/install/scripts/istio-openshift-policies.sh | bash
+
+kubectl apply --filename https://github.com/knative/serving/releases/download/v0.4.0/istio-crds.yaml 
+
+oc apply --filename https://github.com/knative/serving/releases/download/v0.4.0/istio.yaml
+
+oc get cm istio-sidecar-injector -n istio-system -oyaml | sed -e 's/securityContext:/securityContext:\\n      privileged: true/' | oc replace -f -
+
+#Knative
+curl -s https://raw.githubusercontent.com/knative/docs/master/docs/install/scripts/knative-openshift-policies.sh | bash
+
+oc apply --filename https://github.com/knative/serving/releases/download/v0.4.0/serving.yaml 
+oc apply --filename https://github.com/knative/build/releases/download/v0.4.0/build.yaml 
+oc apply --filename https://raw.githubusercontent.com/knative/serving/v0.4.0/third_party/config/build/clusterrole.yaml
+
+sudo ip route add $(minishift openshift config view | grep ingressIPNetworkCIDR | sed 's/\r$//' | awk '{print $NF}') via $(minishift ip)
+
