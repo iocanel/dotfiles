@@ -1,0 +1,1 @@
+export MAVEN_OPTS="$MAVEN_OPTS -Dtwitter4j.oauth.consumerKey=`pass show services/twitter/iocanel-dev/api-key` -Dtwitter4j.oauth.consumerSecret=`pass show services/twitter/iocanel-dev/api-key-secret` -Dtwitter4j.oauth.accessToken=`pass show services/twitter/iocanel-dev/access-token` -Dtwitter4j.oauth.accessTokenSecret=`pass show services/twitter/iocanel-dev/access-token-secret`"
