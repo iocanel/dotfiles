@@ -125,7 +125,9 @@
 #neovim
 !.config/nvim
 !.config/nvim/init.lua
-!.config/nvim/lua/**
+!.config/nvim/lua/
+!.config/nvim/lua/user/
+!.config/nvim/lua/user/*.lua
 !.config/nvim/coc-settings.json
 !.config/nvim/readme.md
 
