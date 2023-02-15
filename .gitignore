@@ -1,6 +1,7 @@
 *
 !.gitignore
 !update-dotfiles.sh
+!install.sh
 
 #general
 !.config
@@ -65,8 +66,10 @@
 !.mailcap
 
 #mbsync / isync
-!.config/mbsync
-!.config/mbsync/**
+!.mbsyncrc
+
+#msmtp
+!.msmtprc
 
 #mutt
 !.config/mutt
