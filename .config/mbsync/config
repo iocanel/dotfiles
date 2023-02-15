@@ -1,3 +1,12 @@
+# Or include everything
+#Patterns *
+# Automatically create missing mailboxes, both locally and on the server
+Create Both
+# Save the synchronization state files in the relevant directory
+SyncState *
+# Delete both locally and on server
+Expunge Both
+
 IMAPAccount iocanel-gmail
 # Address to connect to
 Host imap.gmail.com
@@ -11,21 +20,23 @@ Account iocanel-gmail
 
 MaildirStore iocanel-gmail-local
 # The trailing "/" is important
-Path ~/.mail/iocanel@gmail.com/
-Inbox ~/.mail/iocanel@gmail.com/Inbox
-SubFolders Legacy
+Path /home/iocanel/.mail/iocanel@gmail.com/
+Inbox /home/iocanel/.mail/iocanel@gmail.com/INBOX
+Trash /home/iocanel/.mail/iocanel@gmail.com/Trash
+SubFolders Verbatim
 
 Channel iocanel-gmail
 Master :iocanel-gmail-remote:
 Slave :iocanel-gmail-local:
-# Exclude everything under the internal [Gmail] folder, except the interesting folders
-Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "[Gmail]/All Mail"
+Patterns INBOX Drafts Trash Sent
 # Or include everything
 #Patterns *
 # Automatically create missing mailboxes, both locally and on the server
 Create Both
 # Save the synchronization state files in the relevant directory
 SyncState *
+# Delete both locally and on server
+Expunge Both
 
 IMAPAccount ikanello-gmail
 # Address to connect to
@@ -40,18 +51,12 @@ Account ikanello-gmail
 
 MaildirStore ikanello-gmail-local
 # The trailing "/" is important
-Path ~/.mail/ikanello@redhat.com/
-Inbox ~/.mail/ikanello@redhat.com/Inbox
-SubFolders Legacy
+Path /home/iocanel/.mail/ikanello@redhat.com/
+Inbox /home/iocanel/.mail/ikanello@redhat.com/INBOX
+Trash /home/iocanel/.mail/ikanello@redhat.com/Trash
+SubFolders Verbatim
 
 Channel ikanello-gmail
 Master :ikanello-gmail-remote:
 Slave :ikanello-gmail-local:
-# Exclude everything under the internal [Gmail] folder, except the interesting folders
-Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "[Gmail]/All Mail"
-# Or include everything
-#Patterns *
-# Automatically create missing mailboxes, both locally and on the server
-Create Both
-# Save the synchronization state files in the relevant directory
-SyncState *
+Patterns INBOX Drafts Trash Sent CVE "Teams/Quarkus" "Teams/Snowdrop" 

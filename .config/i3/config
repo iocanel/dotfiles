@@ -14,7 +14,7 @@ set $mod Mod4
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
 #font pango:monospace 8
-font pango: M+ 1m, FontAwesome, Ionicons, 10
+font pango: M+ 1m, FontAwesome, Ionicons, 12
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -27,20 +27,97 @@ font pango: M+ 1m, FontAwesome, Ionicons, 10
 # X core fonts rendering does not support right-to-left and this being a bitmap
 # font, it doesn’t scale on retina/hidpi displays.
 
+# Gaps
+smart_gaps on
+gaps inner 20
+gaps outer 20
+
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
 # start a terminal
 #bindsym $mod+Return exec i3-sensible-terminal
-bindsym $mod+Return exec urxvt --title terminal
-bindsym $mod+Enter exec urxvt --title terminal
+bindsym $mod+Return exec alacritty --title terminal
+bindsym $mod+Enter exec alacritty --title terminal
+
+#
+# Floating Apps
+#
+
+for_window [class="Nitrogen"] floating enable; resize shrink height 1000px; move position center;
+
+# AlsaMixer
+bindsym $mod+Ctrl+a; exec alacritty --title alsamixer -e alsamixer
+for_window [title="alsamixer"] floating enable;
+
+# Bluetooth manager
+bindsym $mod+Ctrl+b; exec blueman-manager
+for_window [class="Blueman-manager"] floating enable; move position center;
+
+# ytop
+bindsym $mod+Ctrl+t; exec alacritty --title ytop -e ytop
+for_window [title="ytop"] floating enable;
+
+# elfeed
+bindsym $mod+Shift+e; exec ~/bin/elfeed
+for_window [title="elfeed-app"] floating enable;
+
+# dunst
+bindsym Ctrl+grave; exec dunstctl history-pop
+bindsym Ctrl+space; exec dunstctl close
+bindsym Ctrl+shift+space; exec dunstctl close-all
+#bindsym $mod+shift+d; exec dunstctl set-paused toggle
+
+# dunst
+
+
+#
+# Emacs frames
+#
+
+# Move shell like windows to the bottom of the screen to create an
+# IDE-like layout (windows on top - tiny shell to the bottom)
+
+#for_window [title="^\*vterm.*"] move down; resize set 100 ppt 25 ppt;
+#for_window [title="^\*shell.*"] move down; resize set 100 ppt 25 ppt;
+#for_window [title=".*helm-ag.*"] move down; resize set 100 ppt 25 ppt;
+#for_window [title=".*undo-tree.*"] move right; resize set 50 ppt 100 ppt;
+
+# mu4e
+bindsym $mod+Shift+m; exec ~/bin/mu4e
+for_window [title="mu4e-app"] floating enable
+
+# org-agenda
+bindsym $mod+Shift+a; exec ~/bin/org-agenda
+for_window [title="org-agenda-app"] floating enable;
+
+# org-capture
+bindsym $mod+Shift+c; exec ~/bin/org-capture
+for_window [title="org-capture-app"] floating enable;
+
+# org-roam-capture
+bindsym --release $mod+Shift+r; exec ~/bin/org-roam-capture
+for_window [title="org-roam-app"] floating enable;
+
+# jbang
+#bindsym $mod+Ctrl+j; exec alacritty --hold --title jbang -e /home/iocanel/scripts/util/jbclip 
+#for_window [title="jbang"] floating enable;
 
 
 # kill focused window
 bindsym $mod+Shift+q kill
+# same rh only
+bindsym $mod+Shift+y kill 
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec dmenu_run
+bindsym $mod+d exec rofi -show drun -show-icons -display-drun "Launch"
+bindsym $mod+semicolon exec rofi -show drun -show-icons -display-drun "Launch"
+bindsym $mod+f exec dmenufm
+bindsym $mod+g exec /home/iocanel/bin/qutebrowser-google-rofi &
+bindsym $mod+t exec "rofi -combi-modi window,drun -show combi -show-icons -display-combi 'Select'"
+
+# start apps
+
 
 # start clipmenu (a clipboard manager)
 bindsym --release $mod+c exec clipmenu
@@ -50,11 +127,12 @@ bindsym --release $mod+c exec clipmenu
 # installed.
 # bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 
+
 # change focus
 bindsym $mod+j focus left
 bindsym $mod+k focus down
 bindsym $mod+l focus up
-bindsym $mod+semicolon focus right
+#bindsym $mod+semicolon focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -81,7 +159,7 @@ bindsym $mod+h split h
 bindsym $mod+v split v
 
 # enter fullscreen mode for the focused container
-bindsym $mod+f fullscreen toggle
+bindsym $mod+Shift+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
 bindsym $mod+s layout stacking
@@ -95,11 +173,18 @@ bindsym $mod+Shift+space floating toggle
 bindsym $mod+space focus mode_toggle
 
 # focus the parent container
-bindsym $mod+a focus parent
+#bindsym $mod+a focus parent
 
 # focus the child container
 #bindsym $mod+d focus child
 
+
+#bindsym $mod+Shift+a exec ~/scripts/k8s/kube-apply-from-clipboard
+#bindsym $mod+Shift+n exec ~/scripts/k8s/kube-select-namespace
+#bindsym $mod+Shift+x exec ~/scripts/util/execute-on-shell
+
+#bindsym $mod+Shift+d exec ~/scripts/iot/toogle-desk-light
+#bindsym $mod+Shift+o exec ~/scripts/iot/toogle-office-light
 
 #menu title
 set $menu1 
@@ -140,15 +225,16 @@ bindsym --release Shift+Print exec "scrot -s '/home/iocanel/Photos/screenshots/%
 bindsym --release Print exec "scrot -m '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
 bindsym --release $mod+Shift+Print exec "scrot -u -d 4 '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
 bindsym --release Ctrl+Shift+p exec "imgur-screenshot -w"
+bindsym --release $mod+Shift+s exec "/home/iocanel/bin/toggle-screenkey"
 
 # Screen Saver
-bindsym $mod+Shift+s exec toggle-screenlock
+bindsym $mod+Ctrl+Shift+s exec toggle-screenlock
 
 # Monitor(DPMS) toggle
-bindsym $mod+Shift+m exec toggle-monitor
+bindsym $mod+Ctrl+s exec toggle-monitor
 
 #Emacs Daemon
-bindsym $mod+Shift+e exec restart-emacsd
+bindsym $mod+Ctrl+Shift+e exec restart-emacsd
 
 #Temporary workaround for auto resolving idea file cache conflicts
 bindsym $mod+Shift+w exec file-cache-conflict-resolve
@@ -160,9 +246,9 @@ bindsym --release $mod+Shift+b exec toggle-blueman-applet
 bindsym --release $mod+Shift+n exec toggle-nm-applet
 
 #Yapt
-bindsym $mod+y exec yapt -t
+#bindsym $mod+y exec yapt -t
 
-bindsym $mod+Shift+y exec yapt -r
+#bindsym $mod+Shift+y exec yapt -r
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -172,10 +258,10 @@ mode "resize" {
 # Pressing right will grow the window’s width.
 # Pressing up will shrink the window’s height.
 # Pressing down will grow the window’s height.
-  bindsym j resize shrink width 10 px or 10 ppt
-    bindsym k resize grow height 10 px or 10 ppt
-    bindsym l resize shrink height 10 px or 10 ppt
-    bindsym semicolon resize grow width 10 px or 10 ppt
+bindsym j resize shrink width 10 px or 10 ppt
+bindsym k resize grow height 10 px or 10 ppt
+bindsym l resize shrink height 10 px or 10 ppt
+bindsym semicolon resize grow width 10 px or 10 ppt
 
 # same bindings, but for the arrow keys
     bindsym Left resize shrink width 10 px or 10 ppt
@@ -195,7 +281,7 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-#  tray_output primary
+#tray_output primary
   workspace_buttons yes
   mode dock #or hide
   modifier $mod
@@ -203,13 +289,13 @@ bar {
   colors {
     # Dracula-ish colors
     background #262626
-    statusline #a8b7c1
+    statusline #a0b7c1
     separator #666666
-    #                  border  back    text
-    focused_workspace  #262626 #a8b7c1 #262626 #262626
-    active_workspace   #262626 #555555 #262626 #262626
-    inactive_workspace #262626 #262626 #555555 #262626
-    urgent_workspace   #262626 #c57632 #262626 #262626
+    #                  border  back      text
+    focused_workspace  #262626 #262626   #c57632
+    active_workspace   #262626 #262626   #ff0000
+    inactive_workspace #262626 #262626   #555555
+    urgent_workspace   #262626 #c57632   #9876aa
   }
 }
 
@@ -218,10 +304,10 @@ new_window pixel 1
 hide_edge_borders both
 
 # Assing applications to workspaces
-assign [class="^Urxvt$" instance="^mutt$"] 1
-assign [class="Emacs"] 2
-assign [class="Chrome"] 3
-assign [class="qutebrowser"] 3
+#assign [class="^Urxvt$" instance="^mutt$"] 1
+#assign [class="Emacs"] 2
+#assign [class="Chrome"] 3
+
 
 #Autostart programs
 
@@ -230,33 +316,38 @@ assign [class="qutebrowser"] 3
 
 
 # Services 
-exec --no-startup-id feh --bg-scale ~/.config/i3/background.png
+exec --no-startup-id nitrogen --random --set-auto --head=0
+exec --no-startup-id nitrogen --random --set-auto --head=1
 exec --no-startup-id "setxkbmap -model pc105 -layout us,gr -option grp:alt_shift_toggle -option ctrl:nocaps"
 exec --no-startup-id "autocutsel"
 
 exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
-#exec --no-startup-id /usr/bin/emacs --daemon
 exec --no-startup-id xautolock -time 30 -locker 'lock-screen'
-exec --no-startup-id /usr/bin/compton -b
-exec --no-startup-id ~/scripts/util/toggle-camera off
+#exec --no-startup-id /usr/bin/picom -b
+#exec --no-startup-id /usr/bin/conky -c ~/.config/conky/config
+#exec --no-startup-id /usr/bin/conky -c ~/.config/conky/agenda
+exec --no-startup-id /usr/bin/clipmenud &
+exec --no-startup-id nm-applet &
+exec --no-startup-id zulip &
+exec --no-startup-id slack &
+exec --no-startup-id /usr/bin/emacs --daemon
+exec --no-startup-id dockd --daemon
+exec --no-startup-id pasystray &
+
+#exec --no-startup-id ~/scripts/util/toggle-camera off
 #exec --no-startup-id ~/scripts/util/toggle-keyboard off
 
-# Applications
-exec --no-startup-id i3-msg 'workspace 1; exec urxvt --title terminal'
-#exec --no-startup-id i3-msg 'workspace 2; exec urxvt --title emacs -name emacs -e emacs'
-exec --no-startup-id i3-msg 'workspace 3; exec qutebrowser'
-exec --no-startup-id i3-msg 'workspace 5; exec wavebox'
-
 # Bind to workspace
-bindsym $mod+1 workspace 1; exec [ $( ps -eo cmd | grep -c '[u]rxvt --title terminal' ) -eq 2 ] && urxvt --title terminal
+bindsym $mod+1 workspace 1; 
 bindsym $mod+2 workspace 2;
-#bindsym $mod+2 workspace 2; # exec [ $( ps -eo cmd | grep -c '[e]macsclient -c' ) -eq 2 ] && emacsclient -c
-bindsym $mod+3 workspace 3; exec [ $( ps -eo cmd | grep -c '[q]utebrowser' ) -eq 2 ] && qutebrowser
+bindsym $mod+3 workspace 3;
+bindsym $mod+4 workspace 4;
 bindsym $mod+5 workspace 5;
-#bindsym $mod+5 workspace 5; exec [ $( ps -eo cmd | grep -c '[w]avebox' ) -eq 2 ] && wavebox
-bindsym $mod+8 workspace 8
-bindsym $mod+9 workspace 9
-bindsym $mod+0 workspace 10
+bindsym $mod+6 workspace 6;
+bindsym $mod+7 workspace 7;
+bindsym $mod+8 workspace 8;
+bindsym $mod+9 workspace 9;
+bindsym $mod+0 workspace 10;
 
 # Monitors
 workspace 1 output DP-3.2

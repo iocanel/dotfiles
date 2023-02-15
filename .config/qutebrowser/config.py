@@ -32,27 +32,31 @@ c.colors.tabs.selected.odd.fg="white"
 c.colors.webpage.bg="white"
 
 # Fonts
-c.fonts.tabs="10pt FontAwesome"
-c.fonts.completion.category="bold 10pt FontAwesome"
-c.fonts.completion.entry="10pt FontAwesome"
-c.fonts.debug_console="10pt FontAwesome"
-c.fonts.downloads="12pt FontAwesome"
-c.fonts.hints="bold 12pt FontAwesome"
-c.fonts.keyhint="12pt FontAwesome"
-c.fonts.messages.error="12pt FontAwesome"
-c.fonts.messages.info="12pt FontAwesome"
-c.fonts.messages.warning="12pt FontAwesome"
-c.fonts.monospace="/Consolas, Terminal"
+#c.fonts.tabs="14pt DejaVu Sans Mono"
+c.fonts.completion.category="bold 12pt DejaVu Sans Mono"
+c.fonts.completion.entry="12pt DejaVu Sans Mono"
+c.fonts.debug_console="12pt DejaVu Sans Mono"
+c.fonts.downloads="12pt DejaVu Sans Mono"
+c.fonts.hints="bold 12pt DejaVu Sans Mono"
+c.fonts.keyhint="12pt DejaVu Sans Mono"
+c.fonts.messages.error="12pt DejaVu Sans Mono"
+c.fonts.messages.info="12pt DejaVu Sans Mono"
+c.fonts.messages.warning="12pt DejaVu Sans Mono"
 c.fonts.prompts="12pt sans-serif"
-c.fonts.statusbar="10pt FontAwesome"
+c.fonts.statusbar="12pt DejaVu Sans Mono"
 
 #SSL
 c.content.ssl_strict=False
 
 #Misc
 c.tabs.position = "top"
-c.tabs.show = "always"
-c.statusbar.hide = True
+c.tabs.show = "never"
+c.statusbar.show = "never"
+
+# Insert mode
+c.input.insert_mode.auto_enter=True
+c.input.insert_mode.auto_leave=False
+c.input.insert_mode.auto_load=True
 
 # Search engines
 c.url.searchengines = {
@@ -80,5 +84,24 @@ c.url.searchengines = {
     }
 
 # Keybindings
-config.bind('<Ctrl-p>', 'spawn --userscript qute-pass') 
-config.bind('<Ctrl-y>', 'spawn youtube-get {url}') 
+
+#
+# Dmenu integration
+#
+# Copy the qutedmenu userscript under .local/share/qutebrowser/userscripts/
+# Ensure that dmenu is installed or rofi linked to dmenu.
+config.bind('o', 'spawn --userscript qutedmenu open')
+config.bind('O', 'spawn --userscript qutedmenu tab')
+
+config.bind('<Alt-a>', 'set tabs.show always')
+config.bind('<Ctrl-p>', 'spawn --userscript qute-pass')
+
+config.bind('<Ctrl-k>', 'spawn -v /bin/kubectl apply -f - {primary}')
+config.bind('<Ctrl-k>', 'spawn -v /bin/kubectl apply -f - {primary}', mode='caret')
+
+config.bind('<Ctrl-y>', 'spawn youtube-get {url}')
+config.bind('<alt-y>', 'spawn youtube-mp3-get {url}')
+config.bind('<alt-s>', 'hint')
+config.bind('e', 'move-to-end-of-word')
+config.bind('b', 'move-to-previous-word')
+config.unbind('d') 

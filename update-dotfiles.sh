@@ -9,6 +9,7 @@ for i in `ls -a .`;do
 		echo "Ignoring '.git'"
 	elif [ ".local" == "$i" ]; then
 		echo "Ignoring '.local'"
+		cp ~/.local/share/systemd/user/* `pwd`/.local/share/systemd/user/
 	else
 		source=~/$i
 		target=`pwd`/$i

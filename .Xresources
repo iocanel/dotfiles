@@ -16,9 +16,12 @@ URxvt*background: #262626
 URxvt.keysym.C-1: command:\033]11;#262626\007\033]10;#a9b7c1\007
 URxvt.keysym.C-2: command:\033]11;#e5e5e0\007\033]10;#000000\007
 
-URxvt*font: xft:DejaVu Sans Mono for Powerline-10
+URxvt.font: xft:DejaVu Sans Mono:regular:size=14, xft:Font Awesome 5 Free:size=14
+!URxvt*font: xft:FontAwesome
+!URxvt*font: xft:DejaVu Sans Mono-14
+!URxvt*font: xft:DejaVu Sans Mono for Powerline-14
 
-URxvt.letterSpace: -1
+URxvt.letterSpace: 0
 
 URxvt.cursorBlink: 1
 URxvt.cursorUnderline: 1
@@ -26,6 +29,12 @@ URxvt.urgentOnBell:  true
 
 URxvt.internalBorder: 0
 URxvt.externalBorder: 0
+
+! Real transparency
+!Urxvt*background: 50[#262626]
+! Fake transparency
+!Urxvt*transparent: true
+!Urxvt*shading: 30
 
 ! 
 ! Perl extensions
