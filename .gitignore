@@ -118,6 +118,14 @@
 !.vim
 !.vim/**
 
+
+#neovim
+!.config/nvim
+!.config/nvim/init.lua
+!.config/nvim/lua/**
+!.config/nvim/coc-settings.json
+!.config/nvim/readme.md
+
 #virtual environments
 !.virtualenvs
 !.virtualenvs/bin
