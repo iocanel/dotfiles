@@ -88,6 +88,9 @@ require('packer').startup(function(use)
   -- Hydra
   use { "anuvyklack/hydra.nvim", commit = "d00274f05363c13f29ed1fa571026a066a634cce" }
 
+  -- Winodw management
+  use { "gbrlsnchs/winpick.nvim", commit = "044623e236750a2f61a2cb96ce0833e113921b88" }
+
   -- Add custom plugins to packer from ~/.config/nvim/lua/custom/plugins.lua
   local has_plugins, plugins = pcall(require, 'custom.plugins')
   if has_plugins then

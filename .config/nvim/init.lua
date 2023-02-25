@@ -35,12 +35,21 @@ require('indent_blankline').setup {
   show_trailing_blankline_indent = false,
 }
 
+
+-- Winpick
+local winpick = require('winpick')
+winpick.setup({
+	border = "single",
+	filter = nil, -- doesn't ignore any window by default
+	prompt = "Pick a window: ",
+	format_label = winpick.defaults.format_label, -- formatted as "<label>: <buffer name>"
+	chars = {'j','f','k','d', 'l', 's', 'a', 'h'}, -- use home row keys
+})
+
 -- finalize startup
 -- jdtls.setup()
 editor.statusline_off()
 editor.linenumber_off()
-
-
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

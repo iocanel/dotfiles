@@ -43,10 +43,19 @@ end, { desc = 'search buffer]' })
 --
 -- [[ Window ]]
 --
-vim.keymap.set('n', '<leader>wsh', "<cmd>horizonal_split<cr>", { desc = 'window split horizontally' })
-vim.keymap.set('n', '<leader>wsv', "<cmd>vertical_split<cr>", { desc = 'window split vertically' })
+vim.keymap.set('n', '<leader>wsh', "<cmd>horizontal split<cr>", { desc = 'window split horizontally' })
+vim.keymap.set('n', '<leader>wsv', "<cmd>vertical split<cr>", { desc = 'window split vertically' })
 vim.keymap.set('n', '<leader>wjh', "<C-w>h", { desc = 'window jump horizontally' })
 vim.keymap.set('n', '<leader>wjv', "<C-w>v", { desc = 'window jump vertically' })
+local winpick_installed, winpick = pcall(require, 'winpick')
+if winpick_installed then
+  vim.keymap.set('n', '<leader>wp', function()
+  local winid = winpick.select()
+   if winid then
+  	vim.api.nvim_set_current_win(winid)
+   end
+  end, { desc = 'window pick' })
+end
 
 --
 -- [[ Git ]]
