@@ -34,7 +34,7 @@ vim.keymap.set('n', '<leader>sw', "<cmd>Telescope grep_string<cr>", { desc = 'se
 vim.keymap.set('n', '<leader>sg', "<cmd>Telescope live_grep<cr>", { desc = 'search grep' })
 vim.keymap.set('n', '<leader>sd', "<cmd>Telescope diagnostics<cr>", { desc = 'search diagnostics' })
 vim.keymap.set('n', '<leader>sb', function()
-  require('telescope_builtin').current_buffer_fuzzy_find(require('telescope_themes').get_dropdown {
+  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
     winblend = 10,
     previewer = false,
   })
