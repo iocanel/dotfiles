@@ -83,10 +83,10 @@ vim.keymap.set('n', '<leader>ef', editor.focus_toggle, { desc = 'focus mode togg
 --
 -- [[ Diagnostic keymaps ]]
 --
-vim.keymap.set('n', '<leader>dp', vim.diagnostic.goto_prev)
-vim.keymap.set('n', '<leader>dn', vim.diagnostic.goto_next)
-vim.keymap.set('n', '<leader>df', vim.diagnostic.open_float)
-vim.keymap.set('n', '<leader>ds', vim.diagnostic.setloclist)
+vim.keymap.set('n', '<leader>dp', vim.diagnostic.goto_prev, {desc = "go to previous"})
+vim.keymap.set('n', '<leader>dn', vim.diagnostic.goto_next, {desc = "go to next"})
+vim.keymap.set('n', '<leader>df', vim.diagnostic.open_float, {desc = "open float"})
+vim.keymap.set('n', '<leader>ds', vim.diagnostic.setloclist, {desc = "add to location list"})
 
 
 --
@@ -150,6 +150,24 @@ if which_key_installed then
     },
     l = {
       name = "lsp",
+      c = {
+        name = "code"
+      },
+      d = {
+        name = "diagnostics"
+      },
+      r = {
+        name = "refactor"
+      },
+      s = {
+        name = "symbol"
+      },
+      t = {
+        name = "type"
+      },
+      w = {
+        name = "workspace"
+      }
     },
     s = {
       name = "search",
