@@ -1,7 +1,6 @@
 require('user.plugins')
 require('user.options')
 require('user.treesitter')
-require('user.lsp.init')
 require('user.telescope')
 require('user.toggleterm')
 require('user.lualine')
