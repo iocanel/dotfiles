@@ -43,6 +43,10 @@
 !.config/i3
 !.config/i3/**
 
+#rofi
+!.config/rofi
+!.config/rofi/**
+
 #icons
 !.local
 !.local/share
