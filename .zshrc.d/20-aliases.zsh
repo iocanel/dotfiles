@@ -5,4 +5,4 @@ alias ps-rss='ps ax -o pid,rss,command | numfmt --header --from-unit=1024 --to=i
 alias asciicast2gif='docker run --rm -v $PWD:/data asciinema/asciicast2gif'
 alias idea="~/Idea/intellij/bin/idea.sh nosplash"
 alias mvn="~/bin/mvnnotify"
-alias quarkusj="java -jar ~/workspace/src/github.com/quarkusio/quarkus/devtools/cli/target/quarkus-cli-999-SNAPSHOT-runner.jar"
+alias quarkus="java -jar ~/workspace/src/github.com/quarkusio/quarkus/devtools/cli/target/quarkus-cli-999-SNAPSHOT-runner.jar"
