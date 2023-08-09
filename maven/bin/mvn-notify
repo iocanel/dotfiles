@@ -12,7 +12,7 @@ eval $MVN $*
 RESULT=$?
 TITLE="Maven"
 SOUND="$HOME/.local/share/sounds/mvn-failure.mp3"
-ICON="$HOME/.local/share/icons/custom/64x64/emblems/maven.png"
+ICON="$HOME/.local/share/icons/maven/64x64/emblems/maven.png"
 
 #Don't report anything if its an `mvn -verison`
 if [ "$1" == "-version" ];then
