@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# An mvn wrapper that sends a notification when the build is done.
+# Just throught it under $HOME/bin and create and alias:
+# alias mvn=$HOME/bin/mvnnotify
+#
+# Requirements: notify-send & xml2
+#
+MVN=`type -p mvn | cut -d " " -f3`
+eval $MVN $*
+
+RESULT=$?
+TITLE="Maven"
+SOUND="$HOME/.local/share/sounds/mvn-failure.mp3"
+ICON="$HOME/.local/share/icons/custom/64x64/emblems/maven.png"
+
+#Don't report anything if its an `mvn -verison`
+if [ "$1" == "-version" ];then
+	return result
+fi
+
+if [ -f pom.xml ]; then
+   NAME=`xml2 < pom.xml  | grep /project/name= | sed 's/.*=//'`
+   if [ -z "$NAME" ]; then
+   	NAME=`xml2 < pom.xml  | grep /project/artifactId= | sed 's/.*=//'`
+   fi
+   VERSION=`xml2 < pom.xml  | grep /project/version= | sed 's/.*=//'`
+   DESCRIPTION="\n$NAME \n$VERSION"
+else
+	DESCRIPTION=""
+fi
+
+if [ $RESULT == 0 ]; then
+	ERGENCY="normal"
+	STATUS="Build Succeeded"
+        SOUND="$HOME/.local/share/sounds/mvn-success.mp3"
+else
+	ERGENCY="critical"
+	STATUS="Build Failed"
+        SOUND="$HOME/.local/share/sounds/mvn-failure.mp3"
+fi
+
+notify-send -a "$TITLE" -u "$ERGENCY" -i "$ICON" "$STATUS" "$DESCRIPTION"
+if [[ "$NOTIFICATION_SOUNDS_ENABLED" == "true" ]]; then
+    mplayer -really-quiet "$SOUND" 2> /dev/null
+fi

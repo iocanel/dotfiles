@@ -1,0 +1,9 @@
+#!/bin/bash
+
+#
+# Script that forces emacs to stop the current task.
+# This is pretty handy when the editor is hung and does
+# not respond to <C-g>.
+#
+
+pkill -SIGUSR2 emacs

@@ -1,0 +1,62 @@
+# Or include everything
+#Patterns *
+# Automatically create missing mailboxes, both locally and on the server
+Create Both
+# Save the synchronization state files in the relevant directory
+SyncState *
+# Delete both locally and on server
+Expunge Both
+
+IMAPAccount iocanel-gmail
+# Address to connect to
+Host imap.gmail.com
+User iocanel@gmail.com
+PassCmd "pass show services/mail/iocanel@gmail.com/token"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore iocanel-gmail-remote
+Account iocanel-gmail
+
+MaildirStore iocanel-gmail-local
+# The trailing "/" is important
+Path /home/iocanel/.mail/iocanel@gmail.com/
+Inbox /home/iocanel/.mail/iocanel@gmail.com/INBOX
+Trash /home/iocanel/.mail/iocanel@gmail.com/Trash
+SubFolders Verbatim
+
+Channel iocanel-gmail
+Master :iocanel-gmail-remote:
+Slave :iocanel-gmail-local:
+Patterns INBOX Drafts Trash Sent
+# Or include everything
+#Patterns *
+# Automatically create missing mailboxes, both locally and on the server
+Create Both
+# Save the synchronization state files in the relevant directory
+SyncState *
+# Delete both locally and on server
+Expunge Both
+
+IMAPAccount ikanello-gmail
+# Address to connect to
+Host imap.gmail.com
+User ikanello@redhat.com
+PassCmd "pass show services/mail/ikanello@redhat.com/token"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore ikanello-gmail-remote
+Account ikanello-gmail
+
+MaildirStore ikanello-gmail-local
+# The trailing "/" is important
+Path /home/iocanel/.mail/ikanello@redhat.com/
+Inbox /home/iocanel/.mail/ikanello@redhat.com/INBOX
+Trash /home/iocanel/.mail/ikanello@redhat.com/Trash
+SubFolders Verbatim
+
+Channel ikanello-gmail
+Master :ikanello-gmail-remote:
+Slave :ikanello-gmail-local:
+Patterns INBOX Drafts Trash Sent CVE "Teams/Quarkus" "Teams/Snowdrop" 

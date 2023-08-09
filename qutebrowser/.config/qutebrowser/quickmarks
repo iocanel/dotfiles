@@ -1,0 +1,21 @@
+iocanel.com http://iocanel.com/
+nas http://192.168.1.250:5000/
+octopi http://192.168.1.60/
+router http://192.168.1.1:8080/
+ergodox https://configure.ergodox-ez.com/ergodox-ez/layouts/ornAe/latest/2
+sck https://github.com/spring-cloud/spring-cloud-kubernetes
+blog https://github.com/iocanel/blog
+idee https://github.com/iocanel/idee
+m2 spring cloud http://repo1.maven.org/maven2/org/springframework/cloud/
+m2 sundrio https://repo1.maven.org/maven2/io/sundr/
+m2 fabric8 https://repo1.maven.org/maven2/io/fabric8/
+sundrio https://github.com/sundrio/sundrio
+k8s-client https://github.com/fabric8io/kubernetes-client
+presentations https://github.com/iocanel/presentations
+dekorate https://github.com/dekorateio/dekorate
+m2 dekorate http://repo1.maven.org/maven2/io/dekorate/
+hello http://localhost:8080/hello
+hello stream http://localhost:8080/hello/stream
+quarkus https://github.com/quarkusio/quarkus
+quarkus quickstarts https://nuget.pkg.github.com/quarkusio/quarkus-quickstarts
+code quarkus https://code.quarkus.io/

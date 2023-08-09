@@ -1,0 +1,8 @@
+[submodule "git@github.com:iocanel/emacs.d.git"]
+	url = emacs/.emacs.d
+[submodule "git@github.com:iocanel/kubemenu.git"]
+	url = kubemenu
+[submodule "git@github.com:iocanel/nvim.git"]
+	url = neovim/.config/nvim
+[submodule "git@github.com:iocanel/doom.d.git"]
+	url = emacs-doom/.doom.d

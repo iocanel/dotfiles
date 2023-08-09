@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# An docker wrapper that sends a notification when the build is done.
+# Just throught it under $HOME/bin and create and alias:
+# alias docker=$HOME/bin/mvnnotify
+#
+# Requirements: notify-send & xml2
+#
+
+TITLE="Docker"
+DOCKER=`type -p docker | cut -d " " -f3`
+SOUND="$HOME/.local/share/sounds/docker-failure.mp3"
+ICON="$HOME/.local/share/icons/custom/64x64/emblems/docker.png"
+DESCRIPTION=""
+
+if [ "$1" == build ]; then
+	shift 1
+	while getopts ":t:" opt; do
+		case $opt in
+			t)
+				DESCRIPTION="\n$OPTARG"
+				;;
+			:)
+				echo "Option -$OPTARG requires an argument." >&2
+				;; 
+		esac
+	done
+else 
+	eval $DOCKER $*
+	RESULT=$?
+	exit $RESULT
+fi
+
+eval $DOCKER build $*
+
+RESULT=$?
+
+if [ $RESULT == 0 ]; then
+	ERGENCY="normal"
+	STATUS="Build Succeeded"
+        SOUND="$HOME/.local/share/sounds/docker-success.mp3"
+else
+	ERGENCY="critical"
+	STATUS="Build Failed"
+        SOUND="$HOME/.local/share/sounds/docker-failure.mp3"
+fi
+
+
+notify-send -a "$TITLE" -u "$ERGENCY" -i "$ICON" "$STATUS" "$DESCRIPTION"
+if [[ "$NOTIFICATION_SOUNDS_ENABLED" == "true" ]]; then
+    mplayer -really-quiet "$SOUND" 2> /dev/null
+fi

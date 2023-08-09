@@ -1,0 +1,25 @@
+#!/bin/bash
+
+dpms_status() {
+  xset q | grep Monitor | awk -F " " '{print $3}'
+}
+
+
+status=$(dpms_status)
+echo "Monitor is $status"
+if [ "$status" == "On" ]; then
+  echo "Turning off monitor"
+  sleep 1; xset dpms force off
+else
+  echo "Turning on monitor"
+  sleep 1; xset dpms force on
+fi
+
+status=$(dpms_status)
+EXTERNAL_MON=`xrandr --query | grep '\bconnected\b' | awk -F" " '{print $1}' | grep -v eDP-1`
+
+echo "Setting $EXTERNAL_MON left of main."
+xrandr --output $EXTERNAL_MON --off 
+xrandr --output $EXTERNAL_MON --auto --left-of eDP-1
+xrandr --output $EXTERNAL_MON --left-of eDP-1
+nitrogen --random --set-auto --head=1

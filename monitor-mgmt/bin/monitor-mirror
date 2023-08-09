@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Rescan for available monitors
+xrandr --auto
+
+# Get a list of connected monitors
+monitors=$(xrandr | grep " connected" | awk '{print $1}')
+
+# Prompt user to select the main monitor using dmenu
+primary_monitor=$(echo "$monitors" | dmenu -p "Select the main monitor:")
+
+# Check if the selected monitor is valid
+if [[ -z "$primary_monitor" ]]; then
+    echo "No monitor selected. Exiting."
+    exit 1
+elif ! echo "$monitors" | grep -q "$primary_monitor"; then
+    echo "Invalid monitor selected. Exiting."
+    exit 1
+fi
+
+secondary_monitor=$(echo "$monitors" | grep -v "$primary_monitor" | head -n 1)
+# Check if the selected monitor is valid
+if [[ -z "$secondary_monitor" ]]; then
+    echo "No secondary monitor selected. Exiting."
+    exit 1
+elif ! echo "$monitors" | grep -q "$secondary_monitor"; then
+    echo "Invalid monitor selected. Exiting."
+    exit 1
+fi
+echo "Secondary: $secondary_monitor"
+
+
+# Get the resolution of the main monitor
+primary_resolution=$(xrandr -q | grep -A999 "$primary_monitor" | sed -n '/connected/!p' | awk  '{print $1}' | sort -nru | dmenu p "Select resolution for $primary_monitor:")
+secondary_resolution=$(xrandr -q | grep -A999 "$secondary_monitor" | sed -n '/connected/!p' | awk  '{print $1}' | sort -nru | dmenu p "Select resolution for $secondary_monitor:")
+
+# Calculate scaled down resolution for the secondary monitor (e.g., 80%)
+#scaling_factor=0.8
+#secondary_resolution=$(echo "$primary_resolution" | awk -F "x" -v scale="$scaling_factor" '{printf "%dx%d", $1*scale, $2*scale}')
+
+echo "Setting primary $primary_monitor with $primary_resolution and $secondary_monitor with $secondary_resolution"
+# Set up monitor mirroring
+xrandr \
+       --output "$primary_monitor" --primary --mode "$primary_resolution" \
+       --output "$secondary_monitor" --mode "$secondary_resolution" --same-as "$primary_monitor"

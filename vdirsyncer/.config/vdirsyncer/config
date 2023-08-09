@@ -1,0 +1,85 @@
+# An example configuration for vdirsyncer.
+#
+# Move it to ~/.vdirsyncer/config or ~/.config/vdirsyncer/config and edit it.
+# Run `vdirsyncer --help` for CLI usage.
+#
+# Optional parameters are commented out.
+# This file doesn"t document all available parameters, see
+# http://vdirsyncer.readthedocs.org/ for the rest of them.
+
+[general]
+# A folder where vdirsyncer can store some metadata about each pair.
+status_path = "~/.local/vdirsyncer/status/"
+#default_command = "sync"
+
+# CARDDAV
+[pair card_ikanello]
+a = "card_ikanello_local"
+b = "card_ikanello_remote"
+collections = ["from b"]
+
+[storage card_ikanello_local]
+type = "filesystem"
+path = "~/Contacts/ikanello@redhat.com"
+fileext = ".vcf"
+
+[storage card_ikanello_remote]
+type = "google_contacts"
+token_file = "~/.tokens/ikanello@redhat.com/card"
+client_id.fetch = ["command", "pass", "show", "services/google/vdirsyncer/ikanello@redhat.com/client-id"]
+client_secret.fetch = ["command", "pass", "show", "services/google/vdirsyncer/ikanello@redhat.com/secret"]
+
+# CALDAV
+[pair calendar_ikanello]
+a = "calendar_ikanello_local"
+b = "calendar_ikanello_remote"
+collections = ["from b"]
+
+[storage calendar_ikanello_local]
+type = "filesystem"
+path = "~/Calendars/ikanello@redhat.com"
+fileext = ".ics"
+
+[storage calendar_ikanello_remote]
+type = "google_calendar"
+token_file = "~/.tokens/ikanello@redhat.com/calendar"
+client_id.fetch = ["command", "pass", "show", "services/google/vdirsyncer/ikanello@redhat.com/client-id"]
+client_secret.fetch = ["command", "pass", "show", "services/google/vdirsyncer/ikanello@redhat.com/secret"]
+
+# CARDDAV
+[pair card_iocanel]
+a = "card_iocanel_local"
+b = "card_iocanel_remote"
+collections = ["from b"]
+
+[storage card_iocanel_local]
+type = "filesystem"
+path = "~/Contacts/iocanel@gmail.com"
+fileext = ".vcf"
+
+[storage card_iocanel_remote]
+type = "google_contacts"
+token_file = "~/.tokens/iocanel@gmail.com/card"
+client_id.fetch = ["command", "pass", "show", "services/google/vdirsyncer/iocanel@gmail.com/client-id"]
+client_secret.fetch = ["command", "pass", "show", "services/google/vdirsyncer/iocanel@gmail.com/secret"]
+
+# CALDAV
+[pair calendar_iocanel]
+a = "calendar_iocanel_local"
+b = "calendar_iocanel_remote"
+collections = ["from b"]
+
+[storage calendar_iocanel_local]
+type = "filesystem"
+path = "~/Calendars/iocanel@gmail.com"
+fileext = ".ics"
+
+[storage calendar_iocanel_remote]
+type = "google_calendar"
+token_file = "~/.tokens/iocanel@gmail.com/calendar"
+client_id.fetch = ["command", "pass", "show", "services/google/vdirsyncer/iocanel@gmail.com/client-id"]
+client_secret.fetch = ["command", "pass", "show", "services/google/vdirsyncer/iocanel@gmail.com/secret"]
+
+
+
+

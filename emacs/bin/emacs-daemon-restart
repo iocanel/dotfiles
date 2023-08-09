@@ -1,0 +1,24 @@
+#!/bin/zsh
+
+EMACSD_PATH=${1:="~/.emacs.d"}
+PID=`ps -aef | grep emacs | grep daemon | awk -F " " '{print $2}'`
+
+export MAGICK_OCL_DEVICE=OFF 
+
+# Attempt to shutdown gracefully
+if [ ! -z "$PID" ]; then
+    echo "Gracefully shutting down emacs daemon..."
+    emacsclient -e "(setq confirm-kill-emacs nil) (save-buffers-kill-emacs t)" > /dev/null
+    kill -9 $PID
+fi
+
+# Source zsh env
+for e in `ls ~/.zshenv.d`; do
+    echo "Loading env file $e"
+    source ~/.zshenv.d/$e
+done 
+
+/usr/bin/emacs --daemon
+
+# Send notification and switch to namespace
+notify-send -a "Emacs" -u "normal" -i ~/.local/share/icons/hicolor/48x48/apps/emacs.png "Restarted" "Emacs daemon has been restarted"

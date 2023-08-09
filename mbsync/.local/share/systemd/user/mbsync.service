@@ -1,0 +1,10 @@
+[Unit]
+Description=MBSync Service
+Documentation=man:mbsync(1)
+
+[Service]
+Type=oneshot
+ExecStart=/home/iocanel/scripts/util/get-mail-and-index
+
+[Install]
+WantedBy=default.target

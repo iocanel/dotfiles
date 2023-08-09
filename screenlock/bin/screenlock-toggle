@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if pgrep -x "xautolock" > /dev/null
+then
+	pkill xautolock
+        notify-send -a "Screensaver" -u "critical" "Disabled" "Screensaver disabled"
+else
+	nohup xautolock -time 10 -locker lock-screen 2> /dev/null &
+        notify-send -a "Screensaver" -u "normal" "Enabled" "Screensaver successfully enabled"
+fi
