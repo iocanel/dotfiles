@@ -7,13 +7,12 @@
 # Requirements: notify-send & xml2
 #
 MVN=`type -p mvn | cut -d " " -f3`
-eval $MVN $*
-
-RESULT=$?
 TITLE="Maven"
 SOUND="$HOME/.local/share/sounds/mvn-failure.mp3"
 ICON="$HOME/.local/share/icons/maven/64x64/emblems/maven.png"
+eval $MVN $*
 
+RESULT=$?
 #Don't report anything if its an `mvn -verison`
 if [ "$1" == "-version" ];then
 	return result
@@ -33,11 +32,11 @@ fi
 if [ $RESULT == 0 ]; then
 	ERGENCY="normal"
 	STATUS="Build Succeeded"
-        SOUND="$HOME/.local/share/sounds/mvn-success.mp3"
+  SOUND="$HOME/.local/share/sounds/mvn-success.mp3"
 else
 	ERGENCY="critical"
 	STATUS="Build Failed"
-        SOUND="$HOME/.local/share/sounds/mvn-failure.mp3"
+  SOUND="$HOME/.local/share/sounds/mvn-failure.mp3"
 fi
 
 notify-send -a "$TITLE" -u "$ERGENCY" -i "$ICON" "$STATUS" "$DESCRIPTION"
