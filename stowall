@@ -1,0 +1,25 @@
+#!/bin/bash 
+stow alacritty
+stow conky
+stow docker
+stow dunst
+stow emacs
+stow emacs-doom
+stow gnupg
+stow htop
+stow i3
+stow kubemenu
+stow maven
+stow mbsync
+stow monitor-mgmt
+stow msmtp
+stow mutt
+stow neovim
+stow qutebrowser
+stow ranger
+stow rofi
+stow screenlock
+stow vdirsyncer
+stow wacom
+stow x-resources
+stow zsh

@@ -1,0 +1,37 @@
+* My dotfiles
+
+Dotfile repository based on [[https://www.gnu.org/software/stow/][stow]].
+
+** Requirements
+To install [[https://www.gnu.org/software/stow/][stow]]:
+*** On Archlinux
+
+#+begin_src sh
+  yay -Sy stow
+#+end_src
+
+*** On Debian
+
+#+begin_src sh
+  sudo apt-get update
+  sudo apt-get install stow
+#+end_src
+
+*** On MacOs
+
+#+begin_src sh
+  brew install stow
+#+end_src
+
+** Usage
+
+*** Clone the repository
+#+begin_src sh
+  git clone git@github.com:iocanel/dotfiles.git ~/.dotfiles
+#+end_src
+
+*** Use stow
+#+begin_src sh
+  cd ~/.dotfiles
+  ./stowall
+#+end_src

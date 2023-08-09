@@ -12,3 +12,4 @@
 # Misc repo files
 ^/README.*
 ^/LICENSE.*
+^/stowall
