@@ -1,9 +1,0 @@
-{
-    "files.exclude": {
-        "**/.classpath": true,
-        "**/.project": true,
-        "**/.settings": true,
-        "**/.factorypath": true
-    },
-    "java.jdt.ls.vmargs": "-XX:+UseAdaptiveSizePolicy -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Xmx8G -Xms2G -Xverify:none"
-}
