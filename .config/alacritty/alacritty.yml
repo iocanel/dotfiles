@@ -25,7 +25,7 @@ font:
 
 key_bindings:
   - { key: Space, mods: Control, chars: "\x00" }
-  - { key: Return, mods: Control, chars: "\x0A" }
+  - { key: Return, mods: Control, chars: "\x1B\x0D" }
   - { key: Home, mods: None, chars: "\x1b[H" }
   - { key: End, mods: None, chars: "\x1b[F" }
 import:
