@@ -64,8 +64,8 @@ for_window [title="elfeed-app"] floating enable;
 
 # dunst
 bindsym Ctrl+grave; exec dunstctl history-pop
-bindsym Ctrl+space; exec dunstctl close
-bindsym Ctrl+shift+space; exec dunstctl close-all
+bindsym Mod+space; exec dunstctl close
+bindsym Mod+shift+space; exec dunstctl close-all
 #bindsym $mod+shift+d; exec dunstctl set-paused toggle
 
 # dunst
