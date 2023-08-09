@@ -1,0 +1,31 @@
+font:
+  # The normal (roman) font face to use.
+  # Style can be specified to pick a specific face.
+  normal:
+    #family: "Source Code Pro"
+    family: "Dejavu Sans Mono"
+    style: Light
+
+  # The bold font face
+  bold:
+    family: "Dejavu Sans Mono"
+    style: Medium
+
+  # The italic font face
+  italic:
+    family: "Dejavu Sans Mono"
+    style: "Light Italic"
+  # Point size of the font
+  size: 14.0
+
+  # Default colors
+  primary:
+    background: '0x282c34'
+    foreground: '0xbbc2cf'
+
+key_bindings:
+  - { key: Space, mods: Control, chars: "\x00" }
+  - { key: Return, mods: Control, chars: "\x0A" }
+
+import:
+ - ~/.config/alacritty/themes/doom_one.yaml
