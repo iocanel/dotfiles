@@ -3,4 +3,4 @@ configuration {
  font: "FontAwesome 18";
  combi-modi: "window,drun,ssh";
  }
-@theme "doom-one"
+@theme "darkula-light"
