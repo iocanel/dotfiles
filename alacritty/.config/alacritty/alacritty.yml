@@ -29,4 +29,7 @@ key_bindings:
   - { key: Home, mods: None, chars: "\x1b[H" }
   - { key: End, mods: None, chars: "\x1b[F" }
 import:
- - ~/.config/alacritty/themes/doom_one.yaml
+  # Light theme
+   - ~/.config/alacritty/themes/github_light.yaml
+  # Dark Theme
+  # - ~/.config/alacritty/themes/doom_one.yaml
