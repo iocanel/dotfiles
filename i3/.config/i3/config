@@ -280,24 +280,7 @@ bindsym $mod+r mode "resize"
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-bar {
-#tray_output primary
-  workspace_buttons yes
-  mode dock #or hide
-  modifier $mod
-  status_command i3blocks -c ~/.config/i3/i3blocks.conf
-  colors {
-    # Dracula-ish colors
-    background #262626
-    statusline #a0b7c1
-    separator #666666
-    #                  border  back      text
-    focused_workspace  #262626 #262626   #c57632
-    active_workspace   #262626 #262626   #ff0000
-    inactive_workspace #262626 #262626   #555555
-    urgent_workspace   #262626 #c57632   #9876aa
-  }
-}
+include ~/.config/i3/darkula-light-theme.conf
 
 # Custom configuration
 new_window pixel 1
