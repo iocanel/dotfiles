@@ -1,34 +1,39 @@
 #!/bin/bash
+
+#
+# Scrambles screen and adds a padlock in the center
+# Requires: ImageMagick
+
 icon=$HOME/.local/share/icons/padlock.png
 tmpbg=/tmp/screen.png
+tmpbglocked=/tmp/screen-locked.png
 scrot $tmpbg
 
 convert $tmpbg -scale 10% -scale 1000% $tmpbg
-#convert $tmpbg $icon -gravity center -composite -matte $tmpbg
-#i3lock -u -i $tmpbg
 
-if [[ -f $icon ]]
-then
+if [ -f "$icon" ]; then
     # placement x/y
     px=0
     py=0
+    echo "icon found"
     # lockscreen image info
-    r=$(file $icon | grep -o '[0-9]* x [0-9]*')
-    rx=$(echo $r | cut -d' ' -f 1)
-    ry=$(echo $r | cut -d' ' -f 3)
+    r=$(file $icon | grep -o '[0-9]* x [0-9]*') # get resolution
+    rx=$(identify -format "%w" $icon)
+    ry=$(identify -format "%h" $icon)
  
-    sr=$(xrandr --query | grep ' connected' | sed 's/primary //' | cut -f3 -d' ')
-    for res in $sr
-    do
+    sr=$(xrandr --query | grep ' connected' | cut -f4 -d' ') # get connected monitors
+    for res in $sr; do
+      echo "resolution: $res"
         # monitor position/offset
         srx=$(echo $res | cut -d'x' -f 1)                   # x pos
         sry=$(echo $res | cut -d'x' -f 2 | cut -d'+' -f 1)  # y pos
         srox=$(echo $res | cut -d'x' -f 2 | cut -d'+' -f 2) # x offset
         sroy=$(echo $res | cut -d'x' -f 2 | cut -d'+' -f 3) # y offset
+        echo "x pos: $srx y pos: $sry x offset: $srox y offset: $sroy"
         px=$(($srox + $srx/2 - $rx/2))
         py=$(($sroy + $sry/2 - $ry/2))
  
-        convert $tmpbg $icon -geometry +$px+$py -composite -matte  $tmpbg
+        convert $tmpbg $icon -geometry +$px+$py -composite -matte  $tmpbglocked
     done
 fi
-i3lock -u -i $tmpbg
+i3lock -u -i $tmpbglocked
