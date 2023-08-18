@@ -45,6 +45,5 @@ if [ -e /home/iocanel/.nix-profile/etc/profile.d/nix.sh ]; then . /home/iocanel/
 # Add nix
 source /home/iocanel/.nix-profile/etc/profile.d/nix.sh
 
-export PATH="$HOME/.poetry/bin:$PATH"
 source /usr/share/nvm/init-nvm.sh
 eval "$(zoxide init zsh)"
