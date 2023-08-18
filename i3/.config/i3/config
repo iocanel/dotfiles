@@ -305,7 +305,7 @@ exec --no-startup-id "setxkbmap -model pc105 -layout us,gr -option grp:alt_shift
 exec --no-startup-id "autocutsel"
 
 exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
-exec --no-startup-id xautolock -time 30 -locker 'lock-screen'
+exec --no-startup-id xautolock -time 30 -locker 'screenlock-now'
 #exec --no-startup-id /usr/bin/picom -b
 #exec --no-startup-id /usr/bin/conky -c ~/.config/conky/config
 #exec --no-startup-id /usr/bin/conky -c ~/.config/conky/agenda
