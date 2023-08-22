@@ -1,1 +1,1 @@
-alias mvn="~/bin/docker-notify"
+alias mvn="~/bin/mvn-notify"
