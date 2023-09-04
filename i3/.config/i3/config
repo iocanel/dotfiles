@@ -44,7 +44,15 @@ bindsym $mod+Enter exec alacritty --title terminal
 # Floating Apps
 #
 
-for_window [class="Nitrogen"] floating enable; resize shrink height 1000px; move position center;
+#Nitrogen
+for_window [class="Nitrogen"] floating enable
+for_window [class="Nitrogen"] resize set 50 ppt 50 ppt
+for_window [class="Nitrogen"] move position center
+
+#K9s
+for_window [title="k9s"] floating enable
+for_window [title="k9s"] resize set 80 ppt 80 ppt
+for_window [title="k9s"] move position center
 
 # AlsaMixer
 bindsym $mod+Ctrl+a; exec alacritty --title alsamixer -e alsamixer
@@ -64,7 +72,7 @@ for_window [title="elfeed-app"] floating enable;
 
 # dunst
 bindsym Ctrl+grave; exec dunstctl history-pop
-bindsym Mod+space; exec dunstctl close
+bindsym --release Ctrl+space; exec dunstctl close
 bindsym Mod+shift+space; exec dunstctl close-all
 #bindsym $mod+shift+d; exec dunstctl set-paused toggle
 

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=K9s
+GenericName=K9s
+Comment=K9s
+Exec=alacritty --title k9s --command k9s
+Icon=kubernetes
+Type=Application
+Terminal=false
+Categories=Devops
+Keywords=Keywords;Menu;
