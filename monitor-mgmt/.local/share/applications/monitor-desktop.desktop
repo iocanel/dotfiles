@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Monitor desktop
+Comment=Rest monitors in the desktop / office layout
+Exec=monitor-desktop
+Icon=display
+Terminal=false
+Type=Application
+Categories=System;Utility;
