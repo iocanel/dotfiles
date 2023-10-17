@@ -10,7 +10,7 @@ MVN=`type -p mvn | cut -d " " -f3`
 TITLE="Maven"
 SOUND="$HOME/.local/share/sounds/mvn-failure.mp3"
 ICON="$HOME/.local/share/icons/maven/64x64/emblems/maven.png"
-eval $MVN $*
+eval "$MVN $*"
 
 RESULT=$?
 #Don't report anything if its an `mvn -verison`
