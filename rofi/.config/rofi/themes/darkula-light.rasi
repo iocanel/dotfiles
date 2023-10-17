@@ -12,7 +12,7 @@
     red: #ff5555;
     yel: #f1fa8c;
 
-    font: "DejaVu Sans Mono 18";
+    font: "DejaVu Sans Mono 24";
 
     foreground: @fgd;
     background-color: @bgd;
