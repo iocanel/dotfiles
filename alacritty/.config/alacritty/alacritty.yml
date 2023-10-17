@@ -30,6 +30,6 @@ key_bindings:
   - { key: End, mods: None, chars: "\x1b[F" }
 import:
   # Light theme
-   - ~/.config/alacritty/themes/github_light.yaml
+  # - ~/.config/alacritty/themes/github_light.yaml
   # Dark Theme
-  # - ~/.config/alacritty/themes/doom_one.yaml
+   - ~/.config/alacritty/themes/doom_one.yaml
