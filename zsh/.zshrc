@@ -1,4 +1,14 @@
-source $HOME/workspace/src/github.com/marlonrichert/zsh-snap/znap.zsh
+export ZNAP_HOME="$HOME/workspace/src/github.com/marlonrichert/zsh-snap/"
+
+if [ ! -d "$ZNAP_HOME" ]; then
+  mkdir -p $ZNAP_HOME
+  pushd $ZNAP_HOME
+  git init
+  git remote add origin https://github.com/marlonrichert/zsh-snap.git
+  git pull --rebase origin main
+  popd
+fi
+source "$ZNAP_HOME/znap.zsh"
 
 setopt -o nomatch
 
