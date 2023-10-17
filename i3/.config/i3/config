@@ -304,7 +304,7 @@ hide_edge_borders both
 #Autostart programs
 
 # Compton is currently uninstalled, due to high CPU usage.
-# exec_always compton
+exec_always compton
 
 
 # Services 
