@@ -1,0 +1,23 @@
+name: quarkus-openshift-console-plugin
+root: ~/workspace/src/github.com/iocanel/quarkus-openshift-console-plugin
+
+
+startup_window: editor
+startup_pane: 1
+
+windows:
+  - editor:
+      layout: main-vertical
+      root: ~/workspace/src/github.com/iocanel/quarkus-openshift-console-plugin/plugin
+      panes:
+        - vim:
+          - vi
+  - console:
+      layout: main-vertical
+      root: ~/workspace/src/github.com/iocanel/quarkus-openshift-console-plugin/plugin
+      panes:
+        - start: 
+          - yarn install
+          - yarn start
+        - console:
+          - yarn start-console
