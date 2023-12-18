@@ -122,7 +122,7 @@ bindsym $mod+d exec rofi -show drun -show-icons -display-drun "Launch"
 bindsym $mod+semicolon exec rofi -show drun -show-icons -display-drun "Launch"
 bindsym $mod+f exec dmenufm
 bindsym $mod+g exec /home/iocanel/bin/qutebrowser-google-rofi &
-bindsym $mod+t exec "rofi -combi-modi window,drun -show combi -show-icons -display-combi 'Select'"
+bindsym $mod+w exec "rofi -combi-modi window,drun -show combi -show-icons -display-combi 'Select'"
 
 # start apps
 
@@ -171,7 +171,7 @@ bindsym $mod+Shift+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
 bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
+# bindsym $mod+w layout tabbed # Disable as we use the combo for switching to window
 bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
