@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Split the $PATH variable into an array using ':' as the delimiter
+IFS=':' read -ra path_dirs <<< "$PATH"
+
+# Loop through each directory in the $PATH
+for dir in "${path_dirs[@]}"; do
+    # Check if the directory exists and is a directory
+    if [ -d "$dir" ]; then
+        # Loop through files starting with "theme-use-light-" in the directory
+        for file in "$dir"/theme-use-dark-*; do
+            # Check if the file is executable
+            if [ -x "$file" ]; then
+                echo "Running $file"
+                "$file"
+            fi
+        done
+    fi
+done

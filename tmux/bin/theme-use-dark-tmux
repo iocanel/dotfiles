@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Open ~/.config/tmux/tmux.conf and replace all occurences of latte to mocha
+sed -i 's/latte/mocha/g' ~/.config/tmux/tmux.conf
+tmux source-file ~/.config/tmux/tmux.conf

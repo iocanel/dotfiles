@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Neovim
+pushd ~/.config/nvim/lua/plugins
+if [ -f current-theme.lua ]; then
+  unlink current-theme.lua
+fi
+ln -s ../themes/light-theme.lua  current-theme.lua
+popd
