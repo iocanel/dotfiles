@@ -45,9 +45,6 @@ c.fonts.messages.warning="12pt DejaVu Sans Mono"
 c.fonts.prompts="12pt sans-serif"
 c.fonts.statusbar="12pt DejaVu Sans Mono"
 
-#SSL
-c.content.ssl_strict=False
-
 #Misc
 c.tabs.position = "top"
 c.tabs.show = "never"
