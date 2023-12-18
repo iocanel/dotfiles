@@ -1,0 +1,19 @@
+name: quarkus-slides
+root: ~/demo/quarkus-slides/
+
+startup_window: editor
+startup_pane: 1
+
+windows:
+  - console:
+      layout: main-vertical
+      panes:
+        - present:
+          - quarkus present slides.md -o
+  - editor:
+      layout: main-vertical
+      root: ~/demo/quarkus-slides/
+      panes:
+        - vim:
+          - vi slides.md
+

@@ -1,0 +1,17 @@
+name: dekorate
+root: ~/workspace/src/github.com/dekorateio/dekorate
+
+
+startup_window: editor
+startup_pane: 1
+
+windows:
+  - editor:
+      layout: main-vertical
+      panes:
+        - vim:
+          - vi
+  - console:
+      layout: main-vertical
+      panes:
+        - shell: 
