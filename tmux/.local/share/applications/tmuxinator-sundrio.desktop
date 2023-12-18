@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Tmuxinator Sundrio
+GenericName=Tmuxinator Sundrio
+Comment=Sundrio
+Exec=alacritty --command tmuxinator sundrio
+Icon=terminal
+Type=Application
+Terminal=false
+Categories=Devops
+Keywords=Keywords;Menu;

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Tmuxinator Quarkus
+GenericName=Tmuxinator Quarkus
+Comment=Quarkus
+Exec=alacritty --command tmuxinator quarkus
+Icon=terminal
+Type=Application
+Terminal=false
+Categories=Devops
+Keywords=Keywords;Menu;

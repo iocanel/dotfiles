@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Tmuxinator Dekorate
+GenericName=Tmuxinator Dekorate
+Comment=Dekorate
+Exec=alacritty --command tmuxinator dekorate
+Icon=terminal
+Type=Application
+Terminal=false
+Categories=Devops
+Keywords=Keywords;Menu;
