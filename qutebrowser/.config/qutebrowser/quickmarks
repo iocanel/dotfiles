@@ -19,3 +19,8 @@ hello stream http://localhost:8080/hello/stream
 quarkus https://github.com/quarkusio/quarkus
 quarkus quickstarts https://nuget.pkg.github.com/quarkusio/quarkus-quickstarts
 code quarkus https://code.quarkus.io/
+devui http://localhost:8080/q/dev-ui/
+qshift-console https://console-openshift-console.apps.qshift.snowdrop.dev/
+qshift-devspaces https://devspaces.apps.qshift.snowdrop.dev/dashboard/#/workspaces
+slides http://localhost:8000
+backstage http://localhost:3000
