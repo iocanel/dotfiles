@@ -29,5 +29,7 @@ key_bindings:
   - { key: Return, mods: Control, chars: "\x1B\x0D" }
   - { key: Home, mods: None, chars: "\x1b[H" }
   - { key: End, mods: None, chars: "\x1b[F" }
+mouse_bindings:
+  - { mouse: Middle, action: Paste }
 import:
    - ~/.config/alacritty/themes/current-theme.yaml
