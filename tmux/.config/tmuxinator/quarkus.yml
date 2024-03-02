@@ -1,7 +1,6 @@
 name: quarkus
 root: ~/workspace/src/github.com/quarkusio/quarkus
 
-
 startup_window: editor
 startup_pane: 1
 
@@ -15,3 +14,8 @@ windows:
       layout: main-vertical
       panes:
         - shell: 
+          - tmux bind -r q send-keys -t quarkus:console.0 "mvn clean install -Pquick-build" C-m
+          - tmux bind -r k send-keys -t quarkus:console.0 "mvn clean install -Pquick-build -pl :quarkus-kubernetes-deployment" C-m
+          - tmux bind -r o send-keys -t quarkus:console.0 "mvn clean install -Pquick-build -pl :quarkus-openshift-deployment" C-m
+          - tmux bind -r c send-keys -t quarkus:console.0 "mvn clean install -Pquick-build -pl :quarkus-cli" C-m
+
