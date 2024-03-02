@@ -232,8 +232,7 @@ bindsym $mod+Ctrl+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut
 bindsym --release $mod+Shift+p exec "scrot -s '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
 bindsym --release Shift+Print exec "scrot -s '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
 bindsym --release Print exec "scrot -m '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
-bindsym --release $mod+Shift+Print exec "scrot -u -d 4 '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
-bindsym --release Ctrl+Shift+p exec "imgur-screenshot -w"
+bindsym --release Ctrl+Shift+p exec "scrot -u '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
 bindsym --release $mod+Shift+s exec "/home/iocanel/bin/toggle-screenkey"
 
 # Screen Saver
