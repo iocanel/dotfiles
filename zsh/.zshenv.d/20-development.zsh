@@ -17,7 +17,12 @@ export CXF_HOME=$HOME/tools/cxf
 export VERTX_HOME=$HOME/tools/vertx
 export ANDROID_HOME=$HOME/Android/Sdk
 export ANDROID_SDK_ROOT=$HOME/Android/Sdk
+export ANDROID_AVD_HOME=$HOME/.android/avd
 
+# React native
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin/
 #GraalVM
 export GRAALVM_HOME=$HOME/.sdkman/candidates/java/current
 
