@@ -8,3 +8,4 @@ export PATH=$HOME/bin:${SCRIPTS_HOME}/arch:${SCRIPTS_HOME}:${SCRIPTS_HOME}/dev:$
 
 export HG2JJ_DIR=~/.local/share/hg2jj/
 export OPENAI_API_KEY=`pass show services/openai/iocanel/api-key`
+export QUARKUS_LANGCHAIN4J_OPENAI_API_KEY=`pass show services/openai/iocanel/api-key`
