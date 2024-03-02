@@ -17,7 +17,9 @@ windows:
       root: ~/workspace/src/github.com/iocanel/quarkus-openshift-console-plugin/plugin
       panes:
         - start: 
+          - nvm use node
           - yarn install
           - yarn start
         - console:
+          - tmux bind -r r send-keys -t quarkus-openshift-console-plugin:console.0 C-c C-m "yarn start" C-m \\\; send-keys -t quarkus-openshift-console-plugin:console.1 C-c C-m "yarn start-console" C-m
           - yarn start-console
