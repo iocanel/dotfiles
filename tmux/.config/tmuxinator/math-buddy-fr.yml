@@ -1,5 +1,8 @@
-name: quarkus
-root: ~/workspace/src/github.com/quarkusio/quarkus
+name: math-buddy-fr
+root: ~/workspace/src/github.com/iocanel/math-buddy-fr
+
+on_project_start:
+  - tmux bind -r r send-keys -t math-buddy:console.0 r
 
 startup_window: editor
 startup_pane: 1
@@ -14,5 +17,3 @@ windows:
       layout: main-vertical
       panes:
         - shell: 
-          - tmux bind -r r send-keys -t quarkus:console.0 "recv mvn" C-m
-

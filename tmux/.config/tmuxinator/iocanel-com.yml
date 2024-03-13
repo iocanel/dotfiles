@@ -1,0 +1,22 @@
+name: iocanel-com
+root: ~/workspace/src/github.com/iocanel/iocanel.github.io
+
+startup_window: editor
+startup_pane: 1
+
+windows:
+  - hugo:
+      layout: main-vertical
+      panes:
+        - shell: 
+          - hugo server --watch
+  - editor:
+      layout: main-vertical
+      panes:
+        - vim:
+          - vi
+  - console:
+      layout: main-vertical
+      panes:
+        - shell: 
+          - tmux bind -r r send-keys -t iocanel-com:hugo.0 C-c C-m "hugo server --watch"

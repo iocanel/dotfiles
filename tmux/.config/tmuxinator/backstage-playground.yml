@@ -5,13 +5,13 @@ startup_pane: 1
 windows:
   - console:
       layout: main-vertical
-      root: ~/workspace/src/github.com/q-shit/backstage-playground
+      root: ~/workspace/src/github.com/q-shift/backstage-playground
       panes:
         - console:
           - nvm use node
   - frontend:
       layout: main-vertical
-      root: ~/workspace/src/github.com/q-shit/backstage-playground
+      root: ~/workspace/src/github.com/q-shift/backstage-playground
       panes:
         - console:
           - nvm use node
@@ -19,7 +19,7 @@ windows:
           - yarn start --config ../../app-config.qshift.local.yaml
   - backend:
       layout: main-vertical
-      root: ~/workspace/src/github.com/q-shit/backstage-playground
+      root: ~/workspace/src/github.com/q-shift/backstage-playground
       panes:
         - console:
           - nvm use node

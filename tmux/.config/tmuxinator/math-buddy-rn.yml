@@ -1,0 +1,23 @@
+name: math-buddy-rn
+root: ~/workspace/src/github.com/iocanel/MathBuddyRN
+
+startup_window: editor
+startup_pane: 1
+
+windows:
+  - expo:
+      layout: main-vertical
+      panes:
+        - shell: 
+          - nvm use node
+          - npx expo start
+  - editor:
+      layout: main-vertical
+      panes:
+        - vim:
+          - vi
+  - terminal:
+      layout: main-vertical
+      panes:
+        - shell:
+          - tmux bind -r r send-keys -t math-buddy-rn:expo.0 r
