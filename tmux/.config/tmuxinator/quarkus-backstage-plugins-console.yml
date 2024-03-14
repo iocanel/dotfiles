@@ -17,5 +17,4 @@ windows:
       panes:
         - console:
           - nvm use node
-on_project_start:
-  - tmux bind -r r send-keys -t quarkus-backstage-plugins:console.0 "yarn tsc; yarn build && cp ~/workspace/src/github.com/q-shift/backstage-plugins/plugins/quarkus-console/dist/* ~/workspace/src/github.com/q-shift/backstage-playground/node_modules/@qshift/plugin-quarkus-console/dist/ -r" C-m \\\; send-keys -t backstage-playground:frontend.0 C-c C-m "sleep 5 && yarn start --config ../../app-config.qshift.local.yaml" C-m
+          - tmux bind -r r send-keys -t quarkus-backstage-plugins:console.0 "yarn tsc; yarn build && cp ~/workspace/src/github.com/q-shift/backstage-plugins/plugins/quarkus-console/dist/* ~/workspace/src/github.com/q-shift/backstage-playground/node_modules/@qshift/plugin-quarkus-console/dist/ -r" C-m \\\; send-keys -t backstage-playground:dev.0 C-c C-m "sleep 5 && yarn dev" C-m
