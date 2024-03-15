@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Alacritty80 
+GenericName=Alacritty80
+Comment=Alacritty Floating Terminal for Demos
+Exec=alacritty --title alacritty-floating-90
+Type=Application
+Terminal=true
+Categories=Devops
+Keywords=Keywords;Menu;

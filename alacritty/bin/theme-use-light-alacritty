@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pushd ~/.config/alacritty/themes
-if [ -f current-theme.yaml ]; then
-  unlink current-theme.yaml
+if [ -f current-theme.toml ]; then
+  unlink current-theme.toml
 fi
-ln -s light-theme.yaml current-theme.yaml
+ln -s light-theme.toml current-theme.toml
 popd
-touch ~/.config/alacritty/alacritty.yml
+touch ~/.config/alacritty/alacritty.toml
