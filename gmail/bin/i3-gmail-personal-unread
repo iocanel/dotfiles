@@ -1,0 +1,12 @@
+#!/bin/bash
+
+case $BLOCK_BUTTON in
+    1) i3-msg workspace "2:  " && exit 0 & ;;
+    2) i3-msg workspace "2:  " && exit 0 & ;;
+    3) i3-msg workspace "2:  " && exit 0 & ;;
+esac
+
+COUNT=`mu find flag:unread to:iocanel@gmail.com | wc -l`
+if [ "$COUNT" -gt 0 ]; then
+    echo " $COUNT"
+fi
