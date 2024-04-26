@@ -214,9 +214,6 @@ assign [class="Slack"] $ws4
 assign [class="Zulip"] $ws5
 assign [class="ChatGPT"] $ws6
 
-# To manage and synchronize clipboards
-exec --no-startup-id autocutsel -fork
-exec --no-startup-id autocutsel -selection PRIMARY -fork
 
 exec --no-startup-id alacritty --class=MainTerminal
 exec --no-startup-id /home/iocanel/bin/gmail-personal
@@ -321,24 +318,35 @@ hide_edge_borders both
 #exec_always compton
 
 
+#
 # Services 
+#
 exec --no-startup-id nitrogen --random --set-auto --head=0
 exec --no-startup-id nitrogen --random --set-auto --head=1
 exec --no-startup-id "setxkbmap -model pc105 -layout us,gr -option grp:alt_shift_toggle -option ctrl:nocaps"
-exec --no-startup-id "autocutsel"
 
 exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
 exec --no-startup-id xautolock -time 30 -locker 'screenlock-now'
 #exec --no-startup-id /usr/bin/picom -b
 #exec --no-startup-id /usr/bin/conky -c ~/.config/conky/config
 #exec --no-startup-id /usr/bin/conky -c ~/.config/conky/agenda
-exec --no-startup-id /usr/bin/clipmenud &
 exec --no-startup-id nm-applet &
 exec --no-startup-id dockd --daemon
 exec --no-startup-id pasystray &
-
 #exec --no-startup-id ~/scripts/util/toggle-camera off
 #exec --no-startup-id ~/scripts/util/toggle-keyboard off
+
+
+#
+# Clipboard management (working, don't touch)
+# 
+
+# Start clipmenud (before starting autocutsel)
+exec --no-startup-id /usr/bin/clipmenud &
+# Use autocutsel to sync primary (selection) and clipboard (explict copy/paste) buffer.
+exec --no-startup-id autocutsel -fork
+exec --no-startup-id autocutsel -selection PRIMARY -fork
+
 
 # Bind to workspace
 bindsym $mod+1 workspace $ws1; 
