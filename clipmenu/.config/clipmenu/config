@@ -1,0 +1,4 @@
+# The number of clipboard entries to keep
+CM_MAX_CLIPS=1000
+# The command to use for the clipboard menu
+CM_LAUNCHER=rofi -dmenu -i -p "Clipboard:"

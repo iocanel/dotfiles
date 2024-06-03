@@ -1,5 +1,7 @@
-#!/bin/bash 
+#!/bin/sh 
+
 stow alacritty
+stow clipmenu
 stow conky
 stow docker
 stow dunst
