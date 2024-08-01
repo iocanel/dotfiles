@@ -3,17 +3,18 @@ import = ["/home/iocanel/.config/alacritty/themes/current-theme.toml"]
 [font]
 size = 12.0
 
+[font.normal]
+family = "JetBrainsMono Nerd Font"
+style = "Light"
+
 [font.bold]
-family = "Dejavu Sans Mono"
+family = "JetBrainsMono Nerd Font"
 style = "Medium"
 
 [font.italic]
-family = "Dejavu Sans Mono"
+family = "JetBrainsMono Nerd Font"
 style = "Light Italic"
 
-[font.normal]
-family = "Dejavu Sans Mono"
-style = "Light"
 
 [[keyboard.bindings]]
 chars = "\u0000"
