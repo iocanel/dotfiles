@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Monitor mirror
 Comment=Enable monitor mirroring
-Exec=monitor-mirror
+Exec=sh -c $HOME/bin/monitor-mirror
 Icon=display
 Terminal=false
 Type=Application

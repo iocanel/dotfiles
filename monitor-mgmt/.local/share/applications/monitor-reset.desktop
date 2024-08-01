@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Monitor reset
 Comment=Rest monitors in the default layout
-Exec=monitor-reset
+Exec=sh -c $HOME/bin/monitor-reset
 Icon=display
 Terminal=false
 Type=Application

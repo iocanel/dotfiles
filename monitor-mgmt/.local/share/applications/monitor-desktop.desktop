@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Monitor desktop
 Comment=Rest monitors in the desktop / office layout
-Exec=monitor-desktop
+Exec=sh -c $HOME/bin/monitor-desktop
 Icon=display
 Terminal=false
 Type=Application
