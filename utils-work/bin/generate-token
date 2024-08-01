@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+if [[ -n $WAYLAND_DISPLAY ]]; then
+	xdotool="ydotool type --file -"
+elif [[ -n $DISPLAY ]]; then
+	xdotool="xdotool type --clearmodifiers --file -"
+else
+	echo "Error: No Wayland or X11 display detected" >&2
+	exit 1
+fi
+
+TOKEN_ID=OATH290580B9
+SECRET=`pass show services/redhat.com/token/$TOKEN_ID/secret`
+PIN=`pass show services/redhat.com/token/$TOKEN_ID/pin`
+COUNTER=`cat $HOME/Documents/.otp-counter`
+COUNTER=$((COUNTER+1))
+echo $COUNTER > $HOME/Documents/.otp-counter
+TOKEN=`$HOME/bin/otp -m hotp -s $SECRET -c $COUNTER | tail -n1`
+PASSWORD="${PIN}${TOKEN}"
+echo $PASSWORD | { IFS= read -r pass; printf %s "$pass"; } | $xdotool
