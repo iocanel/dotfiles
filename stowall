@@ -3,13 +3,16 @@
 stow alacritty
 stow clipmenu
 stow conky
+stow chatgpt
 stow docker
 stow dunst
 stow emacs
 stow emacs-doom
 stow gnupg
+stow gmail
 stow htop
 stow i3
+stow kitty
 stow kubemenu
 stow maven
 stow mbsync
