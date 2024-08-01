@@ -128,7 +128,9 @@ bindsym $mod+w exec "rofi -combi-modi window,drun -show combi -show-icons -displ
 
 
 # start clipmenu (a clipboard manager)
-bindsym --release $mod+c exec clipmenu
+# in some cases clipmenu doesn't pickup the correct CM_LAUNCHER so force it here
+bindsym --release $mod+c exec CM_LAUNCHER="rofi" clipmenu
+bindsym --release $mod+p exec CM_LAUNCHER="rofi" passmenu
 
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
@@ -202,7 +204,8 @@ set $ws3 "3:  "
 set $ws4 "4:  "  
 set $ws5 "5:  "  
 set $ws6 "6:  "
-set $ws7 "7:  "
+set $ws7 "7:   "
+
 set $ws8 "8:"  
 set $ws9 "9"  
 set $ws10 "10"  
@@ -213,6 +216,7 @@ assign [class="GmailWork"] $ws3
 assign [class="Slack"] $ws4
 assign [class="Zulip"] $ws5
 assign [class="ChatGPT"] $ws6
+assign [class="Emacs"] $ws7
 
 
 exec --no-startup-id alacritty --class=MainTerminal
@@ -220,7 +224,8 @@ exec --no-startup-id /home/iocanel/bin/gmail-personal
 exec --no-startup-id /home/iocanel/bin/gmail-work
 exec --no-startup-id slack
 exec --no-startup-id zulip
-exec --no-startup-id chatgpt
+exec --no-startup-id /home/iocanel/bin/chatgpt
+exec --no-startup-id emacs
 
 
 
@@ -248,10 +253,10 @@ bindsym $mod+Ctrl+r restart
 bindsym $mod+Ctrl+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # Screenshots
-bindsym --release $mod+Shift+p exec "scrot -s '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
-bindsym --release Shift+Print exec "scrot -s '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
-bindsym --release Print exec "scrot -m '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
-bindsym --release Ctrl+Shift+p exec "scrot -u '/home/iocanel/Photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
+bindsym --release $mod+Shift+p exec "scrot -s '/home/iocanel/Documents/photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
+bindsym --release Shift+Print exec "scrot -s '/home/iocanel/Documents/photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
+bindsym --release Print exec "scrot -m '/home/iocanel/Documents/photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
+bindsym --release Ctrl+Shift+p exec "scrot -u '/home/iocanel/Documents/photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
 bindsym --release $mod+Shift+s exec "/home/iocanel/bin/toggle-screenkey"
 
 # Screen Saver
