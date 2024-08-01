@@ -1,0 +1,2 @@
+#!/bin/bash
+chromium --app=https://chat.openai.com --user-data-dir=/home/iocanel/.sandbox/iocanel/.local/chatgpt --user-cache-dir=/home/iocanel/.sandbox/iocanel/.cache/chatgpt --class=ChatGPT
