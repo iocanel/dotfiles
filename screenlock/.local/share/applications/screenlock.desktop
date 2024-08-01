@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Lock Screen
 Comment=Lock the screen now
-Exec=screenlock-now
+Exec=sh -c $HOME/bin/screenlock-now
 Icon=screenlock
 Terminal=false
 Type=Application
