@@ -102,6 +102,18 @@ in
     libreoffice
     xournal
     evince
+    # Mail
+    isync
+    offlineimap
+    msmtp
+    mu
+    emacsPackages.mu4e
+    emacsPackages.mu4e-alert
+    emacsPackages.mu4e-column-faces
+    emacsPackages.mu4e-conversation
+    emacsPackages.mu4e-views
+    emacsPackages.mu4e-overview
+    emacsPackages.evil-mu4e
     #
     # CLI
     #
@@ -337,6 +349,20 @@ in
             Restart = "always";
           };
         };
+        sync-email = {
+          Unit = {
+            Description = "Sync Email";
+          };
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
+          Service = {
+            Type = "simple";
+            ExecStart = "${pkgs.isync}/bin/mbsync -a";
+            Restart = "always";
+          };
+        
+        };
       };
       timers = {
         update-nixos-config = {
@@ -365,6 +391,20 @@ in
             WantedBy = [ "timers.target" ];
           };
         };
+        sync-email = {
+          Unit = {
+            Description = "Timer for sync-email";
+          };
+          Timer = {
+            OnCalendar = "minutely";
+            Persistent = true;
+            Unit = "sync-email.service";
+          };
+          Install = {
+            WantedBy = [ "timers.target" ];
+          };
+        };
+
       };
     };
   };
