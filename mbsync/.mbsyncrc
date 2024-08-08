@@ -26,9 +26,9 @@ Trash /home/iocanel/.mail/iocanel@gmail.com/Trash
 SubFolders Verbatim
 
 Channel iocanel-gmail
-Master :iocanel-gmail-remote:
-Slave :iocanel-gmail-local:
-Patterns INBOX Drafts Trash Sent
+Far :iocanel-gmail-remote:
+Near :iocanel-gmail-local:
+Patterns INBOX Drafts Trash Sent "Forums" "Updates" "Promotions"
 # Or include everything
 #Patterns *
 # Automatically create missing mailboxes, both locally and on the server
@@ -57,6 +57,6 @@ Trash /home/iocanel/.mail/ikanello@redhat.com/Trash
 SubFolders Verbatim
 
 Channel ikanello-gmail
-Master :ikanello-gmail-remote:
-Slave :ikanello-gmail-local:
+Far :ikanello-gmail-remote:
+Near :ikanello-gmail-local:
 Patterns INBOX Drafts Trash Sent CVE "Teams/Quarkus" "Teams/Snowdrop" 
