@@ -4,4 +4,4 @@ image/gif; feh %s;
 image/png; feh %s;
 
 text/plain; view %s ; needsterminal
-application/pdf; /usr/bin/evince '%s' -f
+application/pdf; evince '%s' -f
