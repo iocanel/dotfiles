@@ -84,13 +84,13 @@ in
     whatsapp-for-linux
     viber
     zoom-us
+    teams-for-linux
     # Menu
     rofi-pass
 
     #
     # Text editing
     #
-    emacs
     emacs-lsp-booster
     tree-sitter
     pandoc
