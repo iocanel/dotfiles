@@ -91,6 +91,9 @@ bindsym Mod+shift+space; exec dunstctl close-all
 #for_window [title=".*helm-ag.*"] move down; resize set 100 ppt 25 ppt;
 #for_window [title=".*undo-tree.*"] move right; resize set 50 ppt 100 ppt;
 
+for_window [class="EditorTerm"] move down; 
+for_window [class="EditorTerm"] resize set height 25 ppt;
+
 # mu4e
 bindsym $mod+Shift+m; exec ~/bin/mu4e
 for_window [title="mu4e-app"] floating enable
