@@ -133,7 +133,7 @@ bindsym $mod+w exec "rofi -combi-modi window,drun -show combi -show-icons -displ
 # start clipmenu (a clipboard manager)
 # in some cases clipmenu doesn't pickup the correct CM_LAUNCHER so force it here
 bindsym --release $mod+c exec CM_LAUNCHER="rofi" clipmenu
-bindsym --release $mod+p exec CM_LAUNCHER="rofi" passmenu
+bindsym --release $mod+p exec CM_LAUNCHER="rofi" rofi-pass
 
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
