@@ -1,0 +1,241 @@
+"
+" My IdeaVim configuration to match my Emacs/Neovim setup
+"
+" Note: To list all actions available: ':actionlist'
+
+" Set leader key
+let mapleader = " "
+
+" Multiple cursors
+"
+" This has two modes of operation:
+" - Visual
+"   Select region and then <A-n>, this will create multiple cursors in the vertical line of the region
+" - Match selection
+"   <A-n>: Select next
+"   <A-p>: Select previous
+"   <A-x>: Exclude this one (and select next)
+set multiple-cursors
+
+let g:WhichKeyDesc_A_n = "<A-n> Select Next Match"
+let g:WhichKeyDesc_A_p = "<A-p> Select Previous Match"
+let g:WhichKeyDesc_A_x = "<A-x> Skip Match"
+let g:WhichKeyDesc_C_Up = "<C-Up> Multiple Cursors Above"
+let g:WhichKeyDesc_C_Down = "<C-Up> Multiple Cursors Below"
+noremap mc <A-n>
+noremap mp <A-p>
+noremap mx <A-x>
+noremap <C-Up> :action EditorCloneCaretAbove<cr>
+noremap <C-Down> :action EditorCloneCaretBelow<cr>
+
+" Easy motion
+" This is a plugin that allows you to jump to any character in the buffer
+set easymotion
+let g:WhichKeyDesc_j = "<leader>j Jump"
+let g:WhichKeyDesc_jw = "<leader>jw Jump to Word"
+let g:WhichKeyDesc_jl = "<leader>jl Jump to Line"
+let g:WhichKeyDesc_jt = "<leader>jt Jump to Target"
+let g:WhichKeyDesc_jd = "<leader>jd Jump to Declaration"
+noremap <leader>jw :action AceWordAction<cr>
+noremap <leader>jl :action AceLineAction<cr>
+noremap <leader>jt :action AceTargetAction<cr>
+noremap <leader>jd :action AceDeclarationAction<cr>
+
+" IdeaJoin
+" When joining lines using Shift-J Intellij is smarter.
+" Exmaples:
+" - Joining string literals split over mutliple lines using '+'.
+" - Joining flow control statements (e.g. nested ifs etc).  
+set ideajoin
+
+
+" Which Key
+set which-key
+set notimeout
+
+" Set relative line numbers
+set relativenumber
+let g:relative_number_set = 0
+
+" General keymaps
+noremap <Space> <Nop>
+
+" Remap for dealing with word wrap
+let g:WhichKeyDesc_key_k = "k Cursor Up"
+let g:WhichKeyDesc_key_j = "j Cursor Down"
+noremap <expr> k (v:count == 0 ? 'gk' : 'k')
+noremap <expr> j (v:count == 0 ? 'gj' : 'j')
+
+" Open files and buffers
+
+let g:WhichKeyDesc_o = "<leader>o Open"
+let g:WhichKeyDesc_op = "<leader>op Open Project"
+let g:WhichKeyDesc_C_p = "<C-p> Open Project"
+let g:WhichKeyDesc_of = "<leader>of Open File"
+let g:WhichKeyDesc_Space = "<leader><leader> Open File"
+let g:WhichKeyDesc_or = "<leader>or Open Recent Files"
+let g:WhichKeyDesc_oc = "<leader>oc Open Terminal"
+noremap <leader>op :action WelcomeScreen.OpenProject<cr>
+noremap <C-p> :action WelcomeScreen.OpenProject<cr>
+noremap <leader>of :action GotoFile<cr>
+noremap <leader><Space> :action GotoFile<cr>
+noremap <leader>or :action RecentFiles<cr>
+noremap <leader>oc :action ActivateTerminalToolWindow<cr>
+
+"
+" Toggles
+" 
+
+" Toggle relative numbers. Credits: https://github.com/D00mch/dotfiles/blob/master/.ideavimrc
+function! ToggleRelativeNumber()
+    if g:relative_number_set
+        set relativenumber
+        let g:relative_number_set = 0
+    else
+        set norelativenumber
+        let g:relative_number_set = 1
+    endif
+endfunction
+
+let g:WhichKeyDesc_t = "<leader>t Toggle"
+let g:WhichKeyDesc_tf = "<leader>tf Toggle Distraction Free Mode"
+let g:WhichKeyDesc_tl = "<leader>tl Toggle Relative Number"
+let g:WhichKeyDesc_tt = "<leader>tt Toggle Project Tool Window"
+let g:WhichKeyDesc_tr = "<leader>tr Toggle Run Tool Window"
+let g:WhichKeyDesc_tm = "<leader>tm Toggle Maven Tool Window"
+let g:WhichKeyDesc_tgc = "<leader>tgc Toggle Commit Tool Window"
+let g:WhichKeyDesc_tgp = "<leader>tgp Toggle Pull Requests Tool Window"
+let g:WhichKeyDesc_tf = "<leader>th Hide Active Window"
+noremap <leader>tf :action ToggleDistractionFreeMode<cr>
+noremap <leader>tl :call ToggleRelativeNumber()<cr>
+noremap <leader>tt :action ActivateProjectToolWindow<cr>
+noremap <leader>tr :action ActivateRunToolWindow<cr>
+noremap <leader>tm :action ActivateMavenToolWindow<cr>
+noremap <leader>tgc :action ActivateCommitToolWindow<cr>
+noremap <leader>tgp :action ActivatePullRequestsToolWindow<cr>
+noremap <leader>th :action HideActiveWindow<cr>
+
+" Search
+"
+let g:WhichKeyDesc_s = "<leader>s Search"
+let g:WhichKeyDesc_sf = "<leader>sf Search in Path"
+let g:WhichKeyDesc_sh = "<leader>sh Search Settings"
+let g:WhichKeyDesc_sb = "<leader>sb Search in Buffer"
+let g:WhichKeyDesc_sg = "<leader>sg Search in Project"
+let g:WhichKeyDesc_sd = "<leader>sd Search Errors in Project"
+noremap <leader>sf :action FindInPath<cr>
+noremap <leader>sh :action ShowSettings<cr>
+noremap <leader>sb :action Find<cr>
+noremap <leader>sg :action FindInPath<cr>
+noremap <leader>sd :action ShowErrorsInProject<cr>
+
+"
+" Window management
+"
+let g:WhichKeyDesc_w = "<leader>w Window"
+let g:WhichKeyDesc_wsh = "<leader>wsh Split Window Horizontally"
+let g:WhichKeyDesc_wsv = "<leader>wsv Split Window Vertically"
+let g:WhichKeyDesc_wml = "<leader>wml Move to Left Window"
+let g:WhichKeyDesc_wmr = "<leader>wmr Move to Right/Bottom Window"
+let g:WhichKeyDesc_wmu = "<leader>wmu Move to Upper Window"
+let g:WhichKeyDesc_wk = "<leader>wk Close Buffer"
+let g:WhichKeyDesc_wo = "<leader>wo Close Other Windows"
+let g:WhichKeyDesc_wn = "<leader>wn Create New Window"
+let g:WhichKeyDesc_C_x_k = "<C-x>k Close Buffer"
+let g:WhichKeyDesc_C_x_0 = "<C-x>0 Close Current Window"
+let g:WhichKeyDesc_C_x_1 = "<C-x>1 Close Other Windows"
+let g:WhichKeyDesc_C_x_2 = "<C-x>2 Split Window Horizontally"
+let g:WhichKeyDesc_C_x_3 = "<C-x>3 Split Window Vertically"
+let g:WhichKeyDesc_A_o = "<A-o> Switch to Next Window"
+noremap <leader>wsh :action SplitHorizontally<cr>
+noremap <leader>wsv :action SplitVertically<cr>
+noremap <leader>wml <C-w>h
+noremap <leader>wmr <C-w>l
+noremap <leader>wmu <C-w>k
+noremap <leader>wmr <C-w>j
+noremap <leader>wk :bd<cr>
+noremap <leader>wo <C-w>o
+noremap <leader>wn <C-w>n
+noremap <C-x>k :bd<cr>
+" Emacs style window management
+noremap <C-x>0 <C-w>c
+noremap <C-x>1 <C-w>o
+noremap <C-x>2 :action SplitHorizontally<cr>
+noremap <C-x>3 :action SplitVertically<cr>
+noremap <A-o> <C-w>w
+
+" Tab management
+let g:WhichKeyDesc_q = "<leader>q Close"
+let g:WhichKeyDesc_Q = "<leader>Q ReOpen"
+nmap <leader>q :action CloseContent<cr>
+nmap <leader>Q :action ReopenClosedTab<cr>
+
+"
+" Navigation
+"
+let g:WhichKeyDesc_g = "<leader>g Go"
+let g:WhichKeyDesc_gb = "<leader>gb Go Back"
+let g:WhichKeyDesc_gf = "<leader>gf Go Go Forward"
+let g:WhichKeyDesc_gi = "<leader>gi Go to Implementation"
+let g:WhichKeyDesc_gs = "<leader>gs Go to Super Method"
+let g:WhichKeyDesc_gt = "<leader>gt Go to Test"
+let g:WhichKeyDesc_gu = "<leader>gu Find Usages"
+nmap <leader>gf :action Back<cr>
+nmap <leader>gb :action Forward<cr>
+nmap <leader>gi :action GotoImpelmentation<cr>
+nmap <leader>gi :action GotoSuperMethod<cr>
+nmap <leader>gt :action GotoTest<cr>
+nmap <leader>gu :action FindUsages<cr>
+" Errors
+let g:WhichKeyDesc_gen = "<leader>gen Go to Next Error"
+let g:WhichKeyDesc_gep = "<leader>gep Go to Previous Error"
+nmap <leader>gen :action GotoNextError<cr>
+nmap <leader>gep :action GotoPreviousError<cr>
+
+" Git
+let g:WhichKeyDesc_gc = "<leader>gc Checkin Project"
+let g:WhichKeyDesc_gs = "<leader>gs Git Stash"
+let g:WhichKeyDesc_ghn = "<leader>ghn Show Next Diff"
+let g:WhichKeyDesc_ghp = "<leader>ghp Show Previous Diff"
+let g:WhichKeyDesc_ghs = "<leader>ghs Git Stage"
+let g:WhichKeyDesc_ghu = "<leader>ghu Git Unstage"
+let g:WhichKeyDesc_ghr = "<leader>ghr Git Rollback"
+let g:WhichKeyDesc_ghv = "<leader>ghv Show Git History"
+let g:WhichKeyDesc_gn = "<leader>gn Show Git Branches"
+let g:WhichKeyDesc_gg = "<leader>gg Show Git Log"
+let g:WhichKeyDesc_gt = "<leader>gt Git Time Machine"
+let g:WhichKeyDesc_gopl = "<leader>gopl Show Pull Requests"
+noremap <leader>gc :action CheckinProject<cr>
+noremap <leader>gs :action Git.Stash<cr>
+noremap <leader>ghn :action extDiff<cr>
+noremap <leader>ghp :action PreviousDiff<cr>
+noremap <leader>ghs :action Git.Stage<cr>
+noremap <leader>ghu :action Git.Unstage<cr>
+noremap <leader>ghr :action Git.Rollback<cr>
+noremap <leader>ghv :action Git.ShowHistory<cr>
+noremap <leader>gn :action Git.Branches<cr>
+noremap <leader>gg :action Git.Log<cr>
+noremap <leader>gt :action GitTimeMachine<cr>
+noremap <leader>gopl :action ShowPullRequests<cr>
+
+
+let g:WhichKeyDesc_x = "<leader>x Tool"
+let g:WhichKeyDesc_xm = "<leader>xm Maven"
+let g:WhichKeyDesc_xmi = "<leader>xmi Install"
+command! MavenCleanInstall :!nohup kitty --class EditorTerm -e bash -c "mvn clean install; exec bash" >/dev/null 2>&1 &
+noremap <leader>xmi :MavenCleanInstall <cr>
+
+let g:WhichKeyDesc_c = "<leader>c Code"
+let g:WhichKeyDesc_ca = "<leader>ca Show Intention Actions/Complete Statement"
+let g:WhichKeyDesc_cg = "<leader>cg Generate"
+nnoremap <leader>ca :action ShowIntentionActions<cr>
+nnoremap <leader>cg :action Generate<cr>
+
+let g:WhichKeyDesc_c = "<esc> Hide Active Window"
+noremap <ESC> :action HideActiveWindow<cr>
+" Increase or decrease font size
+
+let g:WhichKeyDesc_increase_font = "<C-=> Increase Font Size"
+let g:WhichKeyDesc_increase_font = "<C--> Decrease Font Size"
+nnoremap <C-=> :action EditorIncreaseFontSize<cr>
+nnoremap <C--> :action EditorDecreaseFontSize<cr>
