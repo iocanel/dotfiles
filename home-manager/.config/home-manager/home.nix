@@ -74,8 +74,12 @@ in
     ombi
     geeqie
     digikam
+    calibre
     # Sharing
     dropbox
+    transmission
+    # Browsers
+    nyxt
     # Communication
     zulip
     slack
@@ -107,6 +111,7 @@ in
     evince
     # Mail
     isync
+    vdirsyncer
     offlineimap
     msmtp
     mu
@@ -140,7 +145,6 @@ in
     gradle
     temurin-bin-21
     jbang
-    quarkus
     openapi-generator-cli
     jetbrains.idea-community-bin
 
@@ -191,6 +195,7 @@ in
     rsync
     rclone
     unison
+    sutils
     #
     # Deamons and Services
     dunst
