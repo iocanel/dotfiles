@@ -55,7 +55,7 @@ for_window [title="k9s"] resize set 80 ppt 80 ppt
 for_window [title="k9s"] move position center
 
 # AlsaMixer
-bindsym $mod+Ctrl+a; exec alacritty --title alsamixer -e alsamixer
+bindsym $mod+Ctrl+a; exec kitty --title alsamixer -e alsamixer
 for_window [title="alsamixer"] floating enable;
 
 # Bluetooth manager
@@ -63,7 +63,7 @@ bindsym $mod+Ctrl+b; exec blueman-manager
 for_window [class="Blueman-manager"] floating enable; move position center;
 
 # ytop
-bindsym $mod+Ctrl+t; exec alacritty --title ytop -e ytop
+bindsym $mod+Ctrl+t; exec kitty --title ytop -e ytop
 for_window [title="ytop"] floating enable;
 
 # elfeed
@@ -222,7 +222,7 @@ assign [class="ChatGPT"] $ws6
 assign [class="Emacs"] $ws7
 
 
-exec --no-startup-id alacritty --class=MainTerminal
+exec --no-startup-id kitty --class=MainTerminal
 exec --no-startup-id /home/iocanel/bin/gmail-personal
 exec --no-startup-id /home/iocanel/bin/gmail-work
 exec --no-startup-id slack
