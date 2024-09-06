@@ -6,7 +6,7 @@ case $BLOCK_BUTTON in
     3) i3-msg workspace "2:  " && exit 0 & ;;
 esac
 
-COUNT=`mu find flag:unread to:iocanel@gmail.com | wc -l`
+COUNT=`mu find flag:unread path:$HOME/.mail/iocanel@gmail.com/ | wc -l`
 if [ "$COUNT" -gt 0 ]; then
     echo " $COUNT"
 fi
