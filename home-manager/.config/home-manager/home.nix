@@ -401,7 +401,7 @@ in
             Description = "Timer for sync-email";
           };
           Timer = {
-            OnCalendar = "minutely";
+            OnCalendar = "*:0/5"; # This will run the timer every 5 minutes
             Persistent = true;
             Unit = "sync-email.service";
           };
