@@ -96,7 +96,10 @@ for_window [class="EditorTerm"] resize set height 25 ppt;
 
 # mu4e
 bindsym $mod+Shift+m; exec ~/bin/mu4e
+#for_window [title="mu4e-app"] floating enable
 for_window [title="mu4e-app"] floating enable
+for_window [title="mu4e-app"] resize set 80 ppt 80 ppt
+for_window [title="mu4e-app"] move position center
 
 # org-agenda
 bindsym $mod+Shift+a; exec ~/bin/org-agenda
