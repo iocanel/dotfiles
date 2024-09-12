@@ -1,9 +1,9 @@
 #!/bin/bash
 
 case $BLOCK_BUTTON in
-  1) emacs --title mu4e-app --eval "(progn (mu4e t) (mu4e-search-bookmark \"flag:unread from:github.com\"))"  && exit 0 & ;;  # Left-click action
-  2) emacs --title mu4e-app --eval "(progn (mu4e t) (mu4e-search-bookmark \"flag:unread from:github.com\"))"  && exit 0 & ;;  # Left-click action
-  3) emacs --title mu4e-app --eval "(progn (mu4e t) (mu4e-search-bookmark \"flag:unread from:github.com\"))"  && exit 0 & ;;  # Left-click action
+  1) mu4e-github && exit 0 & ;;  # Left-click action
+  2) mu4e-github && exit 0 & ;;  # Left-click action
+  3) mu4e-github && exit 0 & ;;  # Left-click action
 esac
 
 COUNT=`mu find flag:unread from:github.com path:$HOME/.mail/iocanel@gmail.com/ | wc -l`
