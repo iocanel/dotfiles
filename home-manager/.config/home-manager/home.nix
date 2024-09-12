@@ -301,6 +301,9 @@ in
   };
 
   services = {
+    emacs = {
+      enable = true;
+    };
     gpg-agent = {
       enable = true;
       defaultCacheTtl = 604800;
@@ -320,6 +323,22 @@ in
   systemd = {
     user = { 
       services = {
+        emacs-daemon = {
+          Unit = {
+            Description = "Emacs Daemon Troubleshooting Service";
+          };
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
+          Service = {
+            Type = "simple";
+            ExecStart = "${pkgs.bash}/bin/bash -c  'exec ${pkgs.emacs}/bin/emacs --bg-daemon --debug-init'";
+            ExecStop = "${pkgs.emacs}/bin/emacsclient --eval '(kill-emacs)'"; # Optional, clean stop
+            Restart = "on-failure";
+            StandardOutput = "append:/home/iocanel/.emacs.d/emacs.log";
+            StandardError = "append:/home/iocanel/.emacs.d/emacs.log";
+          };
+        };
         update-nixos-config = {
           Unit = {
             Description = "Update nixos configuration";
