@@ -147,6 +147,7 @@ in
     jbang
     openapi-generator-cli
     jetbrains.idea-community-bin
+    vscode
 
     # Javascript
     nodejs
