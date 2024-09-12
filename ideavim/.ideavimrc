@@ -83,6 +83,20 @@ noremap <leader>or :action RecentFiles<cr>
 noremap <leader>oc :action ActivateTerminalToolWindow<cr>
 
 "
+" Debug
+"
+let g:WhichKeyDesc_d = "<leader>d Debug"
+
+let g:WhichKeyDesc_db = "<leader>db Toogle Line Breakpoint"
+let g:WhichKeyDesc_dc = "<leader>dc Debug Configuration"
+let g:WhichKeyDesc_dd = "<leader>dd Debug"
+let g:WhichKeyDesc_dw = "<leader>dw Debug Window"
+noremap <leader>db :action ToggleLineBreakpoint<cr>
+noremap <leader>dc :action ChooseDebugConfiguration<cr>
+noremap <leader>dc :action Debug<cr>
+noremap <leader>dw :action ActivateDebugToolWindow<cr>
+
+"
 " Toggles
 " 
 
