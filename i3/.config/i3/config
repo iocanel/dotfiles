@@ -222,7 +222,8 @@ assign [class="GmailWork"] $ws3
 assign [class="Slack"] $ws4
 assign [class="Zulip"] $ws5
 assign [class="ChatGPT"] $ws6
-assign [class="Emacs"] $ws7
+# don't assing emacs anywhere
+#assign [class="Emacs"] $ws7
 
 
 exec --no-startup-id kitty --class=MainTerminal
@@ -231,8 +232,8 @@ exec --no-startup-id /home/iocanel/bin/gmail-work
 exec --no-startup-id slack
 exec --no-startup-id zulip
 exec --no-startup-id /home/iocanel/bin/chatgpt
-exec --no-startup-id emacs
-
+exec --no-startup-id emacs --title Emacs
+for_window [title="Emacs"] move to workspace $ws7 
 
 
 # move focused container to workspace
