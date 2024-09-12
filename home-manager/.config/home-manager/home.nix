@@ -75,13 +75,20 @@ in
     geeqie
     digikam
     calibre
+    # Media Downloaders
+    jackett
+    radarr
+    sonarr
+    
     # Sharing
     dropbox
-    transmission
     # Browsers
     nyxt
     # Communication
     zulip
+    zulip-term
+    python312Packages.zulip
+
     slack
     discord
     remmina
