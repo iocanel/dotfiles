@@ -386,11 +386,13 @@ in
             WantedBy = [ "default.target" ];
           };
           Service = {
-            Type = "simple";
-            ExecStart = "${pkgs.isync}/bin/mbsync -a";
-            Restart = "always";
+            Type = "oneshot";
+            ExecStart = "${pkgs.isync}/bin/mbsync -Va
+            ExecStartPost=${pkgs.mu}/bin/mu index --muhome ${config.home.homeDirectory}/.cache/mu/";
+            Restart = "on-failure";  # Only restart if it fails
+            RestartSec = 30;         # Wait 30 seconds before restarting
+            TimeoutStartSec = "300"; # Allow up to 5 minutes for the service to start
           };
-        
         };
       };
       timers = {
