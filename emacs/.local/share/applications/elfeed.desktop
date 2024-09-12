@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Elfeed
+GenericName=Elfeed
+StartupNotify=true
+Terminal=false
+Icon=rss
+Type=Application
+Exec=elfeed

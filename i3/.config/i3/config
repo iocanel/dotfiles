@@ -101,6 +101,12 @@ for_window [title="mu4e-app"] floating enable
 for_window [title="mu4e-app"] resize set 95 ppt 90 ppt
 for_window [title="mu4e-app"] move position center
 
+# elfeed
+for_window [title="elfeed"] floating enable
+for_window [title="elfeed"] resize set 95 ppt 90 ppt
+for_window [title="elfeed"] move position center
+
+
 # org-agenda
 bindsym $mod+Shift+a; exec ~/bin/org-agenda
 for_window [title="org-agenda-app"] floating enable;
