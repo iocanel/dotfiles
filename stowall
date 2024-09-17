@@ -28,3 +28,4 @@ stow vdirsyncer
 stow wacom
 stow x-resources
 stow zsh
+stow nix-sdk
