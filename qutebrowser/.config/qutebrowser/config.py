@@ -67,8 +67,8 @@ c.url.searchengines = {
 #
 # Copy the qutedmenu userscript under .local/share/qutebrowser/userscripts/
 # Ensure that dmenu is installed or rofi linked to dmenu.
-config.bind('o', 'spawn --userscript qutedmenu open')
-config.bind('O', 'spawn --userscript qutedmenu tab')
+#config.bind('o', 'spawn --userscript qutedmenu open')
+#config.bind('O', 'spawn --userscript qutedmenu tab')
 
 config.bind('<Alt-a>', 'set tabs.show always')
 config.bind('<Ctrl-p>', 'spawn --userscript qute-pass')
