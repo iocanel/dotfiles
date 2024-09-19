@@ -1,49 +1,29 @@
 # Load autoconfiguration
 config.load_autoconfig()
 
-# Colors
-c.colors.downloads.bar.bg="black"
-c.colors.downloads.start.fg="white"
-c.colors.statusbar.caret.bg="purple"
-c.colors.statusbar.caret.fg="#a0b7c1"
-c.colors.statusbar.command.bg="#262626"
-c.colors.statusbar.insert.bg="#262626"
-c.colors.statusbar.insert.fg="#555555"
-c.colors.statusbar.normal.bg="#262626"
-c.colors.statusbar.normal.fg="#a0b7c1"
-c.colors.statusbar.passthrough.fg="white"
-c.colors.statusbar.progress.bg="white"
-c.colors.statusbar.url.error.fg="orange"
-c.colors.statusbar.url.fg="#555555"
-c.colors.statusbar.url.hover.fg="aqua"
-c.colors.statusbar.url.success.http.fg="#a0b7c1"
-c.colors.statusbar.url.success.https.fg="lime"
-c.colors.statusbar.url.warn.fg="yellow"
-c.colors.tabs.bar.bg="#555555"
-c.colors.tabs.even.bg="#262626"
-c.colors.tabs.even.fg="white"
-c.colors.tabs.indicator.start="#0000aa"
-c.colors.tabs.indicator.stop="#00aa00"
-c.colors.tabs.odd.bg="#262626"
-c.colors.tabs.selected.even.bg="#3a3a3a"
-c.colors.tabs.selected.even.fg="white"
-c.colors.tabs.selected.odd.bg="#3a3a3a"
-c.colors.tabs.selected.odd.fg="white"
-c.colors.webpage.bg="white"
+import catppuccin
+
+# load your autoconfig, use this, if the rest of your config is empty!
+config.load_autoconfig()
+
+# set the flavor you'd like to use
+# valid options are 'mocha', 'macchiato', 'frappe', and 'latte'
+# last argument (optional, default is False): enable the plain look for the menu rows
+catppuccin.setup(c, 'mocha', False)
+
 
 # Fonts
-#c.fonts.tabs="14pt DejaVu Sans Mono"
-c.fonts.completion.category="bold 12pt DejaVu Sans Mono"
-c.fonts.completion.entry="12pt DejaVu Sans Mono"
-c.fonts.debug_console="12pt DejaVu Sans Mono"
-c.fonts.downloads="12pt DejaVu Sans Mono"
-c.fonts.hints="bold 12pt DejaVu Sans Mono"
-c.fonts.keyhint="12pt DejaVu Sans Mono"
-c.fonts.messages.error="12pt DejaVu Sans Mono"
-c.fonts.messages.info="12pt DejaVu Sans Mono"
-c.fonts.messages.warning="12pt DejaVu Sans Mono"
-c.fonts.prompts="12pt sans-serif"
-c.fonts.statusbar="12pt DejaVu Sans Mono"
+c.fonts.completion.category="bold 18pt JetBrains Mono Nerd Font Bold"
+c.fonts.completion.entry="18pt JetBrains Mono Nerd Font Bold"
+c.fonts.debug_console="18pt JetBrains Mono Nerd Font Bold"
+c.fonts.downloads="18pt JetBrains Mono Nerd Font Bold"
+c.fonts.hints="bold 18pt JetBrains Mono Nerd Font Bold"
+c.fonts.keyhint="18pt JetBrains Mono Nerd Font Bold"
+c.fonts.messages.error="18pt JetBrains Mono Nerd Font Bold"
+c.fonts.messages.info="18pt JetBrains Mono Nerd Font Bold"
+c.fonts.messages.warning="18pt JetBrains Mono Nerd Font Bold"
+c.fonts.prompts="18pt sans-serif"
+c.fonts.statusbar="18pt JetBrains Mono Nerd Font Bold"
 
 #Misc
 c.tabs.position = "top"
