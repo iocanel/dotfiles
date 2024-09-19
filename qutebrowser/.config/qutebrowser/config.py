@@ -78,7 +78,18 @@ config.bind('<Ctrl-k>', 'spawn -v /bin/kubectl apply -f - {primary}', mode='care
 
 config.bind('<Ctrl-y>', 'spawn youtube-get {url}')
 config.bind('<alt-y>', 'spawn youtube-mp3-get {url}')
+
 config.bind('<alt-s>', 'hint')
 config.bind('e', 'move-to-end-of-word')
 config.bind('b', 'move-to-previous-word')
 config.unbind('d') 
+
+
+# User Agent
+c.content.headers.user_agent = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                                "Chrome/117.0.0.0 Safari/537.36")
+
+# Cookies
+config.set("content.javascript.enabled", True, "https://*.google.com/*")
+config.set("content.cookies.accept", "all", "https://*.google.com/*")
