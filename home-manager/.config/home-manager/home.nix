@@ -313,7 +313,7 @@ in
 
   services = {
     emacs = {
-      enable = true;
+      enable = false;
     };
     gpg-agent = {
       enable = true;
@@ -336,14 +336,14 @@ in
       services = {
         emacs-daemon = {
           Unit = {
-            Description = "Emacs Daemon Troubleshooting Service";
+            Description = "Emacs Daemon Service";
           };
           Install = {
             WantedBy = [ "default.target" ];
           };
           Service = {
             Type = "simple";
-            ExecStart = "${pkgs.bash}/bin/bash -c  'exec ${pkgs.emacs}/bin/emacs --bg-daemon --debug-init'";
+            ExecStart = "${pkgs.bash}/bin/bash -c  'exec ${pkgs.emacs}/bin/emacs --fg-daemon --debug-init'";
             ExecStop = "${pkgs.emacs}/bin/emacsclient --eval '(kill-emacs)'"; # Optional, clean stop
             Restart = "on-failure";
             StandardOutput = "append:/home/iocanel/.emacs.d/emacs.log";
