@@ -298,6 +298,8 @@ in
       if test -f ~/.profile
         source ~/.profile
       end
+      # Other environment variables
+      export QUARKUS_KUBERNETES_CLIENT_TRUST_CERTS=true
       '';
     };
     git = {
