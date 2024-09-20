@@ -11,6 +11,8 @@ config.load_autoconfig()
 # last argument (optional, default is False): enable the plain look for the menu rows
 catppuccin.setup(c, 'mocha', False)
 
+# Colors
+c.colors.completion.category.fg = '#FAB387'
 
 # Fonts
 c.fonts.completion.category="bold 18pt JetBrains Mono Nerd Font Bold"
