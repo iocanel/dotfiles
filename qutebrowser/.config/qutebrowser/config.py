@@ -94,3 +94,6 @@ c.content.headers.user_agent = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
 # Cookies
 config.set("content.javascript.enabled", True, "https://*.google.com/*")
 config.set("content.cookies.accept", "all", "https://*.google.com/*")
+
+# Clipboard
+config.set("content.javascript.clipboard", "access", "https://chatgpt.com")
