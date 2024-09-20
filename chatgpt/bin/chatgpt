@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # With Qutebrowser
-qutebrowser --basedir /home/iocanel/.sandbox/iocanel/.local/chatgpt https://chat.openai.com
+qutebrowser --basedir /home/iocanel/.sandbox/iocanel/.local/chatgpt https://chat.openai.com -C /home/iocanel/.config/qutebrowser/config.py
 
 # With Chromium
 # chromium --app=https://chat.openai.com --user-data-dir=/home/iocanel/.sandbox/iocanel/.local/chatgpt --user-cache-dir=/home/iocanel/.sandbox/iocanel/.cache/chatgpt --class=ChatGPT
