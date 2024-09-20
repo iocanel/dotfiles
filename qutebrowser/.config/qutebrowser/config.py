@@ -26,6 +26,7 @@ c.fonts.prompts="18pt sans-serif"
 c.fonts.statusbar="18pt JetBrains Mono Nerd Font Bold"
 
 #Misc
+c.zoom.default = "200%"
 c.tabs.position = "top"
 c.tabs.show = "never"
 c.statusbar.show = "never"
