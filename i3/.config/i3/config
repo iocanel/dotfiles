@@ -66,9 +66,6 @@ for_window [class="Blueman-manager"] floating enable; move position center;
 bindsym $mod+Ctrl+t; exec kitty --title ytop -e ytop
 for_window [title="ytop"] floating enable;
 
-# elfeed
-bindsym $mod+Shift+e; exec ~/bin/elfeed
-for_window [title="elfeed-app"] floating enable;
 
 # dunst
 bindsym Ctrl+grave; exec dunstctl history-pop
@@ -94,18 +91,13 @@ bindsym Mod+shift+space; exec dunstctl close-all
 for_window [class="EditorTerm"] move down; 
 for_window [class="EditorTerm"] resize set height 25 ppt;
 
+# elfeed
+bindsym $mod+Shift+e; exec ~/bin/elfeed
 # mu4e
 bindsym $mod+Shift+m; exec ~/bin/mu4e
-#for_window [title="mu4e-app"] floating enable
-for_window [title="mu4e-app"] floating enable
-for_window [title="mu4e-app"] resize set 95 ppt 90 ppt
-for_window [title="mu4e-app"] move position center
-
-# elfeed
-for_window [title="elfeed"] floating enable
-for_window [title="elfeed"] resize set 95 ppt 90 ppt
-for_window [title="elfeed"] move position center
-
+for_window [title="emacs-floating-app"] floating enable
+for_window [title="emacs-floating-app"] resize set 95 ppt 90 ppt
+for_window [title="emacs-floating-app"] move position center
 
 # org-agenda
 bindsym $mod+Shift+a; exec ~/bin/org-agenda
