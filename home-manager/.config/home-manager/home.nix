@@ -460,7 +460,19 @@ in
             WantedBy = [ "timers.target" ];
           };
         };
-
+        sync-lpass = {
+          Unit = {
+            Description = "Timer for sync-lpass";
+          };
+          Timer = {
+            OnCalendar = "daily";
+            Persistent = true;
+            Unit = "sync-lpass.service";
+          };
+          Install = {
+            WantedBy = [ "timers.target" ];
+          };
+        };
       };
     };
   };
