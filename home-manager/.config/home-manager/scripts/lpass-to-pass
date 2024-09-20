@@ -1,0 +1,59 @@
+#!/bin/bash
+
+# Usage function to display help
+usage() {
+    echo "Usage: $0 [--help] [--dry-run]"
+    echo ""
+    echo "Options:"
+    echo "  --help      Show this help message and exit"
+    echo "  --dry-run   Simulate the actions without inserting passwords into pass"
+    exit 0
+}
+
+# Flag variables
+dry_run=0
+
+# Parse command-line arguments
+for arg in "$@"; do
+    case $arg in
+        --help)
+            usage
+            ;;
+        --dry-run)
+            dry_run=1
+            shift
+            ;;
+        *)
+            echo "Unknown option: $arg"
+            usage
+            ;;
+    esac
+done
+
+# Get from password-store the value of secrets/passbridge/init and evaluate it
+INIT_PASS=$(pass show secrets/passbridge/init)
+eval "$INIT_PASS"
+
+LIST_PASS=$(pass show secrets/passbridge/list-pass)
+SHOW_PASS_DETAILS=$(pass show secrets/passbridge/show-pass-details)
+
+for extension in ".com" ".org" ".net" ".io" ".gr" ".cy"; do
+    for site in `$LIST_PASS | awk -F "/" '{print $2}' | awk -F " " '{print $1}' | grep "$extension" | sort | uniq`; do
+        if [ -n "$site" ]; then
+            for username in $(echo "$($SHOW_PASS_DETAILS -x "$site")" | grep Username | awk -F " " '{print $2}' | sort | uniq); do
+                password=$(echo "$($SHOW_PASS_DETAILS "$site")" | grep -A1 "Username: $username" | grep Password | awk -F " " '{print $2}' | sort | uniq)
+                
+                if [ -n "$password" ]; then
+                    # Check if it's a dry run
+                    if [ $dry_run -eq 1 ]; then
+                        echo "[Dry Run] Setting password for $username on $site"
+                    else
+                        echo "$password" | pass insert -f -e websites/"$site"/"$username"
+                    fi
+                else
+                    echo "Password for $username at $site not found"
+                fi
+            done
+        fi
+    done
+done

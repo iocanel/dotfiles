@@ -3,6 +3,8 @@
 with lib;
 
 let
+  lpass = pkgs.callPackage /home/iocanel/.config/home-manager/packages/lpass/1.6.0.nix { };
+
   zshPrompt = ''
     # Load vcs_info for git branch
     autoload -Uz vcs_info
@@ -141,6 +143,7 @@ in
     jq
     yq
     yt-dlp
+    lpass # lastpass-cli
     #
     # Development
     #
@@ -401,6 +404,20 @@ in
             RestartSec = 30;         # Wait 30 seconds before restarting
             TimeoutStartSec = "300"; # Allow up to 5 minutes for the service to start
           };
+        };
+        sync-lpass = {
+          Unit = {
+            Description = "Sync lpass to pass";
+          };
+          Install = {
+            wantedBy = [ "default.target" ];
+          };
+          Service = {
+            Type = "oneshot";
+            ExecStart = "${config.home.homeDirectory}/.config/home-manager/scripts/lpass-to-pass";
+            Restart = "on-failure";
+          };
+          # Run service after the user session starts
         };
       };
       timers = {
