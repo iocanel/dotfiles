@@ -1,0 +1,16 @@
+#!/bin/bash
+
+
+case $BLOCK_BUTTON in
+  1) dunstctl set-paused toggle && exit 0 & ;;  # Left-click action
+  2) dunstcl set-paused toggle && exit 0 & ;;  # Left-click action
+  3) dunstcl set-paused toggle && exit 0 & ;;  # Left-click action
+esac
+
+# Check if Dunst notifications are paused or running
+status=$(dunstctl is-paused)
+if [ "$status" = "true" ]; then
+    echo " "
+else
+    echo " "
+fi
