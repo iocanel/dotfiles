@@ -138,12 +138,14 @@ in
     openshift
     kind
     k9s
+    argocd
     resumed
     hugo
     jq
     yq
     yt-dlp
     lpass # lastpass-cli
+    gh
     #
     # Development
     #
