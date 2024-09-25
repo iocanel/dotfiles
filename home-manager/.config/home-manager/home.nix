@@ -153,7 +153,6 @@ in
     cmake
     libtool
     # Java
-    maven
     gradle
     temurin-bin-21
     jbang
