@@ -84,21 +84,11 @@ c.url.searchengines = {
     }
 
 # Keybindings
-
-#
-# Dmenu integration
-#
-# Copy the qutedmenu userscript under .local/share/qutebrowser/userscripts/
-# Ensure that dmenu is installed or rofi linked to dmenu.
-#config.bind('o', 'spawn --userscript qutedmenu open')
-#config.bind('O', 'spawn --userscript qutedmenu tab')
-
 config.bind('<Alt-a>', 'set tabs.show always')
-config.bind('<Ctrl-p>', 'spawn --userscript qute-pass')
-
 config.bind('<Ctrl-k>', 'spawn -v /bin/kubectl apply -f - {primary}')
-config.bind('<Ctrl-k>', 'spawn -v /bin/kubectl apply -f - {primary}', mode='caret')
 
+
+config.bind('<Ctrl-m>', 'hint links spawn mpv {url}')
 config.bind('<Ctrl-y>', 'spawn youtube-get {url}')
 config.bind('<alt-y>', 'spawn youtube-mp3-get {url}')
 
