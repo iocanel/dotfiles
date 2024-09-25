@@ -221,7 +221,7 @@ assign [class="GmailPersonal"] $ws2
 assign [class="GmailWork"] $ws3
 assign [class="Slack"] $ws4
 assign [class="Zulip"] $ws5
-assign [class="ChatGPT"] $ws6
+assign [title="ChatGPT"] $ws6
 # don't assing emacs anywhere
 #assign [class="Emacs"] $ws7
 
