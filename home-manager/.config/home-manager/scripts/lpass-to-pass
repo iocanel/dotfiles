@@ -37,7 +37,7 @@ eval "$INIT_PASS"
 LIST_PASS=$(pass show secrets/passbridge/list-pass)
 SHOW_PASS_DETAILS=$(pass show secrets/passbridge/show-pass-details)
 
-for extension in ".com" ".org" ".net" ".io" ".gr" ".cy"; do
+for extension in ".com" ".org" ".net" ".io" ".gr" ".cy" "192.168.1.250"; do
     for site in `$LIST_PASS | awk -F "/" '{print $2}' | awk -F " " '{print $1}' | grep "$extension" | sort | uniq`; do
         if [ -n "$site" ]; then
             for username in $(echo "$($SHOW_PASS_DETAILS -x "$site")" | grep Username | awk -F " " '{print $2}' | sort | uniq); do
