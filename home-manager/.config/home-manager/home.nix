@@ -209,6 +209,7 @@ in
     rclone
     unison
     sutils
+    zip
     #
     # Deamons and Services
     dunst
