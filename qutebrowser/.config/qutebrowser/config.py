@@ -1,6 +1,9 @@
 # Load autoconfiguration
 config.load_autoconfig()
 
+#
+# Appearance
+#
 import catppuccin
 
 # load your autoconfig, use this, if the rest of your config is empty!
@@ -11,10 +14,29 @@ config.load_autoconfig()
 # last argument (optional, default is False): enable the plain look for the menu rows
 catppuccin.setup(c, 'mocha', False)
 
+#Misc
+c.zoom.default = "200%"
+c.tabs.position = "top"
+c.tabs.show = "never"
+c.statusbar.show = "never"
+
+
+#
 # Colors
+#
 c.colors.completion.category.fg = '#FAB387'
 
+#
+# Downloads
+#
+c.downloads.location.directory = '~/Downloads'
+c.downloads.location.prompt = True
+c.downloads.location.remember = True
+c.downloads.location.suggestion = 'both'
+
+#
 # Fonts
+#
 c.fonts.completion.category="bold 18pt JetBrains Mono Nerd Font Bold"
 c.fonts.completion.entry="18pt JetBrains Mono Nerd Font Bold"
 c.fonts.debug_console="18pt JetBrains Mono Nerd Font Bold"
@@ -27,11 +49,6 @@ c.fonts.messages.warning="18pt JetBrains Mono Nerd Font Bold"
 c.fonts.prompts="18pt sans-serif"
 c.fonts.statusbar="18pt JetBrains Mono Nerd Font Bold"
 
-#Misc
-c.zoom.default = "200%"
-c.tabs.position = "top"
-c.tabs.show = "never"
-c.statusbar.show = "never"
 
 # Insert mode
 c.input.insert_mode.auto_enter=True
