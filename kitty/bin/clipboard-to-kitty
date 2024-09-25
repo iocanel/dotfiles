@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Unique title for the new Kitty terminal
+UNIQUE_TITLE="kitty-from-clipboard-$(date +%s)"
+
+# Open a Kitty terminal with a unique title
+kitty --title "$UNIQUE_TITLE" sh -c "exec fish" &
+
+# Wait for a second to allow Kitty to open
+sleep 1
+
+# Use xdotool to find the window with the unique title and focus it
+xdotool search --name "$UNIQUE_TITLE" windowactivate
+
+# Paste the clipboard content into the focused Kitty terminal
+xdotool type "$(xclip -selection clipboard -o)"
