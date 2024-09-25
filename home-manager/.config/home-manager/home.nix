@@ -347,7 +347,7 @@ in
           };
           Service = {
             Type = "simple";
-            ExecStart = "${pkgs.bash}/bin/bash -c  'exec ${pkgs.emacs}/bin/emacs --fg-daemon --debug-init'";
+            ExecStart = "${pkgs.bash}/bin/bash -c  'exec ${pkgs.emacs}/bin/emacs --fg-daemon'";
             ExecStop = "${pkgs.emacs}/bin/emacsclient --eval '(kill-emacs)'"; # Optional, clean stop
             Restart = "on-failure";
             StandardOutput = "append:/home/iocanel/.emacs.d/emacs.log";
