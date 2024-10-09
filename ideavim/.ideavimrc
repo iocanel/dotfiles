@@ -19,12 +19,12 @@ set multiple-cursors
 
 let g:WhichKeyDesc_A_n = "<A-n> Select Next Match"
 let g:WhichKeyDesc_A_p = "<A-p> Select Previous Match"
-let g:WhichKeyDesc_A_x = "<A-x> Skip Match"
+let g:WhichKeyDesc_A_s = "<A-s> Skip Match"
 let g:WhichKeyDesc_C_Up = "<C-Up> Multiple Cursors Above"
 let g:WhichKeyDesc_C_Down = "<C-Up> Multiple Cursors Below"
 noremap mc <A-n>
 noremap mp <A-p>
-noremap mx <A-x>
+noremap mx <A-s>
 noremap <C-Up> :action EditorCloneCaretAbove<cr>
 noremap <C-Down> :action EditorCloneCaretBelow<cr>
 
@@ -71,17 +71,21 @@ noremap <expr> j (v:count == 0 ? 'gj' : 'j')
 let g:WhichKeyDesc_o = "<leader>o Open"
 let g:WhichKeyDesc_op = "<leader>op Open Project"
 let g:WhichKeyDesc_C_p = "<C-p> Open Project"
+let g:WhichKeyDesc_oa = "<leader>of Open Action"
 let g:WhichKeyDesc_of = "<leader>of Open File"
-let g:WhichKeyDesc_Space = "<leader><leader> Open File"
 let g:WhichKeyDesc_or = "<leader>or Open Recent Files"
+let g:WhichKeyDesc_os = "<leader>of Open Symbol"
 let g:WhichKeyDesc_oc = "<leader>oc Open Terminal"
+let g:WhichKeyDesc_Leader = "<leader><leader> Open File"
 noremap <leader>op :action WelcomeScreen.OpenProject<cr>
 noremap <C-p> :action WelcomeScreen.OpenProject<cr>
+noremap <leader>oa :action GotoAction<cr>
 noremap <leader>of :action GotoFile<cr>
-noremap <leader><Space> :action GotoFile<cr>
 noremap <leader>or :action RecentFiles<cr>
+noremap <leader>os :action GotoSymbol<cr>
 noremap <leader>oc :action ActivateTerminalToolWindow<cr>
-
+noremap <leader><leader> :action GotoFile<cr>
+noremap <A-x> :action GotoAction<cr>
 "
 " Debug
 "
