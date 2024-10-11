@@ -1,0 +1,5 @@
+/* Set default white background for pages without a defined background */
+html, body {
+    background-color: white;
+    color: inherit;  /* Inherit the default text color to prevent overriding */
+}

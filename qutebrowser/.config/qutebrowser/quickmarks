@@ -1,7 +1,7 @@
 iocanel.com http://iocanel.com/
 nas http://192.168.1.250:5000/
 octopi http://192.168.1.60/
-router http://192.168.1.1:8080/
+router http://192.168.1.1/html/login/index.html
 ergodox https://configure.ergodox-ez.com/ergodox-ez/layouts/ornAe/latest/2
 sck https://github.com/spring-cloud/spring-cloud-kubernetes
 blog https://github.com/iocanel/blog
@@ -24,3 +24,17 @@ qshift-console https://console-openshift-console.apps.qshift.snowdrop.dev/
 qshift-devspaces https://devspaces.apps.qshift.snowdrop.dev/dashboard/#/workspaces
 slides http://localhost:8000
 backstage http://localhost:3000
+emby http://192.168.1.6:8096/web/index.html#!/startup/login.html?serverId=17dcab528d774d74952f94716e8acf99
+sonarr http://localhost:8989/
+radarr http://localhost:7878/
+bazarr http://localhost:6767/login
+jackett http://localhost:9117/UI/Dashboard
+transmission http://localhost:9091/transmission/web/
+qshift kubernetes token display https://oauth-openshift.apps.qshift.snowdrop.dev/oauth/token/display
+qshift argocd console https://argocd-server-openshift-gitops.apps.qshift.snowdrop.dev/applications?showFavorites=false&proj=&sync=&autoSync=&health=&namespace=&cluster=&labels=
+quay.io https://quay.io/repository/
+quarkus todo app https://quarkus-todo-app-iocanel.apps.qshift.snowdrop.dev/
+quarkus todo chatbot https://quarkus-todo-chatbot-iocanel.apps.qshift.snowdrop.dev/
+quarkus at tyler slides https://docs.google.com/presentation/d/1-F3HXpBqQnPBGfuywepGeRwfzDFBgRrr_-LZYmBQhKM/edit#slide=id.g2c86bb9c24b_0_465
+deluge http://localhost:8112/
+olympiacos fc tickets https://www.ticketmaster.gr/olympiacos/showProductList.html

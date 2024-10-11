@@ -14,6 +14,9 @@ config.load_autoconfig()
 # last argument (optional, default is False): enable the plain look for the menu rows
 catppuccin.setup(c, 'mocha', False)
 
+# Custom stylesheet
+config.set('content.user_stylesheets', '~/.config/qutebrowser/custom.css')
+
 #Misc
 c.zoom.default = "200%"
 c.tabs.position = "top"
@@ -89,7 +92,7 @@ config.bind('<Ctrl-k>', 'spawn -v /bin/kubectl apply -f - {primary}')
 
 
 config.bind('<Ctrl-m>', 'hint links spawn mpv {url}')
-config.bind('<Ctrl-y>', 'spawn youtube-get {url}')
+config.bind('<Ctrl-y>', 'spawn yt-dlp -f "bestvideo+bestaudio" -o "~/Downloads/%(title)s.%(ext)s"   {url}')
 config.bind('<alt-y>', 'spawn youtube-mp3-get {url}')
 
 config.bind('<alt-s>', 'hint')
