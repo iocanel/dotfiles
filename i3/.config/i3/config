@@ -39,6 +39,8 @@ floating_modifier $mod
 #bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+Return exec kitty
 bindsym $mod+Enter exec kitty
+bindsym $mod+u exec kitty --class=EditorTerm
+
 bindsym $mod+b exec qutebrowser
 
 #
