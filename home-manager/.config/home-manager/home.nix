@@ -273,8 +273,13 @@ in
     ln -sf /mnt/cdrom $HOME/.wine/dosdevices/d:
   fi
   '';
-
   
+  # Dokcer buildkit
+  home.activation.docker = lib.hm.dag.entryAfter ["writeBoundary"] ''
+  #/bin/sh
+  export DOCKER_BUILDKIT=1 >> $HOME/.profile
+  '';
+
   programs = {
     direnv = {
       enable = true;
