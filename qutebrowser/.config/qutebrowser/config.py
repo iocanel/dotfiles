@@ -98,7 +98,26 @@ config.bind('<alt-y>', 'spawn youtube-mp3-get {url}')
 config.bind('<alt-s>', 'hint')
 config.bind('e', 'move-to-end-of-word')
 config.bind('b', 'move-to-previous-word')
+
+config.bind('E', 'cmd-set-text :open {url}')
+config.bind('<Ctrl-e>', 'cmd-set-text :open {url}')
+config.bind('<Ctrl-t>', 'cmd-set-text :open -t {url}')
+
 config.unbind('d') 
+
+#
+# Github 
+#
+
+# Aliases
+c.aliases['github-clone'] = 'spawn --userscript github-clone.sh {url}'
+c.aliases['github-goto-fork'] =  'spawn --userscript github-goto-fork.sh {url}'
+c.aliases['github-new-issue'] = 'spawn --userscript github-new-issue.sh {url}'
+
+# Bindings
+config.bind('<Ctrl-g>c', 'spawn --userscript github-clone.sh {url}')
+config.bind('<Ctrl-g>f', 'spawn --userscript github-goto-fork.sh {url}')
+config.bind('<Ctrl-g>i', 'spawn --userscript github-new-issue.sh {url}')
 
 
 # User Agent
