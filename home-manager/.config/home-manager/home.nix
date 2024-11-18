@@ -72,6 +72,12 @@ in
     vocal
     newsflash
     obs-studio
+    peek
+    gifski
+    asciinema
+    asciinema-agg
+    asciinema-scenario
+    asciinema-automation
     kdenlive
     ombi
     geeqie
@@ -189,6 +195,7 @@ in
     eza
     dust
     htop
+    tree
     #
     # Shell Extensions
     #
