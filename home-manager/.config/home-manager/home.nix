@@ -183,6 +183,11 @@ in
     #
     obsidian
     #
+    # Tray
+    #
+    pasystray
+
+    #
     # Terminals
     #
     kitty
