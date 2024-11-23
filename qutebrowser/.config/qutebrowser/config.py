@@ -103,7 +103,10 @@ config.bind('E', 'cmd-set-text :open {url}')
 config.bind('<Ctrl-e>', 'cmd-set-text :open {url}')
 config.bind('<Ctrl-t>', 'cmd-set-text :open -t {url}')
 
+config.bind('z', 'back')
+
 config.unbind('d') 
+config.unbind('h')  # Lot's of sentence starters start with h and it's a demo killer
 
 #
 # Github 
