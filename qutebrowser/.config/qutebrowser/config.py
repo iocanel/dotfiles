@@ -121,6 +121,7 @@ c.aliases['github-new-issue'] = 'spawn --userscript github-new-issue.sh {url}'
 config.bind('<Ctrl-g>c', 'spawn --userscript github-clone.sh {url}')
 config.bind('<Ctrl-g>f', 'spawn --userscript github-goto-fork.sh {url}')
 config.bind('<Ctrl-g>i', 'spawn --userscript github-new-issue.sh {url}')
+config.bind('<Ctrl-g>pc', 'spawn --userscript github-pr-checkout.sh {url}')
 
 
 # User Agent
