@@ -94,6 +94,12 @@ bindsym Mod+shift+space; exec dunstctl close-all
 for_window [class="EditorTerm"] move down; 
 for_window [class="EditorTerm"] resize set height 25 ppt;
 
+# org-agenda
+bindsym $mod+Shift+a; exec ~/bin/org-agenda
+# org-capture
+bindsym $mod+Ctrl+c; exec ~/bin/org-capture
+# org-roam-capture
+bindsym --release $mod+Shift+r; exec ~/bin/org-roam-capture
 # elfeed
 bindsym $mod+Shift+e; exec ~/bin/elfeed
 # mu4e
@@ -102,17 +108,6 @@ for_window [title="emacs-floating-app"] floating enable
 for_window [title="emacs-floating-app"] resize set 95 ppt 90 ppt
 for_window [title="emacs-floating-app"] move position center
 
-# org-agenda
-bindsym $mod+Shift+a; exec ~/bin/org-agenda
-for_window [title="org-agenda-app"] floating enable;
-
-# org-capture
-bindsym $mod+Shift+c; exec ~/bin/org-capture
-for_window [title="org-capture-app"] floating enable;
-
-# org-roam-capture
-bindsym --release $mod+Shift+r; exec ~/bin/org-roam-capture
-for_window [title="org-roam-app"] floating enable;
 
 # jbang
 #bindsym $mod+Ctrl+j; exec alacritty --hold --title jbang -e /home/iocanel/scripts/util/jbclip 
