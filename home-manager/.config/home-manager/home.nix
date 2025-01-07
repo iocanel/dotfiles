@@ -137,6 +137,8 @@ in
     emacsPackages.mu4e-views
     emacsPackages.mu4e-overview
     emacsPackages.evil-mu4e
+    #Music
+    lilypond
     #
     # CLI
     #
