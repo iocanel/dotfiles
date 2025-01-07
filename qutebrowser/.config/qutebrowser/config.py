@@ -114,11 +114,14 @@ config.unbind('h')  # Lot's of sentence starters start with h and it's a demo ki
 
 # Aliases
 c.aliases['github-clone'] = 'spawn --userscript github-clone.sh {url}'
+c.aliases['github-terminal'] = 'spawn --userscript github-terminal.sh {url}'
 c.aliases['github-goto-fork'] =  'spawn --userscript github-goto-fork.sh {url}'
 c.aliases['github-new-issue'] = 'spawn --userscript github-new-issue.sh {url}'
+c.aliases['github-pr-checkout'] = 'spawn --userscript github-new-issue.sh {url}'
 
 # Bindings
 config.bind('<Ctrl-g>c', 'spawn --userscript github-clone.sh {url}')
+config.bind('<Ctrl-g>t', 'spawn --userscript github-terminal.sh {url}')
 config.bind('<Ctrl-g>f', 'spawn --userscript github-goto-fork.sh {url}')
 config.bind('<Ctrl-g>i', 'spawn --userscript github-new-issue.sh {url}')
 config.bind('<Ctrl-g>pc', 'spawn --userscript github-pr-checkout.sh {url}')
