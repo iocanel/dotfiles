@@ -340,7 +340,6 @@ exec --no-startup-id xautolock -time 30 -locker 'screenlock-now'
 #exec --no-startup-id /usr/bin/conky -c ~/.config/conky/config
 #exec --no-startup-id /usr/bin/conky -c ~/.config/conky/agenda
 exec --no-startup-id nm-applet &
-exec --no-startup-id pa-applet &
 exec --no-startup-id dockd --daemon
 exec --no-startup-id pasystray &
 #exec --no-startup-id ~/scripts/util/toggle-camera off
