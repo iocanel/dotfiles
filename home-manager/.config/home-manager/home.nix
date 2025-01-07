@@ -272,6 +272,12 @@ in
   echo "export GEMINI_PROJECT_ID=$GEMINI_PROJECT_ID" >> $HOME/.profile
   echo "export GEMINI_LOCATION=$GEMINI_LOCATION" >> $HOME/.profile
   echo "export PATH=$PATH" >> $HOME/.profile
+
+  # This is against NixOS philosophy but I do need it for demo etc
+  echo "export LIBRARY_PATH=${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib ]}" >> $HOME/.profile
+  echo "export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib ]}" >> $HOME/.profile
+  echo "export LIBCLANG_PATH=${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib ]}" >> $HOME/.profile
+  echo "export NIX_LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib ]}" >> $HOME/.profile
   '';
 
   # Rclone
