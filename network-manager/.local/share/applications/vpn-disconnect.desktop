@@ -1,0 +1,9 @@
+
+[Desktop Entry]
+Name=VPN Discnnect
+Comment=Disconnect from VPN
+Exec=nmcli connection down ams2-openvpn
+Icon=network-vpn
+Terminal=false
+Type=Application
+Categories=Network;

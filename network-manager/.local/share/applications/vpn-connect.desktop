@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=VPN Connect
+Comment=Connect to VPN
+Exec=nmcli connection up ams2-openvpn
+Icon=network-vpn
+Terminal=false
+Type=Application
+Categories=Network;

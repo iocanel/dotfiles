@@ -20,6 +20,7 @@ stow monitor-mgmt
 stow msmtp
 stow mutt
 stow neovim
+stow network-manager
 stow qutebrowser
 stow ranger
 stow rofi
