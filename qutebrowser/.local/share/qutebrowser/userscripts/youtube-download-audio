@@ -1,0 +1,10 @@
+#!/bin/bash
+
+notify-send -a "Qutebrowser" "Download Started" $QUTE_URL
+yt-dlp --audio-format mp3 --audio-quality 0 -P ${QUTE_DOWNLOAD_DIR}/Youtube $QUTE_URL
+#if last command succeeded then notify
+if [ $? -eq 0 ]; then
+    notify-send -a "Qutebrowser" "Download Finished" $QUTE_URL
+else
+  notify-send -a "Qutebrowser" "Download Failed" $QUTE_URL
+fi
