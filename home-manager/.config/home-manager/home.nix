@@ -142,6 +142,8 @@ in
     #
     # CLI
     #
+    android-tools
+    google-cloud-sdk
     kubectl
     openshift
     kind
