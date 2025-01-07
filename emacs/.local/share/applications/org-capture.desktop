@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Org Capture
+GenericName=Org Capture
+StartupNotify=true
+Terminal=false
+Icon=calendar
+Type=Application
+Exec=org-capture

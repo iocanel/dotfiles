@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Org Roam Capture
+GenericName=Org Roam Capture
+StartupNotify=true
+Terminal=false
+Icon=calendar
+Type=Application
+Exec=org-roam-capture

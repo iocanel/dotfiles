@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Emacs (Standalone)
+GenericName=Emacs (Standalone)
+StartupNotify=true
+Terminal=false
+Icon=emacs
+Type=Application
+Exec=emacs

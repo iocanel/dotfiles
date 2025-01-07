@@ -1,0 +1,3 @@
+#!/bin/bash
+
+emacsclient -c --eval "(progn (setq frame-title-format \"emacs-floating-app\") (org-agenda nil \"a\") (delete-other-windows))"
