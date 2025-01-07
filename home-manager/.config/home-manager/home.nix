@@ -176,6 +176,7 @@ in
     nodejs
     nodejs_18
     yarn-berry
+    nodePackages.gulp
     node2nix
     # Python
     python311
