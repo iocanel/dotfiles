@@ -230,6 +230,9 @@ in
     # Requirement for home manager config scripts
     gettext
     hexdump
+
+    #Virtual Machines
+    virtualbox
   ];
 
 
