@@ -327,6 +327,8 @@ in
         # Development aliases
         qs="java -jar /home/iocanel/workspace/src/github.com/quarkusio/quarkus/devtools/cli/target/quarkus-cli-999-SNAPSHOT-runner.jar";
         qds="java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=\\*:5005 -jar /home/iocanel/workspace/src/github.com/quarkusio/quarkus/devtools/cli/target/quarkus-cli-999-SNAPSHOT-runner.jar";
+        argods="java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=\\*:5005 -jar /home/iocanel/workspace/src/github.com/quarkiverse/quarkus-argocd/cli/target/quarkus-argocd-cli-999-SNAPSHOT.jar";
+        qbds="java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=\\*:5005 -jar /home/iocanel/workspace/src/github.com/quarkiverse/quarkus-backstage/cli/target/quarkus-backstage-cli-999-SNAPSHOT.jar";
       };
       interactiveShellInit = ''
       # Let's load the .profile file
