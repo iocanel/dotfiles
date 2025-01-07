@@ -337,12 +337,23 @@ in
         qbds="java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=\\*:5005 -jar /home/iocanel/workspace/src/github.com/quarkiverse/quarkus-backstage/cli/target/quarkus-backstage-cli-999-SNAPSHOT.jar";
       };
       interactiveShellInit = ''
+
+      function fish_prompt_disabled
+          set_color yellow
+          echo -n " \$ "
+          set_color normal
+      end
+
+      set fish_greeting ""
       # Let's load the .profile file
       if test -f ~/.profile
         source ~/.profile
       end
       # Other environment variables
       export QUARKUS_KUBERNETES_CLIENT_TRUST_CERTS=true
+
+      # Enable(1) / Disable(0) autosuggestions
+      set -U fish_autosuggestion_enabled 1
       '';
     };
     git = {
