@@ -66,6 +66,8 @@ in
     # Apps
     #
     # Browser
+    chromium
+    firefox
     tor-browser
     qutebrowser
     # Media
@@ -90,8 +92,6 @@ in
     
     # Sharing
     dropbox
-    # Browsers
-    nyxt
     # Communication
     zulip
     zulip-term
