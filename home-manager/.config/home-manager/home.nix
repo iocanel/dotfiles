@@ -155,6 +155,8 @@ in
     #
     # Development
     #
+    # AI tools
+    codeium
     # C
     cmake
     libtool
