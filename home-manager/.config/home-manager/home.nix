@@ -174,8 +174,9 @@ in
     yarn-berry
     node2nix
     # Python
-    python312
+    python311
     poetry
+    pipenv
     # Rust
 	  rustup
     # Go
