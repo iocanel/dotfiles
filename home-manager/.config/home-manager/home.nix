@@ -250,6 +250,9 @@ in
     exit 0
   fi
   export OPENAI_API_KEY=$(${pkgs.pass}/bin/pass show services/openai/iocanel/api-key)
+  export GEMINI_PROJECT_ID=$(${pkgs.pass}/bin/pass show services/geminiai/project-id)
+  export GEMINI_LOCATION=$(${pkgs.pass}/bin/pass show services/geminiai/location)
+
   export PATH=$HOME/bin:/run/wrappers/bin:/home/iocanel/.nix-profile/bin:/nix/profile/bin:/home/iocanel/.local/state/nix/profile/bin:/etc/profiles/per-user/iocanel/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin
 
   #
@@ -257,6 +260,8 @@ in
   #
   echo "# .profile: generated, do not edit by hand." > $HOME/.profile
   echo "export OPENAI_API_KEY=$OPENAI_API_KEY" >> $HOME/.profile
+  echo "export GEMINI_PROJECT_ID=$GEMINI_PROJECT_ID" >> $HOME/.profile
+  echo "export GEMINI_LOCATION=$GEMINI_LOCATION" >> $HOME/.profile
   echo "export PATH=$PATH" >> $HOME/.profile
   '';
 
