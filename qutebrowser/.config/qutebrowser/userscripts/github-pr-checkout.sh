@@ -10,14 +10,7 @@ URL=$1
 ORGANIZATION=$(echo $URL | sed -n 's/.*github.com\/\([^\/]*\)\/.*/\1/p')
 REPOSITORY_NAME=$(echo $URL | sed -n 's/.*github.com\/[^\/]*\/\([^\/]*\).*/\1/p')
 CLONE_URL_SSH="git@github.com:$ORGANIZATION/$REPOSITORY_NAME.git"
-PROJECT_PATH=~/workspace/src/github.com/$ORGANIZATION/$REPOSITORY_NAME
 PULL_REQUEST_NUMBER=$(echo $URL | sed -n 's/.*pull\/\([0-9]*\).*/\1/p')
-# Determine the remote name and branch from the pull request number
-if [ ! -d $PROJECT_PATH ]; then
-  mkdir -p ~/workspace/src/github.com/$ORGANIZATION
-  cd ~/workspace/src/github.com/$ORGANIZATION
-  git clone $CLONE_URL_SSH
-fi
 
 ## Create a script to run in kitty
 TEMP_SCRIPT=~/clone_pr.sh
@@ -34,6 +27,7 @@ OWNER_REPOSITORY_NAME=\$(gh pr view --json headRepository -q .headRepository.nam
 OWNER_REPOSITORY_URL="git@github.com:\$OWNER/\$OWNER_REPOSITORY_NAME.git"
 git remote add \$OWNER \$OWNER_REPOSITORY_URL
 git fetch \$OWNER
+gh repo set-default $ORGANIZATION/$REPOSITORY_NAME
 gh pr checkout $PULL_REQUEST_NUMBER
 
 exec fish
