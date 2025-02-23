@@ -26,36 +26,19 @@ let
   '';
 in
 {
-  home.stateVersion = "24.05"; # Adjust this according to your Nixpkgs version
+  home.stateVersion = "24.11"; # Adjust this according to your Nixpkgs version
   home.username = "iocanel";
   home.homeDirectory = "/home/iocanel";
 
   home.pointerCursor = {
     name = "Vanilla-DMZ";
-    package = pkgs.gnome.adwaita-icon-theme;
+    package = pkgs.adwaita-icon-theme;
     size = 64;
   };
 
   home.sessionVariables = {
     EDITOR="nvim";
   };
-
-  home.file.".pam-gnupg".text = "A4C5FFF68C5194FF10230082F5AA74EB157D8E01";
-
-  home.file.".unison/documents.prf".text = ''
-    root = ${config.home.homeDirectory}/Documents
-    root = ${config.home.homeDirectory}/.google/drive/Documents
-
-    # Favor ${config.home.homeDirectory}/Documents in case of conflicts
-    prefer = ${config.home.homeDirectory}/Documents
-
-    # Ignore permission changes
-    perms = 0
-    # Additional options
-    auto = true
-    batch = true
-    fastcheck = true
-  '';
 
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.permittedInsecurePackages = [
@@ -81,21 +64,20 @@ in
     asciinema-scenario
     asciinema-automation
     kdenlive
+    losslesscut-bin
     ombi
     geeqie
     digikam
     calibre
-    # Media Downloaders
-    jackett
-    radarr
-    sonarr
+    # Desktop
+    arandr
+    lxrandr
     
     # Sharing
     dropbox
     # Communication
     zulip
     zulip-term
-    python312Packages.zulip
 
     slack
     discord
@@ -124,6 +106,7 @@ in
     libreoffice
     xournal
     evince
+    qpdf
     # Mail
     isync
     vdirsyncer
@@ -151,16 +134,26 @@ in
     argocd
     resumed
     hugo
+    bc
     jq
     yq
     yt-dlp
     lpass # lastpass-cli
     gh
+
+    # Goose CLI
+    # dependencies
+    dbus
+    pkg-config
+    xorg.libxcb
+    #
+
     #
     # Development
     #
     # AI tools
     codeium
+
     # C
     cmake
     libtool
@@ -179,7 +172,19 @@ in
     nodePackages.gulp
     node2nix
     # Python
-    python311
+    (python312.withPackages (ps: with ps; [
+      numpy
+      pandas
+      matplotlib
+      jupyterlab
+      scipy
+      statsmodels
+      scikitlearn
+      requests
+      weaviate
+      weaviate-client
+      zulip
+    ]))
     poetry
     pipenv
     # Rust
@@ -224,6 +229,7 @@ in
     #
     xdotool
     scrot
+    imagemagick
     rsync
     rclone
     unison
@@ -238,6 +244,13 @@ in
 
     #Virtual Machines
     virtualbox
+    expressvpn
+    google-chrome
+
+    # Ethereum
+    go-ethereum
+    nodePackages.ganache
+
   ];
 
 
@@ -316,6 +329,7 @@ in
         vi="nvim";
         vim="nvim";
         ls="${pkgs.eza}/bin/eza";
+        cd="z";
         # Development aliases
         qs="java -jar /home/iocanel/workspace/src/github.com/quarkusio/quarkus/devtools/cli/target/quarkus-cli-999-SNAPSHOT-runner.jar";
         qds="java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=\\*:5005 -jar /home/iocanel/workspace/src/github.com/quarkusio/quarkus/devtools/cli/target/quarkus-cli-999-SNAPSHOT-runner.jar";
@@ -372,7 +386,9 @@ in
     };
     zoxide = {
       enable = true;
+      enableBashIntegration = true;
       enableZshIntegration = true;
+      enableFishIntegration = true;
     };
   };
 
@@ -415,6 +431,120 @@ in
             StandardError = "append:/home/iocanel/.emacs.d/emacs.log";
           };
         };
+        emby-server = {
+          Unit = {
+            Description = "Emby Server";
+          };
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
+          Service = {
+            Type = "simple";
+            ExecStart = "${pkgs.docker}/bin/docker run --name emby-server -e UID=1000 -e GUID=1000 -e GIDLIST=100 -p 8096:8096 -p 8920:8920 -v /home/iocanel/.config/emby/:/config -v /mnt/media:/mnt/media --cpus=2 --memory=4g --restart on-failure emby/embyserver:4.9.0.26";
+            ExecStop = "${pkgs.docker}/bin/docker kill emby-server && ${pkgs.docker}/bin/docker rm -f emby-server";
+            RemainAfterExit = true;
+          };
+        };
+        sonarr = {
+          Unit = {
+            Description = "Sonarr Service";
+          };
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
+          Service = {
+            Type = "simple";
+            ExecStart = ''
+              ${pkgs.docker}/bin/docker run --name sonarr \
+              -e PUID=1000 \
+              -e PGID=100 \
+              -e TZ=Europe/Athens \
+              -p 8989:8989 \
+              -v /home/iocanel/.config/sonarr:/config \
+              -v /mnt/media:/mnt/media \
+              -v /mnt/downloads:/downloads \
+              --restart on-failure \
+              lscr.io/linuxserver/sonarr:3.0.10
+            '';
+            ExecStop = "${pkgs.docker}/bin/docker kill sonarr && ${pkgs.docker}/bin/docker rm -f sonarr";
+            RemainAfterExit = true;
+          };
+        };
+        radarr = {
+          Unit = {
+            Description = "Radarr Service";
+          };
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
+          Service = {
+            Type = "simple";
+            ExecStart = ''
+              ${pkgs.docker}/bin/docker run --name radarr \
+              -e PUID=1000 \
+              -e PGID=100 \
+              -e TZ=Europe/Athens \
+              -p 7878:7878 \
+              -v /home/iocanel/.config/radarr:/config \
+              -v /mnt/media:/mnt/media \
+              -v /mnt/downloads:/downloads \
+              --restart on-failure \
+              lscr.io/linuxserver/radarr:4.3.2
+            '';
+            ExecStop = "${pkgs.docker}/bin/docker kill radarr && ${pkgs.docker}/bin/docker rm -f radarr";
+            RemainAfterExit = true;
+          };
+        };
+        bazarr = {
+          Unit = {
+            Description = "Bazarr Service";
+          };
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
+          Service = {
+            Type = "simple";
+            ExecStart = ''
+              ${pkgs.docker}/bin/docker run --name bazarr \
+              -e PUID=1000 \
+              -e PGID=100 \
+              -e TZ=Europe/Athens \
+              -p 6767:6767 \
+              -v /home/iocanel/.config/bazarr:/config \
+              -v /mnt/media:/mnt/media \
+              -v /mnt/downloads:/downloads \
+              --restart on-failure \
+              lscr.io/linuxserver/bazarr:1.1.2
+            '';
+            ExecStop = "${pkgs.docker}/bin/docker kill bazarr && ${pkgs.docker}/bin/docker rm -f bazarr";
+            RemainAfterExit = true;
+          };
+        };
+        jackett = {
+          Unit = {
+            Description = "Jackett Service";
+          };
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
+          Service = {
+            Type = "simple";
+            ExecStart = ''
+              ${pkgs.docker}/bin/docker run --name jackett \
+              -e PUID=1000 \
+              -e PGID=100 \
+              -e TZ=Europe/Athens \
+              -p 9117:9117 \
+              -v /home/iocanel/.config/jackett:/config \
+              -v /mnt/media:/mnt/media \
+              -v /mnt/downloads:/downloads \
+              --restart on-failure \
+              lscr.io/linuxserver/jackett:0.22.1289
+            '';
+            ExecStop = "${pkgs.docker}/bin/docker kill jackett && ${pkgs.docker}/bin/docker rm -f jackett";
+            RemainAfterExit = true;
+          };
+        };
         update-nixos-config = {
           Unit = {
             Description = "Update nixos configuration";
@@ -424,7 +554,7 @@ in
           };
           Service = {
             Type = "oneshot";
-            ExecStart = "${pkgs.rsync}/bin/rsync -a --delete /etc/nixos/ ${config.home.homeDirectory}/.nixos";
+            ExecStart = "${pkgs.rsync}/bin/rsync -a --delete --exclude='.git/' /etc/nixos/ ${config.home.homeDirectory}/.nixos";
           };
         };
         mount-google-drive = {
@@ -545,5 +675,163 @@ in
   xdg.mimeApps.defaultApplications = {
     "x-scheme-handler/http" = "org.qutebrowser.qutebrowser.desktop";
     "x-scheme-handler/https" = "org.qutebrowser.qutebrowser.desktop";
+  };
+
+  #
+  # Home Files
+  #
+  home.file.".pam-gnupg".text = "A4C5FFF68C5194FF10230082F5AA74EB157D8E01";
+
+  home.file.".unison/documents.prf".text = ''
+    root = ${config.home.homeDirectory}/Documents
+    root = ${config.home.homeDirectory}/.google/drive/Documents
+
+    # Favor ${config.home.homeDirectory}/Documents in case of conflicts
+    prefer = ${config.home.homeDirectory}/Documents
+
+    # Ignore permission changes
+    perms = 0
+    # Additional options
+    auto = true
+    batch = true
+    fastcheck = true
+  '';
+
+  #
+  # Helper scripts
+  #
+
+  # Containers
+   home.file."bin/stop-named-container" = {
+    text = ''
+     #!/bin/sh
+
+     CONTAINER_NAME="$1"
+
+     # Stop the container if it's running
+     if docker ps --format '{{.Names}}' | grep -q "^$CONTAINER_NAME$"; then
+       echo "Stopping container: $CONTAINER_NAME"
+       docker stop $CONTAINER_NAME
+     fi
+
+     # Keep trying to remove the container until it is gone
+     while docker ps -a --format '{{.Names}}' | grep -q "^$CONTAINER_NAME$"; do
+       echo "Trying to remove container: $CONTAINER_NAME"
+       docker rm -f $CONTAINER_NAME
+       sleep 1  # Short delay before retrying
+     done
+
+     echo "Container $CONTAINER_NAME removed successfully!"
+    '';
+    executable = true;
+   };
+
+   home.file."bin/start-named-container" = {
+    text = ''
+     #!/bin/sh
+
+     CONTAINER_NAME="$1"
+     shift
+     DOCKER_ARGS="$@"
+
+     echo "Starting container: $CONTAINER_NAME with arguments: $DOCKER_ARGS"
+     stop-named-container  $CONTAINER_NAME
+     echo "docker run -d --name $CONTAINER_NAME $DOCKER_ARGS"
+     sh -c "docker run -d --name $CONTAINER_NAME $DOCKER_ARGS"
+    '';
+    executable = true;
+   };
+
+  # Media
+  home.file.".local/bin/check-media-mounts.sh" = {
+    text = ''
+    #!/bin/bash
+    # Check if the media mount point is accessible
+    if ${pkgs.util-linux}/bin/mountpoint -q /mnt/media/; then
+        echo "Directory /mnt/media/ is mounted. Starting media services." >> /var/log/check-media-mounts.log
+        systemctl --user start sonarr
+        systemctl --user start radarr
+        systemctl --user start bazarr
+    else
+        echo "Directory /mnt/media/ is not mounted. Stopping mdeia service." >> /var/log/check-media-mounts.log
+        systemctl --user stop sonarr
+        systemctl --user stop radarr
+        systemctl --user stop bazarr
+    fi
+    '';
+    onChange = ''
+    chmod 0755 ~/.local/bin/check-media-mounts.sh
+    '';
+  };
+
+  # Downloads
+  home.file.".local/bin/check-donwload-mounts.sh" = {
+    text = ''
+    #!/bin/bash
+    DOWNLOADS_PATH="/mnt/downloads"
+
+    # Check if the downloads mount point is accessible
+    if ${pkgs.util-linux}/bin/mountpoint -q /mnt/downloads; then
+        echo Directory /mnt/downloads/ is mounted. Starting download services." >> /var/log/check-download-mounts.log
+        systemctl start deluge
+    else
+        echo Directory /mnt/downloads is not mounted. Stopping download services." >> /var/log/check-download-mounts.log
+        systemctl stop deluge
+    fi
+    '';
+    onChange = ''
+    chmod 0755 ~/.local/bin/check-donwload-mounts.sh
+    '';
+  };
+
+  # Check mounts and turn on/off services
+  home.file.".local/bin/sonarr-on-download.sh" = {
+    text = ''
+    #!/bin/bash
+    echo "Calling sonarr on download. Event type: $sonarr_evettype folder: $sonarr_episodefile_sourcefolder"
+    if [ "$sonarr_eventtype" == "Test" ]; then
+      echo "Sonarr event type is Test, exiting"
+      exit 0
+    fi
+
+    pushd $sonarr_episodefile_sourcefolder
+    rar_file=$(ls *.rar 2>/dev/null)
+    if [ -z "$rar_file" ]; then
+      echo "No rar file found in $sonarr_episodefile_sourcefolder"
+      exit 1
+    fi
+    unrar x $rar_file
+    popd
+    '';
+    onChange = ''
+    chmod 0755 ~/.local/bin/sonarr-on-download.sh
+    '';
+  };
+
+  # Jupyterlabs
+ home.file.".local/share/applications/jupyterlab-start.desktop" = {
+  text = ''
+   [Desktop Entry]
+   Name=Start JupyterLab
+   Comment=Start JupyterLab in Docker
+   Exec=start-named-container jupyterlab -p 8888:8888 --user 1000:100 -v /home/iocanel/workspace/src/github.com/iocanel/jupyter-workspace:/home/jovyan/ jupyter/scipy-notebook start-notebook.sh --NotebookApp.token=""
+   Icon=utilities-terminal
+   Terminal=false
+   Type=Application
+   Categories=Development;
+   '';
+  };
+
+  home.file.".local/share/applications/jupyterlab-stop.desktop" = {
+   text = ''
+    [Desktop Entry]
+    Name=Stop JupyterLab
+    Comment=Stop JupyterLab in Docker
+    Exec=stop-named-container jupyterlab
+    Icon=utilities-terminal
+    Terminal=false
+    Type=Application
+    Categories=Development;
+  '';
   };
 }
