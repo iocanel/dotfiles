@@ -344,6 +344,15 @@ in
           set_color normal
       end
 
+      function check_shell_nix --on-variable PWD
+          if test -f shell.nix
+              read -n1 -s -P "⚡ Detected shell.nix in $(pwd). Do you want to enter nix-shell? (y/n)" -l choice
+              if test "$choice" = "y"
+                  nix-shell
+              end
+          end
+      end
+
       set fish_greeting ""
       # Let's load the .profile file
       if test -f ~/.profile
