@@ -75,7 +75,7 @@ c.url.searchengines = {
         "gk": "https://keep.google.com/u/0/#search/text={}",
         "jk": "https://wiki.jenkins-ci.org/dosearchsite.action?queryString={}",
         "kb": "https://kubernetes.io/docs/search?q={}",
-        "np": "https://search.nixos.org/packages?channel=24.05&from=0&size=50&sort=relevance&type=packages&query={}",
+        "np": "https://search.nixos.org/packages?channel=24.11&from=0&size=50&sort=relevance&type=packages&query={}",
         "nc": "https://search.nixos.org/options?channel=24.05&from=0&size=50&sort=relevance&type=packages&query=~{}",
         "os": "https://docs.openshift.com/search.html?query={}",
         "sk": "https://www.skroutz.gr/search?keyphrase={}",
