@@ -10,6 +10,9 @@
 [submodule "doom.d"]
         url = git@github.com:iocanel/doom.d.git
 	path = emacs-doom/.doom.d
+[submodule "qutebrowser/.config/qutebrowser/catppuccin"]
+    path = qutebrowser/.config/qutebrowser/catppuccin
+    url = https://github.com/catppuccin/qutebrowser
 [submodule "yapt"]
 	path = yapt
 	url = git@github.com:iocanel/yapt.git
