@@ -10,3 +10,6 @@
 [submodule "doom.d"]
         url = git@github.com:iocanel/doom.d.git
 	path = emacs-doom/.doom.d
+[submodule "yapt"]
+	path = yapt
+	url = git@github.com:iocanel/yapt.git
