@@ -5,6 +5,11 @@ with lib;
 let
   lpass = pkgs.callPackage /home/iocanel/.config/home-manager/packages/lpass/1.6.0.nix { };
 
+  # Firefly
+  fireflyConfigDir = "${config.home.homeDirectory}/.config/firefly";
+  fireflyServerEnvPath = "${fireflyConfigDir}/server.env";
+  fireflyImporterEnvPath = "${fireflyConfigDir}/importer.env";
+
   zshPrompt = ''
     # Load vcs_info for git branch
     autoload -Uz vcs_info
@@ -26,7 +31,7 @@ let
   '';
 in
 {
-  home.stateVersion = "24.11"; # Adjust this according to your Nixpkgs version
+  home.stateVersion = "25.05"; # Adjust this according to your Nixpkgs version
   home.username = "iocanel";
   home.homeDirectory = "/home/iocanel";
 
@@ -54,7 +59,6 @@ in
     tor-browser
     qutebrowser
     # Media
-    vocal
     newsflash
     obs-studio
     peek
@@ -63,12 +67,13 @@ in
     asciinema-agg
     asciinema-scenario
     asciinema-automation
-    kdenlive
     losslesscut-bin
     ombi
     geeqie
     digikam
     calibre
+    mp4v2
+    pulsemixer
     # Desktop
     arandr
     lxrandr
@@ -77,7 +82,6 @@ in
     dropbox
     # Communication
     zulip
-    zulip-term
 
     slack
     discord
@@ -92,11 +96,15 @@ in
     #
     # Text editing
     #
+    ltex-ls
     emacs-lsp-booster
     tree-sitter
     pandoc
     plantuml
+    graphviz
     ditaa
+    mermaid-cli
+    ispell
     # Emulation
     wine
     winetricks
@@ -104,7 +112,6 @@ in
     texliveFull
     # Office
     libreoffice
-    xournal
     evince
     qpdf
     # Mail
@@ -132,6 +139,7 @@ in
     kind
     k9s
     argocd
+    vault
     resumed
     hugo
     bc
@@ -140,19 +148,29 @@ in
     yt-dlp
     lpass # lastpass-cli
     gh
-
+    inetutils
+    
     # Goose CLI
     # dependencies
     dbus
     pkg-config
     xorg.libxcb
     #
+    
+
+    #
+    # Cloud
+    #
+    ansible
+    terraform
 
     #
     # Development
     #
     # AI tools
     codeium
+    claude-code
+    opencode
 
     # C
     cmake
@@ -167,34 +185,58 @@ in
 
     # Javascript
     nodejs
-    nodejs_18
     yarn-berry
     nodePackages.gulp
     node2nix
+    typescript-language-server
+    vue-language-server
     # Python
     (python312.withPackages (ps: with ps; [
       numpy
       pandas
+      luarocks
       matplotlib
       jupyterlab
       scipy
+      hatchling
       statsmodels
       scikitlearn
       requests
+      rapidfuzz
       weaviate
+      openai
+      tiktoken
       weaviate-client
       zulip
     ]))
+    uv
     poetry
     pipenv
+    shiv # For building binaries
+
     # Rust
-	  rustup
+    rustc
+    rustfmt
+    cargo
+    rust-analyzer
+    
+    # SQL    
+    sqlitebrowser
+
     # Go
     go
+    gopls
+    delve # For debuging
+    air # for auto-reload
     #
     # Productivity
     #
     obsidian
+    #
+    # Finance    
+    #
+    firefly-iii
+
     #
     # Tray
     #
@@ -207,13 +249,23 @@ in
     #
     # TUI
     #
+    
+    fd
+    # fzf and deps
     fzf
+    chafa
+    viu
+    ueberzugpp
+
+
+    lynx
     ripgrep
     bat
     eza
     dust
     htop
     tree
+    pcalc
     #
     # Shell Extensions
     #
@@ -221,7 +273,8 @@ in
     zsh-autosuggestions
     zsh-syntax-highlighting
     #
-    # fish
+    fish
+    #nix-your-shell (breaks nix-shell -p xxx)
     # (for setting up the prompt: $ tide configure)
     fishPlugins.tide
     #
@@ -235,6 +288,8 @@ in
     unison
     sutils
     zip
+    ripgrep
+    util-linux
     #
     # Deamons and Services
     dunst
@@ -249,8 +304,6 @@ in
 
     # Ethereum
     go-ethereum
-    nodePackages.ganache
-
   ];
 
 
@@ -271,9 +324,14 @@ in
   if [ "$AUTHENTICATED" != "true" ]; then
     exit 0
   fi
+  export ANTHROPIC_API_KEY=$(${pkgs.pass}/bin/pass show services/anthropic/iocanel/api-key)
   export OPENAI_API_KEY=$(${pkgs.pass}/bin/pass show services/openai/iocanel/api-key)
   export GEMINI_PROJECT_ID=$(${pkgs.pass}/bin/pass show services/geminiai/project-id)
   export GEMINI_LOCATION=$(${pkgs.pass}/bin/pass show services/geminiai/location)
+
+  export TAVILY_API_KEY=$(${pkgs.pass}/bin/pass show services/tavily/api-key)
+  export QUARKUS_BACKSTAGE_URL=http://localhost:7007
+  export QUARKUS_BACKSTAGE_TOKEN=7KE4bWxxoSHIuOczpLhIy/4GbeMz0Bjc
 
   export PATH=$HOME/bin:/run/wrappers/bin:/home/iocanel/.nix-profile/bin:/nix/profile/bin:/home/iocanel/.local/state/nix/profile/bin:/etc/profiles/per-user/iocanel/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin
 
@@ -281,16 +339,20 @@ in
   # Recreate profile
   #
   echo "# .profile: generated, do not edit by hand." > $HOME/.profile
+  echo "export ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY" >> $HOME/.profile
   echo "export OPENAI_API_KEY=$OPENAI_API_KEY" >> $HOME/.profile
   echo "export GEMINI_PROJECT_ID=$GEMINI_PROJECT_ID" >> $HOME/.profile
   echo "export GEMINI_LOCATION=$GEMINI_LOCATION" >> $HOME/.profile
+  echo "export TAVILY_API_KEY=$TAVILY_API_KEY" >> $HOME/.profile
   echo "export PATH=$PATH" >> $HOME/.profile
+  echo "export QUARKUS_BACKSTAGE_URL=$QUARKUS_BACKSTAGE_URL" >> $HOME/.profile
+  echo "export QUARKUS_BACKSTAGE_TOKEN=$QUARKUS_BACKSTAGE_TOKEN" >> $HOME/.profile
 
   # This is against NixOS philosophy but I do need it for demo etc
-  echo "export LIBRARY_PATH=${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib ]}" >> $HOME/.profile
-  echo "export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib ]}" >> $HOME/.profile
-  echo "export LIBCLANG_PATH=${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib ]}" >> $HOME/.profile
-  echo "export NIX_LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib ]}" >> $HOME/.profile
+  #echo "export LIBRARY_PATH=${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib ]}" >> $HOME/.profile
+  #echo "export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib ]}" >> $HOME/.profile
+  #echo "export LIBCLANG_PATH=${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib ]}" >> $HOME/.profile
+  #echo "export NIX_LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib ]}" >> $HOME/.profile
   '';
 
   # Rclone
@@ -349,6 +411,7 @@ in
         qds="java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=\\*:5005 -jar /home/iocanel/workspace/src/github.com/quarkusio/quarkus/devtools/cli/target/quarkus-cli-999-SNAPSHOT-runner.jar";
         argods="java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=\\*:5005 -jar /home/iocanel/workspace/src/github.com/quarkiverse/quarkus-argocd/cli/target/quarkus-argocd-cli-999-SNAPSHOT.jar";
         qbds="java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=\\*:5005 -jar /home/iocanel/workspace/src/github.com/quarkiverse/quarkus-backstage/cli/target/quarkus-backstage-cli-999-SNAPSHOT.jar";
+        qtds="java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=\\*:5005 -jar /home/iocanel/workspace/src/github.com/quarkiverse/quarkus-tekton/cli/target/quarkus-tekton-cli-999-SNAPSHOT.jar";
       };
       interactiveShellInit = ''
 
@@ -359,7 +422,16 @@ in
       end
 
       function check_shell_nix --on-variable PWD
+          if set -q IN_NIX_SHELL
+              return
+          end
           if test -f shell.nix
+              # Auto-enter when inside VS Code integrated terminal
+              if test "$TERM_PROGRAM" = "vscode"
+                  echo "⚡ Auto-entering nix-shell in (pwd)"
+                  nix-shell
+                  return
+              end
               read -n1 -s -P "⚡ Detected shell.nix in $(pwd). Do you want to enter nix-shell? (y/n)" -l choice
               if test "$choice" = "y"
                   nix-shell
@@ -431,6 +503,9 @@ in
             StandardError = "append:/home/iocanel/.emacs.d/emacs.log";
           };
         };
+        #
+        # Media Server
+        #
         emby-server = {
           Unit = {
             Description = "Emby Server";
@@ -440,7 +515,7 @@ in
           };
           Service = {
             Type = "simple";
-            ExecStart = "${pkgs.docker}/bin/docker run --name emby-server -e UID=1000 -e GUID=1000 -e GIDLIST=100 -p 8096:8096 -p 8920:8920 -v /home/iocanel/.config/emby/:/config -v /mnt/media:/mnt/media --cpus=2 --memory=4g --restart on-failure emby/embyserver:4.9.0.26";
+            ExecStart = "${pkgs.docker}/bin/docker run --rm --name emby-server -e UID=1000 -e GUID=1000 -e GIDLIST=100 -p 8096:8096 -p 8920:8920 -v /home/iocanel/.config/emby/:/config -v /mnt/media:/mnt/media --cpus=2 --memory=4g emby/embyserver:4.9.0.26";
             ExecStop = "${pkgs.docker}/bin/docker kill emby-server && ${pkgs.docker}/bin/docker rm -f emby-server";
             RemainAfterExit = true;
           };
@@ -455,7 +530,7 @@ in
           Service = {
             Type = "simple";
             ExecStart = ''
-              ${pkgs.docker}/bin/docker run --name sonarr \
+              ${pkgs.docker}/bin/docker run --rm --name sonarr \
               -e PUID=1000 \
               -e PGID=100 \
               -e TZ=Europe/Athens \
@@ -463,7 +538,6 @@ in
               -v /home/iocanel/.config/sonarr:/config \
               -v /mnt/media:/mnt/media \
               -v /mnt/downloads:/downloads \
-              --restart on-failure \
               lscr.io/linuxserver/sonarr:3.0.10
             '';
             ExecStop = "${pkgs.docker}/bin/docker kill sonarr && ${pkgs.docker}/bin/docker rm -f sonarr";
@@ -480,7 +554,7 @@ in
           Service = {
             Type = "simple";
             ExecStart = ''
-              ${pkgs.docker}/bin/docker run --name radarr \
+              ${pkgs.docker}/bin/docker run --rm --name radarr \
               -e PUID=1000 \
               -e PGID=100 \
               -e TZ=Europe/Athens \
@@ -488,7 +562,6 @@ in
               -v /home/iocanel/.config/radarr:/config \
               -v /mnt/media:/mnt/media \
               -v /mnt/downloads:/downloads \
-              --restart on-failure \
               lscr.io/linuxserver/radarr:4.3.2
             '';
             ExecStop = "${pkgs.docker}/bin/docker kill radarr && ${pkgs.docker}/bin/docker rm -f radarr";
@@ -505,7 +578,7 @@ in
           Service = {
             Type = "simple";
             ExecStart = ''
-              ${pkgs.docker}/bin/docker run --name bazarr \
+              ${pkgs.docker}/bin/docker run --rm --name bazarr \
               -e PUID=1000 \
               -e PGID=100 \
               -e TZ=Europe/Athens \
@@ -513,10 +586,33 @@ in
               -v /home/iocanel/.config/bazarr:/config \
               -v /mnt/media:/mnt/media \
               -v /mnt/downloads:/downloads \
-              --restart on-failure \
               lscr.io/linuxserver/bazarr:1.1.2
             '';
             ExecStop = "${pkgs.docker}/bin/docker kill bazarr && ${pkgs.docker}/bin/docker rm -f bazarr";
+            RemainAfterExit = true;
+          };
+        };
+        readarr = {
+          Unit = {
+            Description = "Readarr Service";
+          };
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
+          Service = {
+            Type = "simple";
+            ExecStart = ''
+              ${pkgs.docker}/bin/docker run --rm --name readarr \
+              -e PUID=1000 \
+              -e PGID=100 \
+              -e TZ=Europe/Athens \
+              -p 8787:8787 \
+              -v /home/iocanel/.config/readarr:/config \
+              -v /mnt/media:/mnt/media \
+              -v /mnt/downloads:/downloads \
+              lscr.io/linuxserver/readarr:develop
+            '';
+            ExecStop = "${pkgs.docker}/bin/docker kill readarr && ${pkgs.docker}/bin/docker rm -f readarr";
             RemainAfterExit = true;
           };
         };
@@ -530,7 +626,7 @@ in
           Service = {
             Type = "simple";
             ExecStart = ''
-              ${pkgs.docker}/bin/docker run --name jackett \
+              ${pkgs.docker}/bin/docker run --rm --name jackett \
               -e PUID=1000 \
               -e PGID=100 \
               -e TZ=Europe/Athens \
@@ -538,13 +634,132 @@ in
               -v /home/iocanel/.config/jackett:/config \
               -v /mnt/media:/mnt/media \
               -v /mnt/downloads:/downloads \
-              --restart on-failure \
               lscr.io/linuxserver/jackett:0.22.1289
             '';
             ExecStop = "${pkgs.docker}/bin/docker kill jackett && ${pkgs.docker}/bin/docker rm -f jackett";
             RemainAfterExit = true;
           };
         };
+        #
+        # Firefly
+        #
+        firefly-docker-network = {
+          Unit = {
+            Description = "Generate Firefly III .env file if missing";
+          };
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
+          Service = {
+            Type = "oneshot";
+            ExecStart = "${pkgs.docker}/bin/docker network create firefly-net";
+            ExecStop = "${pkgs.docker}/bin/docker network rm firefly-net";
+            RemainAfterExit = true;
+          };
+        };
+
+        firefly-env-init = {
+          Unit = {
+            Description = "Generate Firefly III .env file if missing";
+            ConditionPathExists = "!${fireflyServerEnvPath}";
+          };
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
+          Service = {
+            Type = "oneshot";
+            ExecStart = pkgs.writeShellScript "init-firefly-env" ''
+              ${pkgs.coreutils}/bin/mkdir -p ${fireflyConfigDir}
+              
+              # Create server.env
+              ${pkgs.coreutils}/bin/rm -f ${fireflyServerEnvPath}
+              APP_KEY="base64:$(${pkgs.coreutils}/bin/head -c 32 /dev/urandom | ${pkgs.coreutils}/bin/base64)"
+              echo "APP_KEY=$APP_KEY" >> ${fireflyServerEnvPath}
+              echo "TRUSTED_PROXIES=**" >> ${fireflyServerEnvPath}
+              echo "SITE_OWNER=iocanel@gmail.com" >> ${fireflyServerEnvPath}
+              echo "APP_URL=http://firefly-iii:8080" >> ${fireflyImporterEnvPath}
+
+              echo "DB_CONNECTION=sqlite" >> ${fireflyServerEnvPath}
+              echo "DB_DATABASE=/var/www/html/storage/database/database.sqlite" >> ${fireflyServerEnvPath}
+              chmod 600 ${fireflyServerEnvPath}
+
+              # Create importer.env
+              rm -f ${fireflyImporterEnvPath}
+              echo "TRUSTED_PROXIES=**" > ${fireflyImporterEnvPath}
+              echo "APP_URL=http://localhost:8090" >> ${fireflyImporterEnvPath}
+              chmod 600 ${fireflyImporterEnvPath}
+
+              # Initialize database file if needed
+              ${pkgs.coreutils}/bin/mkdir -p ${fireflyConfigDir}/db
+              ${pkgs.coreutils}/bin/touch ${fireflyConfigDir}/db/database.sqlite
+              chmod -R 775 ${fireflyConfigDir}/db
+              chgrp -R www-data ${fireflyConfigDir}/db
+
+              ${pkgs.coreutils}/bin/mkdir -p ${fireflyConfigDir}/export
+              chmod -R 775 ${fireflyConfigDir}/export
+              chgrp -R www-data ${fireflyConfigDir}/export
+
+              ${pkgs.coreutils}/bin/mkdir -p ${fireflyConfigDir}/upload
+              chmod -R 775 ${fireflyConfigDir}/upload
+              chgrp -R www-data ${fireflyConfigDir}/upload
+            '';
+          };
+        };
+
+        firefly-iii = {
+          Unit = {
+            Description = "Firefly III Personal Finance Manager";
+            After = [ "docker.service" "firefly-docker-network.service" "firefly-env-init.service" ];
+            Requires = [ "firefly-docker-network.service" "firefly-env-init.service" ];
+          };
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
+          Service = {
+            Type = "simple";
+            ExecStart = ''
+              ${pkgs.docker}/bin/docker run --rm --name firefly-iii \
+                --env-file=${fireflyServerEnvPath} \
+                --network firefly-net \
+                -p 8090:8080 \
+                -v ${fireflyConfigDir}/export:/var/www/html/storage/export \
+                -v ${fireflyConfigDir}/upload:/var/www/html/storage/upload \
+                -v ${fireflyConfigDir}/db:/var/www/html/storage/database \
+                fireflyiii/core:latest
+            '';
+            ExecStop = ''
+              ${pkgs.docker}/bin/docker kill firefly-iii || true
+              ${pkgs.docker}/bin/docker rm -f firefly-iii || true
+            '';
+            RemainAfterExit = true;
+          };
+        };
+
+        firefly-importer = {
+          Unit = {
+            Description = "Firefly III Data Importer";
+            After = [ "docker.service" "firefly-docker-network.service" "firefly-iii.service" ];
+          };
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
+          Service = {
+            Type = "simple";
+            ExecStart = ''
+              ${pkgs.docker}/bin/docker run --rm --name firefly-importer \
+                --env-file=${fireflyImporterEnvPath} \
+                --network firefly-net \
+                -p 8091:8080 \
+                fireflyiii/data-importer:latest
+            '';
+            ExecStop = ''
+              ${pkgs.docker}/bin/docker kill firefly-importer || true
+              ${pkgs.docker}/bin/docker rm -f firefly-importer || true
+            '';
+            RemainAfterExit = true;
+          };
+        };
+
         update-nixos-config = {
           Unit = {
             Description = "Update nixos configuration";
@@ -587,6 +802,8 @@ in
         sync-email = {
           Unit = {
             Description = "Sync Email";
+            StartLimitIntervalSec = 600;  # 10 minutes window
+            StartLimitBurst = 2;          # Max 2 restarts in that window
           };
           Install = {
             WantedBy = [ "default.target" ];
@@ -752,11 +969,13 @@ in
         systemctl --user start sonarr
         systemctl --user start radarr
         systemctl --user start bazarr
+        systemctl --user start readarr
     else
         echo "Directory /mnt/media/ is not mounted. Stopping mdeia service." >> /var/log/check-media-mounts.log
         systemctl --user stop sonarr
         systemctl --user stop radarr
         systemctl --user stop bazarr
+        systemctl --user stop readarr
     fi
     '';
     onChange = ''
