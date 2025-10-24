@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# Ensure a Java file is provided
+if [[ $# -lt 1 ]]; then
+  echo "Usage: $0 <JavaFile> [args...]"
+  exit 1
+fi
+
+# Extract base filename without extension
+JAVA_FILE="$1"
+shift  # Remove first argument (Java file), keep the rest as args
+BASE_NAME=$(basename "$JAVA_FILE" .java)
+
+# Generate a unique JFR file based on timestamp
+JFR_FILE="${BASE_NAME}_$(date +%Y%m%d_%H%M%S).jfr"
+
+# Java 21 execution with JFR, preview features, and source execution
+java --enable-preview --source 21 \
+     -XX:StartFlightRecording=filename="$JFR_FILE",settings=profile \
+     "$JAVA_FILE" "$@"
+
+echo "JFR recording saved to: $JFR_FILE"
