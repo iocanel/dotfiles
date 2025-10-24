@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Check if blueman-applet is running
+if pgrep "blueman-applet" > /dev/null; then
+    # If running, kill it
+    pkill "blueman-applet"
+    echo "Blueman applet stopped"
+else
+    # If not running, start it
+    blueman-applet &
+    echo "Blueman applet started"
+fi
