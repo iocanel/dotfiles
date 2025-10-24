@@ -3,8 +3,29 @@
 with lib;
 
 let
-  lpass = pkgs.callPackage /home/iocanel/.config/home-manager/packages/lpass/1.6.0.nix { };
-
+  lpass = pkgs.callPackage ./packages/lpass/1.6.0.nix { };
+  buildFishPlugin = pkgs.fishPlugins.buildFishPlugin;
+  fisher = pkgs.callPackage ./packages/fisher/4.4.4.nix {
+    inherit buildFishPlugin;
+  };
+  fishAi = pkgs.callPackage ./packages/fish-ai/2.0.3.nix {
+    inherit buildFishPlugin;
+  };
+  org-roam-mcp = pkgs.callPackage ./packages/org-roam-mcp/default.nix {
+    orgDir = "$HOME/Documents/org/roam";
+    # Pin to an exact commit you trust:
+    fromSpec = "git+https://github.com/aserranoni/org-roam-mcp@main";
+    # fromSpec = "git+https://github.com/aserranoni/org-roam-mcp@<commit-sha>";
+    # dbPath = "$HOME/Documents/org/roam/org-roam.db";
+    extraArgs = [ ];
+    env = {
+      # Optional:
+      ORG_ROAM_DIR = "$HOME/Documents/org/roam";
+      ORG_ROAM_DB_PATH = "$HOME/.emacs.d/org-roam.db";
+      UV_CACHE_DIR = "$HOME/.cache/uv";
+    };
+  };
+  whisperApi = pkgs.callPackage ./packages/whisper-api/default.nix { };
   # Firefly
   fireflyConfigDir = "${config.home.homeDirectory}/.config/firefly";
   fireflyServerEnvPath = "${fireflyConfigDir}/server.env";
@@ -114,6 +135,7 @@ in
     libreoffice
     evince
     qpdf
+    xournalpp
     # Mail
     isync
     vdirsyncer
@@ -127,12 +149,15 @@ in
     emacsPackages.mu4e-views
     emacsPackages.mu4e-overview
     emacsPackages.evil-mu4e
+    eask
+    
     #Music
     lilypond
     #
     # CLI
     #
     android-tools
+    android-udev-rules
     google-cloud-sdk
     kubectl
     openshift
@@ -171,10 +196,16 @@ in
     codeium
     claude-code
     opencode
+    org-roam-mcp
+    whisperApi
+    chatgpt-cli
 
     # C
     cmake
+    gdb
+    lldb
     libtool
+    clang-tools
     # Java
     gradle
     temurin-bin-21
@@ -182,11 +213,21 @@ in
     openapi-generator-cli
     jetbrains.idea-community-bin
     vscode
+    # codelldb
+    vscode-extensions.vadimcn.vscode-lldb
+    (pkgs.writeShellScriptBin "codelldb" ''
+      EXT="${pkgs.vscode-extensions.vadimcn.vscode-lldb}/share/vscode/extensions/vadimcn.vscode-lldb"
+      export LD_LIBRARY_PATH="$EXT/lldb/lib"
+      exec "$EXT/adapter/codelldb" --liblldb "$EXT/lldb/lib/liblldb.so" "$@"
+    '')
+
+    xml2
 
     # Javascript
     nodejs
     yarn-berry
     nodePackages.gulp
+    nodePackages.ts-node
     node2nix
     typescript-language-server
     vue-language-server
@@ -208,6 +249,7 @@ in
       tiktoken
       weaviate-client
       zulip
+      debugpy
     ]))
     uv
     poetry
@@ -277,6 +319,8 @@ in
     #nix-your-shell (breaks nix-shell -p xxx)
     # (for setting up the prompt: $ tide configure)
     fishPlugins.tide
+    fishAi
+    fisher
     #
     # Utils
     #
@@ -290,6 +334,7 @@ in
     zip
     ripgrep
     util-linux
+    tesseract4
     #
     # Deamons and Services
     dunst
@@ -324,7 +369,7 @@ in
   if [ "$AUTHENTICATED" != "true" ]; then
     exit 0
   fi
-  export ANTHROPIC_API_KEY=$(${pkgs.pass}/bin/pass show services/anthropic/iocanel/api-key)
+  export ANTHROPIC_API_KEY=$(${pkgs.pass}/bin/pass show services/anthropic/iocanel/default-key)
   export OPENAI_API_KEY=$(${pkgs.pass}/bin/pass show services/openai/iocanel/api-key)
   export GEMINI_PROJECT_ID=$(${pkgs.pass}/bin/pass show services/geminiai/project-id)
   export GEMINI_LOCATION=$(${pkgs.pass}/bin/pass show services/geminiai/location)
@@ -376,7 +421,7 @@ in
   #/bin/sh
   export DOCKER_BUILDKIT=1 >> $HOME/.profile
   '';
-
+  
   programs = {
     direnv = {
       enable = true;
@@ -402,6 +447,16 @@ in
     };
     fish = {
       enable = true;
+      plugins = [
+         {
+           name = "fish-ai";
+           src = fishAi;
+         }
+         {
+           name = "fisher";
+           src = fisher;
+         }
+      ];
       shellAliases = {
         vi="nvim";
         vim="nvim";
@@ -414,7 +469,11 @@ in
         qtds="java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=\\*:5005 -jar /home/iocanel/workspace/src/github.com/quarkiverse/quarkus-tekton/cli/target/quarkus-tekton-cli-999-SNAPSHOT.jar";
       };
       interactiveShellInit = ''
-
+      function fish_user_key_bindings
+        bind --erase ctrl-space
+        bind 'ctrl-space' _fish_ai_autocomplete_or_fix
+        bind ctrl-f _fish_ai_autocomplete_or_fix
+      end
       function fish_prompt_disabled
           set_color yellow
           echo -n " \$ "
@@ -897,160 +956,155 @@ in
   #
   # Home Files
   #
-  home.file.".pam-gnupg".text = "A4C5FFF68C5194FF10230082F5AA74EB157D8E01";
+  home.file = {
+    ".pam-gnupg".text = "A4C5FFF68C5194FF10230082F5AA74EB157D8E01";
 
-  home.file.".unison/documents.prf".text = ''
-    root = ${config.home.homeDirectory}/Documents
-    root = ${config.home.homeDirectory}/.google/drive/Documents
-
-    # Favor ${config.home.homeDirectory}/Documents in case of conflicts
-    prefer = ${config.home.homeDirectory}/Documents
-
-    # Ignore permission changes
-    perms = 0
-    # Additional options
-    auto = true
-    batch = true
-    fastcheck = true
-  '';
-
-  #
-  # Helper scripts
-  #
-
-  # Containers
-   home.file."bin/stop-named-container" = {
-    text = ''
-     #!/bin/sh
-
-     CONTAINER_NAME="$1"
-
-     # Stop the container if it's running
-     if docker ps --format '{{.Names}}' | grep -q "^$CONTAINER_NAME$"; then
-       echo "Stopping container: $CONTAINER_NAME"
-       docker stop $CONTAINER_NAME
-     fi
-
-     # Keep trying to remove the container until it is gone
-     while docker ps -a --format '{{.Names}}' | grep -q "^$CONTAINER_NAME$"; do
-       echo "Trying to remove container: $CONTAINER_NAME"
-       docker rm -f $CONTAINER_NAME
-       sleep 1  # Short delay before retrying
-     done
-
-     echo "Container $CONTAINER_NAME removed successfully!"
+    ".unison/documents.prf".text = ''
+      root = ${config.home.homeDirectory}/Documents
+      root = ${config.home.homeDirectory}/.google/drive/Documents
+      # Favor ${config.home.homeDirectory}/Documents in case of conflicts
+      prefer = ${config.home.homeDirectory}/Documents
+      # Ignore permission changes
+      perms = 0
+      # Additional options
+      auto = true
+      batch = true
+      fastcheck = true
     '';
-    executable = true;
-   };
+    ".config/fish-ai.ini".text = ''
+      [fish-ai]
+      configuration = openai
 
-   home.file."bin/start-named-container" = {
-    text = ''
-     #!/bin/sh
-
-     CONTAINER_NAME="$1"
-     shift
-     DOCKER_ARGS="$@"
-
-     echo "Starting container: $CONTAINER_NAME with arguments: $DOCKER_ARGS"
-     stop-named-container  $CONTAINER_NAME
-     echo "docker run -d --name $CONTAINER_NAME $DOCKER_ARGS"
-     sh -c "docker run -d --name $CONTAINER_NAME $DOCKER_ARGS"
+      [openai]
+      provider = openai
+      api_key = ${builtins.getEnv "OPENAI_API_KEY"}
+      model = gpt-4o
     '';
-    executable = true;
-   };
-
-  # Media
-  home.file.".local/bin/check-media-mounts.sh" = {
-    text = ''
-    #!/bin/bash
-    # Check if the media mount point is accessible
-    if ${pkgs.util-linux}/bin/mountpoint -q /mnt/media/; then
-        echo "Directory /mnt/media/ is mounted. Starting media services." >> /var/log/check-media-mounts.log
-        systemctl --user start sonarr
-        systemctl --user start radarr
-        systemctl --user start bazarr
-        systemctl --user start readarr
-    else
-        echo "Directory /mnt/media/ is not mounted. Stopping mdeia service." >> /var/log/check-media-mounts.log
-        systemctl --user stop sonarr
-        systemctl --user stop radarr
-        systemctl --user stop bazarr
-        systemctl --user stop readarr
-    fi
-    '';
-    onChange = ''
-    chmod 0755 ~/.local/bin/check-media-mounts.sh
-    '';
-  };
-
-  # Downloads
-  home.file.".local/bin/check-donwload-mounts.sh" = {
-    text = ''
-    #!/bin/bash
-    DOWNLOADS_PATH="/mnt/downloads"
-
-    # Check if the downloads mount point is accessible
-    if ${pkgs.util-linux}/bin/mountpoint -q /mnt/downloads; then
-        echo Directory /mnt/downloads/ is mounted. Starting download services." >> /var/log/check-download-mounts.log
-        systemctl start deluge
-    else
-        echo Directory /mnt/downloads is not mounted. Stopping download services." >> /var/log/check-download-mounts.log
-        systemctl stop deluge
-    fi
-    '';
-    onChange = ''
-    chmod 0755 ~/.local/bin/check-donwload-mounts.sh
-    '';
-  };
-
-  # Check mounts and turn on/off services
-  home.file.".local/bin/sonarr-on-download.sh" = {
-    text = ''
-    #!/bin/bash
-    echo "Calling sonarr on download. Event type: $sonarr_evettype folder: $sonarr_episodefile_sourcefolder"
-    if [ "$sonarr_eventtype" == "Test" ]; then
-      echo "Sonarr event type is Test, exiting"
-      exit 0
-    fi
-
-    pushd $sonarr_episodefile_sourcefolder
-    rar_file=$(ls *.rar 2>/dev/null)
-    if [ -z "$rar_file" ]; then
-      echo "No rar file found in $sonarr_episodefile_sourcefolder"
-      exit 1
-    fi
-    unrar x $rar_file
-    popd
-    '';
-    onChange = ''
-    chmod 0755 ~/.local/bin/sonarr-on-download.sh
-    '';
-  };
-
-  # Jupyterlabs
- home.file.".local/share/applications/jupyterlab-start.desktop" = {
-  text = ''
-   [Desktop Entry]
-   Name=Start JupyterLab
-   Comment=Start JupyterLab in Docker
-   Exec=start-named-container jupyterlab -p 8888:8888 --user 1000:100 -v /home/iocanel/workspace/src/github.com/iocanel/jupyter-workspace:/home/jovyan/ jupyter/scipy-notebook start-notebook.sh --NotebookApp.token=""
-   Icon=utilities-terminal
-   Terminal=false
-   Type=Application
-   Categories=Development;
-   '';
-  };
-
-  home.file.".local/share/applications/jupyterlab-stop.desktop" = {
-   text = ''
-    [Desktop Entry]
-    Name=Stop JupyterLab
-    Comment=Stop JupyterLab in Docker
-    Exec=stop-named-container jupyterlab
-    Icon=utilities-terminal
-    Terminal=false
-    Type=Application
-    Categories=Development;
-  '';
+    #
+    # Helper scripts
+    #
+    # Containers
+    "bin/stop-named-container" = {
+      text = ''
+        #!/bin/sh
+        CONTAINER_NAME="$1"
+        # Stop the container if it's running
+        if docker ps --format '{{.Names}}' | grep -q "^$CONTAINER_NAME$"; then
+          echo "Stopping container: $CONTAINER_NAME"
+          docker stop $CONTAINER_NAME
+        fi
+        # Keep trying to remove the container until it is gone
+        while docker ps -a --format '{{.Names}}' | grep -q "^$CONTAINER_NAME$"; do
+          echo "Trying to remove container: $CONTAINER_NAME"
+          docker rm -f $CONTAINER_NAME
+          sleep 1  # Short delay before retrying
+        done
+        echo "Container $CONTAINER_NAME removed successfully!"
+      '';
+      executable = true;
+    };
+    "bin/start-named-container" = {
+      text = ''
+        #!/bin/sh
+        CONTAINER_NAME="$1"
+        shift
+        DOCKER_ARGS="$@"
+        echo "Starting container: $CONTAINER_NAME with arguments: $DOCKER_ARGS"
+        stop-named-container  $CONTAINER_NAME
+        echo "docker run -d --name $CONTAINER_NAME $DOCKER_ARGS"
+        sh -c "docker run -d --name $CONTAINER_NAME $DOCKER_ARGS"
+      '';
+      executable = true;
+    };
+    # Media
+    ".local/bin/check-media-mounts.sh" = {
+      text = ''
+        #!/bin/bash
+        # Check if the media mount point is accessible
+        if ${pkgs.util-linux}/bin/mountpoint -q /mnt/media/; then
+            echo "Directory /mnt/media/ is mounted. Starting media services." >> /var/log/check-media-mounts.log
+            systemctl --user start sonarr
+            systemctl --user start radarr
+            systemctl --user start bazarr
+            systemctl --user start readarr
+        else
+            echo "Directory /mnt/media/ is not mounted. Stopping mdeia service." >> /var/log/check-media-mounts.log
+            systemctl --user stop sonarr
+            systemctl --user stop radarr
+            systemctl --user stop bazarr
+            systemctl --user stop readarr
+        fi
+      '';
+      onChange = ''
+        chmod 0755 ~/.local/bin/check-media-mounts.sh
+      '';
+    };
+    # Downloads
+    ".local/bin/check-donwload-mounts.sh" = {
+        text = ''
+        #!/bin/bash
+        DOWNLOADS_PATH="/mnt/downloads"
+    
+        # Check if the downloads mount point is accessible
+        if ${pkgs.util-linux}/bin/mountpoint -q /mnt/downloads; then
+            echo Directory /mnt/downloads/ is mounted. Starting download services." >> /var/log/check-download-mounts.log
+            systemctl start deluge
+        else
+            echo Directory /mnt/downloads is not mounted. Stopping download services." >> /var/log/check-download-mounts.log
+            systemctl stop deluge
+        fi
+        '';
+        onChange = ''
+        chmod 0755 ~/.local/bin/check-donwload-mounts.sh
+        '';
+    };
+    # Check mounts and turn on/off services
+    ".local/bin/sonarr-on-download.sh" = {
+        text = ''
+        #!/bin/bash
+        echo "Calling sonarr on download. Event type: $sonarr_evettype folder: $sonarr_episodefile_sourcefolder"
+        if [ "$sonarr_eventtype" == "Test" ]; then
+          echo "Sonarr event type is Test, exiting"
+          exit 0
+        fi
+    
+        pushd $sonarr_episodefile_sourcefolder
+        rar_file=$(ls *.rar 2>/dev/null)
+        if [ -z "$rar_file" ]; then
+          echo "No rar file found in $sonarr_episodefile_sourcefolder"
+          exit 1
+        fi
+        unrar x $rar_file
+        popd
+        '';
+        onChange = ''
+        chmod 0755 ~/.local/bin/sonarr-on-download.sh
+        '';
+    };
+    # Jupyterlabs
+    ".local/share/applications/jupyterlab-start.desktop" = {
+      text = ''
+        [Desktop Entry]
+        Name=Start JupyterLab
+        Comment=Start JupyterLab in Docker
+        Exec=start-named-container jupyterlab -p 8888:8888 --user 1000:100 -v /home/iocanel/workspace/src/github.com/iocanel/jupyter-workspace:/home/jovyan/ jupyter/scipy-notebook start-notebook.sh --NotebookApp.token=""
+        Icon=utilities-terminal
+        Terminal=false
+        Type=Application
+        Categories=Development;
+      '';
+    };
+    ".local/share/applications/jupyterlab-stop.desktop" = {
+       text = ''
+        [Desktop Entry]
+        Name=Stop JupyterLab
+        Comment=Stop JupyterLab in Docker
+        Exec=stop-named-container jupyterlab
+        Icon=utilities-terminal
+        Terminal=false
+        Type=Application
+        Categories=Development;
+      '';
+    };
   };
 }
