@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+# File to track the last logged meal
+LAST_LOG_FILE="$HOME/.cache/meals"
+
+# Define meal times (adjust as needed)
+BREAKFAST_TIME="07:00"
+LUNCH_TIME="13:00"
+DINNER_TIME="19:00"
+
+FORCE=${1:-false}
+
+current_time=$(date +%H:%M)
+current_date=$(date +%Y-%m-%d)
+
+# Read the last log entry
+if [[ -f "$LAST_LOG_FILE" ]]; then
+    last_log=$(cat "$LAST_LOG_FILE")
+else
+    last_log=""
+fi
+
+# Determine which meal to log
+if [[ "$current_time" > "$BREAKFAST_TIME" && "$current_time" < "$LUNCH_TIME" ]]; then
+    meal="Breakfast"
+    meal_tag="breakfast"
+elif [[ "$current_time" > "$LUNCH_TIME" && "$current_time" < "$DINNER_TIME" ]]; then
+    meal="Lunch"
+    meal_tag="lunch"
+elif [[ "$current_time" > "$DINNER_TIME" ]]; then
+    meal="Dinner"
+    meal_tag="dinner"
+else
+    exit 0 # Do nothing if before breakfast
+fi
+
+# Check if we've already logged this meal today
+expected_log="$current_date-$meal_tag"
+if [[ "$FORCE" == "true" ]]; then
+  # Let's log even if already logged.
+  echo "Force logging $expected_log"
+elif [[ "$last_log" == "$expected_log" ]]; then
+    exit 0 # Skip if already logged
+fi
+
+# Update the last log entry
+echo "$expected_log" > "$LAST_LOG_FILE"
+
+# Prompt to log the meal
+notify-send "Meal Log" "Time to log your $meal!"
+
+# Trigger Emacs with org-capture for meals
+emacsclient -c --eval "(progn (setq frame-title-format \"emacs-floating-app\") (org-capture nil \"nm\") (delete-other-windows))"
