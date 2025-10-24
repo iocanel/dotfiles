@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# List all sources with their technical name and description
+sources=$(pactl list sources | awk '/^Source #/ {idx=$3} /Name: / {name=$2} /Description: / {desc=substr($0, index($0,$3)); if (name && desc) {print name "::" desc; name=""; desc=""}}')
+
+# Use dmenu to select a source by description
+chosen=$(echo "$sources" | awk -F'::' '{print $2}' | dmenu -i -p "Select audio source:")
+
+# Find the technical name corresponding to the chosen description
+if [ -n "$chosen" ]; then
+    source_name=$(echo "$sources" | grep "::$chosen" | awk -F'::' '{print $1}')
+    pactl set-default-source "$source_name"
+fi

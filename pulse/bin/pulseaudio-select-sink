@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# List sinks and extract index and description
+sinks=$(pactl list short sinks | awk -F'\t' '{print $1 " " $2}')
+
+# Use dmenu to select a sink
+chosen=$(echo "$sinks" | dmenu -i -p "Select audio sink:")
+
+# If a sink was selected, extract index and set it
+if [ -n "$chosen" ]; then
+    sink_index=$(echo "$chosen" | awk '{print $1}')
+    pactl set-default-sink "$sink_index"
+
+    # Move all playing streams to the new sink
+    for input in $(pactl list short sink-inputs | awk '{print $1}'); do
+        pactl move-sink-input "$input" "$sink_index"
+    done
+fi
