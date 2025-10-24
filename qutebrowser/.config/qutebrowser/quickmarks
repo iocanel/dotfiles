@@ -6,14 +6,14 @@ ergodox https://configure.ergodox-ez.com/ergodox-ez/layouts/ornAe/latest/2
 sck https://github.com/spring-cloud/spring-cloud-kubernetes
 blog https://github.com/iocanel/blog
 idee https://github.com/iocanel/idee
-m2 spring cloud http://repo1.maven.org/maven2/org/springframework/cloud/
+m2 spring cloud https://repo1.maven.org/maven2/org/springframework/cloud/
 m2 sundrio https://repo1.maven.org/maven2/io/sundr/
 m2 fabric8 https://repo1.maven.org/maven2/io/fabric8/
+m2 dekorate https://repo1.maven.org/maven2/io/dekorate/
 sundrio https://github.com/sundrio/sundrio
 k8s-client https://github.com/fabric8io/kubernetes-client
 presentations https://github.com/iocanel/presentations
 dekorate https://github.com/dekorateio/dekorate
-m2 dekorate http://repo1.maven.org/maven2/io/dekorate/
 hello http://localhost:8080/hello
 hello stream http://localhost:8080/hello/stream
 quarkus https://github.com/quarkusio/quarkus
@@ -38,3 +38,16 @@ quarkus todo chatbot https://quarkus-todo-chatbot-iocanel.apps.qshift.snowdrop.d
 quarkus at tyler slides https://docs.google.com/presentation/d/1-F3HXpBqQnPBGfuywepGeRwfzDFBgRrr_-LZYmBQhKM/edit#slide=id.g2c86bb9c24b_0_465
 deluge http://localhost:8112/
 olympiacos fc tickets https://www.ticketmaster.gr/olympiacos/showProductList.html
+chat http://localhost:8080/
+qshift idp https://backstage-iocanel.apps.apps.qshift.snowdrop.dev/catalog?filters%5Bkind%5D=component&filters%5Buser%5D=all
+zurich-ai console https://console-openshift-console.apps.cluster-4l4gk.4l4gk.sandbox2821.opentlc.com/dashboards
+zurich-ai rhoai https://rhods-dashboard-redhat-ods-applications.apps.cluster-4l4gk.4l4gk.sandbox2821.opentlc.com/
+OpenStack VMs https://rhos-d.infra.prod.upshift.rdu2.redhat.com/dashboard/project/
+jupyter http://127.0.0.1:8888/lab
+google collab https://colab.research.google.com/
+build-your-own-x https://github.com/codecrafters-io/build-your-own-x
+quarkus-langchain4j-workshop https://quarkus.io/quarkus-workshop-langchain4j/
+readarr http://localhost:8787/
+Budgeting https://docs.google.com/spreadsheets/d/1REPYsXbJ8A0kAWLLcHuOF1drGJR0En0u/edit?gid=1134986261#gid=1134986261
+excalidraw https://excalidraw.com/
+vue http://localhost:5173/

@@ -127,6 +127,10 @@ config.bind('<Ctrl-g>i', 'spawn --userscript github-new-issue.sh {url}')
 config.bind('<Ctrl-g>pc', 'spawn --userscript github-pr-checkout.sh {url}')
 
 
+config.bind("<Ctrl-f>", "spawn --userscript create-flashcard.py")
+config.bind("<Ctrl-s>", "spawn --userscript create-org-mode-summary.py")
+config.bind("<Ctrl-t>", "spawn --userscript create-org-mode-takeaway.py")
+
 # User Agent
 c.content.headers.user_agent = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                                 "AppleWebKit/537.36 (KHTML, like Gecko) "
