@@ -2,6 +2,26 @@
 " My IdeaVim configuration to match my Emacs/Neovim setup
 "
 " Note: To list all actions available: ':actionlist'
+"
+
+"
+" Recomended settings
+"
+
+" ~/.connfig/JetBrains/IdeaIC2025.1/idea.properties:
+" nosplash=true
+
+
+"
+" Recommended plugins
+"
+" - IdeaVim
+" - IdeaVim-EasyMotion
+" - IdeaVim-Multiple-Cursors
+" - IdeaVim-WhichKey
+" - AceJump
+" - FuzzyFileSearch
+"
 
 " Set leader key
 let mapleader = " "
@@ -22,9 +42,6 @@ let g:WhichKeyDesc_A_p = "<A-p> Select Previous Match"
 let g:WhichKeyDesc_A_s = "<A-s> Skip Match"
 let g:WhichKeyDesc_C_Up = "<C-Up> Multiple Cursors Above"
 let g:WhichKeyDesc_C_Down = "<C-Up> Multiple Cursors Below"
-noremap mc <A-n>
-noremap mp <A-p>
-noremap mx <A-s>
 noremap <C-Up> :action EditorCloneCaretAbove<cr>
 noremap <C-Down> :action EditorCloneCaretBelow<cr>
 
@@ -47,7 +64,6 @@ noremap <leader>jd :action AceDeclarationAction<cr>
 " - Joining string literals split over mutliple lines using '+'.
 " - Joining flow control statements (e.g. nested ifs etc).  
 set ideajoin
-
 
 " Which Key
 set which-key
@@ -123,7 +139,7 @@ let g:WhichKeyDesc_tr = "<leader>tr Toggle Run Tool Window"
 let g:WhichKeyDesc_tm = "<leader>tm Toggle Maven Tool Window"
 let g:WhichKeyDesc_tgc = "<leader>tgc Toggle Commit Tool Window"
 let g:WhichKeyDesc_tgp = "<leader>tgp Toggle Pull Requests Tool Window"
-let g:WhichKeyDesc_tf = "<leader>th Hide Active Window"
+let g:WhichKeyDesc_th = "<leader>th Hide Active Window"
 noremap <leader>tf :action ToggleDistractionFreeMode<cr>
 noremap <leader>tl :call ToggleRelativeNumber()<cr>
 noremap <leader>tt :action ActivateProjectToolWindow<cr>
@@ -156,6 +172,7 @@ let g:WhichKeyDesc_wsv = "<leader>wsv Split Window Vertically"
 let g:WhichKeyDesc_wml = "<leader>wml Move to Left Window"
 let g:WhichKeyDesc_wmr = "<leader>wmr Move to Right/Bottom Window"
 let g:WhichKeyDesc_wmu = "<leader>wmu Move to Upper Window"
+let g:WhichKeyDesc_wmd = "<leader>wmu Move to Lower Window"
 let g:WhichKeyDesc_wk = "<leader>wk Close Buffer"
 let g:WhichKeyDesc_wo = "<leader>wo Close Other Windows"
 let g:WhichKeyDesc_wn = "<leader>wn Create New Window"
@@ -170,7 +187,7 @@ noremap <leader>wsv :action SplitVertically<cr>
 noremap <leader>wml <C-w>h
 noremap <leader>wmr <C-w>l
 noremap <leader>wmu <C-w>k
-noremap <leader>wmr <C-w>j
+noremap <leader>wmd <C-w>j
 noremap <leader>wk :bd<cr>
 noremap <leader>wo <C-w>o
 noremap <leader>wn <C-w>n
@@ -195,13 +212,13 @@ let g:WhichKeyDesc_g = "<leader>g Go"
 let g:WhichKeyDesc_gb = "<leader>gb Go Back"
 let g:WhichKeyDesc_gf = "<leader>gf Go Go Forward"
 let g:WhichKeyDesc_gi = "<leader>gi Go to Implementation"
-let g:WhichKeyDesc_gs = "<leader>gs Go to Super Method"
 let g:WhichKeyDesc_gt = "<leader>gt Go to Test"
 let g:WhichKeyDesc_gu = "<leader>gu Find Usages"
-nmap <leader>gf :action Back<cr>
-nmap <leader>gb :action Forward<cr>
-nmap <leader>gi :action GotoImpelmentation<cr>
-nmap <leader>gi :action GotoSuperMethod<cr>
+let g:WhichKeyDesc_gms = "<leader>gs Go to Super Method"
+nmap <leader>gb :action Back<cr>
+nmap <leader>gf :action Forward<cr>
+nmap <leader>gi :action GotoImplementation<cr>
+nmap <leader>gs :action GotoSuperMethod<cr>
 nmap <leader>gt :action GotoTest<cr>
 nmap <leader>gu :action FindUsages<cr>
 " Errors
