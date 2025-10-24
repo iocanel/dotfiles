@@ -72,8 +72,8 @@ for_window [title="ytop"] floating enable;
 
 # dunst
 bindsym Ctrl+grave; exec dunstctl history-pop
-bindsym --release Ctrl+space; exec dunstctl close
-bindsym Mod+shift+space; exec dunstctl close-all
+#bindsym --release Ctrl+n; exec dunstctl close
+#bindsym Mod+shift+space; exec dunstctl close-all
 #bindsym $mod+shift+d; exec dunstctl set-paused toggle
 
 # dunst
