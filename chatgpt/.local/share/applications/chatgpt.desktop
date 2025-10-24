@@ -6,4 +6,4 @@ StartupNotify=true
 Terminal=false
 Icon=openapi
 Type=Application
-Exec=chatgpt
+Exec=chatgpt-web
