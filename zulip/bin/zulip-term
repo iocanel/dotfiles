@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Exclude this wrapper from the PATH
+export PATH="${PATH#*:}"
+
+PROFILE=$1
+shift
+if [ "$PROFILE" == "--help" ]; then
+    zulip-term --help
+    exit 0
+fi
+
+echo "Using profile: $PROFILE"
+ZULIP_PROFILE_PASS_KEY="services/zulip/$PROFILE/api-key"
+ZULIP_PROFILE_API_KEY=$(pass $ZULIP_PROFILE_PASS_KEY)
+
+# Create a temporary zuliprc with the API key
+TEMP_ZULIPRC=$(mktemp)
+
+cp ~/.config/zulip/$PROFILE $TEMP_ZULIPRC
+sed -i "s|key=pass:.*|key=$ZULIP_PROFILE_API_KEY|" $TEMP_ZULIPRC
+
+# Start zulip-term with the temporary config
+# Append all arguments after the first one
+zulip-term --config-file $TEMP_ZULIPRC $*
+
+# Remove the temporary config after zulip-term exits
+rm $TEMP_ZULIPRC

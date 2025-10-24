@@ -1,0 +1,107 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import subprocess
+import argparse
+import tempfile
+import zulip
+
+def get_api_key(profile):
+    """Retrieve the Zulip API key from password-store for the given profile."""
+    pass_key = f"services/zulip/{profile}/api-key"
+    try:
+        api_key = subprocess.check_output(["pass", pass_key], text=True).strip()
+        return api_key
+    except subprocess.CalledProcessError:
+        print(f"Error: Unable to retrieve API key from pass for profile {profile}")
+        sys.exit(1)
+
+def create_temp_zuliprc(profile, api_key):
+    """Create a temporary Zulip config file with the retrieved API key."""
+    # Create a temporary file
+    temp_zuliprc = tempfile.NamedTemporaryFile(delete=False)
+    
+    # Copy the base profile config to the temporary file
+    profile_path = os.path.expanduser(f"~/.config/zulip/{profile}")
+    
+    if not os.path.exists(profile_path):
+        print(f"Error: Profile config file not found at {profile_path}")
+        sys.exit(1)
+
+    with open(profile_path, "r") as profile_file:
+        config_content = profile_file.read()
+
+    # Replace the key placeholder with the actual API key
+    config_content = config_content.replace("key=pass:.*", f"key={api_key}")
+
+    # Write the modified content to the temporary zuliprc file
+    with open(temp_zuliprc.name, "w") as temp_file:
+        temp_file.write(config_content)
+
+    return temp_zuliprc.name
+
+def get_unread_messages(config_path):
+    # Check if the config file exists
+    if not os.path.isfile(config_path):
+        print(f"Error: Config file not found at {config_path}")
+        sys.exit(1)
+
+    # Create a Zulip client using the provided config file
+    client = zulip.Client(config_file=config_path)
+
+    # Fetch unread messages
+    response = client.get_unread_messages()
+
+    if response['result'] == 'success':
+        unread_msgs = response['unread_msgs']
+
+        # Print out the details of unread messages
+        for msg_group in unread_msgs['streams']:
+            for message_id in msg_group['unread_message_ids']:
+                message = client.get_message(message_id)
+                print(f"Stream: {msg_group['stream_name']}, Topic: {msg_group['topic']}, Sender: {message['message']['sender_full_name']}")
+                print(f"Message: {message['message']['content']}")
+                print("-" * 40)
+
+        # Handle unread private messages
+        if unread_msgs['pms']:
+            print("\nUnread private messages:\n")
+            for pm in unread_msgs['pms']:
+                for message_id in pm['unread_message_ids']:
+                    message = client.get_message(message_id)
+                    print(f"From: {message['message']['sender_full_name']}")
+                    print(f"Message: {message['message']['content']}")
+                    print("-" * 40)
+
+    else:
+        print("Error fetching unread messages")
+
+def main():
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(description="Zulip-Term wrapper using profile and password store")
+    parser.add_argument("profile", help="Profile name to use")
+    parser.add_argument("args", nargs=argparse.REMAINDER, help="Additional arguments for zulip-term")
+    args = parser.parse_args()
+
+    profile = args.profile
+
+    print(f"Using profile: {profile}")
+
+    # Get the API key from pass
+    api_key = get_api_key(profile)
+
+    # Create a temporary zuliprc with the API key
+    temp_zuliprc = create_temp_zuliprc(profile, api_key)
+
+    try:
+        # Run zulip-term with the temporary zuliprc and additional arguments
+        get_unread_messages(temp_zuliprc)
+    finally:
+        # Clean up: remove the temporary zuliprc file
+        if os.path.exists(temp_zuliprc):
+            os.remove(temp_zuliprc)
+
+
+if __name__ == "__main__":
+    main()

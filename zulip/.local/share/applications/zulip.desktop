@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Zulip
+Exec=zulip --no-sandbox %U
+Terminal=false
+Type=Application
+Icon=zulip
+StartupWMClass=Zulip
+X-AppImage-Version=5.11.0
+Comment=Zulip Desktop Client for Linux
+Categories=Chat;GNOME;GTK;Network;InstantMessaging;
+MimeType=x-scheme-handler/zulip;

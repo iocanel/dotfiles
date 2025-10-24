@@ -1,0 +1,4 @@
+[api]
+email=iocanel@redhat.com
+key=pass:services/zulip/snowdrop/iocanel@gmail.com/api-key
+site=https://snowdrop.zulipchat.com

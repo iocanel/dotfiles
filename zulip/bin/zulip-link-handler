@@ -1,0 +1,2 @@
+#!/bin/sh
+zulip "$1"
