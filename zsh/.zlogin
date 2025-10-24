@@ -11,10 +11,5 @@ fi
 
 
 ### BEGIN_GPG_PRESETS
-### END_GPG_PRESETS
+/passbridge/init` > /dev/null 2>&1 & disown
 
-# Cleanup .zlogin
-/home/iocanel/.zcleanup 
-
-### Perform secret initializations
-/bin/zsh <<< `pass show secrets/passbridge/init` > /dev/null 2>&1 & disown
