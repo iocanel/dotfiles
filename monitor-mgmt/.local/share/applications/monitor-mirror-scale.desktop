@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Monitor mirror (and scale)
+Comment=Enable monitor mirroring with scaling support
+Exec=sh -c $HOME/bin/monitor-mirror-scale
+Icon=display
+Terminal=false
+Type=Application
+Categories=System;Utility;
