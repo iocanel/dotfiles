@@ -4,7 +4,7 @@
 UNIQUE_TITLE="kitty-from-clipboard-$(date +%s)"
 
 # Open a Kitty terminal with a unique title
-kitty --title "$UNIQUE_TITLE" sh -c "exec fish" &
+kitty --title "$UNIQUE_TITLE" sh -c "exec fish" --class EditorTerm &
 
 # Wait for a second to allow Kitty to open
 sleep 1
