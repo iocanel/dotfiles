@@ -21,6 +21,7 @@ stow msmtp
 stow mutt
 stow neovim
 stow network-manager
+stow pulse
 stow qutebrowser
 stow ranger
 stow rofi
@@ -30,3 +31,4 @@ stow wacom
 stow x-resources
 stow zsh
 stow nix-sdk
+stow java-utils
