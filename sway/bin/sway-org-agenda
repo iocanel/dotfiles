@@ -1,0 +1,16 @@
+#!/bin/bash
+
+case $BLOCK_BUTTON in
+  1) org-agenda && exit 0 & ;;  # Left-click action
+  2) org-agenda && exit 0 & ;;  # Left-click action
+  3) org-agenda && exit 0 & ;;  # Left-click action
+esac
+# echo calendar
+
+COUNT=`emacsclient --eval "(my/org-agenda-count-todays-items)"`
+if [ $COUNT -gt 0 ]; then
+    echo " $COUNT"
+else 
+    echo " "
+fi
+

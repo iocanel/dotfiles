@@ -1,0 +1,76 @@
+/* Base window */
+window {
+  margin: 0;
+  border: 3px solid #b4befe;          /* $lavender */
+  background-color: rgba(30, 30, 46, .95); /* $base */
+  border-radius: 16px;
+}
+
+/* Search input */
+#input {
+  margin: 12px;
+  border: none;
+  color: #cdd6f4;                      /* $text */
+  caret-color: #89b4fa;                /* $blue */
+  background-color: rgba(49, 50, 68, .9); /* $surface0 */
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 26px;
+  font-weight: 800;                    /* bold */
+}
+
+/* Placeholder text */
+#input image, #input *:disabled, #input:disabled, #input:focus:disabled {
+  color: #a6adc8;                      /* $subtext0 */
+}
+
+/* List entries */
+#entry {
+  margin: 6px 12px;
+  padding: 16px 12px;
+  border-radius: 12px;
+  color: #cdd6f4;                      /* $text */
+  font-size: 26px;
+  font-weight: 800;                    /* bold */
+  background: transparent;
+}
+
+/* Selected entry */
+#entry:selected {
+  background-color: #89b4fa;           /* $blue */
+  color: #1e1e2e;                      /* $base for contrast */
+  outline: 2px solid #cba6f7;          /* $mauve accent */
+}
+
+/* Icons */
+#img {
+  margin-left: 12px;
+  margin-right: 12px;
+  border-radius: 8px;
+  min-width: 64px;
+  min-height: 64px;
+}
+
+/* Text spacing */
+#text {
+  margin-left: 14px;
+}
+
+/* Separator / scrollbar tints */
+#outer-box, #inner-box, scroll {
+  margin: 10px 0;
+}
+
+#scrollbar {
+  background: transparent;
+}
+
+#scrollbar slider {
+  background: #6c7086;                 /* $overlay0 */
+  border-radius: 8px;
+}
+
+/* Optional global font */
+* {
+  font-family: "Inter", "JetBrains Mono", "Fira Sans", sans-serif;
+}

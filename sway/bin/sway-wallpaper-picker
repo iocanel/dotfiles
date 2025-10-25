@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+WALLPAPER_DIR="$HOME/Pictures/wallpapers"
+
+# initialize swww if not running
+pgrep swww > /dev/null || swww init
+
+# let user pick a wallpaper
+selected=$(find "$WALLPAPER_DIR" -type f | sort | wofi --show dmenu --prompt "Select wallpaper:")
+
+[ -n "$selected" ] && swww img "$selected" --transition-type grow --transition-duration 2
+echo "$selected" > ~/.cache/last_wallpaper
+

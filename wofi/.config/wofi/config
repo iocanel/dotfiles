@@ -1,0 +1,8 @@
+show=drun
+allow_images=true
+image_size=64         # bigger icons (default is 24)
+lines=6               # fewer visible entries
+width=40%             # make it wider
+orientation=vertical
+insensitive=true
+no_actions=true

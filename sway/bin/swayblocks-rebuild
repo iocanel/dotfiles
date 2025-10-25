@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# Base path (default: ~/.config/sway)
+BASE_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/sway"
+MODULES_DIR="$BASE_DIR/i3blocks"
+OUTPUT_FILE="$BASE_DIR/i3blocks.conf"
+
+if [[ ! -d "$MODULES_DIR" ]]; then
+  echo "❌ Modules directory does not exist: $MODULES_DIR"
+  exit 1
+fi
+
+# Build config
+{
+  for module in "$MODULES_DIR"/*.conf; do
+    [[ -f "$module" && "$module" != "$HEADER_FILE" ]] || continue
+    echo "# ---- $(basename "$module") ----"
+    cat "$module"
+    echo ""
+  done
+} > "$OUTPUT_FILE"
+
+echo "✅ i3blocks config generated at: $OUTPUT_FILE"

@@ -1,0 +1,71 @@
+/* Window */
+window {
+  margin: 0;
+  border: 3px solid #7287fd;                 /* $lavender */
+  background-color: rgba(239, 241, 245, .98);/* $base */
+  border-radius: 16px;
+}
+
+/* Search input */
+#input {
+  margin: 12px;
+  border: none;
+  color: #4c4f69;                            /* $text */
+  caret-color: #1e66f5;                      /* $blue */
+  background-color: rgba(204, 208, 218, .9); /* $surface0 */
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 26px;
+  font-weight: 800;                          /* bold */
+}
+
+/* Placeholder */
+#input image, #input *:disabled, #input:disabled, #input:focus:disabled {
+  color: #6c6f85;                            /* $subtext0 */
+}
+
+/* Entries */
+#entry {
+  margin: 6px 12px;
+  padding: 16px 12px;
+  border-radius: 12px;
+  color: #4c4f69;                            /* $text */
+  font-size: 26px;
+  font-weight: 800;                          /* bold */
+  background: transparent;
+}
+
+/* Selected entry */
+#entry:selected {
+  background-color: #1e66f5;                 /* $blue */
+  color: #eff1f5;                            /* $base for contrast */
+  outline: 2px solid #8839ef;                /* $mauve accent */
+}
+
+/* Icons */
+#img {
+  margin-left: 12px;
+  margin-right: 12px;
+  border-radius: 8px;
+  min-width: 64px;
+  min-height: 64px;
+}
+
+/* Text spacing */
+#text {
+  margin-left: 14px;
+}
+
+/* Scrollbar */
+#scrollbar {
+  background: transparent;
+}
+#scrollbar slider {
+  background: #9ca0b0;                       /* $overlay0 */
+  border-radius: 8px;
+}
+
+/* Optional global font */
+* {
+  font-family: "Inter", "JetBrains Mono", "Fira Sans", sans-serif;
+}

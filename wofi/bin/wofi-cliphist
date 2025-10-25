@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Options
+PROMPT="${PROMPT:-Clipboard}"
+MENU_OPTS=(
+  --dmenu
+  --prompt "$PROMPT"
+  --allow-images
+  --cache-file /dev/null
+)
+
+# List entries: id <TAB> type <TAB> preview
+selection="$(cliphist list | wofi "${MENU_OPTS[@]}")" || exit 0
+
+# Extract the entry id (first tab-separated field)
+id="$(printf '%s' "$selection" | cut -f1)"
+
+# If nothing selected, bail
+[ -z "${id:-}" ] && exit 0
+
+# Put the decoded entry back on the clipboard (handles text/images)
+cliphist decode "$id" | wl-copy
+
+# Optional: auto-paste into focused app if wtype exists and AUTO_PASTE=1
+if command -v wtype >/dev/null 2>&1 && [ "${AUTO_PASTE:-0}" = "1" ]; then
+  # small delay helps some apps register the new clipboard before paste
+  sleep 0.05
+  wtype -M ctrl v -m ctrl
+fi

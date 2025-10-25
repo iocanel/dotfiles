@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+selection="$(cliphist list | wofi --dmenu --prompt 'Delete from history' --cache-file /dev/null)" || exit 0
+id="$(printf '%s' "$selection" | cut -f1)"
+[ -z "${id:-}" ] && exit 0
+cliphist delete "$id"
+
+# Optional: show a quick confirmation (not required)
+notify-send -t 1200 "Cliphist" "Deleted entry $id" >/dev/null 2>&1 || true
