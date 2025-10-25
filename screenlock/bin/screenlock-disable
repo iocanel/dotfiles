@@ -1,9 +1,9 @@
 #!/bin/bash
 
-if pgrep -x "xautolock" > /dev/null
+if systemctl --user is-active --quiet swayidle
 then
-	pkill xautolock
-        notify-send -a "Screensaver" -u "critical" "Disabled" "Screensaver disabled"
+	systemctl --user stop swayidle
+        notify-send -a "Screensaver" -u "critical" "Disabled" "Swayidle disabled"
 else
-        notify-send -a "Screensaver" -u "critical" "Disabled" "Screensaver already disabled"
+        notify-send -a "Screensaver" -u "critical" "Disabled" "Swayidle already disabled"
 fi
