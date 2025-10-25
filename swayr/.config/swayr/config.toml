@@ -1,0 +1,6 @@
+# pick one you have installed
+menu-cmd = "wofi --dmenu --prompt Window"
+# menu-cmd = "rofi -dmenu -i -p Window"
+# menu-cmd = "fuzzel --dmenu --prompt Window:"
+icon-theme = "Papirus"          # optional
+max-window-title-length = 100   # optional

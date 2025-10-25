@@ -121,9 +121,8 @@ bindsym $mod+Shift+y kill
 # start dmenu (a program launcher)
 bindsym $mod+d exec wofi --show drun --show-icons --display-drun "Launch"
 bindsym $mod+semicolon exec wofi -show drun -show-icons -display-drun "Launch"
-bindsym $mod+f exec dmenufm
 bindsym $mod+g exec /home/iocanel/bin/qutebrowser-google-wofi &
-bindsym $mod+w exec "wofi -combi-modi window,drun -show combi -show-icons -display-combi 'Select'"
+bindsym $mod+w exec swayr switch-window
 
 
 # start apps

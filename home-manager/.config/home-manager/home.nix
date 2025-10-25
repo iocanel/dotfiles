@@ -107,6 +107,7 @@ in
     waybar
     swaylock-effects
     swayidle
+    swayr
     
     # Sharing
     dropbox
@@ -1058,6 +1059,9 @@ in
   wayland.windowManager.sway = {
     enable = false;          # don't generate it but use the stowed one
     package = pkgs.swayfx;   # ensure HM uses SwayFX too
+    systemd = {
+      enable = true;
+    };
     checkConfig = false;     # <-- prevent sandbox validation (fixes build)
     # extraConfig = ''
     #   corner_radius 10
