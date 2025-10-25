@@ -1,3 +1,10 @@
 #!/bin/bash
 
-kitten themes Catppuccin-Latte
+cp ~/.config/kitty/catppuccin-latte.conf ~/.config/kitty/current-theme.conf
+
+# Try to reload kitty config if remote control is enabled
+if kitty @ load-config 2>/dev/null; then
+    echo "Kitty theme updated and reloaded"
+else
+    echo "Kitty theme updated (restart kitty windows to apply)"
+fi

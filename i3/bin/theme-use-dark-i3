@@ -1,4 +1,4 @@
 #!/bin/bash
 
 sed -i 's/catppuccin-latte/catppuccin-mocha/g' ~/.config/i3/config
-i3-msg restart
+i3-msg reload

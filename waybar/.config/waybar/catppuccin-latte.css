@@ -1,0 +1,111 @@
+/* Catppuccin Latte color scheme */
+@define-color rosewater #dc8a78;
+@define-color flamingo #dd7878;
+@define-color pink #ea76cb;
+@define-color mauve #8839ef;
+@define-color red #d20f39;
+@define-color maroon #e64553;
+@define-color peach #fe640b;
+@define-color yellow #df8e1d;
+@define-color green #40a02b;
+@define-color teal #179299;
+@define-color sky #04a5e5;
+@define-color sapphire #209fb5;
+@define-color blue #1e66f5;
+@define-color lavender #7287fd;
+@define-color text #4c4f69;
+@define-color subtext1 #5c5f77;
+@define-color subtext0 #6c6f85;
+@define-color overlay2 #7c7f93;
+@define-color overlay1 #8c8fa1;
+@define-color overlay0 #9ca0b0;
+@define-color surface2 #acb0be;
+@define-color surface1 #bcc0cc;
+@define-color surface0 #ccd0da;
+@define-color base #eff1f5;
+@define-color mantle #e6e9ef;
+@define-color crust #dce0e8;
+
+* {
+    border: none;
+    border-radius: 0;
+    font-family: FontAwesome;
+    font-size: 24px;
+    min-height: 0;
+}
+
+window#waybar {
+    background-color: @base;
+    color: @text;
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+#workspaces {
+    background-color: @base;
+}
+
+#workspaces button {
+    padding: 0 5px;
+    background-color: @base;
+    color: @text;
+}
+
+#workspaces button:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+#workspaces button.focused {
+    background-color: @base;
+    color: @red;
+}
+
+#workspaces button.active {
+    background-color: @base;
+    color: @mauve;
+}
+
+#workspaces button.urgent {
+    background-color: @base;
+    color: @peach;
+}
+
+#mode {
+    background-color: @base;
+    color: @text;
+    padding: 0 10px;
+}
+
+#clock,
+#custom-agenda,
+#custom-github,
+#custom-gmail-personal,
+#custom-gmail-work,
+#custom-dunst,
+#pulseaudio {
+    padding: 0 10px;
+    background-color: @base;
+    color: #a0b7c1;
+}
+
+#pulseaudio.muted {
+    color: @overlay0;
+}
+
+#tray {
+    background-color: @base;
+    padding: 0 10px;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background-color: @red;
+}
