@@ -1,0 +1,74 @@
+{
+    "layer": "bottom",
+    "position": "bottom",
+    "height": 50,
+    "spacing": 4,
+    "modules-left": ["sway/workspaces", "sway/mode"],
+    "modules-center": [],
+    "modules-right": ["custom/agenda", "custom/github", "custom/gmail-personal", "custom/gmail-work", "tray", "clock"],
+    
+    "sway/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": false,
+        "format": "{name}",
+        "format-icons": {
+            "1": " ",
+            "2": " ",
+            "3": " ",
+            "4": " ",
+            "5": " ",
+            "6": " ",
+            "7": " ",
+            "8": "8",
+            "9": "9",
+            "10": "10"
+        }
+    },
+    
+    "sway/mode": {
+        "format": "<span style=\"italic\">{}</span>"
+    },
+    
+    "clock": {
+        "format": "{:%A %d %B %Y %H:%M}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "interval": 5
+    },
+    
+    "custom/agenda": {
+        "format": " {}",
+        "exec": "i3-org-agenda",
+        "interval": 600,
+        "signal": 2,
+        "tooltip": false
+    },
+    
+    "custom/github": {
+        "format": " {}",
+        "exec": "i3-github-unread",
+        "interval": 10,
+        "signal": 2,
+        "tooltip": false
+    },
+    
+    "custom/gmail-personal": {
+        "format": " {}",
+        "exec": "i3-gmail-personal-unread",
+        "interval": 10,
+        "signal": 2,
+        "tooltip": false
+    },
+    
+    "custom/gmail-work": {
+        "format": " {}",
+        "exec": "i3-gmail-work-unread",
+        "interval": 10,
+        "signal": 2,
+        "tooltip": false
+    },
+    
+    "tray": {
+        "icon-size": 21,
+        "spacing": 10
+    }
+}

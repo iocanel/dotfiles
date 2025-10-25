@@ -207,30 +207,32 @@ set $ws3 "3:  "
 set $ws4 "4:  "  
 set $ws5 "5:  "  
 set $ws6 "6:  "
-set $ws7 "7:   "
-
-set $ws8 "8:"  
+set $ws7 "7:  "
+set $ws8 "8"  
 set $ws9 "9"  
 set $ws10 "10"  
 
-assign [class="MainTerminal"] $ws1 
-assign [class="GmailPersonal"] $ws2 
-assign [class="GmailWork"] $ws3
-assign [class="Slack"] $ws4
-assign [class="Zulip"] $ws5
-assign [title="ChatGPT"] $ws6
-# don't assing emacs anywhere
-#assign [class="Emacs"] $ws7
-
 
 exec --no-startup-id kitty --class=MainTerminal
-exec --no-startup-id /home/iocanel/bin/gmail-personal
-exec --no-startup-id /home/iocanel/bin/gmail-work
-exec --no-startup-id slack
-exec --no-startup-id zulip
-exec --no-startup-id /home/iocanel/bin/chatgpt
+exec --no-startup-id gmail-personal
+exec --no-startup-id gmail-work
+exec --no-startup-id slack --class=Slack
+exec --no-startup-id zulip --class=Zulip
+exec --no-startup-id chatgpt-web
 exec --no-startup-id emacs --title "Workspace Emacs"
+
+# Force window placement using for_window (more reliable than assign)
+for_window [class="MainTerminal"] move to workspace $ws1
+for_window [class="GmailPersonal"] move to workspace $ws2
+for_window [class="GmailWork"] move to workspace $ws3
+for_window [app_id="^chrome-.*-Personal$"] move to workspace $ws2
+for_window [app_id="^chrome-.*-Work$"] move to workspace $ws3
+for_window [app_id="Slack"] move to workspace $ws4
+for_window [app_id="Zulip"] move to workspace $ws5
+for_window [title="ChatGPT"] move to workspace $ws6
 for_window [title="Workspace Emacs"] move to workspace $ws7 
+# don't assing emacs anywhere
+#assign [class="Emacs"] $ws7
 
 
 # move focused container to workspace
@@ -318,6 +320,20 @@ bindsym $mod+r mode "resize"
 # finds out, if available)
 include ~/.config/sway/catppuccin-mocha-theme.conf
 
+# Start portal services
+exec systemctl --user start xdg-desktop-portal-wlr
+exec systemctl --user start xdg-desktop-portal
+
+# Start waybar instead of swaybar
+exec_always {
+  systemctl --user import-environment WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP
+  systemctl --user restart waybar.service
+}
+
+# Remove waybar window decorations and shadows
+#for_window [app_id="waybar"] border none
+#for_window [app_id="waybar"] shadows disable
+
 # Custom configuration
 smart_borders on
 default_border pixel 3
@@ -396,12 +412,12 @@ bindsym $mod+0 workspace $ws10;
 # Sway FX
 shadows enable
 shadow_blur_radius 20
-shadow_color #00000080   # semi-transparent
-shadow_inactive_color #00000040
-shadow_offset 4 4
+shadow_color #000000CC   # less transparent
+shadow_offset 8 8
+exec_always --no-startup-id ~/bin/swayfx-auto-shadows
 
 # Rounded corners (requires swayfx build)
 corner_radius 10
 
 # Thicker border for the focused window
-default_border pixel 8
+default_border pixel 4

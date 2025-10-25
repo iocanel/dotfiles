@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+# Requires: swaymsg, jq
+# Behavior: disable shadows if exactly 1 window on the focused workspace; enable if >= 2; disable if 0.
+
+set -euo pipefail
+
+# Check for --with-notifications flag
+NOTIFICATIONS=false
+if [[ "${1:-}" == "--with-notifications" ]]; then
+  NOTIFICATIONS=true
+fi
+
+# PID file to prevent multiple instances
+PIDFILE="/tmp/swayfx-auto-shadows.pid"
+
+# Clean exit function
+cleanup() {
+  rm -f "$PIDFILE"
+  exit 0
+}
+trap cleanup EXIT INT TERM
+
+# Check if already running
+if [[ -f "$PIDFILE" ]] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
+  echo "swayfx-auto-shadows is already running (PID: $(cat "$PIDFILE"))"
+  exit 1
+fi
+
+# Write current PID
+echo $$ > "$PIDFILE"
+
+# State file to persist current state
+STATEFILE="/tmp/swayfx-auto-shadows.state"
+
+# Count "real" windows (tiled or floating) on the currently focused workspace
+count_windows() {
+  # Count focus array length - this gives us the number of containers
+  swaymsg -t get_workspaces | jq '.[] | select(.focused == true) | .focus | length' 2>/dev/null || echo "0"
+}
+
+apply_state() {
+  local cnt="$1"
+  local desired
+  if [[ "$cnt" -eq 1 ]]; then
+    # Disable shadows for single window (clean look)
+    desired="disable"
+  else
+    # Enable shadows for 0 or 2+ windows
+    desired="enable"
+  fi
+
+  # Read current state from file
+  local current_state="unknown"
+  if [[ -f "$STATEFILE" ]]; then
+    current_state="$(cat "$STATEFILE")"
+  fi
+
+  # Show notification if enabled
+  if [[ "$NOTIFICATIONS" == "true" ]]; then
+    notify-send "swayfx-auto-shadows" "windows: $cnt, shadows: ${desired}d (current: $current_state)"
+  fi
+  
+  if [[ "$current_state" != "$desired" ]]; then
+    if swaymsg "shadows $desired" >/dev/null 2>&1; then
+      echo "$desired" > "$STATEFILE"
+      logger -t swayfx-auto-shadows "window_count=$cnt -> shadows $desired"
+    else
+      logger -t swayfx-auto-shadows "Failed to set shadows $desired"
+    fi
+  fi
+}
+
+# Initial apply on start
+apply_state "$(count_windows)"
+
+# Subscribe to relevant events and react
+swaymsg -t subscribe '["workspace","window","shutdown"]' -m 2>/dev/null | \
+while IFS= read -r line; do
+  # Parse event type
+  event_type=$(echo "$line" | jq -r '.change // empty')
+  
+  # Debug: notify about every received event if enabled
+  if [[ "$NOTIFICATIONS" == "true" ]]; then
+    notify-send "Debug" "Event received: $event_type"
+  fi
+  
+  # Process all window-related events
+  case "$event_type" in
+    "focus"|"new"|"close"|"move"|"floating"|"fullscreen_mode"|"init"|"urgent")
+      apply_state "$(count_windows)" || true
+      ;;
+    *)
+      # For workspace changes and other events
+      if [[ "$event_type" != "" ]]; then
+        apply_state "$(count_windows)" || true
+      fi
+      ;;
+  esac
+done
