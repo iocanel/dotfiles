@@ -72,6 +72,12 @@ in
   ];
   home.packages = with pkgs; [
     #
+    # Portal services
+    #
+    xdg-desktop-portal
+    xdg-desktop-portal-wlr
+    xdg-desktop-portal-gtk
+    #
     # Apps
     #
     # Browser
@@ -98,6 +104,7 @@ in
     # Desktop
     arandr
     lxrandr
+    waybar
     
     # Sharing
     dropbox
@@ -113,6 +120,10 @@ in
     teams-for-linux
     # Menu
     rofi-pass
+    wofi
+    cliphist
+    wl-clipboard
+    wtype
 
     #
     # Text editing
@@ -325,6 +336,7 @@ in
     # Utils
     #
     xdotool
+    ydotool
     scrot
     imagemagick
     rsync
@@ -430,6 +442,9 @@ in
         enable = true;
       };
     };
+    gpg = {
+      enable = true;
+    };
     zsh = {
       enable = false;
       shellAliases = {
@@ -532,6 +547,9 @@ in
       defaultCacheTtl = 604800;
       maxCacheTtl = 604800;
       enableSshSupport = true;
+      pinentry = {
+        package = pkgs.pinentry-qt;   # or pkgs.pinentry-gnome3 / pkgs.pinentry-gtk2
+      };
       extraConfig = ''
         allow-preset-passphrase
       '';
@@ -543,9 +561,58 @@ in
     };
   };
 
+  # XDG Portal configuration - disabled due to startup issues
+  # xdg.portal = {
+  #   enable = true;
+  #   extraPortals = [ 
+  #     pkgs.xdg-desktop-portal-wlr 
+  #     pkgs.xdg-desktop-portal-gtk 
+  #   ];
+  #   config = {
+  #     common = {
+  #       default = "wlr";
+  #       "org.freedesktop.impl.portal.FileChooser" = "gtk";
+  #     };
+  #   };
+  # };
+
   systemd = {
     user = { 
       services = {
+        ydotoold = {
+          Unit = {
+            Description = "ydotool daemon";
+            After = [ "graphical-session.target" ];
+          };
+          Service = {
+            ExecStart = "${pkgs.ydotool}/bin/ydotoold";
+            Restart = "on-failure";
+          };
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
+        };
+        waybar = {
+          Unit = {
+            Description = "Waybar status bar";
+            After = [ "graphical-session.target" ];
+            PartOf = [ "graphical-session.target" ];
+          };
+          Install = {
+            WantedBy = [ "graphical-session.target" ];
+          };
+          Service = {
+            Type = "simple";
+            ExecStart = "${pkgs.waybar}/bin/waybar -c ${config.home.homeDirectory}/.dotfiles/waybar/.config/waybar/config.json";
+            ExecReload = "${pkgs.coreutils}/bin/kill -SIGUSR2 $MAINPID";
+            Restart = "on-failure";
+            RestartSec = "1";
+            Environment = [
+              "XDG_CURRENT_DESKTOP=sway"
+              "XDG_SESSION_TYPE=wayland"
+            ];
+          };
+        };
         emacs-daemon = {
           Unit = {
             Description = "Emacs Daemon Service";
@@ -555,7 +622,7 @@ in
           };
           Service = {
             Type = "simple";
-            ExecStart = "${pkgs.bash}/bin/bash -c  'exec ${pkgs.emacs}/bin/emacs --fg-daemon'";
+            ExecStart = "${pkgs.bash}/bin/bash -c 'source ~/.profile && exec ${pkgs.emacs}/bin/emacs --fg-daemon'";
             ExecStop = "${pkgs.emacs}/bin/emacsclient --eval '(kill-emacs)'"; # Optional, clean stop
             Restart = "on-failure";
             StandardOutput = "append:/home/iocanel/.emacs.d/emacs.log";
@@ -891,6 +958,19 @@ in
           # Run service after the user session starts
         };
       };
+      targets = {
+        "sway-session" = {
+          Unit = {
+            Description = "Sway Graphical Session";
+            BindsTo = [ "graphical-session.target" ];
+            Wants   = [ "graphical-session.target" ];
+            After   = [ "graphical-session-pre.target" ];
+          };
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
+        };
+      };
       timers = {
         update-nixos-config = {
           Unit = {
@@ -951,6 +1031,18 @@ in
   xdg.mimeApps.defaultApplications = {
     "x-scheme-handler/http" = "org.qutebrowser.qutebrowser.desktop";
     "x-scheme-handler/https" = "org.qutebrowser.qutebrowser.desktop";
+  };
+  
+  wayland.windowManager.sway = {
+    enable = false;          # don't generate it but use the stowed one
+    package = pkgs.swayfx;   # ensure HM uses SwayFX too
+    checkConfig = false;     # <-- prevent sandbox validation (fixes build)
+    # extraConfig = ''
+    #   corner_radius 10
+    #   shadows enable
+    #   shadow_blur_radius 20
+    #   shadow_color #00000088
+    # '';
   };
 
   #
