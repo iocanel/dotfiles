@@ -613,6 +613,7 @@ in
             Environment = [
               "XDG_CURRENT_DESKTOP=sway"
               "XDG_SESSION_TYPE=wayland"
+              "PATH=${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
             ];
           };
         };
@@ -946,6 +947,9 @@ in
             Type = "simple";
             ExecStart = "${pkgs.unison}/bin/unison documents";
             Restart = "always";
+            Environment = [
+              "PATH=${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
+            ];
           };
         };
         sync-email = {
@@ -977,6 +981,9 @@ in
             Type = "oneshot";
             ExecStart = "${config.home.homeDirectory}/.config/home-manager/scripts/lpass-to-pass";
             Restart = "on-failure";
+            Environment = [
+              "PATH=${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
+            ];
           };
           # Run service after the user session starts
         };
