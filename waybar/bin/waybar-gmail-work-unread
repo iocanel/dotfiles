@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Waybar custom module for work Gmail unread count
+# Adapted from i3-gmail-work-unread
+# Remove i3-specific BLOCK_BUTTON handling - waybar handles clicks via on-click
+
+COUNT=`mu find flag:unread path:$HOME/.mail/ikanello@redhat.com/ | wc -l`
+if [ "$COUNT" -gt 0 ]; then
+    echo " $COUNT"
+fi

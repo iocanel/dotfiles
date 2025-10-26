@@ -5,7 +5,7 @@
     "spacing": 4,
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": [],
-    "modules-right": ["custom/agenda", "custom/github", "custom/gmail-personal", "custom/gmail-work", "tray", "clock"],
+    "modules-right": [ "custom/gmail-personal", "custom/gmail-work", "custom/github", "tray", "clock", "custom/lock"],
     
     "sway/workspaces": {
         "disable-scroll": true,
@@ -27,44 +27,48 @@
     
     "sway/mode": {
         "format": "<span style=\"italic\">{}</span>"
-    },
-    
+    },  
+
     "clock": {
         "format": "{:%A %d %B %Y %H:%M}",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "on-click": "org-agenda",
         "interval": 5
     },
-    
-    "custom/agenda": {
-        "format": " {}",
-        "exec": "i3-org-agenda",
-        "interval": 600,
-        "signal": 2,
-        "tooltip": false
-    },
-    
+
+    "custom/lock": {
+      "format": "  ",
+      "tooltip": "Lock Screen",
+      "on-click": "screenlock-now",
+      "interval": 0,
+      "tooltip": false
+    }, 
+
     "custom/github": {
         "format": " {}",
-        "exec": "i3-github-unread",
+        "exec": "waybar-github-unread",
         "interval": 10,
         "signal": 2,
-        "tooltip": false
+        "tooltip": false,
+        "on-click": "mu4e-github"
     },
     
     "custom/gmail-personal": {
         "format": " {}",
-        "exec": "i3-gmail-personal-unread",
+        "exec": "waybar-gmail-personal-unread",
         "interval": 10,
         "signal": 2,
-        "tooltip": false
+        "tooltip": false,
+        "on-click": "mu4e-personal"
     },
     
     "custom/gmail-work": {
         "format": " {}",
-        "exec": "i3-gmail-work-unread",
+        "exec": "waybar-gmail-work-unread",
         "interval": 10,
         "signal": 2,
-        "tooltip": false
+        "tooltip": false,
+        "on-click": "mu4e-work"
     },
     
     "tray": {

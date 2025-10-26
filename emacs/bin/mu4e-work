@@ -10,4 +10,4 @@ swaymsg -t subscribe -m '["window"]' | while read event; do
 done &
 
 # Launch emacs
-DISPLAY=:0 emacsclient -c --eval "(progn (org-agenda nil \"a\") (delete-other-windows))"
+DISPLAY=:0 emacsclient -c --eval "(progn (mu4e t) (mu4e-search \"flag:unread path:$HOME/.mail/ikanello@redhat.com/\"))"

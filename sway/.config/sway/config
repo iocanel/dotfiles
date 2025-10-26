@@ -277,7 +277,7 @@ bindsym $mod+Ctrl+Shift+e exec restart-emacsd
 bindsym $mod+Shift+w exec file-cache-conflict-resolve
 
 # Bluetooth Manager
-bindsym --release $mod+Shift+b exec toggle-blueman-applet
+bindsym --release $mod+Shift+b exec sway-toggle-blueman-applet
 
 #Network Manager
 bindsym --release $mod+Shift+n exec toggle-nm-applet

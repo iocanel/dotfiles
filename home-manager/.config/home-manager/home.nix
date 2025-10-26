@@ -72,6 +72,13 @@ in
   ];
   home.packages = with pkgs; [
     #
+    # Shells
+    #
+    bash
+    fish
+    zsh
+
+    #
     # Portal services
     #
     xdg-desktop-portal
@@ -131,6 +138,7 @@ in
     #
     # Text editing
     #
+    emacs
     ltex-ls
     emacs-lsp-booster
     tree-sitter
@@ -613,6 +621,7 @@ in
             Environment = [
               "XDG_CURRENT_DESKTOP=sway"
               "XDG_SESSION_TYPE=wayland"
+              "HOME=${config.home.homeDirectory}" 
               "PATH=${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
             ];
           };
