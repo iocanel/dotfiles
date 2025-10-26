@@ -140,6 +140,7 @@ in
     swaylock-effects
     swayidle
     swayr
+    way-displays
     
     # Sharing
     dropbox

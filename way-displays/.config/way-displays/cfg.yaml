@@ -1,0 +1,15 @@
+# Desktop configuration - dual monitor setup with 1.0 scaling
+# yaml-language-server: $schema=https://raw.githubusercontent.com/alex-courtis/way-displays/refs/heads/master/schema/cfg-1.0.0.yaml
+ARRANGE: ROW
+ALIGN: TOP
+SCALING: TRUE
+AUTO_SCALE: TRUE
+AUTO_SCALE_MIN: 1
+AUTO_SCALE_MAX: -1
+SCALE:
+  - NAME_DESC: DP-5
+    SCALE: 1
+  - NAME_DESC: eDP-1
+    SCALE: 1
+CALLBACK_CMD: notify-send "way-displays ${CALLBACK_LEVEL}" "${CALLBACK_MSG}"
+
