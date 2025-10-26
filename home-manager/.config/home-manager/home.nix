@@ -26,10 +26,6 @@ let
     };
   };
   whisperApi = pkgs.callPackage ./packages/whisper-api/default.nix { };
-  # Firefly
-  fireflyConfigDir = "${config.home.homeDirectory}/.config/firefly";
-  fireflyServerEnvPath = "${fireflyConfigDir}/server.env";
-  fireflyImporterEnvPath = "${fireflyConfigDir}/importer.env";
 
   zshPrompt = ''
     # Load vcs_info for git branch
@@ -52,6 +48,11 @@ let
   '';
 in
 {
+  imports = [
+    ./modules/media-center.nix
+    ./modules/financial-services.nix
+  ];
+
   home.stateVersion = "25.05"; # Adjust this according to your Nixpkgs version
   home.username = "iocanel";
   home.homeDirectory = "/home/iocanel";
@@ -70,6 +71,30 @@ in
   nixpkgs.config.permittedInsecurePackages = [
     "openssl-1.1.1w"
   ];
+
+  # Media Center Services
+  services.media-center = {
+    enable = true;
+    userId = 1000;
+    groupId = 100;
+    timezone = "Europe/Athens";
+    
+    emby.enable = true;
+    sonarr.enable = true;
+    radarr.enable = true;
+    bazarr.enable = true;
+    readarr.enable = true;
+    jackett.enable = true;
+  };
+
+  # Financial Services
+  services.financial-services = {
+    enable = true;
+    firefly = {
+      enable = true;
+      siteOwner = "iocanel@gmail.com";
+    };
+  };
   home.packages = with pkgs; [
     #
     # Shells
@@ -660,262 +685,6 @@ in
             Restart = "on-failure";
             StandardOutput = "append:/home/iocanel/.emacs.d/emacs.log";
             StandardError = "append:/home/iocanel/.emacs.d/emacs.log";
-          };
-        };
-        #
-        # Media Server
-        #
-        emby-server = {
-          Unit = {
-            Description = "Emby Server";
-          };
-          Install = {
-            WantedBy = [ "default.target" ];
-          };
-          Service = {
-            Type = "simple";
-            ExecStart = "${pkgs.docker}/bin/docker run --rm --name emby-server -e UID=1000 -e GUID=1000 -e GIDLIST=100 -p 8096:8096 -p 8920:8920 -v /home/iocanel/.config/emby/:/config -v /mnt/media:/mnt/media --cpus=2 --memory=4g emby/embyserver:4.9.0.26";
-            ExecStop = "${pkgs.docker}/bin/docker kill emby-server && ${pkgs.docker}/bin/docker rm -f emby-server";
-            RemainAfterExit = true;
-          };
-        };
-        sonarr = {
-          Unit = {
-            Description = "Sonarr Service";
-          };
-          Install = {
-            WantedBy = [ "default.target" ];
-          };
-          Service = {
-            Type = "simple";
-            ExecStart = ''
-              ${pkgs.docker}/bin/docker run --rm --name sonarr \
-              -e PUID=1000 \
-              -e PGID=100 \
-              -e TZ=Europe/Athens \
-              -p 8989:8989 \
-              -v /home/iocanel/.config/sonarr:/config \
-              -v /mnt/media:/mnt/media \
-              -v /mnt/downloads:/downloads \
-              lscr.io/linuxserver/sonarr:3.0.10
-            '';
-            ExecStop = "${pkgs.docker}/bin/docker kill sonarr && ${pkgs.docker}/bin/docker rm -f sonarr";
-            RemainAfterExit = true;
-          };
-        };
-        radarr = {
-          Unit = {
-            Description = "Radarr Service";
-          };
-          Install = {
-            WantedBy = [ "default.target" ];
-          };
-          Service = {
-            Type = "simple";
-            ExecStart = ''
-              ${pkgs.docker}/bin/docker run --rm --name radarr \
-              -e PUID=1000 \
-              -e PGID=100 \
-              -e TZ=Europe/Athens \
-              -p 7878:7878 \
-              -v /home/iocanel/.config/radarr:/config \
-              -v /mnt/media:/mnt/media \
-              -v /mnt/downloads:/downloads \
-              lscr.io/linuxserver/radarr:4.3.2
-            '';
-            ExecStop = "${pkgs.docker}/bin/docker kill radarr && ${pkgs.docker}/bin/docker rm -f radarr";
-            RemainAfterExit = true;
-          };
-        };
-        bazarr = {
-          Unit = {
-            Description = "Bazarr Service";
-          };
-          Install = {
-            WantedBy = [ "default.target" ];
-          };
-          Service = {
-            Type = "simple";
-            ExecStart = ''
-              ${pkgs.docker}/bin/docker run --rm --name bazarr \
-              -e PUID=1000 \
-              -e PGID=100 \
-              -e TZ=Europe/Athens \
-              -p 6767:6767 \
-              -v /home/iocanel/.config/bazarr:/config \
-              -v /mnt/media:/mnt/media \
-              -v /mnt/downloads:/downloads \
-              lscr.io/linuxserver/bazarr:1.1.2
-            '';
-            ExecStop = "${pkgs.docker}/bin/docker kill bazarr && ${pkgs.docker}/bin/docker rm -f bazarr";
-            RemainAfterExit = true;
-          };
-        };
-        readarr = {
-          Unit = {
-            Description = "Readarr Service";
-          };
-          Install = {
-            WantedBy = [ "default.target" ];
-          };
-          Service = {
-            Type = "simple";
-            ExecStart = ''
-              ${pkgs.docker}/bin/docker run --rm --name readarr \
-              -e PUID=1000 \
-              -e PGID=100 \
-              -e TZ=Europe/Athens \
-              -p 8787:8787 \
-              -v /home/iocanel/.config/readarr:/config \
-              -v /mnt/media:/mnt/media \
-              -v /mnt/downloads:/downloads \
-              lscr.io/linuxserver/readarr:develop
-            '';
-            ExecStop = "${pkgs.docker}/bin/docker kill readarr && ${pkgs.docker}/bin/docker rm -f readarr";
-            RemainAfterExit = true;
-          };
-        };
-        jackett = {
-          Unit = {
-            Description = "Jackett Service";
-          };
-          Install = {
-            WantedBy = [ "default.target" ];
-          };
-          Service = {
-            Type = "simple";
-            ExecStart = ''
-              ${pkgs.docker}/bin/docker run --rm --name jackett \
-              -e PUID=1000 \
-              -e PGID=100 \
-              -e TZ=Europe/Athens \
-              -p 9117:9117 \
-              -v /home/iocanel/.config/jackett:/config \
-              -v /mnt/media:/mnt/media \
-              -v /mnt/downloads:/downloads \
-              lscr.io/linuxserver/jackett:0.22.1289
-            '';
-            ExecStop = "${pkgs.docker}/bin/docker kill jackett && ${pkgs.docker}/bin/docker rm -f jackett";
-            RemainAfterExit = true;
-          };
-        };
-        #
-        # Firefly
-        #
-        firefly-docker-network = {
-          Unit = {
-            Description = "Generate Firefly III .env file if missing";
-          };
-          Install = {
-            WantedBy = [ "default.target" ];
-          };
-          Service = {
-            Type = "oneshot";
-            ExecStart = "${pkgs.docker}/bin/docker network create firefly-net";
-            ExecStop = "${pkgs.docker}/bin/docker network rm firefly-net";
-            RemainAfterExit = true;
-          };
-        };
-
-        firefly-env-init = {
-          Unit = {
-            Description = "Generate Firefly III .env file if missing";
-            ConditionPathExists = "!${fireflyServerEnvPath}";
-          };
-          Install = {
-            WantedBy = [ "default.target" ];
-          };
-          Service = {
-            Type = "oneshot";
-            ExecStart = pkgs.writeShellScript "init-firefly-env" ''
-              ${pkgs.coreutils}/bin/mkdir -p ${fireflyConfigDir}
-              
-              # Create server.env
-              ${pkgs.coreutils}/bin/rm -f ${fireflyServerEnvPath}
-              APP_KEY="base64:$(${pkgs.coreutils}/bin/head -c 32 /dev/urandom | ${pkgs.coreutils}/bin/base64)"
-              echo "APP_KEY=$APP_KEY" >> ${fireflyServerEnvPath}
-              echo "TRUSTED_PROXIES=**" >> ${fireflyServerEnvPath}
-              echo "SITE_OWNER=iocanel@gmail.com" >> ${fireflyServerEnvPath}
-              echo "APP_URL=http://firefly-iii:8080" >> ${fireflyImporterEnvPath}
-
-              echo "DB_CONNECTION=sqlite" >> ${fireflyServerEnvPath}
-              echo "DB_DATABASE=/var/www/html/storage/database/database.sqlite" >> ${fireflyServerEnvPath}
-              chmod 600 ${fireflyServerEnvPath}
-
-              # Create importer.env
-              rm -f ${fireflyImporterEnvPath}
-              echo "TRUSTED_PROXIES=**" > ${fireflyImporterEnvPath}
-              echo "APP_URL=http://localhost:8090" >> ${fireflyImporterEnvPath}
-              chmod 600 ${fireflyImporterEnvPath}
-
-              # Initialize database file if needed
-              ${pkgs.coreutils}/bin/mkdir -p ${fireflyConfigDir}/db
-              ${pkgs.coreutils}/bin/touch ${fireflyConfigDir}/db/database.sqlite
-              chmod -R 775 ${fireflyConfigDir}/db
-              chgrp -R www-data ${fireflyConfigDir}/db
-
-              ${pkgs.coreutils}/bin/mkdir -p ${fireflyConfigDir}/export
-              chmod -R 775 ${fireflyConfigDir}/export
-              chgrp -R www-data ${fireflyConfigDir}/export
-
-              ${pkgs.coreutils}/bin/mkdir -p ${fireflyConfigDir}/upload
-              chmod -R 775 ${fireflyConfigDir}/upload
-              chgrp -R www-data ${fireflyConfigDir}/upload
-            '';
-          };
-        };
-
-        firefly-iii = {
-          Unit = {
-            Description = "Firefly III Personal Finance Manager";
-            After = [ "docker.service" "firefly-docker-network.service" "firefly-env-init.service" ];
-            Requires = [ "firefly-docker-network.service" "firefly-env-init.service" ];
-          };
-          Install = {
-            WantedBy = [ "default.target" ];
-          };
-          Service = {
-            Type = "simple";
-            ExecStart = ''
-              ${pkgs.docker}/bin/docker run --rm --name firefly-iii \
-                --env-file=${fireflyServerEnvPath} \
-                --network firefly-net \
-                -p 8090:8080 \
-                -v ${fireflyConfigDir}/export:/var/www/html/storage/export \
-                -v ${fireflyConfigDir}/upload:/var/www/html/storage/upload \
-                -v ${fireflyConfigDir}/db:/var/www/html/storage/database \
-                fireflyiii/core:latest
-            '';
-            ExecStop = ''
-              ${pkgs.docker}/bin/docker kill firefly-iii || true
-              ${pkgs.docker}/bin/docker rm -f firefly-iii || true
-            '';
-            RemainAfterExit = true;
-          };
-        };
-
-        firefly-importer = {
-          Unit = {
-            Description = "Firefly III Data Importer";
-            After = [ "docker.service" "firefly-docker-network.service" "firefly-iii.service" ];
-          };
-          Install = {
-            WantedBy = [ "default.target" ];
-          };
-          Service = {
-            Type = "simple";
-            ExecStart = ''
-              ${pkgs.docker}/bin/docker run --rm --name firefly-importer \
-                --env-file=${fireflyImporterEnvPath} \
-                --network firefly-net \
-                -p 8091:8080 \
-                fireflyiii/data-importer:latest
-            '';
-            ExecStop = ''
-              ${pkgs.docker}/bin/docker kill firefly-importer || true
-              ${pkgs.docker}/bin/docker rm -f firefly-importer || true
-            '';
-            RemainAfterExit = true;
           };
         };
 
