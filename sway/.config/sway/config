@@ -348,7 +348,10 @@ default_border pixel 3
 #
 # Services 
 #
-exec --no-startup-id "setxkbmap -model pc105 -layout us,gr -option grp:alt_shift_toggle -option ctrl:nocaps"
+input * {
+    xkb_layout us,gr
+    xkb_options grp:alt_shift_toggle
+}
 
 exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
 exec --no-startup-id xautolock -time 30 -locker 'screenlock-now'
