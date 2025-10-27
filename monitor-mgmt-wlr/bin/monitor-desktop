@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Configure desktop layout with external monitor as primary and laptop screen to the right
+
+# Get all connected monitors
+mapfile -t monitors < <(wlr-randr | grep -E "^[A-Za-z0-9-]+" | awk '{print $1}')
+
+# Find external monitor (anything that's not eDP-1)
+external_monitor=""
+for monitor in "${monitors[@]}"; do
+  if [[ "$monitor" != "eDP-1" ]]; then
+    external_monitor="$monitor"
+    break
+  fi
+done
+
+if [[ -z "$external_monitor" ]]; then
+  echo "No external monitor found, cannot configure desktop layout"
+  exit 1
+fi
+
+echo "Using $external_monitor as external monitor"
+
+# Enable external monitor first in case it was disabled
+wlr-randr --output "$external_monitor" --on
+
+# Wait a moment for the monitor to initialize
+sleep 1
+
+# Get current resolution/mode for external monitor
+external_mode=$(wlr-randr | grep -A 50 "^$external_monitor" | grep -E "^\s+[0-9]+x[0-9]+@[0-9.]+" | head -1 | awk '{print $1}')
+if [[ -z "$external_mode" ]]; then
+  echo "Could not determine mode for $external_monitor, using fallback"
+  external_mode="3840x2160@30.000000"
+  external_width="3840"
+else
+  external_width=$(echo "$external_mode" | cut -d'x' -f1)
+fi
+
+echo "Configuring $external_monitor at $external_mode, eDP-1 positioned at $external_width,0"
+
+# Configure external monitor as primary and laptop to the right
+wlr-randr --output "$external_monitor" --mode "$external_mode" --pos 0,0 --scale 1.0
+wlr-randr --output eDP-1 --mode 2560x1600@60.000999 --pos "$external_width,0" --scale 1.0

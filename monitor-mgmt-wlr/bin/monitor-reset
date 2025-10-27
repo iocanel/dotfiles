@@ -1,0 +1,61 @@
+#!/bin/bash
+
+# Reset monitor configuration - detect monitors and set laptop display at highest resolution at 0,0
+
+echo "Detecting connected monitors..."
+
+# Get all connected monitors using wlr-randr
+mapfile -t monitors < <(wlr-randr | grep -E "^[A-Za-z0-9-]+" | awk '{print $1}')
+
+echo "Found monitors: ${monitors[*]}"
+
+# Find laptop monitor (built-in display starting with eDP, LVDS, or similar)
+laptop_monitor=""
+external_monitors=()
+
+for monitor in "${monitors[@]}"; do
+  if [[ "$monitor" =~ ^(eDP|LVDS|DSI) ]]; then
+    laptop_monitor="$monitor"
+  else
+    external_monitors+=("$monitor")
+  fi
+done
+
+# Disable all external monitors first
+echo "Disabling external monitors..."
+for ext_monitor in "${external_monitors[@]}"; do
+  echo "Disabling $ext_monitor"
+  wlr-randr --output "$ext_monitor" --off
+done
+
+# Configure laptop monitor at highest resolution at 0,0
+if [[ -n "$laptop_monitor" ]]; then
+  echo "Configuring laptop monitor ($laptop_monitor) at highest resolution at position 0,0..."
+  
+  # Get the highest resolution for the laptop monitor
+  highest_res=$(wlr-randr | grep -A 50 "^$laptop_monitor" | grep -E "^\s+[0-9]+x[0-9]+" | head -1 | awk '{print $1}')
+  
+  if [[ -n "$highest_res" ]]; then
+    echo "Setting $laptop_monitor to $highest_res at position 0,0"
+    wlr-randr --output "$laptop_monitor" --mode "$highest_res" --pos 0,0 --scale 1.0
+  else
+    echo "Could not determine highest resolution for $laptop_monitor, using preferred mode"
+    wlr-randr --output "$laptop_monitor" --pos 0,0 --scale 1.0
+  fi
+  
+  # Set a random wallpaper using swaybg (Wayland equivalent of nitrogen)
+  if command -v swaybg > /dev/null && [[ -d ~/Pictures/Wallpapers ]]; then
+    # Kill existing swaybg processes
+    pkill swaybg
+    # Set random wallpaper
+    wallpaper=$(find ~/Pictures/Wallpapers -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.jpeg" \) | shuf -n 1)
+    if [[ -n "$wallpaper" ]]; then
+      swaybg -i "$wallpaper" -m fill &
+    fi
+  fi
+else
+  echo "No laptop monitor found!"
+  exit 1
+fi
+
+echo "Monitor reset complete - laptop display configured at highest resolution at 0,0"

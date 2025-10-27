@@ -141,6 +141,9 @@ in
     swayidle
     swayr
     way-displays
+    wdisplays
+    wlr-randr
+    wl-mirror
     
     # Sharing
     dropbox
@@ -598,20 +601,22 @@ in
     };
   };
 
-  # XDG Portal configuration - disabled due to startup issues
-  # xdg.portal = {
-  #   enable = true;
-  #   extraPortals = [ 
-  #     pkgs.xdg-desktop-portal-wlr 
-  #     pkgs.xdg-desktop-portal-gtk 
-  #   ];
-  #   config = {
-  #     common = {
-  #       default = "wlr";
-  #       "org.freedesktop.impl.portal.FileChooser" = "gtk";
-  #     };
-  #   };
-  # };
+  # XDG Portal configuration for screen sharing
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ 
+      pkgs.xdg-desktop-portal-wlr 
+      pkgs.xdg-desktop-portal-gtk 
+    ];
+    config = {
+      common = {
+        default = "wlr";
+        "org.freedesktop.impl.portal.FileChooser" = "gtk";
+        "org.freedesktop.impl.portal.ScreenCast" = "wlr";
+        "org.freedesktop.impl.portal.Screenshot" = "wlr";
+      };
+    };
+  };
 
   systemd = {
     user = { 

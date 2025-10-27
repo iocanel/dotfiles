@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# Get available monitors from way-displays
+monitors=$(way-displays -g 2>/dev/null | grep -A999 "info:" | grep "name:" | awk -F"'" '{print $2}' | sort)
+
+if [[ -z "$monitors" ]]; then
+    echo "No monitors found. Exiting."
+    exit 1
+fi
+
+# Prompt user to select the main monitor using wofi
+primary_monitor=$(echo "$monitors" | wofi --dmenu --prompt "Select the main monitor:")
+
+# Check if the selected monitor is valid
+if [[ -z "$primary_monitor" ]]; then
+    echo "No monitor selected. Exiting."
+    exit 1
+elif ! echo "$monitors" | grep -q "$primary_monitor"; then
+    echo "Invalid monitor selected. Exiting."
+    exit 1
+fi
+
+secondary_monitor=$(echo "$monitors" | grep -v "$primary_monitor" | head -n 1)
+# Check if the selected monitor is valid
+if [[ -z "$secondary_monitor" ]]; then
+    echo "No secondary monitor selected. Exiting."
+    exit 1
+elif ! echo "$monitors" | grep -q "$secondary_monitor"; then
+    echo "Invalid monitor selected. Exiting."
+    exit 1
+fi
+echo "Secondary: $secondary_monitor"
+
+# Get available resolutions for the primary monitor
+primary_resolutions=$(way-displays -g 2>/dev/null | grep -A999 "$primary_monitor:" | grep "mode:" | awk '{print $2 "x" $4}' | sort -nru)
+primary_resolution=$(echo "$primary_resolutions" | wofi --dmenu --prompt "Select resolution for $primary_monitor:")
+
+# Get available resolutions for the secondary monitor
+secondary_resolutions=$(way-displays -g 2>/dev/null | grep -A999 "$secondary_monitor:" | grep "mode:" | awk '{print $2 "x" $4}' | sort -nru)
+secondary_resolution=$(echo "$secondary_resolutions" | wofi --dmenu --prompt "Select resolution for $secondary_monitor:")
+
+if [[ -z "$primary_resolution" || -z "$secondary_resolution" ]]; then
+    echo "Resolution selection cancelled. Exiting."
+    exit 1
+fi
+
+echo "Setting up scaled mirroring: $primary_monitor ($primary_resolution) and $secondary_monitor ($secondary_resolution)"
+
+# Extract width and height from resolutions
+primary_width=$(echo "$primary_resolution" | cut -d'x' -f1)
+primary_height=$(echo "$primary_resolution" | cut -d'x' -f2)
+secondary_width=$(echo "$secondary_resolution" | cut -d'x' -f1)
+secondary_height=$(echo "$secondary_resolution" | cut -d'x' -f2)
+
+# Calculate scale factors to achieve the mirroring effect
+primary_scale=1.0
+secondary_scale=$(echo "scale=3; $secondary_width / $primary_width" | bc -l)
+
+# Configure scaled mirroring
+way-displays -s ARRANGE_ALIGN ROW TOP
+way-displays -s ORDER "$primary_monitor"
+way-displays -s MODE "$primary_monitor" "$primary_width" "$primary_height"
+way-displays -s MODE "$secondary_monitor" "$secondary_width" "$secondary_height"
+way-displays -s SCALE "$primary_monitor" "$primary_scale"
+way-displays -s SCALE "$secondary_monitor" "$secondary_scale"
+
+echo "Configured: $primary_monitor at ${primary_scale}x scale, $secondary_monitor at ${secondary_scale}x scale"

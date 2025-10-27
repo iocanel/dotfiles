@@ -1,0 +1,87 @@
+#!/bin/bash
+
+# Mirror a selected monitor output to another monitor using wl-mirror
+
+# Get all connected monitors using wlr-randr
+mapfile -t monitors < <(wlr-randr | grep -E "^[A-Za-z0-9-]+" | awk '{print $1}')
+
+if [[ ${#monitors[@]} -lt 2 ]]; then
+    echo "Need at least 2 monitors for mirroring. Found: ${monitors[*]}"
+    exit 1
+fi
+
+echo "Available monitors: ${monitors[*]}"
+
+# Use slurp to let user select which monitor to mirror
+echo "Click on the monitor you want to mirror..."
+source_output=$(slurp -f "%o" -o)
+
+if [[ -z "$source_output" ]]; then
+    echo "No monitor selected. Exiting."
+    exit 1
+fi
+
+echo "Source monitor: $source_output"
+
+# Find the target monitor (the other one)
+target_monitor=""
+for monitor in "${monitors[@]}"; do
+    if [[ "$monitor" != "$source_output" ]]; then
+        target_monitor="$monitor"
+        break
+    fi
+done
+
+if [[ -z "$target_monitor" ]]; then
+    echo "Could not find target monitor. Exiting."
+    exit 1
+fi
+
+echo "Target monitor: $target_monitor"
+
+# Kill any existing wl-mirror processes
+pkill wl-mirror
+
+# Start wl-mirror to mirror the source output to a window
+echo "Starting mirror from $source_output to $target_monitor..."
+wl-mirror "$source_output" &
+mirror_pid=$!
+
+# Wait for the window to appear and try different selectors
+sleep 3
+
+# Move the wl-mirror window to the target monitor and make it fullscreen using sway
+if command -v swaymsg >/dev/null 2>&1; then
+    # Try different ways to find the wl-mirror window
+    window_found=false
+    
+    if swaymsg "[title=\"wl-mirror\"] focus" 2>/dev/null; then
+        swaymsg "[title=\"wl-mirror\"] move container to output $target_monitor"
+        swaymsg "[title=\"wl-mirror\"] focus"
+        swaymsg "[title=\"wl-mirror\"] fullscreen"
+        window_found=true
+    elif swaymsg "[class=\"wl-mirror\"] focus" 2>/dev/null; then
+        swaymsg "[class=\"wl-mirror\"] move container to output $target_monitor"
+        swaymsg "[class=\"wl-mirror\"] focus"
+        swaymsg "[class=\"wl-mirror\"] fullscreen"
+        window_found=true
+    elif swaymsg "[app_id=\"wl-mirror\"] focus" 2>/dev/null; then
+        swaymsg "[app_id=\"wl-mirror\"] move container to output $target_monitor"
+        swaymsg "[app_id=\"wl-mirror\"] focus"
+        swaymsg "[app_id=\"wl-mirror\"] fullscreen"
+        window_found=true
+    fi
+    
+    if [ "$window_found" = false ]; then
+        echo "Warning: Could not find wl-mirror window. Mirror may not be fullscreen."
+        echo "The mirror window should appear on $target_monitor but may need manual fullscreen."
+    fi
+else
+    echo "swaymsg not available. You may need to manually move the mirror window to fullscreen on $target_monitor"
+fi
+
+echo "Mirror active: $source_output -> $target_monitor (PID: $mirror_pid)"
+echo "Press Ctrl+C to stop mirroring"
+
+# Wait for the mirror process or user interrupt
+wait $mirror_pid 
