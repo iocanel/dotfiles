@@ -130,7 +130,7 @@ bindsym $mod+w exec swayr switch-window
 
 # start clipmenu (a clipboard manager)
 # in some cases clipmenu doesn't pickup the correct CM_LAUNCHER so force it here
-bindsym --release $mod+c exec wofi-cliphist
+bindsym $mod+c exec wofi-cliphist
 bindsym --release $mod+Shift+c exec clipboard-to-kitty --class EditorTerm
 bindsym --release $mod+p exec CM_LAUNCHER="wofi" wofi-pass
 
@@ -398,6 +398,8 @@ exec_always sh -c 'wl-paste --primary --type image --watch cliphist store'
 
 # Keep PRIMARY (selection) in sync with clipboard
 exec_always sh -c 'wl-paste --type text --watch wl-copy --type text --primary'
+ # Keep clipboard in sync with PRIMARY (selection)
+exec_always sh -c 'wl-paste --primary --type text --watch wl-copy --type text'
 
 # Bind to workspace
 bindsym $mod+1 workspace $ws1; 
