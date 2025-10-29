@@ -1,15 +1,39 @@
-# Desktop configuration - dual monitor setup with 1.0 scaling
+# Desktop configuration - dual monitor setup with current display positions
 # yaml-language-server: $schema=https://raw.githubusercontent.com/alex-courtis/way-displays/refs/heads/master/schema/cfg-1.0.0.yaml
 ARRANGE: ROW
 ALIGN: TOP
 SCALING: TRUE
-AUTO_SCALE: TRUE
+AUTO_SCALE: FALSE
 AUTO_SCALE_MIN: 1
 AUTO_SCALE_MAX: -1
+
+ORDER:
+  - "Dell Inc. DELL P2715Q V48W266G416S (DP-5)"
+  - "BOE 0x09BA (eDP-1)"
+
 SCALE:
-  - NAME_DESC: DP-5
-    SCALE: 1
-  - NAME_DESC: eDP-1
-    SCALE: 1
+  - NAME_DESC: "Dell Inc. DELL P2715Q V48W266G416S (DP-5)"
+    SCALE: 1.0
+  - NAME_DESC: "BOE 0x09BA (eDP-1)"
+    SCALE: 1.0
+
+MODE:
+  - NAME_DESC: "Dell Inc. DELL P2715Q V48W266G416S (DP-5)"
+    WIDTH: 3840
+    HEIGHT: 2160
+    HZ: 30.0
+  - NAME_DESC: "BOE 0x09BA (eDP-1)"
+    WIDTH: 2560
+    HEIGHT: 1600
+    HZ: 60.0
+
+POSITION:
+  - NAME_DESC: "Dell Inc. DELL P2715Q V48W266G416S (DP-5)"
+    X: 0
+    Y: 0
+  - NAME_DESC: "BOE 0x09BA (eDP-1)"
+    X: 3840
+    Y: 0
+
 CALLBACK_CMD: notify-send "way-displays ${CALLBACK_LEVEL}" "${CALLBACK_MSG}"
 
