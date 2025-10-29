@@ -354,7 +354,7 @@ input * {
 }
 
 exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
-exec --no-startup-id xautolock -time 30 -locker 'screenlock-now'
+exec swayidle -w timeout 1800 'screenlock-now' timeout 2100 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"'
 #exec --no-startup-id /usr/bin/picom -b
 #exec --no-startup-id /usr/bin/conky -c ~/.config/conky/config
 #exec --no-startup-id /usr/bin/conky -c ~/.config/conky/agenda
