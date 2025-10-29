@@ -135,6 +135,15 @@ in
     mp4v2
     pulsemixer
     gimp3WithPlugins
+    pulseaudio
+    pavucontrol
+    pwvucontrol
+    ffmpeg
+    v4l-utils
+    guvcview
+    mpv
+    opencv
+    audacity
     # Desktop
     arandr
     lxrandr
@@ -151,6 +160,18 @@ in
     dropbox
     # Communication
     zulip
+    slack
+    discord
+    dropbox
+    remmina
+    wget
+    curl
+    wireshark
+    openvpn
+    networkmanager-openvpn
+    networkmanagerapplet
+    openssl
+    bluez
 
     slack
     discord
