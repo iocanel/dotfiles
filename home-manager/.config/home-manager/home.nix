@@ -26,6 +26,7 @@ let
     };
   };
   whisperApi = pkgs.callPackage ./packages/whisper-api/default.nix { };
+  gimp3WithPlugins = pkgs.callPackage ./packages/gimp3-with-plugins/default.nix { };
 
   zshPrompt = ''
     # Load vcs_info for git branch
@@ -133,6 +134,7 @@ in
     calibre
     mp4v2
     pulsemixer
+    gimp3WithPlugins
     # Desktop
     arandr
     lxrandr
