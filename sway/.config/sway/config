@@ -258,11 +258,11 @@ bindsym $mod+Ctrl+r restart
 bindsym $mod+Ctrl+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # Screenshots
-bindsym --release $mod+Shift+p exec "scrot -s '/home/iocanel/Documents/photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
-bindsym --release Shift+Print exec "scrot -s '/home/iocanel/Documents/photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
-bindsym --release Print exec "scrot -m '/home/iocanel/Documents/photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
-bindsym --release Ctrl+Shift+p exec "scrot -u '/home/iocanel/Documents/photos/screenshots/%Y-%m-%d_%H:%M:%S_$wx$h.png'"
-bindsym --release $mod+Shift+s exec "/home/iocanel/bin/toggle-screenkey"
+bindsym $mod+Shift+p exec "/home/iocanel/.dotfiles/sway/bin/sway-screenshot-region"
+bindsym Shift+Print exec "/home/iocanel/.dotfiles/sway/bin/sway-screenshot-region"
+bindsym Print exec "/home/iocanel/.dotfiles/sway/bin/sway-screenshot-full"
+bindsym Ctrl+Shift+p exec "/home/iocanel/.dotfiles/sway/bin/sway-screenshot-output"
+bindsym $mod+Shift+s exec "/home/iocanel/bin/toggle-screenkey"
 
 # Screen Saver
 bindsym $mod+Ctrl+Shift+s exec toggle-screenlock

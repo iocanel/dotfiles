@@ -1,0 +1,4 @@
+#!/bin/bash
+mkdir -p /home/iocanel/Documents/photos/screenshots
+timestamp=$(date +%Y-%m-%d_%H:%M:%S)
+grim "/home/iocanel/Documents/photos/screenshots/${timestamp}.png"

@@ -1,0 +1,7 @@
+#!/bin/bash
+mkdir -p /home/iocanel/Documents/photos/screenshots
+timestamp=$(date +%Y-%m-%d_%H:%M:%S)
+geometry=$(slurp -o)
+if [ $? -eq 0 ]; then
+    grim -g "$geometry" "/home/iocanel/Documents/photos/screenshots/${timestamp}.png"
+fi
