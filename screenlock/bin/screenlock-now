@@ -3,19 +3,12 @@
 #
 # Uses swaylock-effects with enhanced visual effects
 # Compatible with Wayland
-
 swaylock \
-    --screenshots \
-    --clock \
-    --indicator \
-    --indicator-radius 100 \
-    --indicator-thickness 7 \
-    --effect-blur 7x5 \
-    --effect-vignette 0.5:0.5 \
-    --ring-color bb00cc \
-    --key-hl-color 880033 \
+    --image /home/iocanel/.local/share/images/unlock.png \
+    --indicator-radius 200 \
+    --indicator-thickness 20 \
+    --ring-color b8693a \
+    --key-hl-color 89b4fa \
     --line-color 00000000 \
-    --inside-color 00000088 \
-    --separator-color 00000000 \
-    --grace 0 \
-    --fade-in 0.2
+    --inside-color 1e1e2ecc \
+    --separator-color 00000000
