@@ -1,8 +1,8 @@
 #!/bin/sh
 
-stow i3
-stow dunst
-stow rofi
-stow x-resources
-stow conky
-stow screenlock
+stow -t ~ i3
+stow -t ~ dunst
+stow -t ~ rofi
+stow -t ~ x-resources
+stow -t ~ conky
+stow -t ~ screenlock

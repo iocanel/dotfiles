@@ -1,0 +1,165 @@
+#!/bin/bash
+
+# Smart unstow script for wayland dotfiles
+# Finds and reports broken symlinks before removing them
+
+DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
+WAYLAND_DIR="$DOTFILES_DIR"
+
+# Color codes for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+echo -e "${BLUE}Smart unstow for wayland dotfiles${NC}"
+echo "Analyzing dotfiles in: $WAYLAND_DIR"
+
+# Function to find broken symlinks in a directory
+find_broken_links() {
+    local target_dir="$1"
+    
+    if [[ ! -d "$target_dir" ]]; then
+        return 0
+    fi
+    
+    # Find all symlinks in the directory (including subdirectories)
+    find "$target_dir" -type l 2>/dev/null | while read -r link; do
+        if [[ -L "$link" ]] && [[ ! -e "$link" ]]; then
+            # Check if it points to our wayland dotfiles OR old dotfiles that should be cleaned up
+            local target=$(readlink "$link")
+            if [[ "$target" == *"/.dotfiles/wayland/"* ]] || [[ "$target" == *"/.dotfiles/"*"/wayland/"* ]] || [[ "$target" == *"/.dotfiles/sway/"* ]] || [[ "$target" == *"/.dotfiles/waybar/"* ]] || [[ "$target" == *"/.dotfiles/wofi/"* ]] || [[ "$target" == *"/.dotfiles/swaync/"* ]] || [[ "$target" == *"/.dotfiles/swaylock/"* ]] || [[ "$target" == *"/.dotfiles/monitor-mgmt-wlr/"* ]]; then
+                echo "$link"
+            fi
+        fi
+    done
+}
+
+# Function to get target directories from dotfiles structure
+get_target_directories() {
+    local target_dirs=()
+    
+    # Check for .config directories
+    for package_dir in "$WAYLAND_DIR"/*/; do
+        if [[ -d "$package_dir/.config" ]]; then
+            for config_subdir in "$package_dir/.config"/*/; do
+                if [[ -d "$config_subdir" ]]; then
+                    local config_name=$(basename "$config_subdir")
+                    target_dirs+=("$HOME/.config/$config_name")
+                fi
+            done
+        fi
+        
+        # Check for bin directories
+        if [[ -d "$package_dir/bin" ]]; then
+            target_dirs+=("$HOME/bin")
+        fi
+        
+        # Check for .local directories
+        if [[ -d "$package_dir/.local" ]]; then
+            # Find subdirectories under .local
+            for local_subdir in "$package_dir/.local"/*; do
+                if [[ -d "$local_subdir" ]]; then
+                    local relative_path=${local_subdir#"$package_dir/.local/"}
+                    target_dirs+=("$HOME/.local/$relative_path")
+                fi
+            done
+        fi
+    done
+    
+    # Remove duplicates and sort
+    printf '%s\n' "${target_dirs[@]}" | sort -u
+}
+
+echo
+echo -e "${YELLOW}Scanning for broken symlinks...${NC}"
+
+# Get all target directories
+mapfile -t target_directories < <(get_target_directories)
+
+# Collect all broken links first
+all_broken_links=()
+for target_dir in "${target_directories[@]}"; do
+    while IFS= read -r link; do
+        if [[ -n "$link" ]]; then
+            all_broken_links+=("$link")
+        fi
+    done < <(find_broken_links "$target_dir")
+done
+
+# Remove duplicates and empty entries
+if [[ ${#all_broken_links[@]} -gt 0 ]]; then
+    mapfile -t total_broken < <(printf '%s\n' "${all_broken_links[@]}" | grep -v '^$' | sort -u)
+else
+    total_broken=()
+fi
+broken_count=${#total_broken[@]}
+
+# Now display results by directory
+for target_dir in "${target_directories[@]}"; do
+    echo "Checking: $target_dir"
+    
+    mapfile -t broken_in_dir < <(find_broken_links "$target_dir")
+    
+    if [[ ${#broken_in_dir[@]} -gt 0 ]]; then
+        echo -e "  ${RED}Found ${#broken_in_dir[@]} broken symlink(s):${NC}"
+        for link in "${broken_in_dir[@]}"; do
+            target_path=$(readlink "$link" 2>/dev/null || echo 'broken')
+            echo -e "    ${RED}✗${NC} $link -> $target_path"
+        done
+    else
+        echo -e "  ${GREEN}✓ No broken symlinks${NC}"
+    fi
+done
+
+echo
+if [[ $broken_count -eq 0 ]]; then
+    echo -e "${GREEN}No broken symlinks found. Nothing to clean up.${NC}"
+    exit 0
+fi
+
+echo -e "${YELLOW}Summary: Found $broken_count broken symlink(s)${NC}"
+echo
+
+# Ask for confirmation
+read -p "Do you want to remove these broken symlinks? [y/N]: " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo -e "${YELLOW}Aborted. No symlinks were removed.${NC}"
+    exit 0
+fi
+
+echo
+echo -e "${BLUE}Removing broken symlinks...${NC}"
+
+removed_count=0
+for link in "${total_broken[@]}"; do
+    if [[ -L "$link" ]]; then
+        echo -e "Removing: ${RED}$link${NC}"
+        rm "$link"
+        if [[ $? -eq 0 ]]; then
+            removed_count=$((removed_count + 1))
+        else
+            echo -e "  ${RED}Failed to remove $link${NC}"
+        fi
+    fi
+done
+
+echo
+echo -e "${GREEN}Successfully removed $removed_count broken symlink(s).${NC}"
+
+# Also run traditional stow -D as backup for any remaining stowed packages
+echo
+echo -e "${BLUE}Running traditional stow -D for remaining packages...${NC}"
+
+packages=(sway waybar wofi swaync swayr way-displays monitor-mgmt-wlr swaylock)
+for package in "${packages[@]}"; do
+    if [[ -d "$WAYLAND_DIR/$package" ]]; then
+        echo "Unstowing: $package"
+        stow -D -t ~ "$package" 2>/dev/null || true
+    fi
+done
+
+echo
+echo -e "${GREEN}Smart unstow completed!${NC}"

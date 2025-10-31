@@ -1,10 +1,10 @@
 #!/bin/sh
 
-stow sway
-stow waybar
-stow wofi
-stow swaync
-stow swayr
-stow way-displays
-stow monitor-mgmt-wlr
-stow swaylock
+stow -t ~ sway
+stow -t ~ waybar
+stow -t ~ wofi
+stow -t ~ swaync
+stow -t ~ swayr
+stow -t ~ way-displays
+stow -t ~ monitor-mgmt-wlr
+stow -t ~ swaylock
