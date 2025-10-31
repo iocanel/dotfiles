@@ -400,7 +400,8 @@ in
     #
     xdotool
     ydotool
-    scrot
+    grim
+    slurp
     imagemagick
     rsync
     rclone
@@ -412,7 +413,7 @@ in
     tesseract4
     #
     # Deamons and Services
-    dunst
+    swaynotificationcenter
     # Requirement for home manager config scripts
     gettext
     hexdump
