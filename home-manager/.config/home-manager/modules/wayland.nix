@@ -22,6 +22,7 @@ with lib;
       wdisplays
       wlr-randr
       wl-mirror
+      waypaper
 
       # Wayland-specific menu and clipboard
       wofi
@@ -117,9 +118,28 @@ with lib;
           };
           Service = {
             Type = "simple";
-            ExecStart = "${pkgs.swayidle}/bin/swayidle -w timeout 300 '${pkgs.swaylock-effects}/bin/swaylock --screenshots --clock --indicator --indicator-radius 100 --indicator-thickness 7 --effect-blur 7x5 --effect-vignette 0.5:0.5 --ring-color bb00cc --key-hl-color 880033 --line-color 00000000 --inside-color 00000088 --separator-color 00000000 --grace 2 --fade-in 0.2' timeout 600 'swaymsg \"output * power off\"' resume 'swaymsg \"output * power on\"' before-sleep '${pkgs.swaylock-effects}/bin/swaylock --screenshots --clock --indicator --indicator-radius 100 --indicator-thickness 7 --effect-blur 7x5 --effect-vignette 0.5:0.5 --ring-color bb00cc --key-hl-color 880033 --line-color 00000000 --inside-color 00000088 --separator-color 00000000 --grace 2 --fade-in 0.2'";
+            ExecStart = "${pkgs.swayidle}/bin/swayidle -w timeout 300 '${config.home.homeDirectory}/bin/screenlock-now' timeout 600 'swaymsg \"output * power off\"' resume 'swaymsg \"output * power on\"' before-sleep '${config.home.homeDirectory}/bin/screenlock-now'";
             Restart = "on-failure";
             RestartSec = "1";
+            Environment = [
+              "XDG_CURRENT_DESKTOP=sway"
+              "XDG_SESSION_TYPE=wayland"
+            ];
+          };
+        };
+
+        waypaper = {
+          Unit = {
+            Description = "Set wallpaper with waypaper";
+            After = [ "graphical-session.target" ];
+            PartOf = [ "graphical-session.target" ];
+          };
+          Install = {
+            WantedBy = [ "graphical-session.target" ];
+          };
+          Service = {
+            Type = "oneshot";
+            ExecStart = "${pkgs.waypaper}/bin/waypaper --wallpaper ${config.home.homeDirectory}/Documents/photos/wallpapers/HD/default.jpg";
             Environment = [
               "XDG_CURRENT_DESKTOP=sway"
               "XDG_SESSION_TYPE=wayland"
