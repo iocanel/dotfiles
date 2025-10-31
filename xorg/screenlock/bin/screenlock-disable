@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if pgrep -x "xautolock" > /dev/null
+then
+	pkill xautolock
+        notify-send -a "Screensaver" -u "critical" "Disabled" "Screensaver disabled"
+else
+        notify-send -a "Screensaver" -u "critical" "Disabled" "Screensaver already disabled"
+fi

@@ -23,7 +23,6 @@ stow_shared() {
     stow pulse
     stow qutebrowser
     stow ranger
-    stow screenlock
     stow vdirsyncer
     stow wacom
     stow zsh
