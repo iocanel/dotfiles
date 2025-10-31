@@ -52,7 +52,15 @@ in
   imports = [
     ./modules/media-center.nix
     ./modules/financial-services.nix
+    ./modules/wayland.nix
+    ./modules/xorg.nix
   ];
+
+  # Desktop environment selection
+  # Enable either wayland or xorg, not both
+  # Set wayland.enable = false and xorg.enable = true to use X11/i3
+  wayland.enable = true;
+  xorg.enable = false;
 
   home.stateVersion = "25.05"; # Adjust this according to your Nixpkgs version
   home.username = "iocanel";
@@ -105,11 +113,9 @@ in
     zsh
 
     #
-    # Portal services
+    # Portal services (base)
     #
     xdg-desktop-portal
-    xdg-desktop-portal-wlr
-    xdg-desktop-portal-gtk
     #
     # Apps
     #
@@ -144,17 +150,9 @@ in
     mpv
     opencv
     audacity
-    # Desktop
+    # Desktop (shared)
     arandr
     lxrandr
-    waybar
-    swaylock
-    swayidle
-    swayr
-    way-displays
-    wdisplays
-    wlr-randr
-    wl-mirror
     
     # Sharing
     dropbox
@@ -180,12 +178,8 @@ in
     viber
     zoom-us
     teams-for-linux
-    # Menu
+    # Menu (shared)
     rofi-pass
-    wofi
-    cliphist
-    wl-clipboard
-    wtype
 
     #
     # Text editing
@@ -399,9 +393,6 @@ in
     # Utils
     #
     xdotool
-    ydotool
-    grim
-    slurp
     imagemagick
     rsync
     rclone
@@ -412,8 +403,7 @@ in
     util-linux
     tesseract4
     #
-    # Deamons and Services
-    swaynotificationcenter
+    # Deamons and Services (shared)
     # Requirement for home manager config scripts
     gettext
     hexdump
@@ -625,82 +615,10 @@ in
     };
   };
 
-  # XDG Portal configuration for screen sharing
-  xdg.portal = {
-    enable = true;
-    extraPortals = [ 
-      pkgs.xdg-desktop-portal-wlr 
-      pkgs.xdg-desktop-portal-gtk 
-    ];
-    config = {
-      common = {
-        default = "wlr";
-        "org.freedesktop.impl.portal.FileChooser" = "gtk";
-        "org.freedesktop.impl.portal.ScreenCast" = "wlr";
-        "org.freedesktop.impl.portal.Screenshot" = "wlr";
-      };
-    };
-  };
 
   systemd = {
     user = { 
       services = {
-        ydotoold = {
-          Unit = {
-            Description = "ydotool daemon";
-            After = [ "graphical-session.target" ];
-          };
-          Service = {
-            ExecStart = "${pkgs.ydotool}/bin/ydotoold";
-            Restart = "on-failure";
-          };
-          Install = {
-            WantedBy = [ "default.target" ];
-          };
-        };
-        waybar = {
-          Unit = {
-            Description = "Waybar status bar";
-            After = [ "graphical-session.target" ];
-            PartOf = [ "graphical-session.target" ];
-          };
-          Install = {
-            WantedBy = [ "graphical-session.target" ];
-          };
-          Service = {
-            Type = "simple";
-            ExecStart = "${pkgs.waybar}/bin/waybar -c ${config.home.homeDirectory}/.dotfiles/waybar/.config/waybar/config.json";
-            ExecReload = "${pkgs.coreutils}/bin/kill -SIGUSR2 $MAINPID";
-            Restart = "on-failure";
-            RestartSec = "1";
-            Environment = [
-              "XDG_CURRENT_DESKTOP=sway"
-              "XDG_SESSION_TYPE=wayland"
-              "HOME=${config.home.homeDirectory}" 
-              "PATH=${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
-            ];
-          };
-        };
-        swayidle = {
-          Unit = {
-            Description = "Swayidle idle daemon";
-            After = [ "graphical-session.target" ];
-            PartOf = [ "graphical-session.target" ];
-          };
-          Install = {
-            WantedBy = [ "graphical-session.target" ];
-          };
-          Service = {
-            Type = "simple";
-            ExecStart = "${pkgs.swayidle}/bin/swayidle -w timeout 300 '${pkgs.swaylock}/bin/swaylock --screenshots --clock --indicator --indicator-radius 100 --indicator-thickness 7 --effect-blur 7x5 --effect-vignette 0.5:0.5 --ring-color bb00cc --key-hl-color 880033 --line-color 00000000 --inside-color 00000088 --separator-color 00000000 --grace 2 --fade-in 0.2' timeout 600 'swaymsg \"output * power off\"' resume 'swaymsg \"output * power on\"' before-sleep '${pkgs.swaylock}/bin/swaylock --screenshots --clock --indicator --indicator-radius 100 --indicator-thickness 7 --effect-blur 7x5 --effect-vignette 0.5:0.5 --ring-color bb00cc --key-hl-color 880033 --line-color 00000000 --inside-color 00000088 --separator-color 00000000 --grace 2 --fade-in 0.2'";
-            Restart = "on-failure";
-            RestartSec = "1";
-            Environment = [
-              "XDG_CURRENT_DESKTOP=sway"
-              "XDG_SESSION_TYPE=wayland"
-            ];
-          };
-        };
         emacs-daemon = {
           Unit = {
             Description = "Emacs Daemon Service";
@@ -796,19 +714,6 @@ in
           # Run service after the user session starts
         };
       };
-      targets = {
-        "sway-session" = {
-          Unit = {
-            Description = "Sway Graphical Session";
-            BindsTo = [ "graphical-session.target" ];
-            Wants   = [ "graphical-session.target" ];
-            After   = [ "graphical-session-pre.target" ];
-          };
-          Install = {
-            WantedBy = [ "default.target" ];
-          };
-        };
-      };
       timers = {
         update-nixos-config = {
           Unit = {
@@ -871,20 +776,6 @@ in
     "x-scheme-handler/https" = "org.qutebrowser.qutebrowser.desktop";
   };
   
-  wayland.windowManager.sway = {
-    enable = false;          # don't generate it but use the stowed one
-    package = pkgs.swayfx;   # ensure HM uses SwayFX too
-    systemd = {
-      enable = true;
-    };
-    checkConfig = false;     # <-- prevent sandbox validation (fixes build)
-    # extraConfig = ''
-    #   corner_radius 10
-    #   shadows enable
-    #   shadow_blur_radius 20
-    #   shadow_color #00000088
-    # '';
-  };
 
   #
   # Home Files
