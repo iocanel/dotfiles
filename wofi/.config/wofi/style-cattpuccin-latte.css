@@ -1,7 +1,7 @@
 /* Window */
 window {
   margin: 0;
-  border: 3px solid #7287fd;                 /* $lavender */
+  border: 3px solid #1e66f5;                 /* $blue */
   background-color: rgba(239, 241, 245, .98);/* $base */
   border-radius: 16px;
 }
@@ -37,9 +37,12 @@ window {
 
 /* Selected entry */
 #entry:selected {
-  background-color: #1e66f5;                 /* $blue */
-  color: #eff1f5;                            /* $base for contrast */
-  outline: 2px solid #8839ef;                /* $mauve accent */
+  color: #fe640b;                            /* $peach orange */
+  outline: none;
+}
+
+#entry:selected #text {
+  color: #fe640b;                            /* $peach orange */
 }
 
 /* Icons */

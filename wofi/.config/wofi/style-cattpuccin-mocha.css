@@ -1,7 +1,7 @@
 /* Base window */
 window {
   margin: 0;
-  border: 3px solid #b4befe;          /* $lavender */
+  border: 3px solid #89b4fa;          /* $blue */
   background-color: rgba(30, 30, 46, .95); /* $base */
   border-radius: 16px;
 }
@@ -37,9 +37,12 @@ window {
 
 /* Selected entry */
 #entry:selected {
-  background-color: #89b4fa;           /* $blue */
-  color: #1e1e2e;                      /* $base for contrast */
-  outline: 2px solid #cba6f7;          /* $mauve accent */
+  color: #fab387;                      /* $peach orange */
+  outline: none;
+}
+
+#entry:selected #text {
+  color: #fab387;                      /* $peach orange */
 }
 
 /* Icons */
