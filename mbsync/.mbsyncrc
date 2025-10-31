@@ -12,7 +12,7 @@ IMAPAccount iocanel-gmail
 Host imap.gmail.com
 User iocanel@gmail.com
 PassCmd "pass show services/mail/iocanel@gmail.com/token"
-SSLType IMAPS
+TLSType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore iocanel-gmail-remote
@@ -43,7 +43,7 @@ IMAPAccount ikanello-gmail
 Host imap.gmail.com
 User ikanello@redhat.com
 PassCmd "pass show services/mail/ikanello@redhat.com/token"
-SSLType IMAPS
+TLSType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore ikanello-gmail-remote
