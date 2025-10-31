@@ -1,0 +1,34 @@
+/* Simple test CSS for swaync with larger fonts */
+
+/* Notification window positioning - matches sway gaps (20px) */
+.notification-row {
+  outline: none;
+  margin: 37px 30px 10px 0px; /* Top 37px, right 30px for better spacing */
+}
+
+.summary {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.body {
+  font-size: 24px;
+}
+
+.time {
+  font-size: 20px;
+}
+
+.widget-title {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.notification {
+  border-radius: 10px;
+  border: 2px solid #45475a;
+  background: #1e1e2e;
+  color: #cdd6f4;
+  padding: 12px;
+  margin: 0px;
+}
