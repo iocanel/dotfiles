@@ -1,2 +1,5 @@
 #!/bin/bash
-chromium --app=https://gmail.com  --user-data-dir=/home/iocanel/.sandbox/iocanel/.config/chromium --user-cache-dir=/home/iocanel/.sandbox/iocanel/.cache/chromium --class=GmailPersonal --profile-directory="Personal"
+#chromium --app=https://gmail.com  --user-data-dir=/home/iocanel/.sandbox/iocanel/.config/chromium --user-cache-dir=/home/iocanel/.sandbox/iocanel/.cache/chromium --class=GmailPersonal --profile-directory="Personal"
+
+# I no longer need sandboxing for gmail
+chromium --app=https://gmail.com 

@@ -1,9 +1,25 @@
 [Desktop Entry]
+StartupWMClass=chromium-browser
 Version=1.0
-Name=Gmail (iocanel)
+Name=Gmail Personal (iocanel@gmail.com)
 GenericName=Gmail
+Comment=Access Gmail in app mode
 StartupNotify=true
 Terminal=false
 Icon=gmail
 Type=Application
-Exec=gmail-personal
+Categories=Network;WebBrowser;
+Exec=chromium --app=https://gmail.com
+Actions=new-window;new-private-window;gmail-app;
+
+[Desktop Action new-window]
+Name=New Window
+Exec=chromium
+
+[Desktop Action new-private-window]
+Name=New Incognito Window
+Exec=chromium --incognito
+
+[Desktop Action gmail-app]
+Name=Gmail App Mode
+Exec=chromium --app=https://gmail.com

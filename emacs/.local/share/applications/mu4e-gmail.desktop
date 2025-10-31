@@ -4,6 +4,6 @@ Name=Mu4e (Github)
 GenericName=Mu4e Github
 StartupNotify=true
 Terminal=false
-Icon=gmail
+Icon=github
 Type=Application
 Exec=mu4e-github

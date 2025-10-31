@@ -1,9 +1,25 @@
 [Desktop Entry]
+StartupWMClass=chromium-browser
 Version=1.0
-Name=Gmail (ikanello)
+Name=Gmail Work (ikanello@redhat.com)
 GenericName=Gmail
+Comment=Access Gmail in app mode
 StartupNotify=true
 Terminal=false
 Icon=gmail
 Type=Application
-Exec=gmail-work
+Categories=Network;WebBrowser;
+Exec=chromium --app=https://gmail.com --user-data-dir=/home/iocanel/.sandbox/ikanello/.config/chromium --user-cache-dir=/home/iocanel/.sandbox/ikanello/.cache/chromium --class=GmailWork --profile-directory="Work"
+Actions=new-window;new-private-window;gmail-app;
+
+[Desktop Action new-window]
+Name=New Window
+Exec=chromium
+
+[Desktop Action new-private-window]
+Name=New Incognito Window
+Exec=chromium --incognito
+
+[Desktop Action gmail-app]
+Name=Gmail App Mode
+Exec=chromium --app=https://gmail.com --user-data-dir=/home/iocanel/.sandbox/ikanello/.config/chromium --user-cache-dir=/home/iocanel/.sandbox/ikanello/.cache/chromium --class=GmailWork --profile-directory="Work"
