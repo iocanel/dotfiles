@@ -353,8 +353,8 @@ input * {
     xkb_options grp:alt_shift_toggle
 }
 
-exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
-exec swayidle -w timeout 1800 'screenlock-now' timeout 2100 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"'
+exec --no-startup-id swaync
+# swayidle is now managed by systemd user service
 #exec --no-startup-id /usr/bin/picom -b
 #exec --no-startup-id /usr/bin/conky -c ~/.config/conky/config
 #exec --no-startup-id /usr/bin/conky -c ~/.config/conky/agenda
@@ -382,6 +382,9 @@ exec --no-startup-id pasystray &
 
 # 1) Start the history daemon (collects text *and* images)
 exec_always cliphist daemon
+
+# Start swayr daemon
+exec_always swayrd
 
 # 2) Feed new selections into the history
 #    Text (regular clipboard)
