@@ -1,0 +1,9 @@
+#!/bin/sh
+
+stow sway
+stow waybar
+stow wofi
+stow swaync
+stow swayr
+stow way-displays
+stow monitor-mgmt-wlr

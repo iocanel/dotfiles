@@ -11,5 +11,5 @@ fi
 
 
 ### BEGIN_GPG_PRESETS
-/passbridge/init` > /dev/null 2>&1 & disown
+# /passbridge/init` > /dev/null 2>&1 & disown
 

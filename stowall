@@ -1,34 +1,57 @@
-#!/bin/sh 
+#!/bin/sh
 
-stow alacritty
-stow clipmenu
-stow conky
-stow chatgpt
-stow docker
-stow dunst
-stow emacs
-stow emacs-doom
-stow gnupg
-stow gmail
-stow htop
-stow i3
-stow kitty
-stow kubemenu
-stow maven
-stow mbsync
-stow monitor-mgmt
-stow msmtp
-stow mutt
-stow neovim
-stow network-manager
-stow pulse
-stow qutebrowser
-stow ranger
-stow rofi
-stow screenlock
-stow vdirsyncer
-stow wacom
-stow x-resources
-stow zsh
-stow nix-sdk
-stow java-utils
+# Function to stow shared packages
+stow_shared() {
+    stow alacritty
+    stow clipmenu
+    stow chatgpt
+    stow docker
+    stow emacs
+    stow emacs-doom
+    stow gnupg
+    stow gmail
+    stow htop
+    stow kitty
+    stow kubemenu
+    stow maven
+    stow mbsync
+    stow monitor-mgmt
+    stow msmtp
+    stow mutt
+    stow neovim
+    stow network-manager
+    stow pulse
+    stow qutebrowser
+    stow ranger
+    stow screenlock
+    stow vdirsyncer
+    stow wacom
+    stow zsh
+    stow nix-sdk
+    stow java-utils
+    stow utils-work
+    stow tmux
+    stow theme-manager
+    stow k9s
+    stow ideavim
+    stow home-manager
+    stow nyxt
+    stow yapt
+    stow zulip
+}
+
+# Check command line argument or detect display server
+if [ "$1" = "xorg" ] || [ "$XDG_SESSION_TYPE" = "x11" ]; then
+    echo "Setting up dotfiles for Xorg..."
+    stow_shared
+    cd xorg && ./stowall
+elif [ "$1" = "wayland" ] || [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+    echo "Setting up dotfiles for Wayland..."
+    stow_shared
+    cd wayland && ./stowall
+else
+    echo "Usage: $0 [xorg|wayland]"
+    echo "Or run without arguments to auto-detect from \$XDG_SESSION_TYPE"
+    echo "Current XDG_SESSION_TYPE: ${XDG_SESSION_TYPE:-not set}"
+    exit 1
+fi
