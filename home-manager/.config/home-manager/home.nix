@@ -8,9 +8,6 @@ let
   fisher = pkgs.callPackage ./packages/fisher/4.4.4.nix {
     inherit buildFishPlugin;
   };
-  fishAi = pkgs.callPackage ./packages/fish-ai/2.0.3.nix {
-    inherit buildFishPlugin;
-  };
   org-roam-mcp = pkgs.callPackage ./packages/org-roam-mcp/default.nix {
     orgDir = "$HOME/Documents/org/roam";
     # Pin to an exact commit you trust:
@@ -387,7 +384,6 @@ in
     #nix-your-shell (breaks nix-shell -p xxx)
     # (for setting up the prompt: $ tide configure)
     fishPlugins.tide
-    fishAi
     fisher
     #
     # Utils
@@ -517,10 +513,6 @@ in
     fish = {
       enable = true;
       plugins = [
-         {
-           name = "fish-ai";
-           src = fishAi;
-         }
          {
            name = "fisher";
            src = fisher;
