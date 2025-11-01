@@ -10,6 +10,7 @@ stow_shared() {
     stow emacs-doom
     stow gnupg
     stow gmail
+    stow outlook
     stow htop
     stow kitty
     stow kubemenu

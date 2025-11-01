@@ -209,7 +209,7 @@ set $ws10 "10"
 
 exec --no-startup-id kitty --class=MainTerminal
 exec --no-startup-id gmail-personal
-exec --no-startup-id gmail-work
+exec --no-startup-id outlook-work
 exec --no-startup-id slack --class=Slack
 exec --no-startup-id zulip --class=Zulip
 exec --no-startup-id chatgpt-web
@@ -217,10 +217,8 @@ exec --no-startup-id emacs --title "Workspace Emacs"
 
 # Force window placement using for_window (more reliable than assign)
 for_window [class="MainTerminal"] move to workspace $ws1
-for_window [class="GmailPersonal"] move to workspace $ws2
-for_window [class="GmailWork"] move to workspace $ws3
-for_window [app_id="^chrome-.*-Personal$"] move to workspace $ws2
-for_window [app_id="^chrome-.*-Work$"] move to workspace $ws3
+for_window [app_id="^chrome-gmail.com.*"] move to workspace $ws2
+for_window [app_id="^chrome-outlook.office.com.*"] move to workspace $ws3
 for_window [app_id="Slack"] move to workspace $ws4
 for_window [app_id="Zulip"] move to workspace $ws5
 for_window [title="ChatGPT"] move to workspace $ws6
