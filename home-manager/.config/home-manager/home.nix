@@ -645,7 +645,7 @@ in
           };
           Service = {
             Type = "oneshot";
-            ExecStart = "${pkgs.rsync}/bin/rsync -a --delete --exclude='.git/' /etc/nixos/ ${config.home.homeDirectory}/.nixos";
+            ExecStart = "${pkgs.rsync}/bin/rsync -a --delete --exclude='.git/' --exclude='etc-pull' --exclude='etc-push' /etc/nixos/ ${config.home.homeDirectory}/.nixos";
           };
         };
         mount-google-drive = {
