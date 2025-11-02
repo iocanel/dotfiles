@@ -71,6 +71,8 @@ in
 
   home.sessionVariables = {
     EDITOR="nvim";
+    # Force Chromium to use proper Wayland clipboard
+    CHROMIUM_FLAGS="--enable-features=UseOzonePlatform --ozone-platform=wayland --enable-wayland-ime";
   };
 
   nixpkgs.config.allowUnfree = true;
