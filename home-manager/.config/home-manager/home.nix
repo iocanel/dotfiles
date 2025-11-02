@@ -651,9 +651,14 @@ in
           };
           Service = {
             Type = "simple";
-            ExecStart = "${pkgs.rclone}/bin/rclone mount \"Google Drive:\" ${config.home.homeDirectory}/.google/drive";
+            ExecStart = "${pkgs.rclone}/bin/rclone mount \"Google Drive:\" ${config.home.homeDirectory}/.google/drive --allow-other --log-file=${config.home.homeDirectory}/.local/state/rclone.log";
             ExecStop = "${pkgs.coreutils}/bin/fusermount -u $HOME/.google/drive";
             Restart = "always";
+            Environment = [
+              "PATH=/run/wrappers/bin:${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
+              "HOME=${config.home.homeDirectory}"
+              "XDG_CONFIG_HOME=${config.home.homeDirectory}/.config"
+            ];
           };
         };
         sync-documents = {
