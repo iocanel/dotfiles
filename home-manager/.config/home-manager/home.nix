@@ -659,14 +659,17 @@ in
         sync-documents = {
           Unit = {
             Description = "Sync Documents";
+            After = [ "mount-google-drive.service" ];
+            BindsTo = [ "mount-google-drive.service" ];
+            ConditionPathIsMountPoint = "${config.home.homeDirectory}/.google/drive";
           };
           Install = {
-            WantedBy = [ "default.target" ];
+            # Don't auto-start, only run via timer when mount is active
+            WantedBy = [ ];
           };
           Service = {
-            Type = "simple";
+            Type = "oneshot";
             ExecStart = "${pkgs.unison}/bin/unison documents";
-            Restart = "always";
             Environment = [
               "PATH=${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
             ];
@@ -725,6 +728,7 @@ in
         sync-documents = {
           Unit = {
             Description = "Timer for sync-documents";
+            ConditionPathIsMountPoint = "${config.home.homeDirectory}/.google/drive";
           };
           Timer = {
             OnCalendar = "daily";
