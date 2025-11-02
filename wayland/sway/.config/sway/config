@@ -346,6 +346,11 @@ input * {
     xkb_options grp:alt_shift_toggle
 }
 
+# Enable middle-click paste globally
+input type:pointer {
+    middle_emulation enabled
+}
+
 exec --no-startup-id swaync
 # swayidle is now managed by systemd user service
 #exec --no-startup-id /usr/bin/picom -b
@@ -370,32 +375,12 @@ exec --no-startup-id pasystray &
 
 
 #
-# Clipboard management (Wayland)
+# Clipboard management (Wayland) - now handled by systemd services
+# See modules/wayland.nix for clipboard service configuration
 #
-
-# 1) Start the history daemon (collects text *and* images)
-exec_always cliphist daemon
 
 # Start swayr daemon
 exec_always swayrd
-
-# 2) Feed new selections into the history
-#    Text (regular clipboard)
-exec_always sh -c 'wl-paste --type text --watch cliphist store'
-#    Images (regular clipboard)
-exec_always sh -c 'wl-paste --type image --watch cliphist store'
-
-# 3) (Optional) also record PRIMARY selections (middle-click buffer)
-#    Only enable if you actually use PRIMARY on Wayland.
-#    Text
-exec_always sh -c 'wl-paste --primary --type text --watch cliphist store'
-#    Images
-exec_always sh -c 'wl-paste --primary --type image --watch cliphist store'
-
-# Keep PRIMARY (selection) in sync with clipboard
-exec_always sh -c 'wl-paste --type text --watch wl-copy --type text --primary'
- # Keep clipboard in sync with PRIMARY (selection)
-exec_always sh -c 'wl-paste --primary --type text --watch wl-copy --type text'
 
 # Bind to workspace
 bindsym $mod+1 workspace $ws1; 
