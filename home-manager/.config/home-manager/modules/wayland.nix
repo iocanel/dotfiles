@@ -28,6 +28,7 @@ with lib;
       wofi
       cliphist
       wl-clipboard
+      wl-clip-persist
       wtype
 
       # Wayland automation and utilities
@@ -145,6 +146,33 @@ with lib;
             Environment = [
               "XDG_CURRENT_DESKTOP=sway"
               "XDG_SESSION_TYPE=wayland"
+              "WAYLAND_DISPLAY=wayland-1"
+              "PATH=/run/wrappers/bin:${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
+            ];
+          };
+        };
+
+        # Simple clipboard management - editor-centric approach
+        cliphist-store = {
+          Unit = {
+            Description = "Store clipboard content in history (regular clipboard only)";
+            After = [ "graphical-session.target" ];
+            PartOf = [ "graphical-session.target" ];
+          };
+          Install = {
+            WantedBy = [ "graphical-session.target" ];
+          };
+          Service = {
+            Type = "simple";
+            ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p %h/.cache/cliphist";
+            ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.wl-clipboard}/bin/wl-paste --watch ${pkgs.cliphist}/bin/cliphist store'";
+            Restart = "on-failure";
+            RestartSec = "1";
+            Environment = [
+              "XDG_CURRENT_DESKTOP=sway"
+              "XDG_SESSION_TYPE=wayland"
+              "WAYLAND_DISPLAY=wayland-1"
+              "PATH=/run/wrappers/bin:${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
             ];
           };
         };
