@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Clipboard history menu that loads selection to PRIMARY selection instead of clipboard
+# Similar to wofi-cliphist but for primary selection
+
+selected=$(cliphist list | wofi -S dmenu -p "Primary History" | cliphist decode)
+
+if [ -n "$selected" ]; then
+    # Copy to primary selection instead of regular clipboard
+    echo -n "$selected" | wl-copy --primary
+    
+    # Optional: Show notification
+    # notify-send "Primary Selection" "Loaded to primary selection (middle-click to paste)"
+fi
