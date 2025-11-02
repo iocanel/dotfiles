@@ -147,6 +147,7 @@ with lib;
               "XDG_CURRENT_DESKTOP=sway"
               "XDG_SESSION_TYPE=wayland"
               "WAYLAND_DISPLAY=wayland-1"
+              "DISPLAY=:0"
               "PATH=/run/wrappers/bin:${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
             ];
           };
