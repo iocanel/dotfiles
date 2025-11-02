@@ -126,7 +126,7 @@ bindsym $mod+w exec swayr switch-window
 # start clipmenu (a clipboard manager)
 # in some cases clipmenu doesn't pickup the correct CM_LAUNCHER so force it here
 bindsym $mod+c exec wofi-cliphist
-bindsym --release $mod+Shift+c exec clipboard-to-kitty --class EditorTerm
+bindsym --release $mod+Shift+c exec wofi-cliphist-primary
 bindsym --release $mod+p exec CM_LAUNCHER="wofi" wofi-pass
 
 # There also is the (new) i3-dmenu-desktop which only displays applications
