@@ -102,7 +102,7 @@ with lib;
               "XDG_CURRENT_DESKTOP=sway"
               "XDG_SESSION_TYPE=wayland"
               "HOME=${config.home.homeDirectory}" 
-              "PATH=${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
+              "PATH=/run/wrappers/bin:${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
             ];
           };
         };
@@ -124,6 +124,8 @@ with lib;
             Environment = [
               "XDG_CURRENT_DESKTOP=sway"
               "XDG_SESSION_TYPE=wayland"
+              "WAYLAND_DISPLAY=wayland-1"
+              "PATH=/run/wrappers/bin:${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
             ];
           };
         };
