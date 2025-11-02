@@ -89,7 +89,7 @@ in
           };
           Service = {
             Type = "oneshot";
-            ExecStart = "${pkgs.docker}/bin/docker network create ${cfg.firefly.networkName}";
+            ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.docker}/bin/docker network create ${cfg.firefly.networkName} || ${pkgs.docker}/bin/docker network inspect ${cfg.firefly.networkName} >/dev/null'";
             ExecStop = "${pkgs.docker}/bin/docker network rm ${cfg.firefly.networkName}";
             RemainAfterExit = true;
           };
