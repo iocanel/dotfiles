@@ -414,6 +414,9 @@ in
 
     # Ethereum
     go-ethereum
+    
+    # Gaming
+    steam
   ];
 
 
