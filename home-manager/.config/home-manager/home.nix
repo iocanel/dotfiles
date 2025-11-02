@@ -643,6 +643,8 @@ in
         mount-google-drive = {
           Unit = {
             Description = "Mount Google Drive";
+            After = [ "graphical-session.target" "network-online.target" ];
+            Wants = [ "network-online.target" ];
           };
           Install = {
             WantedBy = [ "default.target" ];
