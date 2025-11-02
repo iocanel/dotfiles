@@ -258,6 +258,7 @@ in
     # Development
     #
     # AI tools
+    ollama
     codeium
     claude-code
     opencode
