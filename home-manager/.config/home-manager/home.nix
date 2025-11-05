@@ -25,6 +25,15 @@ let
   whisperApi = pkgs.callPackage ./packages/whisper-api/default.nix { };
   gimp3WithPlugins = pkgs.callPackage ./packages/gimp3-with-plugins/default.nix { };
 
+  # Wrapper that forces Teams to use system notifications + Wayland
+  teams-for-linux-with-notifications = pkgs.writeShellScriptBin "teams-for-linux" ''
+    exec ${pkgs.teams-for-linux}/bin/teams-for-linux \
+      --use-system-notifications \
+      --enable-features=UseOzonePlatform,WaylandWindowDecorations \
+      --ozone-platform-hint=auto \
+      "$@"
+  '';
+
   zshPrompt = ''
     # Load vcs_info for git branch
     autoload -Uz vcs_info
@@ -176,13 +185,14 @@ in
     whatsapp-for-linux
     viber
     zoom-us
-    teams-for-linux
+    teams-for-linux-with-notifications
     # Menu (shared)
     rofi-pass
 
     #
     # Text editing
     #
+    neovim
     emacs
     ltex-ls
     emacs-lsp-booster
