@@ -793,10 +793,29 @@ in
       };
     };
   };
-
-  xdg.mimeApps.defaultApplications = {
-    "x-scheme-handler/http" = "org.qutebrowser.qutebrowser.desktop";
-    "x-scheme-handler/https" = "org.qutebrowser.qutebrowser.desktop";
+  
+  xdg = {
+    mimeApps = {
+      enable = true;
+      defaultApplications = {
+        "x-scheme-handler/http" = "org.qutebrowser.qutebrowser.desktop";
+        "x-scheme-handler/https" = "org.qutebrowser.qutebrowser.desktop";
+        "text/html" = "org.qutebrowser.qutebrowser.desktop"; 
+      };
+    };
+  
+    desktopEntries = {
+      "teams-for-linux" = {
+        name = "Teams for Linux";
+        genericName = "Microsoft Teams (community)";
+        comment = "Unofficial Microsoft Teams client";
+        exec = "teams-for-linux %U";
+        terminal = false;
+        categories = [ "Network" "InstantMessaging" "Chat" ];
+        icon = "${pkgs.teams-for-linux}/share/icons/hicolor/512x512/apps/teams-for-linux.png";
+        startupNotify = true;
+      };
+    };
   };
   
 
