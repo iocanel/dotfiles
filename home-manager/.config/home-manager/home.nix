@@ -511,6 +511,9 @@ in
     gpg = {
       enable = true;
     };
+    home-manager = {
+      enable = true;
+    };
     zsh = {
       enable = false;
       shellAliases = {
