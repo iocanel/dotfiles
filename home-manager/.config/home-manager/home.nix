@@ -411,6 +411,7 @@ in
     ripgrep
     util-linux
     tesseract4
+    stow
     #
     # Deamons and Services (shared)
     # Requirement for home manager config scripts
