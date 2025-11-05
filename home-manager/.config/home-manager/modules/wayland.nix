@@ -142,7 +142,7 @@ with lib;
           };
           Service = {
             Type = "oneshot";
-            ExecStart = "${pkgs.waypaper}/bin/waypaper --wallpaper ${config.home.homeDirectory}/Documents/photos/wallpapers/HD/default.jpg";
+            ExecStart = "${pkgs.waypaper}/bin/waypaper --restore";
             Environment = [
               "XDG_CURRENT_DESKTOP=sway"
               "XDG_SESSION_TYPE=wayland"
