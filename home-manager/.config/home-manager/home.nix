@@ -482,7 +482,7 @@ in
   home.activation.rclone = lib.hm.dag.entryAfter ["writeBoundary"] ''
   #/bin/sh
   mkdir -p $HOME/.config/rclone
-  pass show config/rclone > $HOME/.config/rclone/rclone.conf
+  ${pkgs.pass}/bin/pass show config/rclone > $HOME/.config/rclone/rclone.conf
   '';
 
   # Wine
