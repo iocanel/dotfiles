@@ -169,7 +169,9 @@ let
     qpdf
     xournalpp
     # Mail
-    isync
+    (pkgs.isync.override { withCyrusSaslXoauth2 = true; })
+    pkgs.cyrus-sasl-xoauth2
+    pkgs.oauth2ms
     vdirsyncer
     offlineimap
     msmtp
