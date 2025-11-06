@@ -232,6 +232,7 @@ let
     org-roam-mcp
     whisperApi
     chatgpt-cli
+    spring-boot-cli
 
     # C
     cmake
