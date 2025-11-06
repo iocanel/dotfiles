@@ -423,6 +423,7 @@ let
   echo "export PATH=$PATH" >> $HOME/.profile
   echo "export QUARKUS_BACKSTAGE_URL=$QUARKUS_BACKSTAGE_URL" >> $HOME/.profile
   echo "export QUARKUS_BACKSTAGE_TOKEN=$QUARKUS_BACKSTAGE_TOKEN" >> $HOME/.profile
+  echo "export JAVA_HOME=$JAVA_HOME" >> $HOME/.profile
 
   # This is against NixOS philosophy but I do need it for demo etc
   #echo "export LIBRARY_PATH=${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib ]}" >> $HOME/.profile
