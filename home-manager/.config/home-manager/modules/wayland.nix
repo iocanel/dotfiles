@@ -115,7 +115,7 @@ with lib;
                 sleep 0.1
               done
               exec ${pkgs.swayidle}/bin/swayidle -w \
-                timeout 300 '${config.home.homeDirectory}/bin/screenlock-now' \
+                timeout 180 '${config.home.homeDirectory}/bin/screenlock-now' \
                 timeout 600 'swaymsg "output * power off"' \
                 resume 'swaymsg "output * power on"' \
                 before-sleep '${config.home.homeDirectory}/bin/screenlock-now'
