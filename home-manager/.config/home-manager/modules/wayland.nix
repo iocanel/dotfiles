@@ -110,7 +110,16 @@ with lib;
           };
           Service = {
             Type = "simple";
-            ExecStart = "${pkgs.swayidle}/bin/swayidle -w timeout 300 '${config.home.homeDirectory}/bin/screenlock-now' timeout 600 'swaymsg \"output * power off\"' resume 'swaymsg \"output * power on\"' before-sleep '${config.home.homeDirectory}/bin/screenlock-now'";
+            ExecStart = "${pkgs.writeShellScript "start-swayidle" ''
+              until ${pkgs.sway}/bin/swaymsg -t get_version >/dev/null 2>&1; do 
+                sleep 0.1
+              done
+              exec ${pkgs.swayidle}/bin/swayidle -w \
+                timeout 300 '${config.home.homeDirectory}/bin/screenlock-now' \
+                timeout 600 'swaymsg "output * power off"' \
+                resume 'swaymsg "output * power on"' \
+                before-sleep '${config.home.homeDirectory}/bin/screenlock-now'
+            ''}";
             Restart = "on-failure";
             RestartSec = "1";
             Environment = [
