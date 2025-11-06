@@ -3,7 +3,13 @@
 with lib;
 
 let
-  cfg = config.services.financial-services;
+  cfg = {
+    enable = true;
+    firefly = {
+      enable = true;
+      siteOwner = "iocanel@gmail.com";
+    };
+  };
   
   # Firefly configuration paths
   fireflyConfigDir = "${cfg.configPath}/firefly";

@@ -56,8 +56,6 @@ let
 in
 {
   imports = [
-    ./modules/media-center.nix
-    ./modules/financial-services.nix
     ./modules/wayland.nix
     ./modules/xorg.nix
   ];
@@ -89,29 +87,6 @@ in
     "openssl-1.1.1w"
   ];
 
-  # Media Center Services
-  services.media-center = {
-    enable = true;
-    userId = 1000;
-    groupId = 100;
-    timezone = "Europe/Athens";
-    
-    emby.enable = true;
-    sonarr.enable = true;
-    radarr.enable = true;
-    bazarr.enable = true;
-    readarr.enable = true;
-    jackett.enable = true;
-  };
-
-  # Financial Services
-  services.financial-services = {
-    enable = true;
-    firefly = {
-      enable = true;
-      siteOwner = "iocanel@gmail.com";
-    };
-  };
   home.packages = with pkgs; [
     #
     # Shells
@@ -881,71 +856,6 @@ in
         sh -c "docker run -d --name $CONTAINER_NAME $DOCKER_ARGS"
       '';
       executable = true;
-    };
-    # Media
-    ".local/bin/check-media-mounts.sh" = {
-      text = ''
-        #!/bin/bash
-        # Check if the media mount point is accessible
-        if ${pkgs.util-linux}/bin/mountpoint -q /mnt/media/; then
-            echo "Directory /mnt/media/ is mounted. Starting media services." >> /var/log/check-media-mounts.log
-            systemctl --user start sonarr
-            systemctl --user start radarr
-            systemctl --user start bazarr
-            systemctl --user start readarr
-        else
-            echo "Directory /mnt/media/ is not mounted. Stopping mdeia service." >> /var/log/check-media-mounts.log
-            systemctl --user stop sonarr
-            systemctl --user stop radarr
-            systemctl --user stop bazarr
-            systemctl --user stop readarr
-        fi
-      '';
-      onChange = ''
-        chmod 0755 ~/.local/bin/check-media-mounts.sh
-      '';
-    };
-    # Downloads
-    ".local/bin/check-donwload-mounts.sh" = {
-        text = ''
-        #!/bin/bash
-        DOWNLOADS_PATH="/mnt/downloads"
-    
-        # Check if the downloads mount point is accessible
-        if ${pkgs.util-linux}/bin/mountpoint -q /mnt/downloads; then
-            echo Directory /mnt/downloads/ is mounted. Starting download services." >> /var/log/check-download-mounts.log
-            systemctl start deluge
-        else
-            echo Directory /mnt/downloads is not mounted. Stopping download services." >> /var/log/check-download-mounts.log
-            systemctl stop deluge
-        fi
-        '';
-        onChange = ''
-        chmod 0755 ~/.local/bin/check-donwload-mounts.sh
-        '';
-    };
-    # Check mounts and turn on/off services
-    ".local/bin/sonarr-on-download.sh" = {
-        text = ''
-        #!/bin/bash
-        echo "Calling sonarr on download. Event type: $sonarr_evettype folder: $sonarr_episodefile_sourcefolder"
-        if [ "$sonarr_eventtype" == "Test" ]; then
-          echo "Sonarr event type is Test, exiting"
-          exit 0
-        fi
-    
-        pushd $sonarr_episodefile_sourcefolder
-        rar_file=$(ls *.rar 2>/dev/null)
-        if [ -z "$rar_file" ]; then
-          echo "No rar file found in $sonarr_episodefile_sourcefolder"
-          exit 1
-        fi
-        unrar x $rar_file
-        popd
-        '';
-        onChange = ''
-        chmod 0755 ~/.local/bin/sonarr-on-download.sh
-        '';
     };
     # Jupyterlabs
     ".local/share/applications/jupyterlab-start.desktop" = {
