@@ -34,26 +34,7 @@ let
       "$@"
   '';
 
-  zshPrompt = ''
-    # Load vcs_info for git branch
-    autoload -Uz vcs_info
-    precmd() { vcs_info }
-    zstyle ':vcs_info:git:*' formats '(%b)'
-
-    # Define git_status function
-    git_status() {
-      if [[ -n $(git status --porcelain 2>/dev/null) ]]; then
-        echo ''
-      else
-        echo '✔'
-      fi
-    }
-
-    # Define the prompt
-    PROMPT=" %F{yellow} ";
-    PRPROMPT='%F{gray}$(git_status)%f'
-  '';
-in
+  in
 {
   imports = [
     ./modules/wayland.nix
@@ -93,7 +74,6 @@ in
     #
     bash
     fish
-    zsh
 
     #
     # Portal services (base)
@@ -364,9 +344,6 @@ in
     #
     # Shell Extensions
     #
-    # Zsh
-    zsh-autosuggestions
-    zsh-syntax-highlighting
     #
     fish
     #nix-your-shell (breaks nix-shell -p xxx)
@@ -479,7 +456,6 @@ in
   programs = {
     direnv = {
       enable = true;
-      enableZshIntegration = true;
       nix-direnv = {
         enable = true;
       };
@@ -489,21 +465,6 @@ in
     };
     home-manager = {
       enable = true;
-    };
-    zsh = {
-      enable = false;
-      shellAliases = {
-        vi="nvim";
-        vim="nvim";
-        ls="${pkgs.eza}/bin/eza";
-        cd="z";
-        # Development aliases
-        qs="java -jar /home/iocanel/workspace/src/github.com/quarkusio/quarkus/devtools/cli/target/quarkus-cli-999-SNAPSHOT-runner.jar";
-        qds="java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=\\*:5005 -jar /home/iocanel/workspace/src/github.com/quarkusio/quarkus/devtools/cli/target/quarkus-cli-999-SNAPSHOT-runner.jar";
-      };
-      initExtra = ''
-        ${zshPrompt}
-      '';
     };
     fish = {
       enable = true;
@@ -574,7 +535,6 @@ in
     zoxide = {
       enable = true;
       enableBashIntegration = true;
-      enableZshIntegration = true;
       enableFishIntegration = true;
     };
   };
