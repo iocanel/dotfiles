@@ -57,15 +57,6 @@ with lib;
       };
     };
 
-    # Sway window manager configuration
-    wayland.windowManager.sway = {
-      enable = false;          # don't generate it but use the stowed one
-      package = pkgs.swayfx;   # ensure HM uses SwayFX too
-      systemd = {
-        enable = true;
-      };
-      checkConfig = false;     # <-- prevent sandbox validation (fixes build)
-    };
 
     # Wayland-specific systemd services
     systemd.user = {
@@ -180,17 +171,7 @@ with lib;
       };
 
       targets = {
-        "sway-session" = {
-          Unit = {
-            Description = "Sway Graphical Session";
-            BindsTo = [ "graphical-session.target" ];
-            Wants   = [ "graphical-session.target" ];
-            After   = [ "graphical-session-pre.target" ];
-          };
-          Install = {
-            WantedBy = [ "default.target" ];
-          };
-        };
+        # Remove custom sway-session target - home-manager creates one automatically
       };
     };
   };
