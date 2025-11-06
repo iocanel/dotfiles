@@ -1,0 +1,25 @@
+[Desktop Entry]
+StartupWMClass=chromium-browser
+Version=1.0
+Name=Outlook Calendar Work (iocanel@cyberranges.com)
+GenericName=Outlook Calendar
+Comment=Access Outlook Calendar in app mode
+StartupNotify=true
+Terminal=false
+Icon=calendar
+Type=Application
+Categories=Network;WebBrowser;Office;Calendar;
+Exec=chromium --app=https://outlook.office.com/calendar
+Actions=new-window;new-private-window;calendar-app;
+
+[Desktop Action new-window]
+Name=New Window
+Exec=chromium
+
+[Desktop Action new-private-window]
+Name=New Incognito Window
+Exec=chromium --incognito
+
+[Desktop Action calendar-app]
+Name=Calendar App Mode
+Exec=outlook-work-calendar
