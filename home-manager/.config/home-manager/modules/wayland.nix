@@ -78,11 +78,10 @@ with lib;
         waybar = {
           Unit = {
             Description = "Waybar status bar";
-            After = [ "graphical-session.target" ];
-            PartOf = [ "graphical-session.target" ];
+            After = [ "default.target" ];
           };
           Install = {
-            WantedBy = [ "graphical-session.target" ];
+            WantedBy = [ "default.target" ];
           };
           Service = {
             Type = "simple";
@@ -102,17 +101,18 @@ with lib;
         swayidle = {
           Unit = {
             Description = "Swayidle idle daemon";
-            After = [ "graphical-session.target" ];
-            PartOf = [ "graphical-session.target" ];
+            After = [ "default.target" ];
+            Requisite = [ "default.target" ];
           };
           Install = {
-            WantedBy = [ "graphical-session.target" ];
+            WantedBy = [ "default.target" ];
           };
           Service = {
             Type = "simple";
             ExecStart = "${pkgs.writeShellScript "start-swayidle" ''
-              until ${pkgs.sway}/bin/swaymsg -t get_version >/dev/null 2>&1; do 
-                sleep 0.1
+              # Wait for Sway to be fully ready
+              until [ -n "$WAYLAND_DISPLAY" ] && ${pkgs.sway}/bin/swaymsg -t get_version >/dev/null 2>&1; do 
+                sleep 1
               done
               exec ${pkgs.swayidle}/bin/swayidle -w \
                 timeout 180 '${config.home.homeDirectory}/bin/screenlock-now' \
@@ -134,15 +134,26 @@ with lib;
         waypaper = {
           Unit = {
             Description = "Set wallpaper with waypaper";
-            After = [ "graphical-session.target" ];
-            PartOf = [ "graphical-session.target" ];
+            After = [ "default.target" ];
+            Requisite = [ "default.target" ];
           };
           Install = {
-            WantedBy = [ "graphical-session.target" ];
+            WantedBy = [ "default.target" ];
           };
           Service = {
-            Type = "oneshot";
-            ExecStart = "${pkgs.waypaper}/bin/waypaper --restore";
+            Type = "forking";
+            ExecStart = "${pkgs.writeShellScript "start-waypaper" ''
+              # Wait for Wayland display to be available
+              until [ -n "$WAYLAND_DISPLAY" ] && [ -S "/run/user/$(id -u)/wayland-1" ]; do
+                sleep 1
+              done
+              # Kill any existing swaybg processes first
+              pkill swaybg || true
+              # Start waypaper which will launch swaybg in background
+              ${pkgs.waypaper}/bin/waypaper --restore
+            ''}";
+            Restart = "on-failure";
+            RestartSec = "5";
             Environment = [
               "XDG_CURRENT_DESKTOP=sway"
               "XDG_SESSION_TYPE=wayland"
@@ -157,16 +168,22 @@ with lib;
         cliphist-store = {
           Unit = {
             Description = "Store clipboard content in history (regular clipboard only)";
-            After = [ "graphical-session.target" ];
-            PartOf = [ "graphical-session.target" ];
+            After = [ "default.target" ];
+            Requisite = [ "default.target" ];
           };
           Install = {
-            WantedBy = [ "graphical-session.target" ];
+            WantedBy = [ "default.target" ];
           };
           Service = {
             Type = "simple";
             ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p %h/.cache/cliphist";
-            ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.wl-clipboard}/bin/wl-paste --watch ${pkgs.cliphist}/bin/cliphist store'";
+            ExecStart = "${pkgs.writeShellScript "start-cliphist" ''
+              # Wait for Wayland display to be available
+              until [ -n "$WAYLAND_DISPLAY" ] && [ -S "/run/user/$(id -u)/wayland-1" ]; do
+                sleep 1
+              done
+              exec ${pkgs.wl-clipboard}/bin/wl-paste --watch ${pkgs.cliphist}/bin/cliphist store
+            ''}";
             Restart = "on-failure";
             RestartSec = "1";
             Environment = [
