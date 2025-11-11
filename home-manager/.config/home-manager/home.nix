@@ -39,6 +39,7 @@ let
   imports = [
     ./modules/wayland.nix
     ./modules/xorg.nix
+    ./private/index.nix
   ];
 
   # Desktop environment selection
@@ -46,6 +47,14 @@ let
   # Set wayland.enable = false and xorg.enable = true to use X11/i3
   wayland.enable = true;
   xorg.enable = false;
+
+  # Work configuration
+  work = {
+    enable = true;
+    gitlab = {
+      enable = true;
+    };
+  };
 
   home.stateVersion = "25.05"; # Adjust this according to your Nixpkgs version
   home.username = "iocanel";
