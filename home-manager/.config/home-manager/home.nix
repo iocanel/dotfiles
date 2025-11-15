@@ -543,6 +543,11 @@ let
       enable = true;
       userName = "Ioannis Canellos";
       userEmail = "iocanel@gmail.com";
+      extraConfig = {
+        credential = {
+          helper = "store";
+        };
+      };
     };
     zoxide = {
       enable = true;
