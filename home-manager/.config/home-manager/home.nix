@@ -215,6 +215,7 @@ let
     yt-dlp
     lpass # lastpass-cli
     gh
+    spring-boot-cli
     inetutils
     
     # Goose CLI
