@@ -566,10 +566,11 @@ let
       maxCacheTtl = 604800;
       enableSshSupport = true;
       pinentry = {
-        package = pkgs.pinentry-qt;   # or pkgs.pinentry-gnome3 / pkgs.pinentry-gtk2
+        package = pkgs.pinentry-curses;
       };
       extraConfig = ''
         allow-preset-passphrase
+        grab
       '';
     };
     udiskie = {
