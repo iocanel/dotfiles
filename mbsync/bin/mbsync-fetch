@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Fetch emails using mbsync and optionally index with mu
+# Usage: mbsync-fetch [--index]
+
+INDEX=false
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --index)
+            INDEX=true
+            shift
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Usage: $0 [--index]"
+            exit 1
+            ;;
+    esac
+done
+
+# Sync emails
+mbsync -a -c ~/.config/mbsync/config
+
+# Index emails if requested
+if [ "$INDEX" = true ]; then
+    mu index
+fi

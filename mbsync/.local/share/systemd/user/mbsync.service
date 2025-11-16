@@ -4,7 +4,8 @@ Documentation=man:mbsync(1)
 
 [Service]
 Type=oneshot
-ExecStart=/home/iocanel/scripts/util/get-mail-and-index
+Environment=PATH=/home/iocanel/bin:/home/iocanel/.nix-profile/bin:/run/current-system/sw/bin
+ExecStart=/home/iocanel/bin/mbsync-fetch --index
 
 [Install]
 WantedBy=default.target
