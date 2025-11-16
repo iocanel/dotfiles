@@ -37,26 +37,3 @@ Create Both
 SyncState *
 # Delete both locally and on server
 Expunge Both
-
-IMAPAccount ikanello-gmail
-# Address to connect to
-Host imap.gmail.com
-User ikanello@redhat.com
-PassCmd "pass show services/mail/ikanello@redhat.com/token"
-TLSType IMAPS
-CertificateFile /etc/ssl/certs/ca-certificates.crt
-
-IMAPStore ikanello-gmail-remote
-Account ikanello-gmail
-
-MaildirStore ikanello-gmail-local
-# The trailing "/" is important
-Path /home/iocanel/.mail/ikanello@redhat.com/
-Inbox /home/iocanel/.mail/ikanello@redhat.com/INBOX
-Trash /home/iocanel/.mail/ikanello@redhat.com/Trash
-SubFolders Verbatim
-
-Channel ikanello-gmail
-Far :ikanello-gmail-remote:
-Near :ikanello-gmail-local:
-Patterns INBOX Drafts Trash Sent CVE "Teams/Quarkus" "Teams/Snowdrop" 

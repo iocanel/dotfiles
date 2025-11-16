@@ -9,15 +9,3 @@ tls on
 tls_trust_file /etc/ssl/certs/ca-certificates.crt
 auth on
 logfile ~/.local/state/msmtp/personal.log
-
-# ikanello@redhat.com
-account        ikanello@redhat.com
-host           smtp.gmail.com
-port           587
-from           ikanello@redhat.com
-user           ikanello@redhat.com
-passwordeval   "pass show services/mail/ikanello@redhat.com/token"
-tls on
-tls_trust_file /etc/ssl/certs/ca-certificates.crt
-auth on
-logfile ~/.local/state/msmtp/work.log
