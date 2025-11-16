@@ -218,12 +218,6 @@ let
     spring-boot-cli
     inetutils
     
-    # Goose CLI
-    # dependencies
-    dbus
-    pkg-config
-    xorg.libxcb
-    #
     
 
     #
@@ -236,14 +230,19 @@ let
     # Development
     #
     # AI tools
-    ollama
     codeium
     claude-code
     opencode
     org-roam-mcp
     whisperApi
     chatgpt-cli
-    spring-boot-cli
+    aider-chat-full
+    goose-cli
+    # Goose CLI - dependencies
+    dbus
+    pkg-config
+    xorg.libxcb
+    #
 
     # C
     cmake
