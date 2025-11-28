@@ -664,11 +664,15 @@ let
           };
           Service = {
             Type = "oneshot";
-            ExecStart = "${pkgs.isync}/bin/mbsync -Va
-            ExecStartPost=${pkgs.mu}/bin/mu index --muhome ${config.home.homeDirectory}/.cache/mu/";
+            ExecStart = "${pkgs.isync}/bin/mbsync -Va";
+            ExecStartPost = "${pkgs.mu}/bin/mu index --muhome ${config.home.homeDirectory}/.cache/mu/";
             Restart = "on-failure";  # Only restart if it fails
             RestartSec = 30;         # Wait 30 seconds before restarting
             TimeoutStartSec = "300"; # Allow up to 5 minutes for the service to start
+            Environment = [
+              "PATH=${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
+              "HOME=${config.home.homeDirectory}"
+            ];
           };
         };
         sync-lpass = {
