@@ -84,11 +84,13 @@ window#waybar.hidden {
 #custom-github,
 #custom-gmail-personal,
 #custom-gmail-work,
+#custom-notifications,
+#custom-lock,
 #custom-dunst,
 #pulseaudio {
     padding: 0 10px;
     background-color: @base;
-    color: #a0b7c1;
+    color: @text;
 }
 
 #pulseaudio.muted {

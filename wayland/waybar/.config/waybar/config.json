@@ -5,7 +5,7 @@
     "spacing": 4,
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": [],
-    "modules-right": [ "custom/gmail-personal", "custom/gmail-work", "custom/github", "tray", "clock", "custom/lock"],
+    "modules-right": [ "custom/gmail-personal", "custom/gmail-work", "custom/github", "tray", "custom/notifications", "clock", "custom/lock"],
     
     "sway/workspaces": {
         "disable-scroll": true,
@@ -37,10 +37,13 @@
     },
 
     "custom/lock": {
-      "format": "  ",
-      "tooltip": "Lock Screen",
+      "format": "{}",
+      "tooltip": "Left: Lock now, Right: Toggle auto-lock",
       "on-click": "screenlock-now",
-      "interval": 0,
+      "on-click-right": "waybar-swayidle-toggle toggle && pkill -RTMIN+11 waybar",
+      "interval": 5,
+      "signal": 11,
+      "exec": "waybar-swayidle-toggle",
       "tooltip": false
     }, 
 
@@ -71,6 +74,17 @@
         "on-click": "mu4e-work"
     },
     
+    "custom/notifications": {
+        "format": "{}",
+        "exec": "waybar-notifications-toggle",
+        "tooltip": "Toggle notifications (Left: DND, Right: Panel)",
+        "on-click": "waybar-notifications-toggle toggle && pkill -RTMIN+10 waybar",
+        "on-click-right": "waybar-notifications-toggle panel",
+        "interval": 5,
+        "signal": 10,
+        "tooltip": false
+    },
+
     "tray": {
         "icon-size": 21,
         "spacing": 10
