@@ -86,11 +86,11 @@ with lib;
         swayidle = {
           Unit = {
             Description = "Swayidle idle daemon";
-            After = [ "default.target" ];
-            Requisite = [ "default.target" ];
+            After = [ "sway-session.target" ];
+            Requisite = [ "sway-session.target" ];
           };
           Install = {
-            WantedBy = [ "default.target" ];
+            WantedBy = [ "sway-session.target" ];
           };
           Service = {
             Type = "simple";
@@ -119,11 +119,11 @@ with lib;
         waypaper = {
           Unit = {
             Description = "Set wallpaper with waypaper";
-            After = [ "default.target" ];
-            Requisite = [ "default.target" ];
+            After = [ "sway-session.target" ];
+            Requisite = [ "sway-session.target" ];
           };
           Install = {
-            WantedBy = [ "default.target" ];
+            WantedBy = [ "sway-session.target" ];
           };
           Service = {
             Type = "forking";
@@ -153,11 +153,11 @@ with lib;
         cliphist-store = {
           Unit = {
             Description = "Store clipboard content in history (regular clipboard only)";
-            After = [ "default.target" ];
-            Requisite = [ "default.target" ];
+            After = [ "sway-session.target" ];
+            Requisite = [ "sway-session.target" ];
           };
           Install = {
-            WantedBy = [ "default.target" ];
+            WantedBy = [ "sway-session.target" ];
           };
           Service = {
             Type = "simple";
