@@ -1,0 +1,205 @@
+#!/usr/bin/env bash
+set -e
+
+# Function to infer DNS server from OpenVPN config
+infer_dns_server() {
+    local config_file="$1"
+    
+    # First try to extract DNS from dhcp-option DNS directives
+    local dns_servers
+    dns_servers=$(grep -E "^dhcp-option\s+DNS\s+" "$config_file" | awk '{print $3}' | tr '\n' ' ' | sed 's/ $//')
+    
+    if [[ -n "$dns_servers" ]]; then
+        echo "$dns_servers"
+        return 0
+    fi
+    
+    # Fallback: try to infer from remote host
+    local remote_host
+    remote_host=$(grep -E "^remote\s+" "$config_file" | head -1 | awk '{print $2}')
+    
+    if [[ -z "$remote_host" ]]; then
+        echo "Warning: Could not find dhcp-option DNS or remote directive in OpenVPN config" >&2
+        return 1
+    fi
+    
+    # Try to resolve the remote host to get the network
+    local remote_ip
+    remote_ip=$(getent hosts "$remote_host" | head -1 | awk '{print $1}')
+    
+    if [[ -z "$remote_ip" ]]; then
+        echo "Warning: Could not resolve remote host: $remote_host" >&2
+        return 1
+    fi
+    
+    # Convert IP to network and infer DNS server (typically .1 of the network)
+    local network_base
+    network_base=$(echo "$remote_ip" | cut -d. -f1-3)
+    echo "${network_base}.1"
+}
+
+# Parse command line arguments
+SKIP_DNS=false
+CUSTOM_DNS=""
+VPN_CONFIG=""
+USERNAME=""
+CONNECTION_NAME=""
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --skip-dns)
+            SKIP_DNS=true
+            shift
+            ;;
+        --dns)
+            CUSTOM_DNS="$2"
+            shift 2
+            ;;
+        --help|-h)
+            echo "Usage: setup-vpn [OPTIONS] <path-to-ovpn-file> <username> [connection-name]"
+            echo ""
+            echo "Options:"
+            echo "  --skip-dns           Skip DNS configuration entirely"
+            echo "  --dns <server>       Use specific DNS server (can specify multiple separated by spaces)"
+            echo "  --help, -h           Show this help message"
+            echo ""
+            echo "Examples:"
+            echo "  setup-vpn /path/to/config.ovpn canelio"
+            echo "  setup-vpn --skip-dns /path/to/config.ovpn canelio"
+            echo "  setup-vpn --dns '8.8.8.8 8.8.4.4' /path/to/config.ovpn canelio"
+            echo "  setup-vpn /path/to/config.ovpn canelio my-custom-vpn"
+            exit 0
+            ;;
+        *)
+            if [[ -z "$VPN_CONFIG" ]]; then
+                VPN_CONFIG="$1"
+            elif [[ -z "$USERNAME" ]]; then
+                USERNAME="$1"
+            elif [[ -z "$CONNECTION_NAME" ]]; then
+                CONNECTION_NAME="$1"
+            else
+                echo "Error: Too many arguments"
+                echo "Use --help for usage information"
+                exit 1
+            fi
+            shift
+            ;;
+    esac
+done
+
+# Check required arguments
+if [[ -z "$VPN_CONFIG" || -z "$USERNAME" ]]; then
+    echo "Error: Missing required arguments"
+    echo "Usage: setup-vpn [OPTIONS] <path-to-ovpn-file> <username> [connection-name]"
+    echo "Use --help for more information"
+    exit 1
+fi
+
+# Set default connection name if not provided
+CONNECTION_NAME="${CONNECTION_NAME:-$(basename "$VPN_CONFIG" .ovpn)}"
+
+echo "Setting up NetworkManager VPN connection..."
+echo "Config file: $VPN_CONFIG"
+echo "Username: $USERNAME"
+echo "Connection name: $CONNECTION_NAME"
+
+# Check if config file exists
+if [[ ! -f "$VPN_CONFIG" ]]; then
+    echo "Error: VPN config file not found at $VPN_CONFIG"
+    exit 1
+fi
+
+# Delete existing connection if it exists
+if nmcli connection show "$CONNECTION_NAME" &>/dev/null; then
+    echo "Deleting existing connection '$CONNECTION_NAME'..."
+    nmcli connection delete "$CONNECTION_NAME"
+fi
+
+# Import the VPN configuration
+echo "Importing VPN configuration..."
+IMPORTED_NAME=$(basename "$VPN_CONFIG" .ovpn)
+nmcli connection import type openvpn file "$VPN_CONFIG"
+
+# Rename to work-vpn if different
+if [[ "$IMPORTED_NAME" != "$CONNECTION_NAME" ]]; then
+    echo "Renaming connection from '$IMPORTED_NAME' to '$CONNECTION_NAME'..."
+    nmcli connection modify "$IMPORTED_NAME" connection.id "$CONNECTION_NAME"
+fi
+
+# Set the username and configure password saving
+echo "Setting username to '$USERNAME'..."
+nmcli connection modify "$CONNECTION_NAME" vpn.user-name "$USERNAME"
+
+# Configure connection to save passwords for user
+echo "Configuring connection to save credentials..."
+nmcli connection modify "$CONNECTION_NAME" connection.permissions user:$USER
+
+# Configure password storage - set password-flags to 0 (save in keyring)
+echo "Enabling password storage in keyring..."
+nmcli connection modify "$CONNECTION_NAME" +vpn.data password-flags=0
+
+# Configure split tunneling - prevent VPN from becoming default route
+echo "Configuring split tunneling..."
+nmcli connection modify "$CONNECTION_NAME" ipv4.never-default true
+
+# Configure DNS based on options
+if [[ "$SKIP_DNS" == "true" ]]; then
+    echo "Skipping DNS configuration (--skip-dns specified)"
+elif [[ -n "$CUSTOM_DNS" ]]; then
+    echo "Using custom DNS server(s): $CUSTOM_DNS"
+    nmcli connection modify "$CONNECTION_NAME" ipv4.dns "$CUSTOM_DNS"
+    # For users using systemd-resolved, set DNS priority to avoid conflicts
+    nmcli connection modify "$CONNECTION_NAME" ipv4.dns-priority -42
+else
+    # Infer DNS server from VPN config
+    echo "Inferring DNS server from VPN configuration..."
+    if DNS_SERVER=$(infer_dns_server "$VPN_CONFIG"); then
+        echo "Using inferred DNS server(s): $DNS_SERVER"
+        nmcli connection modify "$CONNECTION_NAME" ipv4.dns "$DNS_SERVER"
+        
+        # For users using systemd-resolved, set DNS priority to avoid conflicts
+        nmcli connection modify "$CONNECTION_NAME" ipv4.dns-priority -42
+    else
+        echo "Failed to infer DNS server, skipping DNS configuration"
+    fi
+fi
+
+echo "VPN setup complete!"
+echo
+echo "Attempting to connect to save credentials..."
+echo "Note: Please enter your password when prompted."
+read -s -p "VPN Password: " VPN_PASSWORD
+echo
+
+# Save the password in the connection
+echo "Saving password to connection..."
+nmcli connection modify "$CONNECTION_NAME" +vpn.secrets "password=$VPN_PASSWORD"
+
+echo "Testing connection with saved password..."
+if nmcli connection up "$CONNECTION_NAME"; then
+    echo "✓ VPN connected successfully!"
+    
+    # Verify password was saved by checking if we can disconnect and reconnect without prompting
+    echo "Testing credential saving..."
+    nmcli connection down "$CONNECTION_NAME" 2>/dev/null || true
+    sleep 2
+    
+    if nmcli connection up "$CONNECTION_NAME" 2>/dev/null; then
+        echo "✓ Credentials saved successfully! Future connections won't require password."
+    else
+        echo "⚠ Password may not have been saved. You may be prompted again next time."
+        nmcli --ask connection up "$CONNECTION_NAME"
+    fi
+    
+    echo
+    echo "Usage:"
+    echo "  Connect:    nmcli connection up $CONNECTION_NAME"
+    echo "  Disconnect: nmcli connection down $CONNECTION_NAME"
+    echo "  Status:     nmcli connection show $CONNECTION_NAME"
+else
+    echo "✗ Initial connection failed. Please try manually:"
+    echo "nmcli --ask connection up $CONNECTION_NAME"
+    echo
+    echo "If the connection succeeds, the password should be saved automatically."
+fi
+
