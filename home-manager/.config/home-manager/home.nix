@@ -407,7 +407,7 @@ let
   # If not (when logging in) exit
   # Else (when we run home-manager switch) continue
   #
-  AUTHENTICATED=$(${pkgs.pass}/bin/pass show authenticated)
+  AUTHENTICATED=$(${pkgs.pass}/bin/pass show authenticated 2>/dev/null || echo "false")
   if [ "$AUTHENTICATED" != "true" ]; then
     exit 0
   fi
