@@ -318,6 +318,9 @@ include ~/.config/sway/catppuccin-mocha-theme.conf
 exec systemctl --user start xdg-desktop-portal-wlr
 exec systemctl --user start xdg-desktop-portal
 
+# Start sway session target
+exec systemctl --user start sway-session.target
+
 # Start waybar instead of swaybar
 exec_always {
   systemctl --user import-environment WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP
