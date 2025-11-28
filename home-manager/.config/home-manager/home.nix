@@ -240,6 +240,7 @@ let
     opencode
     org-roam-mcp
     whisperApi
+    openai-whisper
     chatgpt-cli
     aider-chat-full
     goose-cli
