@@ -1,0 +1,14 @@
+#!/bin/bash
+
+case $1 in
+  "toggle") swaync-client --toggle-dnd ;;
+  "panel") swaync-client -t ;;
+esac
+
+# Check if swaync DND is enabled
+dnd=$(swaync-client --get-dnd)
+if [ "$dnd" = "true" ]; then
+    echo " "
+else
+    echo " "
+fi
