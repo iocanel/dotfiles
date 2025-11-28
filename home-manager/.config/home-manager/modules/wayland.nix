@@ -32,7 +32,6 @@ with lib;
       wtype
 
       # Wayland automation and utilities
-      ydotool
       grim
       slurp
 
@@ -61,27 +60,13 @@ with lib;
     # Wayland-specific systemd services
     systemd.user = {
       services = {
-        ydotoold = {
-          Unit = {
-            Description = "ydotool daemon";
-            After = [ "graphical-session.target" ];
-          };
-          Service = {
-            ExecStart = "${pkgs.ydotool}/bin/ydotoold";
-            Restart = "on-failure";
-          };
-          Install = {
-            WantedBy = [ "default.target" ];
-          };
-        };
-
         waybar = {
           Unit = {
             Description = "Waybar status bar";
-            After = [ "default.target" ];
+            After = [ "sway-session.target" ];
           };
           Install = {
-            WantedBy = [ "default.target" ];
+            WantedBy = [ "sway-session.target" ];
           };
           Service = {
             Type = "simple";
