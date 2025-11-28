@@ -791,6 +791,8 @@ let
       prefer = ${config.home.homeDirectory}/Documents
       # Ignore permission changes
       perms = 0
+      # Ignore symlinks to avoid filesystem compatibility issues
+      ignore = BelowPath photos/wallpapers/HD/default.jpg
       # Additional options
       auto = true
       batch = true
