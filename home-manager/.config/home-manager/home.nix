@@ -93,6 +93,7 @@ let
     #
     # Browser
     chromium
+    firefox
     tor-browser
     qutebrowser
     # Media
