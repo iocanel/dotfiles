@@ -141,6 +141,11 @@ let
     networkmanagerapplet
     openssl
     bluez
+    
+    # Cybersecurity
+    nmap
+    zenmap
+    dig
 
     slack
     discord
