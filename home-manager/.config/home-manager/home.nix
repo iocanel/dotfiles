@@ -137,6 +137,8 @@ let
     wget
     curl
     wireshark
+    wirelesstools
+    iw
     openvpn
     networkmanager-openvpn
     networkmanagerapplet
