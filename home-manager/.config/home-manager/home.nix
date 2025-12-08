@@ -233,6 +233,7 @@ let
     #
     ansible
     terraform
+    vagrant
 
     #
     # Development
