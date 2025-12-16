@@ -5,6 +5,7 @@ stow_shared() {
     stow alacritty
     stow clipmenu
     stow chatgpt
+    stow flameshot
     stow docker
     stow emacs
     stow emacs-doom

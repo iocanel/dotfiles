@@ -253,10 +253,8 @@ bindsym $mod+Ctrl+r restart
 bindsym $mod+Ctrl+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # Screenshots
-bindsym $mod+Shift+p exec "sway-screenshot-region"
-bindsym Shift+Print exec "sway-screenshot-region"
-bindsym Print exec "sway-screenshot-full"
-bindsym Ctrl+Shift+p exec "sway-screenshot-output"
+bindsym $mod+Shift+p exec "flameshot gui"
+bindsym Ctrl+Shift+p exec "sway-screenshot-region"
 bindsym $mod+Shift+s exec "toggle-screenkey"
 
 # Screen Saver

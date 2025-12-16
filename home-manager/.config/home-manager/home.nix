@@ -113,6 +113,7 @@ let
     mp4v2
     pulsemixer
     gimp3WithPlugins
+    flameshot
     pulseaudio
     pavucontrol
     pwvucontrol
