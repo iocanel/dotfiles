@@ -179,6 +179,35 @@ with lib;
             ];
           };
         };
+
+        flameshot = {
+          Unit = {
+            Description = "Flameshot screenshot tool daemon";
+            After = [ "sway-session.target" ];
+            Requisite = [ "sway-session.target" ];
+          };
+          Install = {
+            WantedBy = [ "sway-session.target" ];
+          };
+          Service = {
+            Type = "simple";
+            ExecStart = "${pkgs.writeShellScript "start-flameshot" ''
+              # Wait for Wayland display to be available
+              until [ -n "$WAYLAND_DISPLAY" ] && [ -S "/run/user/$(id -u)/wayland-1" ]; do
+                sleep 1
+              done
+              exec ${pkgs.flameshot}/bin/flameshot
+            ''}";
+            Restart = "on-failure";
+            RestartSec = "1";
+            Environment = [
+              "XDG_CURRENT_DESKTOP=sway"
+              "XDG_SESSION_TYPE=wayland"
+              "WAYLAND_DISPLAY=wayland-1"
+              "PATH=/run/wrappers/bin:${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
+            ];
+          };
+        };
       };
 
       targets = {
