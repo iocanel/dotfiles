@@ -68,6 +68,7 @@ let
 
   home.sessionVariables = {
     EDITOR="nvim";
+    TERM="xterm-256color";
     # Force Chromium to use proper Wayland clipboard
     CHROMIUM_FLAGS="--enable-features=UseOzonePlatform --ozone-platform=wayland --enable-wayland-ime";
   };
