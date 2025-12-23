@@ -263,7 +263,7 @@ let
     clang-tools
     # Java
     gradle
-    temurin-bin-21
+    temurin-bin-21 # 21 is required by LSP
     jbang
     openapi-generator-cli
     jetbrains.idea-community-bin
