@@ -463,6 +463,9 @@ let
   home.activation.rclone = lib.hm.dag.entryAfter ["writeBoundary"] ''
   #/bin/sh
   mkdir -p $HOME/.config/rclone
+  mkdir -p $HOME/.nas/home
+  
+  # Base rclone config (e.g. Google Drive, NAS etc)
   if ${pkgs.pass}/bin/pass show config/rclone >/dev/null 2>&1; then
     ${pkgs.pass}/bin/pass show config/rclone > $HOME/.config/rclone/rclone.conf
   fi
