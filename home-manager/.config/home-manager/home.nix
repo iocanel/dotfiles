@@ -95,9 +95,11 @@ let
     # Browser
     chromium
     firefox
+    brave
     tor-browser
     qutebrowser
     # Media
+    rhythmbox
     newsflash
     obs-studio
     peek
@@ -114,6 +116,8 @@ let
     mp4v2
     pulsemixer
     gimp3WithPlugins
+    rembg
+
     flameshot
     pulseaudio
     pavucontrol
