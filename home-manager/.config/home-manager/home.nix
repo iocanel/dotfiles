@@ -785,6 +785,21 @@ let
         icon = "${pkgs.teams-for-linux}/share/icons/hicolor/512x512/apps/teams-for-linux.png";
         startupNotify = true;
       };
+      "steam" = {
+        name = "Steam";
+        comment = "Application for managing and playing games on Steam";
+        exec = "steam %U";
+        terminal = false;
+        type = "Application";
+        categories = [ "Network" "FileTransfer" "Game" ];
+        mimeType = [ "x-scheme-handler/steam" "x-scheme-handler/steamlink" ];
+        icon = "steam";
+        startupNotify = true;
+        settings = {
+          "PrefersNonDefaultGPU" = "false";
+          "X-KDE-RunOnDiscreteGpu" = "false";
+        };
+      };
     };
   };
   
@@ -851,6 +866,17 @@ let
         stop-named-container  $CONTAINER_NAME
         echo "docker run -d --name $CONTAINER_NAME $DOCKER_ARGS"
         sh -c "docker run -d --name $CONTAINER_NAME $DOCKER_ARGS"
+      '';
+      executable = true;
+    };
+    "bin/steam-wrapper" = {
+      text = ''
+        #!/usr/bin/env bash
+        # Steam wrapper that launches via terminal to get proper environment
+        
+        # Launch Steam in a new terminal session that immediately closes
+        # This gives Steam the same environment as launching from terminal
+        kitty --hold=never sh -c "steam $* &" &
       '';
       executable = true;
     };
