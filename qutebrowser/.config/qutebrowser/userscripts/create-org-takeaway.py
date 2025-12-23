@@ -10,7 +10,7 @@ import logging
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 PAGE_CONTENT_FILE = os.getenv('QUTE_TEXT')
 LOG_FILE = "/home/iocanel/.local/share/qutebrowser/log/create-takeaway.log"
-TAKEAWAY_FILE="/home/iocanel/.local/share/qutebrowser/takeaway.org"
+TAKEAWAY_FILE="/home/iocanel/Documents/org/learning/takeaway.org"
 
 os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True)
 logging.basicConfig(
@@ -335,8 +335,6 @@ if not page_content:
     send_notification("No content to analyze!")
 #logging.info(f'Page content: {page_content}.')
 
-send_notification(f"key: {OPENAI_API_KEY}")
-logging.info(f"key: {OPENAI_API_KEY}")
 input = isolate_ai_coaching_info(page_content)
 takeaway = detect_takeaway(input)
 existing_takeaway = read_takeaways()

@@ -10,7 +10,7 @@ import logging
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 PAGE_CONTENT_FILE = os.getenv('QUTE_TEXT')
 LOG_FILE = "/home/iocanel/.local/share/qutebrowser/log/answer-question.log"
-FLASHCARDS_FILE="/home/iocanel/.local/share/qutebrowser/flashcards.org"
+FLASHCARDS_FILE="/home/iocanel/Documents/org/learning/flashcards.org"
 
 os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True)
 logging.basicConfig(

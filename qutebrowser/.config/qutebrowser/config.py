@@ -127,14 +127,14 @@ config.bind('<Ctrl-g>i', 'spawn --userscript github-new-issue.sh {url}')
 config.bind('<Ctrl-g>pc', 'spawn --userscript github-pr-checkout.sh {url}')
 
 
-config.bind("<Ctrl-f>", "spawn --userscript create-flashcard.py")
+config.bind("<Ctrl-f>", "spawn --userscript create-org-flashcards.py")
 config.bind("<Ctrl-s>", "spawn --userscript create-org-mode-summary.py")
-config.bind("<Ctrl-t>", "spawn --userscript create-org-mode-takeaway.py")
+config.bind("<Ctrl-t>", "spawn --userscript create-org-takeaway.py")
 
 # User Agent
-c.content.headers.user_agent = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+c.content.headers.user_agent = ("Mozilla/5.0 (X11; Linux x86_64) "
                                 "AppleWebKit/537.36 (KHTML, like Gecko) "
-                                "Chrome/117.0.0.0 Safari/537.36")
+                                "Chrome/142.0.0.0 Safari/537.36")
 
 # Cookies
 config.set("content.javascript.enabled", True, "https://*.google.com/*")
@@ -142,3 +142,9 @@ config.set("content.cookies.accept", "all", "https://*.google.com/*")
 
 # Clipboard
 config.set("content.javascript.clipboard", "access", "https://chatgpt.com")
+
+# Asana User Agent
+config.set("content.headers.user_agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36", "https://*.asana.com/*")
+config.set("content.headers.custom", {"sec-ch-ua": '"Google Chrome";v="142", "Chromium";v="142", "Not?A_Brand";v="99"'}, "https://*.asana.com/*")
+config.set("content.headers.custom", {"sec-ch-ua-mobile": "?0"}, "https://*.asana.com/*")
+config.set("content.headers.custom", {"sec-ch-ua-platform": '"Linux"'}, "https://*.asana.com/*")
