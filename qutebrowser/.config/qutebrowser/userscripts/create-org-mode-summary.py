@@ -63,7 +63,7 @@ Use all the content in thee triple backticks to generate the summary:
                 "content": prompt,
             }
         ],
-        model="gpt-4o",
+        model="gpt-5.2",
     )
     # Extract and print only the assistant's response
     answer = response.choices[0].message.content

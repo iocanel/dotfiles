@@ -60,7 +60,8 @@ def detect_takeaway(content):
 
 You are an org-mode assistant that helps me maintain my notes.
 
-Your job is to detect the key takeaways from the input text and convert it to org-mode format.
+Your job is to detect the key usage, summary points and takeaways from the input text and convert it to org-mode format.
+When the source content contains software usage examples, commands, code snippets, or technical details, ensure these are preserved accurately in the org-mode output as #+begin_src or #+begin_example blocks.
 
 Headings should have a reasonable size and should avoid wrapping text in quotes, stars etc.
 Headings should avoid using ':'. Instead they split the heading at ':' and move the right side of the ':' to the body.
@@ -295,7 +296,7 @@ Use all the content in thee triple backticks to generate the takeaway:
                 "content": prompt,
             }
         ],
-        model="gpt-4o",
+        model="gpt-5.2",
     )
     # Extract and print only the assistant's response
     answer = response.choices[0].message.content
@@ -315,7 +316,7 @@ def merge_takeaways(existing, takeaway):
                 "content": prompt,
             }
         ],
-        model="gpt-4o",
+        model="gpt-5.2",
     )
     # Extract and print only the assistant's response
     answer = response.choices[0].message.content
