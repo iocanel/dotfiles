@@ -93,7 +93,7 @@ bindsym $mod+Shift+a exec ~/bin/org-agenda
 # org-capture
 bindsym $mod+Ctrl+c exec ~/bin/org-capture
 # org-roam-capture
-bindsym --release $mod+Shift+r exec ~/bin/org-roam-capture
+bindsym $mod+Shift+r exec ~/bin/org-roam-capture
 # elfeed
 bindsym $mod+Shift+e exec ~/bin/elfeed
 # mu4e
@@ -126,8 +126,8 @@ bindsym $mod+w exec swayr switch-window
 # start clipmenu (a clipboard manager)
 # in some cases clipmenu doesn't pickup the correct CM_LAUNCHER so force it here
 bindsym $mod+c exec wofi-cliphist
-bindsym --release $mod+Shift+c exec wofi-cliphist-primary
-bindsym --release $mod+p exec CM_LAUNCHER="wofi" wofi-pass
+bindsym $mod+Shift+c exec wofi-cliphist-primary
+bindsym $mod+p exec CM_LAUNCHER="wofi" wofi-pass
 
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
@@ -270,10 +270,10 @@ bindsym $mod+Ctrl+Shift+e exec restart-emacsd
 bindsym $mod+Shift+w exec file-cache-conflict-resolve
 
 # Bluetooth Manager
-bindsym --release $mod+Shift+b exec sway-toggle-blueman-applet
+bindsym $mod+Shift+b exec sway-toggle-blueman-applet
 
 #Network Manager
-bindsym --release $mod+Shift+n exec toggle-nm-applet
+bindsym $mod+Shift+n exec toggle-nm-applet
 
 #Yapt
 #bindsym $mod+y exec yapt -t
