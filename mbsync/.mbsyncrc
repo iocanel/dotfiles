@@ -11,7 +11,8 @@ IMAPAccount iocanel-gmail
 # Address to connect to
 Host imap.gmail.com
 User iocanel@gmail.com
-PassCmd "pass show services/mail/iocanel@gmail.com/token"
+PassCmd "pass show mail.google.com/iocanel@gmail.com/app-passwords/mbsync"
+AuthMechs PLAIN
 TLSType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
