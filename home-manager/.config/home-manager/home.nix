@@ -25,12 +25,22 @@ let
   whisperApi = pkgs.callPackage ./packages/whisper-api/default.nix { };
   gimp3WithPlugins = pkgs.callPackage ./packages/gimp3-with-plugins/default.nix { };
 
-  # Wrapper that forces Teams to use system notifications + Wayland
+  # Override Chromium with NVIDIA offload and hardware acceleration
+  chromium = pkgs.writeShellScriptBin "chromium" ''
+    exec nvidia-offload ${pkgs.chromium}/bin/chromium \
+      --enable-features=Vulkan,VaapiVideoDecoder,VaapiVideoEncoder \
+      --use-vulkan --use-angle=vulkan --ignore-gpu-blocklist \
+      --enable-gpu-rasterization --enable-zero-copy --ozone-platform=x11 \
+      "$@"
+  '';
+
+  # Override Teams with NVIDIA offload, hardware acceleration and system notifications
   teams-for-linux-with-notifications = pkgs.writeShellScriptBin "teams-for-linux" ''
-    exec ${pkgs.teams-for-linux}/bin/teams-for-linux \
+    exec nvidia-offload ${pkgs.teams-for-linux}/bin/teams-for-linux \
       --use-system-notifications \
-      --enable-features=UseOzonePlatform,WaylandWindowDecorations \
-      --ozone-platform-hint=auto \
+      --enable-features=Vulkan,VaapiVideoDecoder,VaapiVideoEncoder,UseOzonePlatform,WaylandWindowDecorations \
+      --use-vulkan --use-angle=vulkan --ignore-gpu-blocklist \
+      --enable-gpu-rasterization --enable-zero-copy --ozone-platform=x11 \
       "$@"
   '';
 
