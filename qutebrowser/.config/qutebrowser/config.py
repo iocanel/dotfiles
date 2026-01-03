@@ -109,22 +109,35 @@ config.unbind('d')
 config.unbind('h')  # Lot's of sentence starters start with h and it's a demo killer
 
 #
-# Github 
+# Git Operations (GitHub & GitLab unified)
 #
 
-# Aliases
+# Unified Git Aliases (work with both GitHub and GitLab)
+c.aliases['git-clone'] = 'spawn --userscript git-clone.sh {url}'
+c.aliases['git-terminal'] = 'spawn --userscript git-terminal.sh {url}'
+c.aliases['git-goto-fork'] = 'spawn --userscript git-goto-fork.sh {url}'
+c.aliases['git-new-issue'] = 'spawn --userscript git-new-issue.sh {url}'
+c.aliases['git-pr-checkout'] = 'spawn --userscript git-pr-checkout.sh {url}'
+
+# Unified Git Bindings (work with both GitHub and GitLab)
+config.bind('<Ctrl-g>c', 'spawn --userscript git-clone.sh {url}')
+config.bind('<Ctrl-g>t', 'spawn --userscript git-terminal.sh {url}')
+config.bind('<Ctrl-g>f', 'spawn --userscript git-goto-fork.sh {url}')
+config.bind('<Ctrl-g>i', 'spawn --userscript git-new-issue.sh {url}')
+config.bind('<Ctrl-g>p', 'spawn --userscript git-pr-checkout.sh {url}')
+
+# Platform-specific aliases (for advanced use)
 c.aliases['github-clone'] = 'spawn --userscript github-clone.sh {url}'
 c.aliases['github-terminal'] = 'spawn --userscript github-terminal.sh {url}'
-c.aliases['github-goto-fork'] =  'spawn --userscript github-goto-fork.sh {url}'
+c.aliases['github-goto-fork'] = 'spawn --userscript github-goto-fork.sh {url}'
 c.aliases['github-new-issue'] = 'spawn --userscript github-new-issue.sh {url}'
 c.aliases['github-pr-checkout'] = 'spawn --userscript github-pr-checkout.sh {url}'
 
-# Bindings
-config.bind('<Ctrl-g>c', 'spawn --userscript github-clone.sh {url}')
-config.bind('<Ctrl-g>t', 'spawn --userscript github-terminal.sh {url}')
-config.bind('<Ctrl-g>f', 'spawn --userscript github-goto-fork.sh {url}')
-config.bind('<Ctrl-g>i', 'spawn --userscript github-new-issue.sh {url}')
-config.bind('<Ctrl-g>pc', 'spawn --userscript github-pr-checkout.sh {url}')
+c.aliases['gitlab-clone'] = 'spawn --userscript gitlab-clone.sh {url}'
+c.aliases['gitlab-terminal'] = 'spawn --userscript gitlab-terminal.sh {url}'
+c.aliases['gitlab-goto-fork'] = 'spawn --userscript gitlab-goto-fork.sh {url}'
+c.aliases['gitlab-new-issue'] = 'spawn --userscript gitlab-new-issue.sh {url}'
+c.aliases['gitlab-mr-checkout'] = 'spawn --userscript gitlab-mr-checkout.sh {url}'
 
 
 config.bind("<Ctrl-f>", "spawn --userscript create-org-flashcards.py")
