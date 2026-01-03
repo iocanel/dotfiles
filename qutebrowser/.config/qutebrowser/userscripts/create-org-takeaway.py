@@ -6,11 +6,14 @@ import json
 import openai
 import subprocess
 import logging
+import datetime
+import hashlib
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 PAGE_CONTENT_FILE = os.getenv('QUTE_TEXT')
 LOG_FILE = "/home/iocanel/.local/share/qutebrowser/log/create-takeaway.log"
 TAKEAWAY_FILE="/home/iocanel/Documents/org/learning/takeaway.org"
+ORIGINAL_CONTENT_DIR="/home/iocanel/.local/share/qutebrowser/original-content/takeaways"
 
 os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True)
 logging.basicConfig(
@@ -20,11 +23,28 @@ logging.basicConfig(
 )
 
 os.makedirs(os.path.dirname(TAKEAWAY_FILE), exist_ok=True)
+os.makedirs(ORIGINAL_CONTENT_DIR, exist_ok=True)
 
 def get_page_content():
     """Read the page content from a file."""
     with open(PAGE_CONTENT_FILE, "r") as f:
         return f.read()
+
+def save_original_content(content, content_hash):
+    """Save the original content with timestamp, URL, title and hash."""
+    timestamp = datetime.datetime.now().isoformat()
+    filename = f"{timestamp}_{content_hash[:8]}.txt"
+    filepath = os.path.join(ORIGINAL_CONTENT_DIR, filename)
+    
+    with open(filepath, "w") as f:
+        f.write(f"Timestamp: {timestamp}\n")
+        f.write(f"URL: {os.getenv('QUTE_URL', 'unknown')}\n")
+        f.write(f"Title: {os.getenv('QUTE_TITLE', 'unknown')}\n")
+        f.write(f"Hash: {content_hash}\n")
+        f.write("=" * 80 + "\n")
+        f.write(content)
+    
+    return filepath
 
 def save_takeaway(answer):
     """Append the answer to the takeaway file and save the takeaway to a file."""
@@ -32,9 +52,11 @@ def save_takeaway(answer):
         f.write(answer)
         f.write("\n\n")
 
-def replace_takeaway(answer): 
+def replace_takeaway(answer, original_file=None): 
     """Replace the takeaway file with the new answer."""
     with open(TAKEAWAY_FILE, "w") as f:
+        if original_file:
+            f.write(f"#+source: {original_file}\n\n")
         f.write(answer)
         f.write("\n\n")
 
@@ -61,7 +83,10 @@ def detect_takeaway(content):
 You are an org-mode assistant that helps me maintain my notes.
 
 Your job is to detect the key usage, summary points and takeaways from the input text and convert it to org-mode format.
-When the source content contains software usage examples, commands, code snippets, or technical details, ensure these are preserved accurately in the org-mode output as #+begin_src or #+begin_example blocks.
+When the source content contains software usage examples, commands, code snippets, or technical details, ensure these are preserved accurately in the org-mode output:
+- Use #+begin_src sh :results output for shell commands and scripts
+- Use #+begin_src <language> for code snippets in specific languages
+- Use #+begin_example for general examples or output
 
 Headings should have a reasonable size and should avoid wrapping text in quotes, stars etc.
 Headings should avoid using ':'. Instead they split the heading at ':' and move the right side of the ':' to the body.
@@ -334,12 +359,16 @@ send_notification("Creating takeaway...")
 page_content = get_page_content()
 if not page_content:
     send_notification("No content to analyze!")
-#logging.info(f'Page content: {page_content}.')
+
+# Save original content with metadata
+content_hash = hashlib.sha256(page_content.encode()).hexdigest()
+original_file = save_original_content(page_content, content_hash)
+logging.info(f"Original content saved to: {original_file}")
 
 input = isolate_ai_coaching_info(page_content)
 takeaway = detect_takeaway(input)
 existing_takeaway = read_takeaways()
 new_takeaway = merge_takeaways(existing_takeaway, takeaway)
 logging.info(f"takeaway: {takeaway}")
-replace_takeaway(takeaway)
+replace_takeaway(takeaway, original_file)
 send_notification(f"takeaway: {takeaway}")

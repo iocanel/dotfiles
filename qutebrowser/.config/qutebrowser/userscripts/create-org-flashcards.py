@@ -48,8 +48,14 @@ The flashcard should be an org heading with the :drill: tag that contains no pro
 The content of the heading should be never be empty. 
 If there is nothing to included in the body (e.g. multiple choices, clarifications) then repeat the full question. 
 The answer should be provided under an answer sub-heading. The answer itself may not contain additional sub-headings. 
+After the answer, include an elaboration paragraph that provides reasoning, context, and possible links to online resources.
 Be carefull, to discern when the question is followed by the response or multiple choices. 
 Also make sure you filter out content irrelevant to the question.
+
+When the content contains shell commands, scripts, or code snippets:
+- Use #+begin_src sh :results output for shell commands and scripts
+- Use #+begin_src <language> for code snippets in specific languages
+- Use #+begin_example for general examples or output
 Examples: 
 
 User: 
@@ -60,6 +66,8 @@ What's the capital of Greece ?
 *** Answer 
 Athens
 
+Athens is the largest city in Greece and serves as both the capital and the largest urban center. It's one of the world's oldest cities with a recorded history spanning over 3,400 years. The city is named after Athena, the ancient Greek goddess of wisdom and warfare. For more information, see: https://en.wikipedia.org/wiki/Athens
+
 User: 
 What's the capital of Greece ?
 Athens
@@ -68,6 +76,8 @@ Assistant:
 What's the capital of Greece ?
 *** Answer 
 Athens
+
+Athens is the largest city in Greece and serves as both the capital and the largest urban center. It's one of the world's oldest cities with a recorded history spanning over 3,400 years. The city is named after Athena, the ancient Greek goddess of wisdom and warfare. For more information, see: https://en.wikipedia.org/wiki/Athens
 
 User:
 What's the capital of Greece ?
@@ -82,6 +92,8 @@ Assistant:
 *** Answer 
 Athens
 
+Athens is the largest city in Greece and serves as both the capital and the largest urban center. It's one of the world's oldest cities with a recorded history spanning over 3,400 years. The city is named after Athena, the ancient Greek goddess of wisdom and warfare. Rome is the capital of Italy, and Paris is the capital of France. For more information, see: https://en.wikipedia.org/wiki/Athens
+
 User: 
 The capital of Greece is Athens
 Assistant:
@@ -89,6 +101,8 @@ Assistant:
 What's the capital of Greece ?
 *** Answer 
 Athens
+
+Athens is the largest city in Greece and serves as both the capital and the largest urban center. It's one of the world's oldest cities with a recorded history spanning over 3,400 years. The city is named after Athena, the ancient Greek goddess of wisdom and warfare. For more information, see: https://en.wikipedia.org/wiki/Athens
 
 User:
 Important LinkedIn Alerts
@@ -98,7 +112,7 @@ There are no alerts at the moment.
 Skip to section
 Skip to search
 Accessibility feedback
-Contact LinkedIn’s Disability Answer Desk with accessibility feedback or issues
+Contact LinkedIn's Disability Answer Desk with accessibility feedback or issues
 Close jump menu
 Expand site navigation
 Me
@@ -143,8 +157,11 @@ What is the difference between a scalar and a vector?
 - a vector is a number and a scalar is an ordered list of numbers that has both dimensionality and orientation
 - a scalar is a number and a vector is an ordered list of numbers that has both dimensionality and orientation
 - a scalar is a number and a vector is an ordered list of numbers
+- they are the same
 *** Answer
-a vector is a number and a scalar is an ordered list of numbers that has both dimensionality and orientation
+a scalar is a number and a vector is an ordered list of numbers that has both dimensionality and orientation
+
+In linear algebra, scalars and vectors are fundamental concepts. A scalar is simply a single numerical value (like 5, -2.3, or π) that represents magnitude only. A vector, on the other hand, is an ordered collection of numbers that represents both magnitude and direction in space. Vectors have dimensionality (the number of components) and orientation (direction). This distinction is crucial in machine learning and physics applications. For more details, see: https://en.wikipedia.org/wiki/Scalar_(mathematics) and https://en.wikipedia.org/wiki/Vector_(mathematics_and_physics)
 
 Use all the content in thee triple backticks to generate the flashcoard:
     {content}
