@@ -485,6 +485,12 @@ let
   fi
   '';
 
+  # Audiobooks directory
+  home.activation.audiobooks = lib.hm.dag.entryAfter ["writeBoundary"] ''
+  #/bin/sh
+  mkdir -p $HOME/Documents/Audiobooks
+  '';
+
   # Wine
   home.activation.wine = lib.hm.dag.entryAfter ["writeBoundary"] ''
   #/bin/sh
