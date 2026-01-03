@@ -143,6 +143,12 @@ config.set("content.cookies.accept", "all", "https://*.google.com/*")
 # Clipboard
 config.set("content.javascript.clipboard", "access", "https://chatgpt.com")
 
+# File dialog settings
+c.fileselect.handler = 'external'
+c.fileselect.single_file.command = ['zenity', '--file-selection', '--filename={}']
+c.fileselect.multiple_files.command = ['zenity', '--file-selection', '--multiple', '--filename={}']
+c.fileselect.folder.command = ['zenity', '--file-selection', '--directory', '--filename={}']
+
 # Asana User Agent
 config.set("content.headers.user_agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36", "https://*.asana.com/*")
 config.set("content.headers.custom", {"sec-ch-ua": '"Google Chrome";v="142", "Chromium";v="142", "Not?A_Brand";v="99"'}, "https://*.asana.com/*")

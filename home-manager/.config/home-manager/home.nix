@@ -168,6 +168,9 @@ let
     zenmap
     dig
 
+    # GUI utilities
+    zenity
+
     slack
     discord
     remmina
