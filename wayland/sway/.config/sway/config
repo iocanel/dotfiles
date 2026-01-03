@@ -38,7 +38,7 @@ floating_modifier $mod
 # start a terminal
 #bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+Return exec kitty
-bindsym $mod+u exec kitty --class=EditorTerm
+bindsym $mod+u exec kitty --title=EditorTerm
 
 bindsym $mod+b exec qutebrowser
 
@@ -85,8 +85,8 @@ bindsym Ctrl+grave exec swaync-client -t -sw
 #for_window [title=".*helm-ag.*"] move down; resize set 100 ppt 25 ppt;
 #for_window [title=".*undo-tree.*"] move right; resize set 50 ppt 100 ppt;
 
-for_window [class="EditorTerm"] move down; 
-for_window [class="EditorTerm"] resize set height 25 ppt;
+for_window [title="EditorTerm"] move down; 
+for_window [title="EditorTerm"] resize set height 25 ppt;
 
 # org-agenda
 bindsym $mod+Shift+a exec ~/bin/org-agenda
