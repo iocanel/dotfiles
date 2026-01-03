@@ -42,10 +42,10 @@ export GREN_GITHUB_TOKEN=`pass show services/github.com/iocanel/token`
 #export GITHUB_TOKEN=`pass show services/github.com/snowdrop-bot/token`
 export GITHUB_TOKEN=`pass show services/github.com/iocanel/token`
 export JIRA_USERNAME="iocanel"
-export JIRA_PASSWORD=`pass show websites/jboss.org/iocanel`
+export JIRA_PASSWORD=`pass show jboss.org/iocanel/password`
 
 #
 # Source Graph
 #
-#export SRC_ACCESS_TOKEN=`pass show services/sourcegraph/token`
+#export SRC_ACCESS_TOKEN=`pass show sourcegraph.com/token`
 #export SRC_ENDPOINT=https://sourcegraph.com

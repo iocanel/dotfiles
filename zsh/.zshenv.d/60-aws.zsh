@@ -1,1 +1,1 @@
-export AWS_LAMBDA_ROLE=`pass show services/aws/lambda/default_role`
+export AWS_LAMBDA_ROLE=`pass show aws.amazon.com/lambda/default_role`
