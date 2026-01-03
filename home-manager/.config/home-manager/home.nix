@@ -24,6 +24,7 @@ let
   };
   whisperApi = pkgs.callPackage ./packages/whisper-api/default.nix { };
   gimp3WithPlugins = pkgs.callPackage ./packages/gimp3-with-plugins/default.nix { };
+  storyteller = pkgs.callPackage ./packages/storyteller/default.nix { };
 
   # Override Chromium with NVIDIA offload and hardware acceleration
   chromium = pkgs.writeShellScriptBin "chromium" ''
@@ -264,6 +265,7 @@ let
     chatgpt-cli
     aider-chat-full
     goose-cli
+    storyteller
     # Goose CLI - dependencies
     dbus
     pkg-config
