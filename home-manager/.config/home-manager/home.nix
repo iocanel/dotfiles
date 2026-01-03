@@ -441,12 +441,12 @@ let
   if [ "$AUTHENTICATED" != "true" ]; then
     exit 0
   fi
-  export ANTHROPIC_API_KEY=$(${pkgs.pass}/bin/pass show services/anthropic/iocanel/default-key)
-  export OPENAI_API_KEY=$(${pkgs.pass}/bin/pass show services/openai/iocanel/api-key)
+  export ANTHROPIC_API_KEY=$(${pkgs.pass}/bin/pass show anthropic.com/iocanel/default-key)
+  export OPENAI_API_KEY=$(${pkgs.pass}/bin/pass show openai.com/iocanel/api-key)
   export GEMINI_PROJECT_ID=$(${pkgs.pass}/bin/pass show services/geminiai/project-id)
   export GEMINI_LOCATION=$(${pkgs.pass}/bin/pass show services/geminiai/location)
 
-  export TAVILY_API_KEY=$(${pkgs.pass}/bin/pass show services/tavily/api-key)
+  export TAVILY_API_KEY=$(${pkgs.pass}/bin/pass show tavily.com/api-key)
   export QUARKUS_BACKSTAGE_URL=http://localhost:7007
   export QUARKUS_BACKSTAGE_TOKEN=7KE4bWxxoSHIuOczpLhIy/4GbeMz0Bjc
 
