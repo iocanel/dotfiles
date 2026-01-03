@@ -241,6 +241,7 @@ let
     yt-dlp
     lpass # lastpass-cli
     gh
+    glab
     spring-boot-cli
     inetutils
     
