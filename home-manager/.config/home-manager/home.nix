@@ -124,6 +124,7 @@ let
     geeqie
     digikam
     calibre
+    libation
     mp4v2
     pulsemixer
     gimp3WithPlugins
