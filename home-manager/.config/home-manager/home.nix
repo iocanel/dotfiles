@@ -48,16 +48,15 @@ let
   in
 {
   imports = [
-    ./modules/wayland.nix
-    ./modules/xorg.nix
+    ./modules/display/manager.nix
     ./private/index.nix
   ];
 
-  # Desktop environment selection
-  # Enable either wayland or xorg, not both
-  # Set wayland.enable = false and xorg.enable = true to use X11/i3
-  wayland.enable = true;
-  xorg.enable = false;
+  # Display manager configuration - auto-detected from NixOS config
+  custom.display-manager = {
+    enable = true;
+    # backend auto-detected from NixOS custom.display-manager.backend
+  };
 
   # Work configuration
   work = {

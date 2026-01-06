@@ -208,13 +208,11 @@ set $ws10 "10"
 
 
 exec --no-startup-id kitty --class=MainTerminal
+exec --no-startup-id emacs --title "Workspace Emacs"
+exec --no-startup-id chatgpt-web
 exec --no-startup-id gmail-personal
 exec --no-startup-id outlook-work-email
 exec --no-startup-id outlook-work-calendar
-exec --no-startup-id slack --class=Slack
-exec --no-startup-id zulip --class=Zulip
-exec --no-startup-id chatgpt-web
-exec --no-startup-id emacs --title "Workspace Emacs"
 
 # Force window placement using for_window (more reliable than assign)
 for_window [class="MainTerminal"] move to workspace $ws1
