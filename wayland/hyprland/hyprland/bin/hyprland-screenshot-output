@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Take a screenshot of current output using grim
+# Hyprland replacement for sway-screenshot-output
+
+grim -o "$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .name')" - | wl-copy

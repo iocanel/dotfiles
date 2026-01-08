@@ -1,0 +1,6 @@
+#!/bin/sh
+
+stow --no-folding --adopt -t ~ monitor-mgmt-wlr
+stow --no-folding --adopt -t ~ swaync
+stow --no-folding --adopt -t ~ waybar
+stow --no-folding --adopt -t ~ wofi

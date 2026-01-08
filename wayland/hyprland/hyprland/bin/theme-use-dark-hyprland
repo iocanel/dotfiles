@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Switch to dark theme for Hyprland
+
+# Update hyprland colors to catppuccin mocha
+hyprctl keyword general:col.active_border rgb(cba6f7)
+hyprctl keyword general:col.inactive_border rgb(6c7086)
+hyprctl keyword decoration:col.shadow rgba(000000CC)
+
+# Reload waybar with dark theme
+theme-use-dark-waybar
+
+echo "Switched to dark theme"

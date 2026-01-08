@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Take a full screenshot using grim
+# Hyprland replacement for sway-screenshot-full
+
+grim - | wl-copy

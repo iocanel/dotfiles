@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Switch to light theme for Hyprland
+
+# Update hyprland colors to catppuccin latte
+hyprctl keyword general:col.active_border rgb(8839ef)
+hyprctl keyword general:col.inactive_border rgb(9ca0b0)
+hyprctl keyword decoration:col.shadow rgba(00000033)
+
+# Reload waybar with light theme
+theme-use-light-waybar
+
+echo "Switched to light theme"

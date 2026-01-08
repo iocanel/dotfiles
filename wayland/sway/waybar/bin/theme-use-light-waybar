@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Switch waybar to catppuccin latte theme
+sed -i 's/catppuccin-mocha\.css/catppuccin-latte.css/g' ~/.config/waybar/style.css
+
+# Restart waybar to apply changes
+systemctl --user restart waybar.service

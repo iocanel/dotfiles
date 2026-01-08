@@ -1,0 +1,20 @@
+#!/bin/bash
+
+case $1 in
+  "toggle") 
+    if systemctl --user is-active --quiet swayidle; then
+      # Stop swayidle service
+      systemctl --user stop swayidle
+    else
+      # Start swayidle service
+      systemctl --user start swayidle
+    fi
+    ;;
+esac
+
+# Check if swayidle service is active and output appropriate icon
+if systemctl --user is-active --quiet swayidle; then
+    echo "  "
+else
+    echo "  "
+fi

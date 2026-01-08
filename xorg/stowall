@@ -1,8 +1,8 @@
 #!/bin/sh
 
-stow -t ~ i3
-stow -t ~ dunst
-stow -t ~ rofi
-stow -t ~ x-resources
-stow -t ~ conky
-stow -t ~ screenlock
+stow --no-folding --adopt -t ~ i3
+stow --no-folding --adopt -t ~ dunst
+stow --no-folding --adopt -t ~ rofi
+stow --no-folding --adopt -t ~ x-resources
+stow --no-folding --adopt -t ~ conky
+stow --no-folding --adopt -t ~ screenlock

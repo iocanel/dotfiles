@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Hyprland window switcher using wofi
+# Replacement for swayr switch-window
+
+# Get list of windows from hyprland
+windows=$(hyprctl clients -j | jq -r '.[] | "\(.address)|\(.class)|\(.title)"')
+
+# Format for wofi display
+formatted=$(echo "$windows" | while IFS='|' read -r address class title; do
+    echo "$class: $title|$address"
+done)
+
+# Show in wofi and get selection
+selected=$(echo "$formatted" | cut -d'|' -f1 | wofi --dmenu --prompt "Switch to window")
+
+if [ -n "$selected" ]; then
+    # Get the address of selected window
+    address=$(echo "$formatted" | grep -F "$selected" | cut -d'|' -f2 | head -1)
+    # Focus the window
+    hyprctl dispatch focuswindow "address:$address"
+fi

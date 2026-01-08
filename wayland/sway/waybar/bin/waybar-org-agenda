@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Waybar custom module for org-mode agenda
+# Adapted from i3-org-agenda
+
+# Waybar doesn't use BLOCK_BUTTON, but we can handle click events via on-click
+# Remove the i3blocks-specific click handling
+
+COUNT=`emacsclient --eval "(my/org-agenda-count-todays-items)"`
+if [ $COUNT -gt 0 ]; then
+    echo " $COUNT"
+else 
+    echo " "
+fi

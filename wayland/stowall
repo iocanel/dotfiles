@@ -1,10 +1,13 @@
 #!/bin/sh
 
-stow -t ~ sway
-stow -t ~ waybar
-stow -t ~ wofi
-stow -t ~ swaync
-stow -t ~ swayr
-stow -t ~ way-displays
-stow -t ~ monitor-mgmt-wlr
-stow -t ~ swaylock
+pushd common
+./stowall
+popd
+
+pushd sway
+./stowall
+popd
+
+pushd hyprland
+./stowall
+popd
