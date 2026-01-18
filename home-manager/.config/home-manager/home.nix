@@ -90,6 +90,7 @@ let
     tor-browser
     qutebrowser
     # Media
+    musicpod
     rhythmbox
     newsflash
     obs-studio
@@ -165,6 +166,7 @@ let
     # Text editing
     #
     neovim
+    neovide
     emacs
     ltex-ls
     emacs-lsp-booster
@@ -225,6 +227,7 @@ let
     lastpass-cli
     gh
     glab
+    copybara
     spring-boot-cli
     inetutils
     
@@ -386,6 +389,7 @@ let
     util-linux
     tesseract4
     stow
+    dos2unix
     #
     # Deamons and Services (shared)
     # Requirement for home manager config scripts
