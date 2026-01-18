@@ -1,0 +1,4 @@
+#!/bin/bash
+pushd $HOME/Videos
+DISPLAY=:0 emacsclient -c --eval "(dired nil)"
+popd

@@ -1,0 +1,27 @@
+# hyprviz configuration (created automatically)
+
+xwayland {
+    enabled = false
+}
+
+general {
+    gaps_in = 5
+    gaps_out = 5
+    border_size = 3
+
+    snap {
+        enabled = true
+        border_overlap = true
+        respect_gaps = true
+    }
+
+    no_border_on_floating = false
+}
+
+decoration {
+    dim_inactive = true
+}
+
+animations {
+    enabled = true
+}

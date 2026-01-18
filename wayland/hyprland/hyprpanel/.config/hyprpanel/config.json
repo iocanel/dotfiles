@@ -1,0 +1,256 @@
+{
+  "bar.customModules.storage.paths": [
+    "/"
+  ],
+  "theme.bar.menus.enableShadow": true,
+  "menus.dashboard.stats.enable_gpu": false,
+  "theme.bar.floating": false,
+  "theme.bar.location": "bottom",
+  "bar.autoHide": "fullscreen",
+  "theme.bar.buttons.enableBorders": false,
+  "theme.bar.layer": "top",
+  "theme.bar.buttons.workspaces.enableBorder": false,
+  "bar.workspaces.monitorSpecific": true,
+  "bar.workspaces.show_numbered": false,
+  "bar.workspaces.showWsIcons": true,
+  "bar.workspaces.showApplicationIcons": false,
+  "bar.workspaces.applicationIconOncePerWorkspace": false,
+  "bar.workspaces.numbered_active_indicator": "highlight",
+  "theme.bar.buttons.workspaces.smartHighlight": true,
+  "theme.font.name": "JetBrainsMono Nerd Font",
+  "theme.font.style": "normal",
+  "theme.font.label": "JetBrainsMono Nerd Font Ultra-Light",
+  "theme.bar.border.location": "none",
+  "theme.bar.enableShadow": false,
+  "bar.launcher.autoDetectIcon": true,
+  "bar.workspaces.show_icons": false,
+  "bar.workspaces.icons": {
+    "1": "",
+    "2": "",
+    "3": "",
+    "4": "",
+    "5": "",
+    "6": "",
+    "7": ""
+  },
+  "bar.workspaces.applicationIconMap": {
+    "1": {
+      "icon": ""
+    }
+  },
+  "bar.workspaces.workspaceIconMap": {
+    "1": {
+      "icon": ""
+    },
+    "2": {
+      "icon": ""
+    },
+    "3": {
+      "icon": ""
+    },
+    "4": {
+      "icon": ""
+    },
+    "5": {
+      "icon": ""
+    },
+    "6": {
+      "icon": ""
+    },
+    "7": {
+      "icon": ""
+    }
+  },
+  "theme.bar.buttons.windowtitle.enableBorder": false,
+  "bar.windowtitle.title_map": [
+    [
+      "kitty",
+      "󰄛",
+      "Kitty Terminal"
+    ],
+    [
+      "firefox",
+      "󰈹",
+      "Firefox"
+    ],
+    [
+      "Org.qutebrowser.qutebrowser",
+      "󰖟",
+      "Qutebrowser"
+    ],
+    [
+      "microsoft-edge.*",
+      "󰇩",
+      "Edge"
+    ],
+    [
+      "Chrome-outlook.office.com__email-Default",
+      "󰊫",
+      "Outlook Mail"
+    ],
+    [
+      "Chrome-outlook.office.com__calendar-Default",
+      "󰃭",
+      "Outlook Calendar"
+    ],
+    [
+      "discord",
+      "",
+      "Discord"
+    ],
+    [
+      "chatgpt|chat.openai.com|openai",
+      "󰚩",
+      "ChatGPT"
+    ],
+    [
+      "org.kde.dolphin",
+      "",
+      "Dolphin"
+    ]
+  ],
+  "bar.layouts": {
+    "*": {
+      "left": [
+        "dashboard",
+        "workspaces",
+        "windowtitle"
+      ],
+      "middle": [
+        "media"
+      ],
+      "right": [
+        "volume",
+        "network",
+        "bluetooth",
+        "battery",
+        "systray",
+        "clock",
+        "notifications"
+      ]
+    }
+  },
+  "bar.windowtitle.class_name": false,
+  "bar.windowtitle.label": true,
+  "bar.volume.label": false,
+  "bar.network.label": false,
+  "theme.bar.buttons.network.enableBorder": false,
+  "bar.network.showWifiInfo": true,
+  "bar.bluetooth.label": false,
+  "bar.battery.label": false,
+  "bar.clock.showIcon": true,
+  "bar.clock.showTime": true,
+  "bar.media.truncation": false,
+  "bar.media.show_label": false,
+  "theme.bar.buttons.media.enableBorder": false,
+  "bar.media.show_active_only": true,
+  "theme.bar.buttons.notifications.enableBorder": false,
+  "bar.windowtitle.custom_title": false,
+  "bar.windowtitle.icon": true,
+  "menus.clock.time.military": true,
+  "menus.clock.time.hideSeconds": false,
+  "scalingPriority": "hyprland",
+  "theme.matugen": true,
+  "wallpaper.image": "/home/iocanel/Documents/photos/wallpapers/HD/fantasy_islands-wallpaper-3840x2160.jpg",
+  "theme.bar.buttons.modules.microphone.enableBorder": false,
+  "bar.customModules.microphone.label": true,
+  "menus.dashboard.powermenu.avatar.image": "/home/iocanel/Documents/photos/profile-2024.png",
+  "menus.dashboard.directories.enabled": true,
+  "menus.dashboard.shortcuts.enabled": true,
+  "menus.dashboard.shortcuts.left.shortcut1.tooltip": "Browser",
+  "menus.dashboard.shortcuts.left.shortcut4.command": "wofi",
+  "menus.dashboard.shortcuts.left.shortcut1.icon": "󰇩",
+  "menus.dashboard.shortcuts.left.shortcut1.command": "brave",
+  "theme.bar.menus.menu.dashboard.profile.size": "8em",
+  "theme.matugen_settings.scheme_type": "tonal-spot",
+  "theme.bar.buttons.separator.color": "#585b70",
+  "theme.bar.buttons.dashboard.background": "#242438",
+  "theme.bar.buttons.workspaces.background": "#242438",
+  "theme.bar.buttons.windowtitle.background": "#242438",
+  "theme.bar.buttons.media.background": "#242438",
+  "theme.bar.buttons.volume.background": "#242438",
+  "theme.bar.buttons.network.background": "#242438",
+  "theme.bar.buttons.bluetooth.background": "#242438",
+  "theme.bar.buttons.systray.background": "#242438",
+  "theme.bar.buttons.battery.background": "#242438",
+  "theme.bar.buttons.clock.background": "#242438",
+  "theme.bar.buttons.notifications.background": "#242438",
+  "theme.bar.background": "#242438",
+  "theme.bar.transparent": false,
+  "theme.bar.buttons.dashboard.icon": "#9a9996",
+  "theme.bar.buttons.workspaces.hover": "#585b70",
+  "theme.bar.buttons.workspaces.active": "#242438",
+  "theme.bar.buttons.workspaces.numbered_active_highlighted_text_color": "#c64600",
+  "theme.bar.buttons.workspaces.occupied": "#c0bfbc",
+  "theme.bar.buttons.dashboard.border": "#f9e2af",
+  "theme.bar.buttons.windowtitle.text": "#9a9996",
+  "theme.bar.buttons.windowtitle.icon": "#9a9996",
+  "theme.bar.buttons.volume.text": "#9a9996",
+  "theme.bar.buttons.volume.icon": "#9a9996",
+  "theme.bar.buttons.network.text": "#9a9996",
+  "theme.bar.buttons.network.icon": "#9a9996",
+  "theme.bar.buttons.clock.text": "#9a9996",
+  "theme.bar.buttons.clock.icon": "#9a9996",
+  "theme.bar.buttons.notifications.icon": "#9a9996",
+  "theme.bar.buttons.battery.text": "#9a9996",
+  "theme.bar.buttons.battery.icon": "#9a9996",
+  "theme.bar.menus.opacity": 95,
+  "theme.matugen_settings.mode": "dark",
+  "theme.matugen_settings.variation": "standard_1",
+  "theme.bar.menus.menu.dashboard.card.color": "#1e1e2e",
+  "theme.bar.menus.menu.dashboard.profile.name": "#9a9996",
+  "theme.bar.menus.menu.dashboard.powermenu.shutdown": "#9a9996",
+  "theme.bar.menus.menu.dashboard.powermenu.logout": "#9a9996",
+  "theme.bar.menus.menu.dashboard.powermenu.restart": "#9a9996",
+  "theme.bar.menus.menu.dashboard.powermenu.sleep": "#9a9996",
+  "theme.bar.menus.menu.dashboard.shortcuts.background": "#9a9996",
+  "theme.bar.menus.menu.dashboard.powermenu.confirmation.label": "#9a9996",
+  "theme.bar.menus.menu.dashboard.powermenu.confirmation.body": "#9a9996",
+  "theme.bar.menus.menu.dashboard.powermenu.confirmation.confirm": "#9a9996",
+  "theme.bar.menus.menu.dashboard.powermenu.confirmation.deny": "#9a9996",
+  "theme.bar.menus.menu.dashboard.controls.wifi.background": "#9a9996",
+  "theme.bar.menus.menu.dashboard.controls.bluetooth.background": "#9a9996",
+  "theme.bar.menus.menu.dashboard.controls.notifications.background": "#9a9996",
+  "theme.bar.menus.menu.dashboard.controls.volume.background": "#9a9996",
+  "theme.bar.menus.menu.dashboard.controls.input.background": "#9a9996",
+  "theme.bar.menus.menu.dashboard.shortcuts.recording": "#9a9996",
+  "theme.bar.menus.menu.dashboard.directories.left.top.color": "#9a9996",
+  "theme.bar.menus.menu.dashboard.directories.left.middle.color": "#9a9996",
+  "theme.bar.menus.menu.dashboard.directories.left.bottom.color": "#9a9996",
+  "theme.bar.menus.menu.dashboard.directories.right.middle.color": "#9a9996",
+  "theme.bar.menus.menu.dashboard.directories.right.top.color": "#9a9996",
+  "theme.bar.menus.menu.dashboard.directories.right.bottom.color": "#9a9996",
+  "theme.bar.menus.menu.dashboard.monitors.cpu.icon": "#9a9996",
+  "theme.bar.menus.menu.dashboard.monitors.cpu.bar": "#9a9996",
+  "theme.bar.menus.menu.dashboard.monitors.cpu.label": "#9a9996",
+  "theme.bar.menus.menu.dashboard.monitors.ram.icon": "#9a9996",
+  "theme.bar.menus.menu.dashboard.monitors.ram.bar": "#9a9996",
+  "theme.bar.menus.menu.dashboard.monitors.ram.label": "#9a9996",
+  "theme.bar.menus.menu.dashboard.monitors.gpu.icon": "#9a9996",
+  "theme.bar.menus.menu.dashboard.monitors.gpu.bar": "#9a9996",
+  "theme.bar.menus.menu.dashboard.monitors.gpu.label": "#9a9996",
+  "theme.bar.menus.menu.dashboard.monitors.disk.icon": "#9a9996",
+  "theme.bar.menus.menu.dashboard.monitors.disk.bar": "#9a9996",
+  "theme.bar.menus.menu.dashboard.monitors.disk.label": "#9a9996",
+  "menus.dashboard.directories.left.directory1.command": "hyprland-dired-downloads",
+  "menus.dashboard.directories.left.directory2.command": "hyprland-dired-videos",
+  "menus.dashboard.directories.right.directory1.command": "hyprland-dired-documents",
+  "menus.dashboard.directories.left.directory3.command": "hyprland-dired-projects",
+  "menus.dashboard.directories.right.directory2.command": "hyprland-dired-pictures",
+  "menus.dashboard.directories.right.directory3.command": "hyprland-dired-home",
+  "menus.clock.weather.location": "Athens",
+  "menus.clock.weather.unit": "metric",
+  "menus.dashboard.shortcuts.left.shortcut2.command": "musicpod",
+  "menus.dashboard.shortcuts.left.shortcut2.tooltip": "Music Pod",
+  "menus.dashboard.shortcuts.left.shortcut3.tooltip": "Microsoft Teams",
+  "menus.dashboard.shortcuts.left.shortcut3.command": "teams-for-linux",
+  "menus.dashboard.shortcuts.left.shortcut3.icon": "󰊻",
+  "menus.power.lowBatteryNotification": true,
+  "theme.bar.buttons.bluetooth.text": "#9a9996",
+  "theme.bar.buttons.bluetooth.icon": "#9a9996",
+  "menus.dashboard.shortcuts.left.shortcut2.icon": "󰎈",
+  "menus.dashboard.shortcuts.left.shortcut4.icon": "󰂾",
+  "theme.bar.buttons.opacity": 65,
+  "theme.bar.buttons.modules.kbLayout.enableBorder": false,
+  "theme.bar.buttons.modules.hypridle.enableBorder": false
+}

@@ -1,3 +1,3 @@
 #!/bin/sh
 
-stow --no-folding --adopt -t ~ hyprland
+stow --no-folding --adopt hyprland
