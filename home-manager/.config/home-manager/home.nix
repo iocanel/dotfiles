@@ -210,7 +210,6 @@ let
     # CLI
     #
     android-tools
-    android-udev-rules
     google-cloud-sdk
     kubectl
     openshift
@@ -299,7 +298,7 @@ let
       scipy
       hatchling
       statsmodels
-      scikitlearn
+      scikit-learn
       requests
       rapidfuzz
       weaviate
