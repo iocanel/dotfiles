@@ -59,7 +59,7 @@ with lib;
         };
         Service = {
           Type = "simple";
-          ExecStart = "${pkgs.hyprpanel}/bin/hypridle -w -c ${config.home.homeDirectory}/.config/hyprpanel/config.json";
+          ExecStart = "${pkgs.hyprpanel}/bin/hyprpanel";
           ExecReload = "${pkgs.coreutils}/bin/kill -SIGUSR2 $MAINPID";
           Restart = "on-failure";
           RestartSec = "1";

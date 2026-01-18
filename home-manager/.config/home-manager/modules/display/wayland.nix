@@ -3,26 +3,29 @@
 with lib;
 
 {
+  imports = [
+    ./sway.nix
+    ./hyprland.nix
+  ];
+
   options.wayland = {
     enable = mkEnableOption "Wayland desktop environment configuration";
   };
 
   config = mkIf config.wayland.enable {
+    # Enable both Sway and Hyprland when Wayland is enabled
+    # This ensures both are ready to use without config changes
+
     home.packages = with pkgs; [
       # Portal services
-      xdg-desktop-portal-wlr
       xdg-desktop-portal-gtk
 
       # Wayland desktop components
       waybar
-      swaylock-effects
-      swayidle
-      swayr
       way-displays
       wdisplays
       wlr-randr
       wl-mirror
-      waypaper
 
       # Wayland-specific menu and clipboard
       wofi
@@ -39,179 +42,56 @@ with lib;
       swaynotificationcenter
     ];
 
-    # XDG Portal configuration for screen sharing
-    xdg.portal = {
-      enable = true;
-      extraPortals = [ 
-        pkgs.xdg-desktop-portal-wlr 
-        pkgs.xdg-desktop-portal-gtk 
-      ];
-      config = {
-        common = {
-          default = "wlr";
-          "org.freedesktop.impl.portal.FileChooser" = "gtk";
-          "org.freedesktop.impl.portal.ScreenCast" = "wlr";
-          "org.freedesktop.impl.portal.Screenshot" = "wlr";
+    # Common Wayland systemd services
+    # Services can bind to either sway-session.target or hyprland-session.target as needed
+    # Only one compositor runs at a time, so only one set of services starts
+    systemd.user.services = {
+
+      cliphist-store = {
+        Unit = {
+          Description = "Store clipboard content in history";
+          After = [ "sway-session.target" "hyprland-session.target" ];
+          PartOf = [ "sway-session.target" "hyprland-session.target" ];
         };
-      };
-    };
-
-
-    # Wayland-specific systemd services
-    systemd.user = {
-      services = {
-        waybar = {
-          Unit = {
-            Description = "Waybar status bar";
-            After = [ "sway-session.target" ];
-          };
-          Install = {
-            WantedBy = [ "sway-session.target" ];
-          };
-          Service = {
-            Type = "simple";
-            ExecStart = "${pkgs.waybar}/bin/waybar -c ${config.home.homeDirectory}/.config/waybar/config.json";
-            ExecReload = "${pkgs.coreutils}/bin/kill -SIGUSR2 $MAINPID";
-            Restart = "on-failure";
-            RestartSec = "1";
-            Environment = [
-              "XDG_CURRENT_DESKTOP=sway"
-              "XDG_SESSION_TYPE=wayland"
-              "HOME=${config.home.homeDirectory}" 
-              "PATH=/run/wrappers/bin:${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
-            ];
-          };
+        Install = {
+          WantedBy = [ "sway-session.target" "hyprland-session.target" ];
         };
-
-        swayidle = {
-          Unit = {
-            Description = "Swayidle idle daemon";
-            After = [ "sway-session.target" ];
-            Requisite = [ "sway-session.target" ];
-          };
-          Install = {
-            WantedBy = [ "sway-session.target" ];
-          };
-          Service = {
-            Type = "simple";
-            ExecStart = "${pkgs.writeShellScript "start-swayidle" ''
-              # Wait for Sway to be fully ready
-              until [ -n "$WAYLAND_DISPLAY" ] && ${pkgs.sway}/bin/swaymsg -t get_version >/dev/null 2>&1; do 
-                sleep 1
-              done
-              exec ${pkgs.swayidle}/bin/swayidle -w \
-                timeout 180 '${config.home.homeDirectory}/bin/screenlock-now' \
-                timeout 600 'swaymsg "output * power off"' \
-                resume 'swaymsg "output * power on"' \
-                before-sleep '${config.home.homeDirectory}/bin/screenlock-now'
-            ''}";
-            Restart = "on-failure";
-            RestartSec = "1";
-            Environment = [
-              "XDG_CURRENT_DESKTOP=sway"
-              "XDG_SESSION_TYPE=wayland"
-              "WAYLAND_DISPLAY=wayland-1"
-              "PATH=/run/wrappers/bin:${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
-            ];
-          };
-        };
-
-        waypaper = {
-          Unit = {
-            Description = "Set wallpaper with waypaper";
-            After = [ "sway-session.target" ];
-            Requisite = [ "sway-session.target" ];
-          };
-          Install = {
-            WantedBy = [ "sway-session.target" ];
-          };
-          Service = {
-            Type = "forking";
-            ExecStart = "${pkgs.writeShellScript "start-waypaper" ''
-              # Wait for Wayland display to be available
-              until [ -n "$WAYLAND_DISPLAY" ] && [ -S "/run/user/$(id -u)/wayland-1" ]; do
-                sleep 1
-              done
-              # Kill any existing swaybg processes first
-              pkill swaybg || true
-              # Start waypaper which will launch swaybg in background
-              ${pkgs.waypaper}/bin/waypaper --restore
-            ''}";
-            Restart = "on-failure";
-            RestartSec = "5";
-            Environment = [
-              "XDG_CURRENT_DESKTOP=sway"
-              "XDG_SESSION_TYPE=wayland"
-              "WAYLAND_DISPLAY=wayland-1"
-              "DISPLAY=:0"
-              "PATH=/run/wrappers/bin:${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
-            ];
-          };
-        };
-
-        # Simple clipboard management - editor-centric approach
-        cliphist-store = {
-          Unit = {
-            Description = "Store clipboard content in history (regular clipboard only)";
-            After = [ "sway-session.target" ];
-            Requisite = [ "sway-session.target" ];
-          };
-          Install = {
-            WantedBy = [ "sway-session.target" ];
-          };
-          Service = {
-            Type = "simple";
-            ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p %h/.cache/cliphist";
-            ExecStart = "${pkgs.writeShellScript "start-cliphist" ''
-              # Wait for Wayland display to be available
-              until [ -n "$WAYLAND_DISPLAY" ] && [ -S "/run/user/$(id -u)/wayland-1" ]; do
-                sleep 1
-              done
-              exec ${pkgs.wl-clipboard}/bin/wl-paste --watch ${pkgs.cliphist}/bin/cliphist store
-            ''}";
-            Restart = "on-failure";
-            RestartSec = "1";
-            Environment = [
-              "XDG_CURRENT_DESKTOP=sway"
-              "XDG_SESSION_TYPE=wayland"
-              "WAYLAND_DISPLAY=wayland-1"
-              "PATH=/run/wrappers/bin:${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
-            ];
-          };
-        };
-
-        flameshot = {
-          Unit = {
-            Description = "Flameshot screenshot tool daemon";
-            After = [ "sway-session.target" ];
-            Requisite = [ "sway-session.target" ];
-          };
-          Install = {
-            WantedBy = [ "sway-session.target" ];
-          };
-          Service = {
-            Type = "simple";
-            ExecStart = "${pkgs.writeShellScript "start-flameshot" ''
-              # Wait for Wayland display to be available
-              until [ -n "$WAYLAND_DISPLAY" ] && [ -S "/run/user/$(id -u)/wayland-1" ]; do
-                sleep 1
-              done
-              exec ${pkgs.flameshot}/bin/flameshot
-            ''}";
-            Restart = "on-failure";
-            RestartSec = "1";
-            Environment = [
-              "XDG_CURRENT_DESKTOP=sway"
-              "XDG_SESSION_TYPE=wayland"
-              "WAYLAND_DISPLAY=wayland-1"
-              "PATH=/run/wrappers/bin:${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
-            ];
-          };
+        Service = {
+          Type = "simple";
+          ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p %h/.cache/cliphist";
+          ExecStart = "${pkgs.writeShellScript "start-cliphist" ''
+            # Wait for Wayland display to be available
+            until [ -n "$WAYLAND_DISPLAY" ] && [ -S "/run/user/$(id -u)/$WAYLAND_DISPLAY" ]; do
+              sleep 1
+            done
+            exec ${pkgs.wl-clipboard}/bin/wl-paste --watch ${pkgs.cliphist}/bin/cliphist store
+          ''}";
+          Restart = "on-failure";
+          RestartSec = "1";
         };
       };
 
-      targets = {
-        # Remove custom sway-session target - home-manager creates one automatically
+      flameshot = {
+        Unit = {
+          Description = "Flameshot screenshot tool daemon";
+          After = [ "sway-session.target" "hyprland-session.target" ];
+          PartOf = [ "sway-session.target" "hyprland-session.target" ];
+        };
+        Install = {
+          WantedBy = [ "sway-session.target" "hyprland-session.target" ];
+        };
+        Service = {
+          Type = "simple";
+          ExecStart = "${pkgs.writeShellScript "start-flameshot" ''
+            # Wait for Wayland display to be available
+            until [ -n "$WAYLAND_DISPLAY" ] && [ -S "/run/user/$(id -u)/$WAYLAND_DISPLAY" ]; do
+              sleep 1
+            done
+            exec ${pkgs.flameshot}/bin/flameshot
+          ''}";
+          Restart = "on-failure";
+          RestartSec = "1";
+        };
       };
     };
   };
