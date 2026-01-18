@@ -50,4 +50,4 @@ echo "$expected_log" > "$LAST_LOG_FILE"
 notify-send "Meal Log" "Time to log your $meal!"
 
 # Trigger Emacs with org-capture for meals
-emacsclient -c --eval "(progn (setq frame-title-format \"emacs-floating-app\") (org-capture nil \"nm\") (delete-other-windows))"
+DISPLAY=:0 emacsclient -c -F '((name . "Floating Capture Meals"))' --eval "(progn (org-capture nil \"nm\") (delete-other-windows))"

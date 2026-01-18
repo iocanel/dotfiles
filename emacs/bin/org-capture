@@ -1,3 +1,3 @@
 #!/bin/bash
 
-emacsclient -c --eval "(progn (setq frame-title-format \"emacs-floating-app\") (switch-to-buffer (generate-new-buffer \"*capture*\")) (delete-other-windows) (add-hook 'org-select-mode-hook 'delete-other-windows) (org-capture nil))"
+ DISPLAY=:0 emacsclient -c -F '((name . "Floating Org Capture"))' --eval "(progn (switch-to-buffer (generate-new-buffer \"*capture*\")) (delete-other-windows) (add-hook 'org-select-mode-hook 'delete-other-windows) (org-capture nil))"
