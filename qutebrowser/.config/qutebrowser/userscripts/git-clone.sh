@@ -13,7 +13,7 @@ clone_repo() {
     local repo=$(extract_repository "$url")
     local workspace=$(build_workspace_path "$host" "$org")
     
-    kitty --class EditorTerm -e bash -c "mkdir -p $workspace; cd $workspace; $(declare -f smart_clone); $(declare -f get_clone_method); $(declare -f build_ssh_url); $(declare -f build_https_url); $(declare -f clone_with_fallback); smart_clone '$host' '$org' '$repo' '$repo'; exec fish"
+    kitty --title "Auxiliary Terminal" -e bash -c "source '$SCRIPT_DIR/git-lib.sh'; mkdir -p $workspace; cd $workspace; smart_clone '$host' '$org' '$repo' '$repo'; exec fish"
 }
 
 # Route to appropriate implementation (fallback for compatibility)

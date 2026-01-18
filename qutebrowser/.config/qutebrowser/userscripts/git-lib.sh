@@ -2,9 +2,12 @@
 
 # Shared library for git userscripts
 
-# Source the generic TOML library
-SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
-source "$SCRIPT_DIR/toml-lib.sh"
+if [ ! -f "$HOME/bin/grab" ]; then
+  mkdir -p $HOME/bin
+  export PATH=$PATH:$HOME/bin
+  curl -o $HOME/bin/grab -L https://github.com/shellib/grab/raw/master/grab.sh && chmod +x $HOME/bin/grab
+fi
+source $(grab github.com/shellib/git as git)
 
 # Detect if URL is GitHub or GitLab
 is_github() {
@@ -14,115 +17,47 @@ is_github() {
 
 # Extract host from URL
 extract_host() {
-    local url="$1"
-    echo "$url" | sed -n 's/.*:\/\/\([^\/]*\)\/.*/\1/p'
+  git::extract_host "$@"
 }
 
 # Extract organization from URL
 extract_organization() {
-    local url="$1"
-    echo "$url" | sed -n 's/.*\/\/[^\/]*\/\([^\/]*\)\/.*/\1/p'
+  git::extract_organization "$@"
 }
 
 # Extract repository name from URL
 extract_repository() {
-    local url="$1"
-    echo "$url" | sed -n 's/.*\/\/[^\/]*\/[^\/]*\/\([^\/]*\).*/\1/p'
+  git::extract_repository "$@"
 }
 
 # Extract path after repository from URL
 extract_path() {
-    local url="$1"
-    echo "$url" | sed -n 's/.*\/\/[^\/]*\/[^\/]*\/[^\/]*\(\/.*\)/\1/p'
+  git::extract_path "$@"
 }
 
 # Extract pull request number from GitHub URL
 extract_github_pr_number() {
-    local url="$1"
-    echo "$url" | sed -n 's/.*pull\/\([0-9]*\).*/\1/p'
+  git::extract_github_pr_number "$@"
 }
 
 # Extract merge request number from GitLab URL
 extract_gitlab_mr_number() {
-    local url="$1"
-    echo "$url" | sed -n 's/.*merge_requests\/\([0-9]*\).*/\1/p'
+  git::extract_gitlab_mr_number "$@"
 }
 
 # Build SSH clone URL
 build_ssh_url() {
-    local host="$1"
-    local org="$2"
-    local repo="$3"
-    local username="$4"  # Optional username override
-    
-    if [ -n "$username" ]; then
-        echo "git@$host:$username/$repo.git"
-    else
-        echo "git@$host:$org/$repo.git"
-    fi
+  git::build_ssh_url "$@"
 }
 
 # Build HTTPS clone URL
 build_https_url() {
-    local host="$1"
-    local org="$2"
-    local repo="$3"
-    echo "https://$host/$org/$repo.git"
+  git::build_https_url "$@"
 }
 
 # Parse TOML config and extract method and username
 get_config_values() {
-    local host="$1"
-    local org="$2" 
-    local repo="$3"
-    local config_file="${GIT_CONFIG_FILE:-$HOME/.config/qutebrowser/git.toml}"
-    
-    # Default values - start with empty method so we can detect when config is found
-    local method=""
-    local username=""
-    
-    if [ -f "$config_file" ]; then
-        # Try repo-specific config first
-        local repo_section="\"$host/$org/$repo\""
-        if toml_has_section "$repo_section" "$config_file"; then
-            method=$(toml_get_value "$repo_section" "method" "$config_file")
-            username=$(toml_get_value "$repo_section" "username" "$config_file")
-        fi
-        
-        # If not found or empty, try host-specific config
-        if [ -z "$method" ]; then
-            local host_section="\"$host\""
-            if toml_has_section "$host_section" "$config_file"; then
-                local host_method=$(toml_get_value "$host_section" "method" "$config_file")
-                local host_username=$(toml_get_value "$host_section" "username" "$config_file")
-                
-                if [ -n "$host_method" ]; then
-                    method="$host_method"
-                    if [ -z "$username" ]; then
-                        username="$host_username"
-                    fi
-                fi
-            fi
-        fi
-        
-        # If not found or empty, try global config
-        if [ -z "$method" ]; then
-            if toml_has_section "default" "$config_file"; then
-                local default_method=$(toml_get_value "default" "method" "$config_file")
-                if [ -n "$default_method" ]; then
-                    method="$default_method"
-                fi
-            fi
-        fi
-        
-    fi
-    
-    # Default to fallback if nothing found
-    if [ -z "$method" ]; then
-        method="fallback"
-    fi
-    
-    echo "$method|$username"
+  git::get_config_values "$@"
 }
 
 # Get clone method from config (ssh|https|fallback) - for backward compatibility
@@ -139,38 +74,7 @@ get_clone_username() {
 
 # Try SSH clone with timeout, fallback to HTTPS if it fails
 clone_with_fallback() {
-    local host="$1"
-    local org="$2"
-    local repo="$3"
-    local target_dir="$4"
-    local username="$5"  # Optional username
-    
-    local ssh_url=$(build_ssh_url "$host" "$org" "$repo" "$username")
-    local https_url=$(build_https_url "$host" "$org" "$repo")
-    
-    echo "Attempting SSH clone: $ssh_url"
-    
-    # Set SSH timeout and try SSH clone
-    if timeout 10 git -c core.sshCommand="ssh -o ConnectTimeout=10 -o ServerAliveInterval=10 -o ServerAliveCountMax=1" clone "$ssh_url" "$target_dir" 2>/dev/null; then
-        echo "SSH clone successful"
-        return 0
-    else
-        echo "SSH clone failed, trying HTTPS: $https_url"
-        # Clean up partial clone if it exists
-        rm -rf "$target_dir" 2>/dev/null
-        
-        # Clone with HTTPS
-        if git clone "$https_url" "$target_dir"; then
-            echo "HTTPS clone successful"
-            # Configure git to always use HTTPS for this host to avoid future SSH timeouts
-            (cd "$target_dir" && git config url."https://$host/".insteadOf "git@$host:")
-            echo "Configured git to use HTTPS for $host"
-            return 0
-        else
-            echo "HTTPS clone failed"
-            return 1
-        fi
-    fi
+  git::clone_with_fallback "$@"
 }
 
 # Clone repository using configured method
