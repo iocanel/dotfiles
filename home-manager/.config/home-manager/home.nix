@@ -3,7 +3,6 @@
 with lib;
 
 let
-  lpass = pkgs.callPackage ./packages/lpass/1.6.0.nix { };
   buildFishPlugin = pkgs.fishPlugins.buildFishPlugin;
   fisher = pkgs.callPackage ./packages/fisher/4.4.4.nix {
     inherit buildFishPlugin;
