@@ -566,9 +566,11 @@ let
     };
     git = {
       enable = true;
-      userName = "Ioannis Canellos";
-      userEmail = "iocanel@gmail.com";
-      extraConfig = {
+      settings = {
+        user = {
+          name = "Ioannis Canellos";
+          email = "iocanel@gmail.com";
+        };
         credential = {
           helper = "store";
         };
