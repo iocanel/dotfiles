@@ -49,6 +49,7 @@ let
   home.stateVersion = "25.05"; # Adjust this according to your Nixpkgs version
   home.username = "iocanel";
   home.homeDirectory = "/home/iocanel";
+  home.enableNixpkgsReleaseCheck = false;
 
   home.pointerCursor = {
     name = "Vanilla-DMZ";
@@ -153,10 +154,10 @@ let
     slack
     discord
     remmina
-    whatsapp-for-linux
+    wasistlos
     viber
     zoom-us
-    teams-for-linux-with-notifications
+    teams-for-linux
     # Menu (shared)
     rofi-pass
 
@@ -199,7 +200,7 @@ let
     emacsPackages.mu4e-views
     emacsPackages.mu4e-overview
     emacsPackages.evil-mu4e
-    eask
+    eask-cli
     
     #Music
     lilypond
@@ -264,10 +265,9 @@ let
     clang-tools
     # Java
     gradle
-    temurin-bin-21 # 21 is required by LSP
+    temurin-bin-25 # 21 is required by LSP
     jbang
     openapi-generator-cli
-    jetbrains.idea-community-bin
     vscode
     # codelldb
     vscode-extensions.vadimcn.vscode-lldb
@@ -283,7 +283,6 @@ let
     nodejs
     yarn-berry
     nodePackages.gulp
-    nodePackages.ts-node
     node2nix
     typescript-language-server
     vue-language-server
