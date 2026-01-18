@@ -221,7 +221,7 @@ let
     jq
     yq
     yt-dlp
-    lpass # lastpass-cli
+    lastpass-cli
     gh
     glab
     spring-boot-cli
