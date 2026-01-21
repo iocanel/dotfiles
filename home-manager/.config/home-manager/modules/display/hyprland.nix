@@ -46,6 +46,17 @@ with lib;
       };
     };
 
+    systemd.user.targets.hyprland-session = {
+      Unit = {
+        Description = "Hyprland session";
+        BindsTo = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
+      };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
+    };
+
     systemd.user.services = {
       hyprpanel = {
         Unit = {
