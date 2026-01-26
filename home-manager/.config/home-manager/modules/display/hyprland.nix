@@ -16,18 +16,11 @@ with lib;
     # Do NOT enable wayland.windowManager.hyprland as it will override stow configs
     # wayland.windowManager.hyprland.enable must be false to use dotfiles
 
-    # Hyprland-specific packages
-    home.packages = with pkgs; [
-      xdg-desktop-portal-hyprland
-      hyprland
-      hyprpaper
-      hyprlock
-      hypridle
-      hyprpicker
-      hyprpanel  # Hyprland-specific bar
-      hyprpwcenter  # Pipewire audio control
-      hyprviz
-    ];
+     wayland.windowManager.hyprland = {
+        plugins = [
+          hyprlandPlugins.hy3
+        ];
+     };
 
     # XDG Portal configuration for Hyprland
     xdg.portal = {

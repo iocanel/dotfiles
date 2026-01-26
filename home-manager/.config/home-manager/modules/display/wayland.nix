@@ -42,6 +42,18 @@ with lib;
       swaynotificationcenter
     ];
 
+    # Mask waybar's built-in systemd service since we manage it per-compositor
+    # The waybar package ships with a service that auto-starts with graphical-session.target
+    # We only want it to start when explicitly configured for sway
+    systemd.user.services.waybar = {
+      Unit = {
+        Description = "Waybar service masked - managed per compositor";
+      };
+      Install = {
+        WantedBy = mkForce [ ];
+      };
+    };
+
     # Common Wayland systemd services
     # Services can bind to either sway-session.target or hyprland-session.target as needed
     # Only one compositor runs at a time, so only one set of services starts

@@ -90,6 +90,7 @@ let
     tor-browser
     qutebrowser
     # Media
+    cozy
     musicpod
     rhythmbox
     newsflash
