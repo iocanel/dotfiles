@@ -51,5 +51,5 @@ EOF
 chmod +x $TEMP_SCRIPT
 
 # Run the script in kitty
-kitty --class EditorTerm -e bash -c "$TEMP_SCRIPT"
+term-aux -e bash -c "$TEMP_SCRIPT"
 

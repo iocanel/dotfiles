@@ -14,5 +14,5 @@ REPOSITORY_NAME=$(extract_repository "$URL")
 WORKSPACE=$(build_workspace_path "$HOST" "$ORGANIZATION")
 
 # Clone repo in kitty and keep terminal open afterwards
-kitty --title "Auxiliary Terminal" -e bash -c "source '$SCRIPT_DIR/git-lib.sh'; mkdir -p $WORKSPACE; cd $WORKSPACE; smart_clone '$HOST' '$ORGANIZATION' '$REPOSITORY_NAME' '$REPOSITORY_NAME'; exec fish"
+term-aux -e bash -c "source '$SCRIPT_DIR/git-lib.sh'; mkdir -p $WORKSPACE; cd $WORKSPACE; smart_clone '$HOST' '$ORGANIZATION' '$REPOSITORY_NAME' '$REPOSITORY_NAME'; exec fish"
 popd

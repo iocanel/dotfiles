@@ -53,7 +53,7 @@ exec fish
 EOF
 
     chmod +x $temp_script
-    kitty --class EditorTerm -e bash -c "$temp_script"
+    term-aux -e bash -c "$temp_script"
 }
 
 # Route to appropriate implementation (fallback for compatibility)

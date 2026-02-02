@@ -14,7 +14,7 @@ open_terminal() {
     local ssh_url=$(build_ssh_url "$host" "$org" "$repo")
     local workspace=$(build_workspace_path "$host" "$org")
     
-    kitty --title "Auxiliary Terminal" -e bash -c "source '$SCRIPT_DIR/git-lib.sh'; mkdir -p $workspace; cd $workspace; if [ ! -d ${repo} ]; then smart_clone '$host' '$org' '$repo' '$repo'; fi; cd $repo; exec fish"
+    term-aux -e bash -c "source '$SCRIPT_DIR/git-lib.sh'; mkdir -p $workspace; cd $workspace; if [ ! -d ${repo} ]; then smart_clone '$host' '$org' '$repo' '$repo'; fi; cd $repo; exec fish"
 }
 
 # Route to appropriate implementation (fallback for compatibility)

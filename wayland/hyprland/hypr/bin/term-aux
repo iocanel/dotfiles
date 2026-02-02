@@ -1,0 +1,14 @@
+#!/bin/bash
+PID=$(hyprctl activewindow -j | jq -r .pid)
+DIR=$(readlink -f /proc/$PID/cwd 2>/dev/null || printf "%s" "$HOME")
+mon_h=$(hyprctl monitors -j | jq -r ".[] | select(.focused==true) | .height")
+delta=$(( - mon_h / 4 ))
+hyprctl dispatch hy3:makegroup v
+kitty --title "Auxiliary Terminal" --directory "$DIR" $@ &
+for _ in {1..60}; do
+  if [[ "$(hyprctl activewindow -j | jq -r .title)" == "Auxiliary Terminal" ]]; then
+    hyprctl dispatch resizeactive 0 "$delta"
+    exit 0
+  fi
+  sleep 0.05
+done
