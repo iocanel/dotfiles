@@ -12,18 +12,23 @@ checkout_pr() {
     local org=$(extract_organization "$url")
     local repo=$(extract_repository "$url")
     local ssh_url=$(build_ssh_url "$host" "$org" "$repo")
-    
+
     local pr_number
+    local request_type
     if is_github "$url"; then
         pr_number=$(extract_github_pr_number "$url")
         local script_name="clone_pr.sh"
         local checkout_cmd="gh pr checkout $pr_number"
+        request_type="pull request"
     else
         pr_number=$(extract_gitlab_mr_number "$url")
         local script_name="clone_mr.sh"
         local checkout_cmd="glab mr checkout $pr_number"
+        request_type="merge request"
     fi
-    
+
+    local review_dir=$(build_review_path "$host" "$org" "$repo" "$pr_number")
+
     # Create a script to run in kitty
     local temp_script=~/$script_name
     cat <<EOF > $temp_script
@@ -32,21 +37,31 @@ checkout_pr() {
 # Source the git library to use smart_clone
 source "$SCRIPT_DIR/git-lib.sh"
 
-TEMP_DIR=\$(mktemp -d)
-cd \$TEMP_DIR
-echo "Checking out $(if is_github "$url"; then echo "pull request"; else echo "merge request"; fi): $pr_number into \$TEMP_DIR/$repo..."
+REVIEW_DIR="$review_dir"
+
+# Check if already checked out
+if [ -d "\$REVIEW_DIR" ]; then
+    echo "$request_type already checked out at: \$REVIEW_DIR"
+    cd "\$REVIEW_DIR"
+    exec fish
+fi
+
+# Create parent directory
+mkdir -p "\$(dirname "\$REVIEW_DIR")"
+cd "\$(dirname "\$REVIEW_DIR")"
+echo "Checking out $request_type: $pr_number into \$REVIEW_DIR..."
 
 # Use smart_clone instead of hardcoded git clone
-smart_clone "$host" "$org" "$repo" "$repo"
+smart_clone "$host" "$org" "$repo" "$pr_number"
 
 # Check if clone was successful
-if [ ! -d "$repo" ]; then
+if [ ! -d "$pr_number" ]; then
     echo "ERROR: Failed to clone repository"
     exec fish
     exit 1
 fi
 
-cd $repo
+cd $pr_number
 $checkout_cmd
 
 exec fish

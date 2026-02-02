@@ -113,6 +113,15 @@ build_workspace_path() {
     echo "~/workspace/src/$host/$org"
 }
 
+# Build review path for MR/PR checkouts
+build_review_path() {
+    local host="$1"
+    local org="$2"
+    local repo="$3"
+    local mr_number="$4"
+    echo "$HOME/workspace/review/$host/$org/$repo/$mr_number"
+}
+
 # Test functions
 test_is_github() {
     if is_github "https://github.com/owner/repo"; then
@@ -235,6 +244,17 @@ test_build_workspace_path() {
         return 0
     else
         echo "✗ build_workspace_path failed, got: '$workspace'"
+        return 1
+    fi
+}
+
+test_build_review_path() {
+    local review_path=$(build_review_path "github.com" "owner" "repo" "123")
+    if [ "$review_path" = "$HOME/workspace/review/github.com/owner/repo/123" ]; then
+        echo "✓ build_review_path works"
+        return 0
+    else
+        echo "✗ build_review_path failed, got: '$review_path'"
         return 1
     fi
 }
@@ -420,6 +440,7 @@ run_tests() {
     test_build_ssh_url || failed=1
     test_build_https_url || failed=1
     test_build_workspace_path || failed=1
+    test_build_review_path || failed=1
     test_get_config_values_default || failed=1
     test_get_config_values_host || failed=1
     test_get_config_values_repo || failed=1
