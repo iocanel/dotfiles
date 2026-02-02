@@ -126,6 +126,10 @@ config.bind('<Ctrl-g>f', 'spawn --userscript git-goto-fork.sh {url}')
 config.bind('<Ctrl-g>i', 'spawn --userscript git-new-issue.sh {url}')
 config.bind('<Ctrl-g>p', 'spawn --userscript git-pr-checkout.sh {url}')
 
+# Asana
+c.aliases['asana-open'] = 'spawn --userscript asana-open.sh {url}'
+config.bind('<Ctrl-g>a', 'spawn --userscript asana-open.sh {url}')
+
 # Platform-specific aliases (for advanced use)
 c.aliases['github-clone'] = 'spawn --userscript github-clone.sh {url}'
 c.aliases['github-terminal'] = 'spawn --userscript github-terminal.sh {url}'
