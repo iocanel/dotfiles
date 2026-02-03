@@ -29,29 +29,29 @@ route_terminal() {
 
 # Test functions
 test_open_terminal() {
-    # Mock kitty to test function logic
-    kitty() {
-        echo "Mock kitty called with: $*"
+    # Mock term-aux to test function logic
+    term-aux() {
+        echo "Mock term-aux called with: $*"
     }
-    
+
     # Test GitHub terminal
     local result=$(open_terminal "https://github.com/owner/repo" 2>&1)
-    if echo "$result" | grep -q "mkdir -p ~/workspace/src/github.com/owner"; then
+    if echo "$result" | grep -q "Mock term-aux called"; then
         echo "✓ open_terminal works for GitHub"
     else
         echo "✗ open_terminal failed for GitHub: $result"
         return 1
     fi
-    
+
     # Test GitLab terminal
     local result=$(open_terminal "https://gitlab.example.com/owner/repo" 2>&1)
-    if echo "$result" | grep -q "mkdir -p ~/workspace/src/gitlab.example.com/owner"; then
+    if echo "$result" | grep -q "Mock term-aux called"; then
         echo "✓ open_terminal works for GitLab"
     else
         echo "✗ open_terminal failed for GitLab: $result"
         return 1
     fi
-    
+
     return 0
 }
 

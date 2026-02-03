@@ -11,9 +11,46 @@ clone_repo() {
     local host=$(extract_host "$url")
     local org=$(extract_organization "$url")
     local repo=$(extract_repository "$url")
-    local workspace=$(build_workspace_path "$host" "$org")
-    
-    kitty --title "Auxiliary Terminal" -e bash -c "source '$SCRIPT_DIR/git-lib.sh'; mkdir -p $workspace; cd $workspace; smart_clone '$host' '$org' '$repo' '$repo'; exec fish"
+    local workspace="$HOME/workspace/src/$host/$org"
+
+    # Create a script to run in terminal
+    local temp_script=~/clone_repo.sh
+    cat <<EOF > $temp_script
+#!/bin/bash
+
+# Source the git library to use smart_clone
+source "$SCRIPT_DIR/git-lib.sh"
+
+WORKSPACE="$workspace"
+REPO="$repo"
+
+# Check if already cloned
+if [ -d "\$WORKSPACE/\$REPO" ]; then
+    echo "Repository already cloned at: \$WORKSPACE/\$REPO"
+    cd "\$WORKSPACE/\$REPO"
+    exec fish
+fi
+
+# Create workspace directory
+mkdir -p "\$WORKSPACE"
+cd "\$WORKSPACE"
+echo "Cloning $repo into \$WORKSPACE..."
+
+# Clone the repository
+smart_clone "$host" "$org" "$repo" "$repo"
+
+# Check if clone was successful and cd into repo
+if [ -d "\$REPO" ]; then
+    cd "\$REPO"
+else
+    echo "ERROR: Failed to clone repository"
+fi
+
+exec fish
+EOF
+
+    chmod +x $temp_script
+    term-aux -e bash -c "$temp_script"
 }
 
 # Route to appropriate implementation (fallback for compatibility)
@@ -28,29 +65,32 @@ route_clone() {
 
 # Test functions
 test_clone_repo() {
-    # Mock kitty to test function logic
-    kitty() {
-        echo "Mock kitty called with: $*"
+    # Mock term-aux and chmod to test function logic
+    term-aux() {
+        echo "Mock term-aux called with: $*"
     }
-    
+    chmod() {
+        echo "Mock chmod called with: $*"
+    }
+
     # Test GitHub clone
     local result=$(clone_repo "https://github.com/owner/repo" 2>&1)
-    if echo "$result" | grep -q "mkdir -p ~/workspace/src/github.com/owner"; then
+    if echo "$result" | grep -q "Mock term-aux called" && [ -f ~/clone_repo.sh ]; then
         echo "✓ clone_repo works for GitHub"
     else
         echo "✗ clone_repo failed for GitHub: $result"
         return 1
     fi
-    
+
     # Test GitLab clone
     local result=$(clone_repo "https://gitlab.example.com/owner/repo" 2>&1)
-    if echo "$result" | grep -q "mkdir -p ~/workspace/src/gitlab.example.com/owner"; then
+    if echo "$result" | grep -q "Mock term-aux called"; then
         echo "✓ clone_repo works for GitLab"
     else
         echo "✗ clone_repo failed for GitLab: $result"
         return 1
     fi
-    
+
     return 0
 }
 

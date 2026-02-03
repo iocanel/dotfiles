@@ -27,9 +27,14 @@ checkout_pr() {
         request_type="merge request"
     fi
 
+    if [ -z "$pr_number" ]; then
+        notify-send -u critical "Git PR Checkout" "No $request_type number found in URL.\nUse <Ctrl-g>c for regular cloning."
+        exit 1
+    fi
+
     local review_dir=$(build_review_path "$host" "$org" "$repo" "$pr_number")
 
-    # Create a script to run in kitty
+    # Create a script to run in terminal
     local temp_script=~/$script_name
     cat <<EOF > $temp_script
 #!/bin/bash
@@ -83,32 +88,32 @@ route_checkout_pr() {
 
 # Test functions
 test_checkout_pr() {
-    # Mock kitty, chmod, and cat
-    kitty() {
-        echo "Mock kitty called with: $*"
+    # Mock term-aux and chmod
+    term-aux() {
+        echo "Mock term-aux called with: $*"
     }
     chmod() {
         echo "Mock chmod called with: $*"
     }
-    
+
     # Test GitHub PR checkout
     local result=$(checkout_pr "https://github.com/owner/repo/pull/123" 2>&1)
-    if echo "$result" | grep -q "Mock kitty called" && echo "$result" | grep -q "clone_pr.sh"; then
+    if echo "$result" | grep -q "Mock term-aux called" && echo "$result" | grep -q "clone_pr.sh"; then
         echo "✓ checkout_pr works for GitHub"
     else
         echo "✗ checkout_pr failed for GitHub: $result"
         return 1
     fi
-    
+
     # Test GitLab MR checkout
     local result=$(checkout_pr "https://gitlab.example.com/owner/repo/-/merge_requests/456" 2>&1)
-    if echo "$result" | grep -q "Mock kitty called" && echo "$result" | grep -q "clone_mr.sh"; then
+    if echo "$result" | grep -q "Mock term-aux called" && echo "$result" | grep -q "clone_mr.sh"; then
         echo "✓ checkout_pr works for GitLab"
     else
         echo "✗ checkout_pr failed for GitLab: $result"
         return 1
     fi
-    
+
     return 0
 }
 

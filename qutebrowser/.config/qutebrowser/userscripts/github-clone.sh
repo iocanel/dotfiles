@@ -9,6 +9,6 @@ ORGANIZATION=$(echo $URL | sed -n 's/.*github.com\/\([^\/]*\)\/.*/\1/p')
 REPOSITORY_NAME=$(echo $URL | sed -n 's/.*github.com\/[^\/]*\/\([^\/]*\).*/\1/p')
 CLONE_URL_SSH="git@github.com:$ORGANIZATION/$REPOSITORY_NAME.git"
 
-# Clone repo in kitty and keep terminal open afterwards
+# Clone repo in terminal and keep it open afterwards
 term-aux -e bash -c "mkdir -p ~/workspace/src/github.com/$ORGANIZATION; cd ~/workspace/src/github.com/$ORGANIZATION; git clone $CLONE_URL_SSH; exec fish"
 popd

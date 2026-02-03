@@ -16,7 +16,7 @@ PULL_REQUEST_NUMBER=$(extract_github_pr_number "$URL")
 
 REVIEW_DIR=$(build_review_path "$HOST" "$ORGANIZATION" "$REPOSITORY_NAME" "$PULL_REQUEST_NUMBER")
 
-## Create a script to run in kitty
+# Create a script to run in terminal
 TEMP_SCRIPT=~/clone_pr.sh
 cat <<EOF > $TEMP_SCRIPT
 #!/bin/bash
@@ -62,6 +62,6 @@ EOF
 
 chmod +x $TEMP_SCRIPT
 
-# Run the script in kitty
+# Run the script in terminal
 term-aux -e bash -c "$TEMP_SCRIPT"
 
