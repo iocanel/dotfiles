@@ -8,7 +8,7 @@
 " Recomended settings
 "
 
-" ~/.connfig/JetBrains/IdeaIC2025.1/idea.properties:
+" ~/.config/JetBrains/IdeaIC2025.1/idea.properties:
 " nosplash=true
 
 
@@ -36,6 +36,7 @@ let mapleader = " "
 "   <A-p>: Select previous
 "   <A-x>: Exclude this one (and select next)
 set multiple-cursors
+set NERDTree
 
 let g:WhichKeyDesc_A_n = "<A-n> Select Next Match"
 let g:WhichKeyDesc_A_p = "<A-p> Select Previous Match"
@@ -86,15 +87,16 @@ noremap <expr> j (v:count == 0 ? 'gj' : 'j')
 
 let g:WhichKeyDesc_o = "<leader>o Open"
 let g:WhichKeyDesc_op = "<leader>op Open Project"
-let g:WhichKeyDesc_C_p = "<C-p> Open Project"
+let g:WhichKeyDesc_C_p = "<C-x><C-p> Open Project"
 let g:WhichKeyDesc_oa = "<leader>of Open Action"
 let g:WhichKeyDesc_of = "<leader>of Open File"
+let g:WhichKeyDesc_of = "<C-x><C-f> Open File"
 let g:WhichKeyDesc_or = "<leader>or Open Recent Files"
 let g:WhichKeyDesc_os = "<leader>of Open Symbol"
 let g:WhichKeyDesc_oc = "<leader>oc Open Terminal"
 let g:WhichKeyDesc_Leader = "<leader><leader> Open File"
-noremap <leader>op :action WelcomeScreen.OpenProject<cr>
-noremap <C-p> :action WelcomeScreen.OpenProject<cr>
+noremap <leader>op :action OpenFile<cr>
+noremap <C-x><C-p> :action OpenFile<cr>
 noremap <leader>oa :action GotoAction<cr>
 noremap <leader>of :action GotoFile<cr>
 noremap <leader>or :action RecentFiles<cr>
@@ -102,6 +104,8 @@ noremap <leader>os :action GotoSymbol<cr>
 noremap <leader>oc :action ActivateTerminalToolWindow<cr>
 noremap <leader><leader> :action GotoFile<cr>
 noremap <A-x> :action GotoAction<cr>
+noremap <C-x><C-f> :action GotoFile<cr>
+
 "
 " Debug
 "
@@ -113,7 +117,7 @@ let g:WhichKeyDesc_dd = "<leader>dd Debug"
 let g:WhichKeyDesc_dw = "<leader>dw Debug Window"
 noremap <leader>db :action ToggleLineBreakpoint<cr>
 noremap <leader>dc :action ChooseDebugConfiguration<cr>
-noremap <leader>dc :action Debug<cr>
+noremap <leader>dd :action Debug<cr>
 noremap <leader>dw :action ActivateDebugToolWindow<cr>
 
 "
@@ -140,14 +144,25 @@ let g:WhichKeyDesc_tm = "<leader>tm Toggle Maven Tool Window"
 let g:WhichKeyDesc_tgc = "<leader>tgc Toggle Commit Tool Window"
 let g:WhichKeyDesc_tgp = "<leader>tgp Toggle Pull Requests Tool Window"
 let g:WhichKeyDesc_th = "<leader>th Hide Active Window"
+let g:WhichKeyDesc_tw = "<leader>tw Tool Windows"
+let g:WhichKeyDesc_twg = "<leader>twg Toggle Git Tool Window"
+let g:WhichKeyDesc_tws = "<leader>tws Toggle Status Bar"
+let g:WhichKeyDesc_twr = "<leader>twr Toggle Run Tool Window"
+let g:WhichKeyDesc_twd = "<leader>twd Toggle Debug Tool Window"
+let g:WhichKeyDesc_twp = "<leader>twp Toggle Problems Tool Window"
 noremap <leader>tf :action ToggleDistractionFreeMode<cr>
 noremap <leader>tl :call ToggleRelativeNumber()<cr>
-noremap <leader>tt :action ActivateProjectToolWindow<cr>
+noremap <leader>tt :NERDTreeToggle<cr>
 noremap <leader>tr :action ActivateRunToolWindow<cr>
 noremap <leader>tm :action ActivateMavenToolWindow<cr>
 noremap <leader>tgc :action ActivateCommitToolWindow<cr>
 noremap <leader>tgp :action ActivatePullRequestsToolWindow<cr>
 noremap <leader>th :action HideActiveWindow<cr>
+noremap <leader>twg :action ActivateVersionControlToolWindow<cr>
+noremap <leader>tws :action ViewStatusBar<cr>
+noremap <leader>twr :action ActivateRunToolWindow<cr>
+noremap <leader>twd :action ActivateDebugToolWindow<cr>
+noremap <leader>twp :action ActivateProblemsViewToolWindow<cr>
 
 " Search
 "
@@ -224,8 +239,8 @@ nmap <leader>gu :action FindUsages<cr>
 " Errors
 let g:WhichKeyDesc_gen = "<leader>gen Go to Next Error"
 let g:WhichKeyDesc_gep = "<leader>gep Go to Previous Error"
-nmap <leader>gen :action GotoNextError<cr>
-nmap <leader>gep :action GotoPreviousError<cr>
+nmap <leader>jen :action GotoNextError<cr>
+nmap <leader>jep :action GotoPreviousError<cr>
 
 " Git
 let g:WhichKeyDesc_gc = "<leader>gc Checkin Project"
@@ -240,24 +255,26 @@ let g:WhichKeyDesc_gn = "<leader>gn Show Git Branches"
 let g:WhichKeyDesc_gg = "<leader>gg Show Git Log"
 let g:WhichKeyDesc_gt = "<leader>gt Git Time Machine"
 let g:WhichKeyDesc_gopl = "<leader>gopl Show Pull Requests"
+let g:WhichKeyDesc_goml = "<leader>goml Show Merge Requests"
 noremap <leader>gc :action CheckinProject<cr>
 noremap <leader>gs :action Git.Stash<cr>
-noremap <leader>ghn :action extDiff<cr>
-noremap <leader>ghp :action PreviousDiff<cr>
-noremap <leader>ghs :action Git.Stage<cr>
-noremap <leader>ghu :action Git.Unstage<cr>
-noremap <leader>ghr :action Git.Rollback<cr>
-noremap <leader>ghv :action Git.ShowHistory<cr>
+noremap <leader>ghn :action VcsShowNextChangeMarker<cr>
+noremap <leader>ghp :action VcsShowPrevChangeMarker<cr>
+noremap <leader>ghs :action Git.Stage.Add<cr>
+noremap <leader>ghu :action Git.Stage.Reset<cr>
+noremap <leader>ghr :action Git.Stage.Reset<cr>
+noremap <leader>ghv :action Git.ShowHistory
 noremap <leader>gn :action Git.Branches<cr>
 noremap <leader>gg :action Git.Log<cr>
 noremap <leader>gt :action GitTimeMachine<cr>
 noremap <leader>gopl :action ShowPullRequests<cr>
+noremap <leader>goml :action Gitlab.Merge.Request.Show<cr>
 
 
 let g:WhichKeyDesc_x = "<leader>x Tool"
 let g:WhichKeyDesc_xm = "<leader>xm Maven"
 let g:WhichKeyDesc_xmi = "<leader>xmi Install"
-command! MavenCleanInstall :!nohup kitty --class EditorTerm -e bash -c "mvn clean install; exec bash" >/dev/null 2>&1 &
+command! MavenCleanInstall :!nohup term-aux -e bash -c "mvn clean install; exec bash" >/dev/null 2>&1 &
 noremap <leader>xmi :MavenCleanInstall <cr>
 
 let g:WhichKeyDesc_c = "<leader>c Code"
@@ -274,3 +291,6 @@ let g:WhichKeyDesc_increase_font = "<C-=> Increase Font Size"
 let g:WhichKeyDesc_increase_font = "<C--> Decrease Font Size"
 nnoremap <C-=> :action EditorIncreaseFontSize<cr>
 nnoremap <C--> :action EditorDecreaseFontSize<cr>
+
+
+let g:NERDTreeQuitOnOpen = 1
