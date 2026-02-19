@@ -68,10 +68,48 @@ set ideajoin
 
 " Which Key
 set which-key
-set notimeout
+set timeout
+" Note: IntelliJ has a fixed 2000ms timeout for second keystroke (actionSystem.secondKeystrokeTimeout).
+" This is not configurable via dotfiles, so even if we keep which-key open longer, IntelliJ resets anyway.
+set timeoutlen=2000
+let g:WhichKey_DefaultDelay = 400
 
 " Let IDE handle Ctrl+x for two-keystroke shortcuts
 sethandler <C-x> a:ide
+
+" Ctrl+x which-key descriptions (handled by IDE keymap)
+let g:WhichKeyDesc_C_x = "<C-x> Ctrl-X Prefix"
+let g:WhichKeyDesc_C_x_C_x = "<C-x><C-x> Switcher (Last File)"
+let g:WhichKeyDesc_C_x_C_f = "<C-x><C-f> Open File"
+let g:WhichKeyDesc_C_x_C_p = "<C-x><C-p> Open Project"
+let g:WhichKeyDesc_C_x_C_r = "<C-x><C-r> Recent Files"
+let g:WhichKeyDesc_C_x_C_k = "<C-x><C-k> Close All Editors"
+let g:WhichKeyDesc_C_x_k = "<C-x>k Close Buffer"
+let g:WhichKeyDesc_C_x_0 = "<C-x>0 Unsplit All"
+let g:WhichKeyDesc_C_x_1 = "<C-x>1 Unsplit"
+let g:WhichKeyDesc_C_x_2 = "<C-x>2 Split Horizontally"
+let g:WhichKeyDesc_C_x_3 = "<C-x>3 Split Vertically"
+let g:WhichKeyDesc_C_x_g = "<C-x>g Git Tool Window"
+let g:WhichKeyDesc_C_x_r = "<C-x>r Run Tool Window"
+let g:WhichKeyDesc_C_x_d = "<C-x>d Debug Tool Window"
+let g:WhichKeyDesc_C_x_e = "<C-x>e Problems Tool Window"
+let g:WhichKeyDesc_C_x_t = "<C-x>t Project Tool Window"
+let g:WhichKeyDesc_C_x_c = "<C-x>c Terminal"
+let g:WhichKeyDesc_C_x_s = "<C-x>s Status Bar"
+let g:WhichKeyDesc_C_x_m = "<C-x>m Maven Tool Window"
+
+" Ctrl+x mappings (for which-key visibility, IDE keymap handles execution)
+noremap <C-x><C-x> :action Switcher<cr>
+noremap <C-x><C-r> :action RecentFiles<cr>
+noremap <C-x><C-k> :action CloseAllEditors<cr>
+noremap <C-x>g :action ActivateVersionControlToolWindow<cr>
+noremap <C-x>r :action ActivateRunToolWindow<cr>
+noremap <C-x>d :action ActivateDebugToolWindow<cr>
+noremap <C-x>e :action ActivateProblemsViewToolWindow<cr>
+noremap <C-x>t :action ActivateProjectToolWindow<cr>
+noremap <C-x>c :action ActivateTerminalToolWindow<cr>
+noremap <C-x>s :action ViewStatusBar<cr>
+noremap <C-x>m :action ActivateMavenToolWindow<cr>
 
 " Set relative line numbers
 set relativenumber
