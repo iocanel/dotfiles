@@ -70,6 +70,9 @@ set ideajoin
 set which-key
 set notimeout
 
+" Let IDE handle Ctrl+x for two-keystroke shortcuts
+sethandler <C-x> a:ide
+
 " Set relative line numbers
 set relativenumber
 let g:relative_number_set = 0
