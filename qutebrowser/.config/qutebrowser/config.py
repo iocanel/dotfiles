@@ -18,7 +18,8 @@ catppuccin.setup(c, 'mocha', False)
 config.set('content.user_stylesheets', '~/.config/qutebrowser/custom.css')
 
 #Misc
-c.zoom.default = "200%"
+c.zoom.default = "100%"
+c.new_instance_open_target = 'window'
 c.tabs.position = "top"
 c.tabs.show = "never"
 c.statusbar.show = "never"
@@ -40,17 +41,17 @@ c.downloads.location.suggestion = 'both'
 #
 # Fonts
 #
-c.fonts.completion.category="bold 18pt JetBrains Mono Nerd Font Bold"
-c.fonts.completion.entry="18pt JetBrains Mono Nerd Font Bold"
-c.fonts.debug_console="18pt JetBrains Mono Nerd Font Bold"
-c.fonts.downloads="18pt JetBrains Mono Nerd Font Bold"
-c.fonts.hints="bold 18pt JetBrains Mono Nerd Font Bold"
-c.fonts.keyhint="18pt JetBrains Mono Nerd Font Bold"
-c.fonts.messages.error="18pt JetBrains Mono Nerd Font Bold"
-c.fonts.messages.info="18pt JetBrains Mono Nerd Font Bold"
-c.fonts.messages.warning="18pt JetBrains Mono Nerd Font Bold"
-c.fonts.prompts="18pt sans-serif"
-c.fonts.statusbar="18pt JetBrains Mono Nerd Font Bold"
+c.fonts.completion.category="bold 12pt JetBrains Mono Nerd Font Bold"
+c.fonts.completion.entry="12pt JetBrains Mono Nerd Font Bold"
+c.fonts.debug_console="12pt JetBrains Mono Nerd Font Bold"
+c.fonts.downloads="12pt JetBrains Mono Nerd Font Bold"
+c.fonts.hints="bold 12pt JetBrains Mono Nerd Font Bold"
+c.fonts.keyhint="12pt JetBrains Mono Nerd Font Bold"
+c.fonts.messages.error="12pt JetBrains Mono Nerd Font Bold"
+c.fonts.messages.info="12pt JetBrains Mono Nerd Font Bold"
+c.fonts.messages.warning="12pt JetBrains Mono Nerd Font Bold"
+c.fonts.prompts="12pt sans-serif"
+c.fonts.statusbar="12pt JetBrains Mono Nerd Font Bold"
 
 
 # Insert mode
@@ -99,6 +100,9 @@ config.bind('<alt-s>', 'hint')
 config.bind('e', 'move-to-end-of-word')
 config.bind('b', 'move-to-previous-word')
 
+config.bind('<Ctrl-Tab>', 'tab-next')
+config.bind('<Ctrl-Shift-Tab>', 'tab-prev')
+
 config.bind('E', 'cmd-set-text :open {url}')
 config.bind('<Ctrl-e>', 'cmd-set-text :open {url}')
 config.bind('<Ctrl-t>', 'cmd-set-text :open -t {url}')
@@ -118,6 +122,7 @@ c.aliases['git-terminal'] = 'spawn --userscript git-terminal.sh {url}'
 c.aliases['git-goto-fork'] = 'spawn --userscript git-goto-fork.sh {url}'
 c.aliases['git-new-issue'] = 'spawn --userscript git-new-issue.sh {url}'
 c.aliases['git-pr-checkout'] = 'spawn --userscript git-pr-checkout.sh {url}'
+c.aliases['git-pr-review'] = 'spawn --userscript git-pr-review.sh {url}'
 
 # Unified Git Bindings (work with both GitHub and GitLab)
 config.bind('<Ctrl-g>c', 'spawn --userscript git-clone.sh {url}')
@@ -125,6 +130,7 @@ config.bind('<Ctrl-g>t', 'spawn --userscript git-terminal.sh {url}')
 config.bind('<Ctrl-g>f', 'spawn --userscript git-goto-fork.sh {url}')
 config.bind('<Ctrl-g>i', 'spawn --userscript git-new-issue.sh {url}')
 config.bind('<Ctrl-g>p', 'spawn --userscript git-pr-checkout.sh {url}')
+config.bind('<Ctrl-g>r', 'spawn --userscript git-pr-review.sh {url}')
 
 # Asana
 c.aliases['asana-open'] = 'spawn --userscript asana-open.sh {url}'
@@ -136,12 +142,14 @@ c.aliases['github-terminal'] = 'spawn --userscript github-terminal.sh {url}'
 c.aliases['github-goto-fork'] = 'spawn --userscript github-goto-fork.sh {url}'
 c.aliases['github-new-issue'] = 'spawn --userscript github-new-issue.sh {url}'
 c.aliases['github-pr-checkout'] = 'spawn --userscript github-pr-checkout.sh {url}'
+c.aliases['github-pr-review'] = 'spawn --userscript github-pr-review.sh {url}'
 
 c.aliases['gitlab-clone'] = 'spawn --userscript gitlab-clone.sh {url}'
 c.aliases['gitlab-terminal'] = 'spawn --userscript gitlab-terminal.sh {url}'
 c.aliases['gitlab-goto-fork'] = 'spawn --userscript gitlab-goto-fork.sh {url}'
 c.aliases['gitlab-new-issue'] = 'spawn --userscript gitlab-new-issue.sh {url}'
 c.aliases['gitlab-mr-checkout'] = 'spawn --userscript gitlab-mr-checkout.sh {url}'
+c.aliases['gitlab-mr-review'] = 'spawn --userscript gitlab-mr-review.sh {url}'
 
 
 config.bind("<Ctrl-f>", "spawn --userscript create-org-flashcards.py")
@@ -161,10 +169,10 @@ config.set("content.cookies.accept", "all", "https://*.google.com/*")
 config.set("content.javascript.clipboard", "access", "https://chatgpt.com")
 
 # File dialog settings
-c.fileselect.handler = 'external'
-c.fileselect.single_file.command = ['zenity', '--file-selection', '--filename={}']
-c.fileselect.multiple_files.command = ['zenity', '--file-selection', '--multiple', '--filename={}']
-c.fileselect.folder.command = ['zenity', '--file-selection', '--directory', '--filename={}']
+#c.fileselect.handler = 'external'
+#c.fileselect.single_file.command = ['zenity', '--file-selection', '--filename={}']
+#c.fileselect.multiple_files.command = ['zenity', '--file-selection', '--multiple', '--filename={}']
+#c.fileselect.folder.command = ['zenity', '--file-selection', '--directory', '--filename={}']
 
 # Asana User Agent
 config.set("content.headers.user_agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36", "https://*.asana.com/*")
