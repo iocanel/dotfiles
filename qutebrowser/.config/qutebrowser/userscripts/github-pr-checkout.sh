@@ -57,6 +57,11 @@ git fetch \$OWNER
 gh repo set-default $ORGANIZATION/$REPOSITORY_NAME
 gh pr checkout $PULL_REQUEST_NUMBER
 
+# Download raw diff to project root
+echo "Downloading PR diff..."
+gh pr diff $PULL_REQUEST_NUMBER > pr-$PULL_REQUEST_NUMBER.diff
+echo "Diff saved to: pr-$PULL_REQUEST_NUMBER.diff"
+
 exec fish
 EOF
 
