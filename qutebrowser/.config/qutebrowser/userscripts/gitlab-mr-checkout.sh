@@ -52,6 +52,11 @@ fi
 cd $MERGE_REQUEST_NUMBER
 glab mr checkout $MERGE_REQUEST_NUMBER
 
+# Download raw diff to project root
+echo "Downloading MR diff..."
+glab mr diff $MERGE_REQUEST_NUMBER > mr-$MERGE_REQUEST_NUMBER.diff
+echo "Diff saved to: mr-$MERGE_REQUEST_NUMBER.diff"
+
 exec fish
 EOF
 
