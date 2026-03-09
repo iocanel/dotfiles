@@ -161,5 +161,5 @@ if [ "$1" = "--test" ]; then
     fi
 fi
 
-# Main execution - use new checkout_pr function
-checkout_pr "$1"
+# Main execution - delegate to platform-specific scripts
+route_checkout_pr "$1"
