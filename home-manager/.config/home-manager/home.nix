@@ -7,23 +7,20 @@ let
   fisher = pkgs.callPackage ./packages/fisher/4.4.4.nix {
     inherit buildFishPlugin;
   };
-  org-roam-mcp = pkgs.callPackage ./packages/org-roam-mcp/default.nix {
-    orgDir = "$HOME/Documents/org/roam";
-    # Pin to an exact commit you trust:
-    fromSpec = "git+https://github.com/aserranoni/org-roam-mcp@main";
-    # fromSpec = "git+https://github.com/aserranoni/org-roam-mcp@<commit-sha>";
-    # dbPath = "$HOME/Documents/org/roam/org-roam.db";
-    extraArgs = [ ];
-    env = {
-      # Optional:
-      ORG_ROAM_DIR = "$HOME/Documents/org/roam";
-      ORG_ROAM_DB_PATH = "$HOME/.emacs.d/org-roam.db";
-      UV_CACHE_DIR = "$HOME/.cache/uv";
-    };
+  org-cli = pkgs.callPackage ./packages/org-cli/default.nix {
+    src = /home/iocanel/workspace/src/github.com/iocanel/org-cli;
+  };
+  glab-mr-tracker = pkgs.callPackage ./packages/glab-mr-tracker/default.nix {
+    src = /home/iocanel/workspace/src/github.com/iocanel/glab-mr-tracker;
   };
   whisperApi = pkgs.callPackage ./packages/whisper-api/default.nix { };
   gimp3WithPlugins = pkgs.callPackage ./packages/gimp3-with-plugins/default.nix { };
   storyteller = pkgs.callPackage ./packages/storyteller/default.nix { };
+  robot = pkgs.callPackage ./packages/robot/default.nix { };
+  asana-cli = pkgs.callPackage ./packages/asana-cli/default.nix { };
+  outlook-mcp = pkgs.callPackage ./packages/outlook-mcp/default.nix { };
+  airchiv = pkgs.callPackage ./packages/airchiv/default.nix { };
+  fuseki-cli = pkgs.callPackage ./packages/fuseki-cli/default.nix { };
 
   in
 {
@@ -193,6 +190,7 @@ let
     evince
     qpdf
     xournalpp
+    wkhtmltopdf
     # Mail
     (pkgs.isync.override { withCyrusSaslXoauth2 = true; })
     pkgs.cyrus-sasl-xoauth2
@@ -230,6 +228,8 @@ let
     yq
     yt-dlp
     lastpass-cli
+    git
+    git-filter-repo
     gh
     glab
     copybara
@@ -244,6 +244,7 @@ let
     ansible
     terraform
     vagrant
+    cloudflared
 
     #
     # Development
@@ -252,18 +253,26 @@ let
     codeium
     claude-code
     opencode
-    org-roam-mcp
+    org-cli
+    glab-mr-tracker
+    asana-cli
+    outlook-mcp
+    fuseki-cli
     whisperApi
     openai-whisper
     chatgpt-cli
     aider-chat-full
     goose-cli
     storyteller
+    robot
+    airchiv
     # Goose CLI - dependencies
     dbus
     pkg-config
     xorg.libxcb
     #
+    just
+    codeql
 
     # C
     cmake
@@ -277,6 +286,7 @@ let
     jbang
     openapi-generator-cli
     vscode
+    jetbrains.idea-oss
     # codelldb
     vscode-extensions.vadimcn.vscode-lldb
     (pkgs.writeShellScriptBin "codelldb" ''
@@ -313,6 +323,10 @@ let
       weaviate-client
       zulip
       debugpy
+      sentence-transformers
+      # PDF generation (for kathimerini-news skill)
+      pdfkit
+      pypdf
     ]))
     uv
     poetry
