@@ -182,6 +182,7 @@
   "theme.bar.buttons.workspaces.active": "#1E1E2E",
   "theme.bar.buttons.workspaces.numbered_active_highlighted_text_color": "#c64600",
   "theme.bar.buttons.workspaces.occupied": "#c0bfbc",
+  "theme.bar.buttons.workspaces.urgent": "#f38ba8",
   "theme.bar.buttons.dashboard.border": "#f9e2af",
   "theme.bar.buttons.windowtitle.text": "#9a9996",
   "theme.bar.buttons.windowtitle.icon": "#9a9996",
@@ -253,5 +254,8 @@
   "theme.bar.buttons.opacity": 65,
   "theme.bar.buttons.modules.kbLayout.enableBorder": false,
   "theme.bar.buttons.modules.hypridle.enableBorder": false,
-  "menus.media.hideAuthor": false
+  "menus.media.hideAuthor": false,
+  "bar.customModules.worldclock.tz": [
+    "Europe/Athens"
+  ]
 }
