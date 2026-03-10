@@ -83,6 +83,28 @@ with lib;
         };
       };
 
+      clipboard-to-primary = {
+        Unit = {
+          Description = "Sync clipboard to primary selection";
+          After = [ "sway-session.target" "hyprland-session.target" ];
+          PartOf = [ "sway-session.target" "hyprland-session.target" ];
+        };
+        Install = {
+          WantedBy = [ "sway-session.target" "hyprland-session.target" ];
+        };
+        Service = {
+          Type = "simple";
+          ExecStart = "${pkgs.writeShellScript "clipboard-to-primary" ''
+            until [ -n "$WAYLAND_DISPLAY" ] && [ -S "/run/user/$(id -u)/$WAYLAND_DISPLAY" ]; do
+              sleep 1
+            done
+            exec ${pkgs.wl-clipboard}/bin/wl-paste --watch ${pkgs.wl-clipboard}/bin/wl-copy --primary
+          ''}";
+          Restart = "on-failure";
+          RestartSec = "1";
+        };
+      };
+
       flameshot = {
         Unit = {
           Description = "Flameshot screenshot tool daemon";
