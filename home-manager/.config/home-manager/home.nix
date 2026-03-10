@@ -46,6 +46,11 @@ let
     };
   };
 
+  # Email configuration (Gmail + Outlook)
+  email = {
+    enable = true;
+  };
+
   home.stateVersion = "25.05"; # Adjust this according to your Nixpkgs version
   home.username = "iocanel";
   home.homeDirectory = "/home/iocanel";
