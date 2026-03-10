@@ -40,13 +40,6 @@ get_title() {
     project_url="$(extract_gitlab_project_url "$URL")"
     [[ -n "${mr:-}" && -n "${project_url:-}" ]] || die "Could not extract GitLab project/mr from URL"
 
-    # Debug: log token and command
-    echo "DEBUG: GITLAB_TOKEN='${GITLAB_TOKEN:-unset}'" >&2
-    echo "DEBUG: GITLAB_TOKEN length=${#GITLAB_TOKEN}" >&2
-    echo "DEBUG: GITLAB_TOKEN hex=$(printf '%s' "$GITLAB_TOKEN" | od -An -tx1)" >&2
-    echo "DEBUG: Command: glab mr view $mr -R $project_url" >&2
-
-    # Works outside a git repo; no --json required
     glab mr view "$mr" -R "$project_url" \
       | sed -n 's/^title:[[:space:]]*//Ip' \
       | head -n1
@@ -55,14 +48,36 @@ get_title() {
   fi
 }
 
+get_branch() {
+  if is_github "$URL"; then
+    local pr repo
+    pr="$(extract_github_pr "$URL")"
+    repo="$(extract_github_repo "$URL")"
+    [[ -n "${pr:-}" && -n "${repo:-}" ]] || return 1
+
+    gh pr view "$pr" -R "$repo" --json headRefName -q .headRefName
+
+  elif is_gitlab "$URL"; then
+    local mr project_url
+    mr="$(extract_gitlab_mr "$URL")"
+    project_url="$(extract_gitlab_project_url "$URL")"
+    [[ -n "${mr:-}" && -n "${project_url:-}" ]] || return 1
+
+    glab mr view "$mr" -R "$project_url" --output json \
+      | jq -r '.source_branch // empty'
+  else
+    return 1
+  fi
+}
+
 title="$(get_title)"
 [[ -n "${title:-}" ]] || die "Empty title returned"
 
-# Extract all CR references from title
-# Match: CR-1234, #CR-1234, CR 1234, #CR 1234, cr-1234, cr 1234
+# Extract all CR references from text
+# Match: CR-1234, #CR-1234, CR 1234, #CR 1234, cr-1234, cr 1234, cr_1234, cr1234
 extract_cr_refs() {
   local text="$1"
-  echo "$text" | grep -oEi '(#[[:space:]]*)?cr[[:space:]-]*[0-9]+' \
+  echo "$text" | grep -oEi '(#[[:space:]]*)?cr[[:space:]_-]*[0-9]+' \
     | grep -oE '[0-9]+' \
     | sort -u \
     | while read -r num; do echo "CR-$num"; done
@@ -71,7 +86,16 @@ extract_cr_refs() {
 mapfile -t cr_refs < <(extract_cr_refs "$title")
 
 if [[ ${#cr_refs[@]} -eq 0 ]]; then
-  die "No CR reference found (expected CR-#### or 'cr ####'): $title"
+  echo "No CR reference in title, checking branch name..."
+  branch="$(get_branch)" || branch=""
+  if [[ -n "${branch:-}" ]]; then
+    echo "Branch: $branch"
+    mapfile -t cr_refs < <(extract_cr_refs "$branch")
+  fi
+fi
+
+if [[ ${#cr_refs[@]} -eq 0 ]]; then
+  die "No CR reference found in title or branch (expected CR-####, cr_####, cr####): $title"
 fi
 
 echo "Title: $title"
