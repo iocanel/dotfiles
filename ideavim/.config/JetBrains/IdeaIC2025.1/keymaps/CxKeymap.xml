@@ -37,6 +37,9 @@
   <action id="HideActiveWindow">
     <keyboard-shortcut first-keystroke="escape" />
   </action>
+  <action id="NextSplitter">
+    <keyboard-shortcut first-keystroke="alt o" />
+  </action>
   <action id="OpenFile">
     <keyboard-shortcut first-keystroke="ctrl x" second-keystroke="ctrl p" />
   </action>

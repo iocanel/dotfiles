@@ -32,6 +32,9 @@
   <action id="GotoAction">
     <keyboard-shortcut first-keystroke="alt x" />
   </action>
+  <action id="NextSplitter">
+    <keyboard-shortcut first-keystroke="alt o" />
+  </action>
   <action id="GotoFile">
     <keyboard-shortcut first-keystroke="ctrl x" second-keystroke="ctrl f" />
   </action>
