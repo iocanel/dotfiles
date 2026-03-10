@@ -10,8 +10,8 @@ else
 fi
 
 TOKEN_ID=OATH290580B9
-SECRET=`pass show services/redhat.com/token/$TOKEN_ID/secret`
-PIN=`pass show services/redhat.com/token/$TOKEN_ID/pin`
+SECRET=`pass show redhat.com/token/$TOKEN_ID/secret`
+PIN=`pass show redhat.com/token/$TOKEN_ID/pin`
 COUNTER=`cat $HOME/Documents/.otp-counter`
 COUNTER=$((COUNTER+1))
 echo $COUNTER > $HOME/Documents/.otp-counter
