@@ -207,10 +207,10 @@ for seg in "${segments[@]}"; do
 
   if supports_verbose && [[ "$REQUEST_FORMAT" == "verbose_json" ]]; then
     adj=$(printf "%s" "$raw" | jq --argjson off "$offset" --argjson dur "$chunk_dur" '
-      if (.segments // null) then
-        .segments = (map(.start += $off | .end += $off))
+      if (.segments | type) == "array" and (.segments | length) > 0 and (.segments[0] | type) == "object" then
+        .segments = (.segments | map(if .start then .start += $off else . end | if .end then .end += $off else . end))
       else
-        .segments = [ {id: 0, start: $off, end: ($off + $dur), text: (.text // "") } ]
+        .segments = [ {id: 0, start: $off, end: ($off + $dur), text: (.text // "")} ]
       end')
   else
     adj=$(jq -n --arg text "$(printf "%s" "$raw" | jq -r '.text // ""')" \
@@ -232,8 +232,10 @@ merged_text=$(jq -rs 'map(.text // "") | join("\n\n")' "${RESP_FILES[@]}")
 merged_segments_json=$(jq -s '[ .[] | (.segments // [])[] ]' "${RESP_FILES[@]}")
 
 merged_verbose_path="$TMPDIR/merged.json"
-jq -n --argjson segs "$merged_segments_json" --arg text "$merged_text" \
-  '{ text: $text, segments: $segs }' > "$merged_verbose_path"
+merged_segs_path="$TMPDIR/merged_segs.json"
+printf "%s" "$merged_segments_json" > "$merged_segs_path"
+jq -n --slurpfile segs "$merged_segs_path" --arg text "$merged_text" \
+  '{ text: $text, segments: $segs[0] }' > "$merged_verbose_path"
 
 case "$MERGE_TARGET" in
   verbose_json) emit "$(jq . "$merged_verbose_path")" "verbose_json" ;;
