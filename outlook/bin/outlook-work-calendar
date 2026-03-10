@@ -1,2 +1,4 @@
 #!/bin/bash
-chromium --app=https://outlook.office.com/calendar --enable-features=UseOzonePlatform --ozone-platform=wayland
+
+#chromium --app=https://outlook.office.com/calendar --enable-features=UseOzonePlatform --ozone-platform=wayland
+qutebrowser --target=window https://outlook.office.com/calendar

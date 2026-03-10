@@ -9,16 +9,8 @@ Terminal=false
 Icon=outlook
 Type=Application
 Categories=Network;WebBrowser;
-Exec=chromium --app=https://outlook.office.com
+Exec=outlook-work-email
 Actions=new-window;new-private-window;outlook-app;
-
-[Desktop Action new-window]
-Name=New Window
-Exec=chromium
-
-[Desktop Action new-private-window]
-Name=New Incognito Window
-Exec=chromium --incognito
 
 [Desktop Action outlook-app]
 Name=Outlook App Mode

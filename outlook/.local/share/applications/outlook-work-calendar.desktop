@@ -9,16 +9,8 @@ Terminal=false
 Icon=calendar
 Type=Application
 Categories=Network;WebBrowser;Office;Calendar;
-Exec=chromium --app=https://outlook.office.com/calendar
+Exec=outlook-work-calendar
 Actions=new-window;new-private-window;calendar-app;
-
-[Desktop Action new-window]
-Name=New Window
-Exec=chromium
-
-[Desktop Action new-private-window]
-Name=New Incognito Window
-Exec=chromium --incognito
 
 [Desktop Action calendar-app]
 Name=Calendar App Mode
