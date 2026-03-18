@@ -1,0 +1,3 @@
+#!/bin/bash
+DISPLAY=:0 emacsclient -c -F '((name . "Floating Journal"))' --eval "(org-roam-dailies-goto-today)"
+
