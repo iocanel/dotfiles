@@ -16,3 +16,6 @@
 [submodule "yapt"]
 	path = yapt
 	url = git@github.com:iocanel/yapt.git
+[submodule "home-manager/.config/home-manager/private"]
+	path = home-manager/.config/home-manager/private
+	url = git@github.com:iocanel/home-manager.p.git
