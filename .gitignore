@@ -1,0 +1,29 @@
+# GPG sensitive files
+gnupg/.gnupg/private-keys-v1.d/
+gnupg/.gnupg/pubring.kbx
+gnupg/.gnupg/pubring.kbx~
+gnupg/.gnupg/trustdb.gpg
+gnupg/.gnupg/random_seed
+gnupg/.gnupg/sshcontrol
+gnupg/.gnupg/.#lk*
+gnupg/.gnupg/unlock.sh
+gnupg/.gnupg/unlock.sh.off
+
+# Qutebrowser runtime/history
+qutebrowser/.local/share/qutebrowser/history.sqlite*
+qutebrowser/.local/share/qutebrowser/sessions/
+qutebrowser/.local/share/qutebrowser/cmd-history
+qutebrowser/.local/share/qutebrowser/state
+qutebrowser/.local/share/qutebrowser/webengine/
+qutebrowser/.local/share/qutebrowser/crash.log
+qutebrowser/.local/share/qutebrowser/log/
+qutebrowser/.config/qutebrowser/qsettings/
+qutebrowser/.config/qutebrowser/autoconfig.yml
+qutebrowser/.config/qutebrowser/userscripts/.venv/
+
+# Nix build artifacts
+home-manager/.config/home-manager/result
+
+# Misc
+nohup.out
+msmtp/.config/msmtp/config.backup
