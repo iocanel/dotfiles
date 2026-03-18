@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Delete from Clipboard History
+GenericName=wofi-cliphist-delete
+Comment=Delete entries from clipboard history
+Exec=sh -c $HOME/bin/wofi-cliphist-delete
+Icon=edit-clear
+Type=Application
+Terminal=false
+Categories=Utility
+Keywords=clipboard;history;delete;wofi;cliphist;
