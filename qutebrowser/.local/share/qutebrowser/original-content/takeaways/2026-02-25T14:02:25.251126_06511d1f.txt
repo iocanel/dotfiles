@@ -1,0 +1,364 @@
+Timestamp: 2026-02-25T14:02:25.251126
+URL: https://www.linkedin.com/learning/learning-canvas-2022/create-question-banks?autoSkip=true&resume=false
+Title: Create question banks | LinkedIn Learning
+Hash: 06511d1fceaca96c891f00aaddef190a5f6ef84d5c7f920b83804f32150b8c43
+================================================================================
+0 notifications total
+Skip to section
+Accessibility feedback
+Contact LinkedIn’s Disability Answer Desk with accessibility feedback or issues
+Close jump menu
+Expand site navigation
+Search
+Me
+EN
+Change language. Current language is English.
+Home
+My Career Journey
+My Library
+Content
+AI Coaching
+AI Role Play
+Hands-On Tech
+Certifications
+Help
+LinkedIn Learning
+Contents
+Introduction
+1. Getting Started with Canvas
+2. Creating a Course
+3. Structure Your Course
+4. Manage Students and Create Groups
+5. Add Assignments and Quizzes
+The Rich Content Editor in Canvas
+(Viewed)
+4m 30s video
+Save
+Create pages for learners to access
+(Viewed)
+4m 26s video
+Save
+Create assignment groups
+(Viewed)
+2m 22s video
+Save
+Create assignments
+(Viewed)
+5m 47s video
+Save
+Create discussions
+(Viewed)
+4m 38s video
+Save
+Create a quiz
+(Viewed)
+4m 31s video
+Save
+Add questions to a quiz
+(Viewed)
+4m 57s video
+Save
+Create question banks
+(Viewed)
+4m 31s video
+Save
+Chapter Quiz
+(In progress)
+5 questions
+6. Explore the Grading Tools
+Overview of the Canvas gradebook
+(Viewed)
+5m 45s video
+Save
+Gradebook views in Canvas
+(Viewed)
+3m 45s video
+Save
+Individual assignments in the gradebook
+(Viewed)
+2m 17s video
+Save
+Late policy and grade posting policy
+(Viewed)
+1m 37s video
+Save
+Create assignment rubrics
+(Viewed)
+5m 13s video
+Save
+Create course outcomes
+(Viewed)
+3m 57s video
+Save
+Quickly grade with Speedgrader
+(Viewed)
+5m 10s video
+Save
+Chapter Quiz
+(In progress)
+5 questions
+7. Course Management Tools
+Communicate with conversations
+(Viewed)
+2m video
+Save
+Update your class with announcements
+(Viewed)
+2m 25s video
+Save
+Work with the course calendar
+(Viewed)
+2m 21s video
+Save
+Chapter Quiz
+(In progress)
+3 questions
+Conclusion
+Learning Canvas
+Create question banks
+Leave a review
+390
+390 likes
+Save
+11,969
+11,969 bookmarks
+Add to my content
+Share Learning Canvas
+Loaded: 7.61%
+Pause
+Skip back 10 seconds
+Skip ahead 10 seconds
+Previous
+Next
+Current time 
+0:02/
+Duration 
+4:31
+1.5x
+Playback speed
+Open Captions Menu
+Settings
+Mute
+Turn fullscreen on
+we discussed classic quizzes inside of Canvas.
+Overview
+Notebook
+Transcript
+Instructor
+Oliver Schinkten
+Speaker, Consultant, Writer, Video Trainer
+Follow on LinkedIn
+Related to this course
+Certificates 
+Show all
+Course details
+1h 54m
+Beginner
+Released: 3/14/2022
+4.8
+(622)
+Learning management systems have revolutionized the way educators and corporate trainers are able to provide instruction. With an online platform, instructors and students can communicate, collaborate, share and access resources, submit assignments, and give feedback at any time. With online learning more important than ever, learning how to take advantage of all a learning management system has to offer is now a vital part of providing instruction. In this course, Oliver Schinkten explores how to set up and use Canvas, a leading LMS used by institutions and instructors around the globe. Oliver shows how to set up a class, work with students, teach online, and discusses best practices for leveraging Canvas for student success. He also covers grading, adding assignments, student communication, and adding multimedia. If you’re looking to enhance the online component of your classes, this course is for you.
+Skills covered
+Instructure Canvas
+Learners
+390 members like this content
+18,116 people started learning
+Learner reviews
+4.8 out of 5
+622 ratings
+Ratings calculation
+5 star
+84%
+4 star
+13%
+3 star
+3%
+2 star
+<1%
+1 star
+<1%
+Filter by:
+All stars
+Sort by: Most recent
+Atul Rajput 3rd
+Digital creator
+
+Reviewer rating 5 out of 5
+
+December 28, 2025
+
+Must do course
+
+Helpful
+Report
+Clementina Odiowaya 3rd
+Data Analytics Facilitator
+
+Reviewer rating 3 out of 5
+
+December 6, 2025
+
+It's good for beginners, but the engagement is very low, and there is no exercise file to work with. The content is not rich, and it's also an old video, as Canvas has undergone numerous updates.
+
+Helpful
+Report
+Lillian Steele
+Certified Teacher
+
+Reviewer rating 5 out of 5
+
+November 15, 2025
+
+Yes.
+
+Helpful
+Report
+Show more reviews
+Related courses
+Learning Brightspace by D2L
+Course
+2,732 learners
+Save
+1h 45m
+Learning Moodle
+Course
+7,801 learners
+Save
+1h 39m
+Learning Artboard Studio
+Course
+1,861 learners
+Save
+2h 40m
+Adobe Captivate Essential Training
+Course
+5,771 learners
+Save
+2h 39m
+Automated ML.NET Training, Metrics, and Accuracy
+Course
+1,838 learners
+Save
+35m
+AI Coach Info
+Close AI Coach
+Video
+The Rich Content Editor in Canvas
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on the Rich Content Editor in Canvas:
+
+
+The Rich Content Editor allows you to create, curate, and share resources, assignments, quizzes, and more.
+You can customize your content with various formatting options like adjusting fonts, adding links, images, videos, and documents.
+The editor includes accessibility features such as adding Alt Text to images and an accessibility checker to ensure your content is accessible to all students.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Create pages for learners to access
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on creating pages in Canvas:
+
+
+Creating Pages: Pages are versatile tools in Canvas that allow you to add links, images, multimedia, and more to share with students.
+Rich Content Editor: Use the Rich Content Editor to format and customize the content on your pages.
+Embedding Videos: You can embed videos directly into your pages using embed codes, making it easy for students to view content without leaving Canvas.
+Publishing and Viewing: After creating a page, you can publish it and view it from the student's perspective to ensure everything looks correct.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Create assignment groups
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on creating assignment groups in Canvas:
+
+
+Organize Assignments: Creating assignment groups helps keep assignments organized and allows for different weighting in grading.
+Adding Groups: You can add new groups such as assessments, discussions, and projects to categorize assignments.
+Weighting Grades: You can set different weights for each assignment group to calculate final grades based on these weights.
+Placeholders: Add placeholders for assignments, discussions, quizzes, or external tools within these groups.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Create assignments
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on creating assignments in Canvas:
+
+
+Creating Assignments: You can create assignments by navigating to the Assignments tab and clicking the plus Assignment button.
+Rich Content Editor: Use the Rich Content Editor to add text, videos, and other resources to your assignments.
+Assignment Details: Specify details like points, assignment group, submission type, and due date.
+Student View: Always check the assignment from the student's perspective to ensure everything is set up correctly.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Create discussions
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on creating discussions in Canvas:
+
+
+Creating Discussions: Discussions can be created from the course navigation bar by clicking on 'Discussions' and then 'plus Discussion'.
+Discussion Sections: Discussions are categorized into Pinned Discussions, Active Discussions, and Closed for Comments.
+Rich Content Editor: Use the Rich Content Editor to add text, links, videos, and other prompts for the discussion.
+Threaded Replies: Enable threaded replies to structure responses and make conversations easier to follow.
+Visibility and Participation: You can set options for who can see the discussion and when it is available. You can also require students to post before seeing others' replies.
+Student View: Always check the discussion from the student's perspective to ensure it is set up correctly.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Create a quiz
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on creating quizzes in Canvas:
+
+
+Classic vs. New Quizzes: The video focuses on creating Classic Quizzes, but mentions that New Quizzes will eventually replace them.
+Creating a Quiz: Navigate to the Quizzes section and click on '+ Quiz' to start creating a quiz.
+Quiz Details: You can name the quiz, provide instructions, set the quiz type (graded, practice, etc.), and configure various settings like time limits and multiple attempts.
+Student Feedback: Decide whether to allow students to see their quiz responses and correct answers immediately or within a set timeframe.
+Access Control: Options to require an access code or filter by IP address for taking the quiz.
+Assignment Groups: Assign the quiz to specific groups like assessments.
+Publishing: Save and publish the quiz once all details are set.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Add questions to a quiz
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on adding questions to a quiz in Canvas:
+
+
+Adding Questions: You can add questions to a quiz by clicking on '+ New Question' or by finding questions from the question bank.
+Question Types: Canvas offers multiple question types such as multiple choice, true/false, and fill in the blank.
+Correct Answers: Ensure you select the correct answer for each question to avoid student frustration.
+Feedback: You can provide specific feedback for each answer choice to guide students.
+Previewing Quizzes: Use the Preview button to see the quiz from the student's perspective and ensure everything is set up correctly.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Create question banks
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on the question bank in Canvas:
+
+
+Question Bank: Allows you to store questions for future assessments.
+Creating a Question Bank: Navigate to the quizzes tab, click on the three-dot icon, and select 'Manage Question Banks'.
+Adding Questions: Create questions directly within the question bank or move existing unfiled questions into it.
+Using Question Banks: When creating a quiz, you can easily add questions from your question banks, saving time and ensuring consistency.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Send message
+
+This is powered by AI and may make mistakes. Learn more about how your conversations are saved.

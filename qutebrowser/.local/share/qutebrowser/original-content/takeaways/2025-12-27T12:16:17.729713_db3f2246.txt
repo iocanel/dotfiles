@@ -1,0 +1,363 @@
+Timestamp: 2025-12-27T12:16:17.729713
+URL: https://www.linkedin.com/learning/product-management-first-steps/develop-a-strong-research-plan-23448383?autoSkip=true&contextUrn=urn%3Ali%3AlyndaLearningPath%3A6477c370498e31ada9757f94&resume=false&u=0
+Title: Develop a strong research plan | LinkedIn Learning
+Hash: db3f22463f931cbf9795e77a2ca8568541082905782c6f0243f45513012bbd8d
+================================================================================
+0 notifications total
+Skip to section
+Accessibility feedback
+Contact LinkedIn’s Disability Answer Desk with accessibility feedback or issues
+Close jump menu
+Expand site navigation
+Search
+Me
+EN
+Change language. Current language is English.
+Home
+My Career Journey
+My Library
+Content
+AI Coaching
+AI Role Play
+Hands-On Tech
+Certifications
+Help
+LinkedIn Learning
+Contents
+BACK TO LEARNING PATH
+Aha! Product Management Professional Certificate
+Go back to learning path: Aha! Product Management Professional Certificate
+Introduction
+1. What Is Product Management?
+2. What Does a Product Manager Do?
+3. Research
+Develop a strong research plan
+(Viewed)
+2m 33s video
+Save
+Research plan examples
+(Viewed)
+2m 47s video
+Save
+Plan a product research customer meeting
+(Viewed)
+2m 58s video
+Save
+Open a product research customer meeting
+(Viewed)
+2m 6s video
+Save
+Pitch your product idea to the customer
+(Viewed)
+2m 53s video
+Save
+Summarize customer meeting findings
+(Viewed)
+1m 54s video
+Save
+Present your customer meeting findings
+(Viewed)
+2m 12s video
+Save
+Chapter Quiz
+(In progress)
+4 questions
+4. Plan
+Identify versions, releases, and sprints
+(Viewed)
+2m 24s video
+Save
+Define your product sprints
+(Viewed)
+2m 18s video
+Save
+Prioritize product features
+(Viewed)
+3m 19s video
+Save
+Create product requirements and stories
+(Viewed)
+3m 31s video
+Save
+Review your product plan
+(Viewed)
+2m 22s video
+Save
+Chapter Quiz
+(In progress)
+3 questions
+5. Build
+Monitor progress using a burndown chart
+(Viewed)
+2m 39s video
+Save
+Identify issues using a burndown chart
+(Viewed)
+2m 57s video
+Save
+Test your product with users
+(Viewed)
+2m 30s video
+Save
+Certify your product for release
+(Viewed)
+3m 32s video
+Save
+Chapter Quiz
+(In progress)
+1 question
+6. Release
+Define your go-to market
+(Viewed)
+3m 55s video
+Save
+Position your product to personas
+(Viewed)
+2m 36s video
+Save
+Release your product
+(Viewed)
+2m 45s video
+Save
+Chapter Quiz
+(In progress)
+1 question
+7. Refine
+Talk to your users and non-users
+(Viewed)
+3m 1s video
+Save
+Evaluate product usage analytics
+(Viewed)
+2m 33s video
+Save
+Use Net Promoter Scores
+(Viewed)
+2m 55s video
+Save
+Planning product updates
+(Viewed)
+2m 6s video
+Save
+Chapter Quiz
+(In progress)
+1 question
+8. Retire
+When it's time to retire a product
+(Viewed)
+2m 50s video
+Save
+Chapter Quiz
+(In progress)
+1 question
+Conclusion
+Take exam
+Product Management First Steps
+Develop a strong research plan
+Leave a review
+15,350
+15,350 likes
+Save
+172,512
+172,512 bookmarks
+Add to my content
+Share Product Management First Steps
+Loaded: 61.21%
+Pause
+Skip back 10 seconds
+Skip ahead 10 seconds
+Previous
+Next
+Current time 
+0:09/
+Duration 
+2:33
+1.5x
+Playback speed
+Open Captions Menu
+Settings
+Mute
+Turn fullscreen on
+Let me share some tips to help you
+Overview
+Notebook
+Transcript
+Instructor
+Rich Winnie
+Principal Staff Author, Technology Education Evangelist
+Follow on LinkedIn
+Related to this course
+Exercise Files (2) 
+Show all
+Certificates 
+Show all
+Certifying Organizations 
+Show more
+Exam 
+Take exam
+Course details
+1h 36m
+Beginner
+Updated: 2/21/2024
+4.8
+(12,510)
+
+Behind every successful technology product lies the guiding hand of the product manager. Product managers are critical leaders who coordinate all aspects of product development, from making the business case to deciding when and if a product should be retired. In this course, principal staff instructor and former Adobe Principal Product Manager Doug (Rich) Winnie provides a comprehensive overview of product management and takes you through the six stages of the product life cycle (PLC): research, plan, build, release, refine, and retire. He also explains the day-to-day activities of a product manager, introduces you to the members of the product team, walks through interactive ways to help define your product, and outlines the skills a product manager needs to have to be successful. Whether you want to become a product manager or simply become a better member of a product team, this course will help you understand how a good process brings better products to life.
+
+This course is part of a Professional Certificate from Aha!.
+
+Learning objectives
+Identify types of products.
+Recognize different types of industries.
+Examine what elements make up a quality extended team.
+Explore the components of managing a life cycle.
+Name the elements of a strong research plan.
+Break down how to pitch an idea.
+Identify versions, releases, and sprints.
+Recognize how to monitor progress using a burndown chart.
+Define your go-to market.
+Skills covered
+Product Management
+Learners
+15,350 members like this content
+353,213 people started learning
+Professional Certifications and Continuing Education Units (CEUs)
+International Institute of Business Analysis™ (IIBA®)
+Continuing Development Units (CDUs) : 2
+
+LinkedIn Learning is an approved IIBA® Endorsed Education Provider for CCBA®, CBAP®, Provider #189294. LinkedIn Learning courses can assist learners with their continuing development units (CDUs).
+
+CBAP® and CCBA® are registered certification marks owned by International Institute of Business Analysis. Certified Business Analysis Professional™, Certification of Competency in Business Analysis™, Endorsed Education Provider™, EEP™ and the EEP logo
+
+Show more
+National Association of State Boards of Accountancy (NASBA)
+Continuing Professional Education Credit (CPE): 3
+Recommended NASBA Field of Study: Personal Development
+
+Sponsor Identification number: 140940
+
+To earn CPE credits, the learner is expected to:
+
+Complete all videos and chapter quizzes
+Complete the final exam within one year from completing the course
+Score 70% or higher on final exam
+
+Glossary: see PDF file in the Exercise Files area
+Program Level: Basic
+Prerequisite Education: There are no prerequisites for this course.
+Advanced Preparation: There is no advance preparation required for this course.
+If you undertake this course for CPE credits, you can leave final comments in the Self Study Course Evaluation.
+
+LinkedIn Learning is registered with the National Association of State Boards of Accountancy (NASBA) as a sponsor of continuing professional education on the National Registry of CPE Sponsors. State boards of accountancy have final authority on the acceptance of individual courses for CPE credit. Complaints regarding registered sponsors may be submitted to the National Registry of CPE Sponsors through its web site: NASBA Registry.
+
+For course refund policy, issue resolution, and additional info please see the LinkedIn User Agreement. For more information regarding administrative policies such as complaint and refund, please contact our offices at +1 650-687-3600.
+
+Show more
+Project Management Institute (PMI)®
+PDUs/ContactHours: 1.5
+
+LinkedIn Learning has been reviewed and approved by the PMI® Authorized Training Partner Program. This course qualifies for professional development units (PDUs).
+
+The PMI Authorized Training Partner logo is a registered mark of the Project Management Institute, Inc.
+
+To view the activity and PDU details for this course, click here.
+
+Show more
+Learner reviews
+4.8 out of 5
+12,510 ratings
+Ratings calculation
+5 star
+81%
+4 star
+16%
+3 star
+2%
+2 star
+<1%
+1 star
+<1%
+Filter by:
+All stars
+Sort by: Most recent
+Sanchi Shukla 3rd
+Medicine internship
+
+Reviewer rating 4 out of 5
+
+December 25, 2025
+
+add more real life examples and make it interactive
+
+Helpful
+Report
+Chris Brailsford EngTech MIMechE 3rd
+Technical Support Specialist
+
+Reviewer rating 5 out of 5
+
+December 23, 2025
+
+concise explanations given
+
+Helpful
+Report
+Casey Abell, MBA 3rd
+Corporate Engineer IV
+
+Reviewer rating 5 out of 5
+
+December 4, 2025
+
+I would recommend this for users new into Product Management or for someone that needs a refresher, Good paced course and provides a good understanding of what Product Management is.
+
+Helpful
+Report
+Show more reviews
+Related courses
+Transitioning to Product Management
+Course
+283,539 learners
+Save
+38m
+Product Management: Building a Product Roadmap
+Course
+416,075 learners
+Save
+Popular
+47m
+Generative AI for Product Managers
+Course
+94,196 learners
+Save
+Popular
+24m
+Agile Foundations
+Course
+1,247,509 learners
+Save
+Popular
+1h 35m
+Product Management Insights
+Course
+33,020 learners
+Save
+34m
+AI Coach Info
+Close AI Coach
+Video
+Develop a strong research plan
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on creating a comprehensive research plan for product management:
+
+
+Quantitative vs. Qualitative Research: Quantitative research gathers large amounts of data with standardized questions, while qualitative research provides in-depth information from a smaller group through open-ended discussions.
+Internal vs. External Data: Internal data is gathered during the research phase and is unique to your product, while external data comes from outside your product or company and focuses on the needs of your audience.
+Balanced Research Plan: Combining quantitative and qualitative research with internal and external data ensures a well-rounded research plan for your product.
+Send positive feedback
+Send negative feedback
+Send message
+
+This is powered by AI and may make mistakes. Learn more about how your conversations are saved.

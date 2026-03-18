@@ -1,0 +1,570 @@
+Timestamp: 2026-01-02T17:28:07.500086
+URL: https://www.linkedin.com/learning/product-management-customer-development/when-to-confirm-or-pivot?autoSkip=true&contextUrn=urn%3Ali%3AlyndaLearningPath%3A6477c370498e31ada9757f94&resume=false&u=0
+Title: When to confirm or pivot | LinkedIn Learning
+Hash: 0462ec3048e713d95e911a329dc78ef4153865723252ffa669a8259edf8c6282
+================================================================================
+0 notifications total
+Skip to section
+Accessibility feedback
+Contact LinkedIn’s Disability Answer Desk with accessibility feedback or issues
+Close jump menu
+Expand site navigation
+Search
+Me
+EN
+Change language. Current language is English.
+Home
+My Career Journey
+My Library
+Content
+AI Coaching
+AI Role Play
+Hands-On Tech
+Certifications
+Help
+LinkedIn Learning
+Contents
+BACK TO LEARNING PATH
+Aha! Product Management Professional Certificate
+Go back to learning path: Aha! Product Management Professional Certificate
+Introduction
+1. Customer Development
+Introduction to customer development
+(Viewed)
+2m 50s video
+Save
+Four stages of customer development
+(Viewed)
+3m 22s video
+Save
+Chapter Quiz
+2 questions
+2. Identifying a Problem
+Where product ideas come from
+(Viewed)
+2m 22s video
+Save
+Overview of customer discovery
+(Viewed)
+3m 28s video
+Save
+What is a problem hypothesis?
+(Viewed)
+3m 9s video
+Save
+Create your own problem hypothesis
+(Viewed)
+3m 6s video
+Save
+Chapter Quiz
+4 questions
+3. User Research
+Performing user research
+(Viewed)
+3m 32s video
+Save
+Define your target market
+(Viewed)
+3m 4s video
+Save
+Secondary research techniques
+(Viewed)
+2m 57s video
+Save
+Primary research techniques
+(Viewed)
+2m 56s video
+Save
+How to create a screener
+(Viewed)
+3m 37s video
+Save
+Chapter Quiz
+5 questions
+4. User Surveys
+What makes a good survey?
+(Viewed)
+3m 59s video
+Save
+How to create a survey
+(Viewed)
+2m 43s video
+Save
+How to analyze survey results
+(Viewed)
+4m 12s video
+Save
+Chapter Quiz
+3 questions
+5. User Interviews
+What makes a good interview?
+(Viewed)
+3m 21s video
+Save
+How to create an interview template
+(Viewed)
+3m 16s video
+Save
+How to conduct a user interview
+(Viewed)
+3m 22s video
+Save
+How to analyze interview results
+(Viewed)
+3m 30s video
+Save
+Chapter Quiz
+4 questions
+Conclusion
+When to confirm or pivot
+(In progress)
+2m 49s video
+Save
+Chapter Quiz
+1 question
+Product Management: Customer Development
+When to confirm or pivot
+Leave a review
+2,401
+2,401 likes
+Save
+39,935
+39,935 bookmarks
+Add to my content
+Share Product Management: Customer Development
+Loaded: 67.74%
+Pause
+Skip back 10 seconds
+Skip ahead 10 seconds
+Previous
+Next
+Current time 
+0:28/
+Duration 
+2:49
+2x
+Playback speed
+Open Captions Menu
+Settings
+Mute
+Turn fullscreen on
+If you were right and validated your problem hypothesis,
+Overview
+Notebook
+Transcript
+Instructor
+Jay Clouse
+LinkedIn Influencer
+Writer and Entrepreneur from Columbus, Ohio
+Follow on LinkedIn
+Related to this course
+Exercise Files 
+Show all
+Certificates 
+Show all
+Certifying Organizations 
+Show more
+Course details
+1h 2m
+Beginner
+Released: 6/21/2018
+4.7
+(1,456)
+
+Great products are built from a strong understanding of customer needs. As a product manager, you're tasked with identifying those customer needs so that you're able to direct the creation of products that make your customers' lives a bit easier.
+
+In this course, discover how to leverage the customer development process to validate your assumptions and create products customers will truly love—without spending all your precious time or money. Learn how to craft your own problem hypothesis, perform user research, create surveys and analyze the results, and conduct effective user interviews.
+
+This course is part of a Professional Certificate from Aha!.
+
+Learning objectives
+Four stages of customer development
+Creating a problem hypothesis
+Performing user research
+Defining your target market
+Creating effective surveys
+Conducting effective user interviews
+Analyzing interview results
+Skills covered
+Product Management
+Learners
+2,401 members like this content
+106,659 people started learning
+Professional Certifications and Continuing Education Units (CEUs)
+International Institute of Business Analysis™ (IIBA®)
+Continuing Development Units (CDUs) : 1
+
+LinkedIn Learning is an approved IIBA® Endorsed Education Provider for CCBA®, CBAP®, Provider #189294. LinkedIn Learning courses can assist learners with their continuing development units (CDUs).
+
+CBAP® and CCBA® are registered certification marks owned by International Institute of Business Analysis. Certified Business Analysis Professional™, Certification of Competency in Business Analysis™, Endorsed Education Provider™, EEP™ and the EEP logo
+
+Show more
+Project Management Institute (PMI)®
+PDUs/ContactHours: 1
+
+LinkedIn Learning has been reviewed and approved by the PMI® Authorized Training Partner Program. This course qualifies for professional development units (PDUs).
+
+The PMI Authorized Training Partner logo is a registered mark of the Project Management Institute, Inc.
+
+To view the activity and PDU details for this course, click here.
+
+Show more
+Learner reviews
+4.7 out of 5
+1,456 ratings
+Ratings calculation
+5 star
+78%
+4 star
+17%
+3 star
+4%
+2 star
+<1%
+1 star
+<1%
+Filter by:
+All stars
+Sort by: Most recent
+Muunda Mudenda 3rd
+Research & Innovation Lead - Genomic Testing (Africa)
+
+Reviewer rating 5 out of 5
+
+December 31, 2025
+
+The course gave me a solid foundation for my product management journey.
+
+Helpful
+Report
+Sanjit Gaonkar
+Sanjit Gaonkar 3rd
+
+Reviewer rating 5 out of 5
+
+December 24, 2025
+
+Good
+
+Helpful
+Report
+Eyob Begashaw 3rd
+Knowlege Base Supervisor
+
+Reviewer rating 5 out of 5
+
+December 1, 2025
+
+good
+
+Helpful
+Report
+Show more reviews
+Related courses
+Product Management First Steps
+Course
+353,840 learners
+Save
+Popular
+1h 36m
+Product Management: Building a Product Roadmap
+Course
+416,552 learners
+Save
+Popular
+47m
+Transitioning to Product Management
+Course
+284,437 learners
+Save
+Popular
+38m
+Generative AI for Product Managers
+Course
+94,638 learners
+Save
+Popular
+24m
+Data-Driven Product Management
+Course
+31,327 learners
+Save
+Popular
+2h 1m
+AI Coach Info
+Close AI Coach
+Video
+Welcome
+Ioannis Canellos:
+Key takeaways for this course
+Learning AI:
+Here are the key takeaways from the course Product Management: Customer Development:
+
+
+Understand the four stages of customer development.
+Learn how to create and validate a problem hypothesis.
+Perform effective user research and define your target market.
+Create and analyze surveys and user interviews to gather valuable insights.
+Send positive feedback
+Send negative feedback
+Video
+Four stages of customer development
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video on customer development:
+
+
+Customer development is crucial for understanding customer needs and achieving product/market fit.
+It involves four phases: customer discovery, customer validation, customer creation, and company building.
+Each phase may require multiple attempts to get right.
+Successful customer development helps in creating a product that customers truly want and can lead to long-term success.
+Send positive feedback
+Send negative feedback
+Video
+Where product ideas come from
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video on product ideas:
+
+
+Great product ideas often come from solving a personal problem or 'scratching your own itch.'
+Product ideas can originate from internal sources like sales and customer service teams, or external sources like customers and industry trends.
+As a product manager, it's essential to critically evaluate these ideas to determine if they present a real market opportunity and align with your company's capabilities.
+Send positive feedback
+Send negative feedback
+Video
+Overview of customer discovery
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video on customer discovery:
+
+
+Customer Discovery Goal: Identify if a problem is real for potential customers and if your solution addresses it effectively.
+Four Stages: The process includes stating a problem hypothesis, testing it, testing your solution, and verifying or pivoting based on results.
+Scientific Method: Apply the scientific method to test assumptions about your users and their problems.
+Listening is Key: Focus on understanding your target users' problems rather than convincing them to use your product.
+Iterative Process: If assumptions are not confirmed, restart the process to find the best solution.
+Send positive feedback
+Send negative feedback
+Video
+What is a problem hypothesis?
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video on creating a problem hypothesis:
+
+
+Problem Hypothesis Focus: Focus on identifying users' problems or needs rather than a specific product solution.
+User Stories: Use user stories to frame your problem hypothesis, which helps in understanding the users' needs and goals.
+Validation: Talk to real potential customers to validate your problem hypothesis and gain insights into their needs.
+Survey and Interview Questions: Develop survey and interview questions based on your problem hypothesis to gather valuable feedback.
+Send positive feedback
+Send negative feedback
+Video
+Create your own problem hypothesis
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video on formulating a problem hypothesis:
+
+
+User Story Approach: Write a problem hypothesis as a user story, putting yourself in the shoes of your target customer.
+Specificity: Be specific about the user's role and their desired behavior or action.
+Outcome Focus: Identify the ultimate benefit or outcome the user seeks, such as saving time or reducing errors.
+Iterative Process: Understand that customer discovery may reveal that your proposed solution needs adjustment, and that's part of the process.
+Send positive feedback
+Send negative feedback
+Video
+Performing user research
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video on user research:
+
+
+Importance of User Research: User research is crucial and often overlooked in product development. It helps validate assumptions and avoid wasting time and money.
+Secondary Research: Start with secondary sources like academic research, consumer reports, and expert interviews to get initial insights.
+Primary Research: Focus on direct feedback from users through surveys and interviews. This is essential to truly understand user needs and create products they love.
+Real-World Example: The success of Airbnb was partly due to their founders' commitment to understanding their users by directly engaging with them.
+Send positive feedback
+Send negative feedback
+Video
+Define your target market
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video on defining your target market:
+
+
+Target Users: Clearly identify who your target users are; your product won't be for everyone.
+Feedback: Get feedback specifically from your target users to avoid creating the wrong product.
+Psychographics: Segment your target audience by their attitudes and aspirations (psychographics) rather than just demographics like age and gender.
+Specificity: Be as specific as possible in defining your target users to better understand their needs and create a product they will love.
+Send positive feedback
+Send negative feedback
+Video
+Secondary research techniques
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video on secondary research techniques:
+
+
+Leverage Existing Research: Utilize secondary sources like academic research, private research firms, consumer reports, and expert interviews to validate your hypotheses.
+Cost-Effective: Secondary research is often free and can save time and money compared to conducting primary research from scratch.
+Sources: Google Scholar and Pew Research Center are valuable resources for finding relevant studies and data.
+Expert Insights: Interviewing experts who have already studied your target users can provide valuable insights and help refine your hypotheses.
+Send positive feedback
+Send negative feedback
+Video
+Primary research techniques
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video on primary research techniques:
+
+
+Primary Research Importance: Direct feedback from users is irreplaceable for validating assumptions and understanding user needs.
+Surveys and Interviews: These are the two most important methods of primary research. Surveys are good for quantitative data, while interviews are better for qualitative insights.
+Survey Design: Ensure survey questions are unbiased and clear to get meaningful insights.
+Interview Benefits: Interviews allow for deeper understanding through open-ended questions and observing body language.
+Send positive feedback
+Send negative feedback
+Video
+How to create a screener
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video on using a screener for user research:
+
+
+Target Users: Identify the characteristics of your target users, such as job title, behavior, or product usage.
+Criteria: Develop specific criteria to determine if someone fits the profile of your target user.
+Screening Questions: Create questions that help you identify if someone meets your criteria.
+Survey Tools: Use online survey tools like Google Forms, Typeform, or Survey Monkey to collect responses efficiently.
+Avoiding Mismatches: Screen out users who do not fit your target profile to ensure relevant feedback.
+Send positive feedback
+Send negative feedback
+Video
+What makes a good survey?
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video on surveys:
+
+
+Proper Use: Surveys are effective for gathering quantifiable information but not for understanding reasons behind user behavior or needs.
+Design Considerations: Ensure surveys are short, purposeful, and have grouped questions to avoid biased responses.
+Common Pitfalls: Avoid leading questions, double-barreled questions, and open-ended 'why' questions in surveys.
+Effective Surveys: Use rating scales and specific questions to gather meaningful data.
+Send positive feedback
+Send negative feedback
+Video
+How to create a survey
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video on the Net Promoter Score (NPS) survey:
+
+
+NPS Survey: Measures customer experience and predicts business growth with a simple question: 'How likely is it that you would recommend this product to a friend or colleague?'
+Rating Scale: Uses a 0 to 10 rating scale to get quantifiable data.
+Survey Design: Keep surveys short and focused, using rating scales to avoid bias and gather actionable data.
+Example: The instructor shares a 7-question survey used in a startup accelerator to gather specific insights and improve the product.
+Send positive feedback
+Send negative feedback
+Video
+How to analyze survey results
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video on analyzing survey results:
+
+
+Deeper Analysis: Go beyond average responses to uncover valuable insights by examining the distribution of responses.
+Representative Sample: Ensure your survey sample size is representative of your target market for reliable results.
+Granular Understanding: Look at individual responses to identify different user segments and their specific needs.
+NPS Calculation: Understand how to calculate and interpret Net Promoter Score (NPS) to gauge customer loyalty and satisfaction.
+Send positive feedback
+Send negative feedback
+Video
+What makes a good interview?
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video on conducting effective user interviews:
+
+
+Open-Ended Questions: Ask open-ended and non-leading questions to gather more detailed information.
+Intensity Arc: Start with easy questions to build rapport and gradually move to more intense questions.
+Active Listening: Focus on listening more than talking to learn from the user.
+Follow-Up: Be prepared to ask follow-up questions based on the user's responses to gain deeper insights.
+Avoid Pitching: Keep the interview centered on discovery rather than trying to sell your product.
+Send positive feedback
+Send negative feedback
+Video
+How to create an interview template
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video on conducting effective user interviews:
+
+
+Question Template: Create a question template to stay organized and align with your interview goals.
+Learning Objectives: Clearly define what you want to learn from the interview.
+Intensity Arc: Start with low-intensity questions to build rapport and gradually move to more intense questions.
+Open-Ended Questions: Use open-ended questions to encourage detailed responses.
+Active Listening: Focus on listening and ask for clarifications if needed.
+Follow-Up: End the interview with low-intensity questions and ask for permission to follow up if necessary.
+Send positive feedback
+Send negative feedback
+Video
+How to conduct a user interview
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video on conducting a successful user interview:
+
+
+Interviewer Conduct: Your body language and presence can significantly impact the success of the interview.
+Friendly and Engaging: Be friendly, engaging, and casual to make the interviewee comfortable.
+Neutrality: Stay neutral and avoid biasing responses; use body language like nodding and leaning forward to encourage the interviewee.
+Comfort with Silence: Use silence to your advantage; it can prompt the interviewee to share more information.
+Observe Body Language: Pay attention to the interviewee's body language to gauge their comfort and adjust accordingly.
+Send positive feedback
+Send negative feedback
+Video
+How to analyze interview results
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video on analyzing interview results:
+
+
+Look for Patterns: Identify similar responses across different interviews to find common problems or needs.
+Concentric Circles: Visualize interview subjects in concentric circles based on their responses, from not mentioning the problem to having a budget to solve it.
+Severity of Problems: The more central the circle, the more severe the problem and the easier it is to sell a solution.
+New Insights: Pay attention to unexpected information that can change your approach to solving the problem.
+Avoid Early Conclusions: Wait until all interviews are completed before drawing conclusions to ensure accurate pattern recognition.
+Send positive feedback
+Send negative feedback
+Video
+When to confirm or pivot
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video on validating problem hypotheses:
+
+
+Validation Outcomes: You may find that your problem hypothesis is correct, close but needs adjustments, or completely off.
+Next Steps: If validated, proceed to customer validation. If close, adjust the hypothesis and re-interview. If off, pivot and create a new hypothesis.
+Positive Pivoting: Pivoting is a positive outcome as it saves time and resources by identifying incorrect assumptions early.
+Iterative Process: Each iteration of the process becomes easier with real user data and insights.
+Send positive feedback
+Send negative feedback
+Send message
+
+This is powered by AI and may make mistakes. Learn more about how your conversations are saved.

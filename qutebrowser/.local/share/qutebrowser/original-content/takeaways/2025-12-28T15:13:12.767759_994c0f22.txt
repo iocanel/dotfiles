@@ -1,0 +1,56 @@
+Timestamp: 2025-12-28T15:13:12.767759
+URL: https://app.cyberranges.com/instance/69512ce2dabdba0ee85a753c/overview
+Title: Scenario Overview | Introduction to MITRE ATT&CK Navigator Part 3 - CYBER RANGES
+Hash: 994c0f22ed188117d9adff3a666614eb1f28cbd5e3af26a48b9f25e91200bb97
+================================================================================
+Introduction to MITRE ATT&CK Navigator Part 3
+119 MIN
+0
+Overview
+Questions
+Score
+Help
+Exit
+MISSION
+RULES
+INTRODUCTION TO MITRE ATT&CK NAVIGATOR PART 3
+
+We continue in part 3 with the practical mapping of a Threat Group in the Mitre ATT&CK Navigator. Please make sure you open up your MITRE ATT&CK Navigator, so you can practically follow along.
+
+Open up your Navigator at https://mitre-attack.github.io/attack-navigator/
+
+ADVANCED PERSISTENT THREAT GROUP HEAT MAP
+
+Open up your MITRE Navigator and choose the enterprise Matrix to create your Threat Group heatmap on. First click on Create New Layer, then click on Enterprise.
+
+For this exercise, we are going to choose the Threat Group APT 29. You can find the Groups' description on the attack.mitre.org website under the tab groups. You can choose any other group if so please.
+
+Use your search and multi select tool icon to search for APT29 on the Navigator. You will notice that one technique with one Threat Group. 
+
+Open up the down arrow on the Threat Group tab to reveal APT29. Click on the select button in order to set all the techniques that APT29 use on the Navigator.
+
+After you have chosen the APT29 selection, you will notice a border highlight around each technique relevant to the Group. I have highlighted one of the techniques in blue by hovering my mouse over it, to show that block as one of the techniques.
+
+Other techniques are highlighted with a bold border around them.
+
+To make the techniques visible and to heat map them, we need to attach a score to the techniques. A score is a numeric value assigned to a technique. The meaning or interpretation of scores is completely up to the user. You can click on the scoring icon and add a score of one.
+
+By default, techniques are "unscored" meaning that no score has been assigned to the technique.
+
+The technique blocks are now highlighted in a red colour. You can add any score value depending on your outcome. For example, you can add a grading score or a score based on the red team using these techniques.
+
+Adding a score is useful when you want to compare layers and add up the techniques used by different groups. Hovering your mouse over a technique will reveal that the score has been added successfully.
+
+If you open up the attack.mitre.org website and go to the group tab, you can click on APT29, which will take you to that specific page of the group. Down the page, you will see a link button to open up MITRE Navigator to that specific group. Click on the button, which will then ask if you want to open Navigator and view it.
+
+A slightly different Navigator heat map will be displayed, showing the techniques highlighted with an underline in yellow. If you hover your mouse over the technique, a comment will be displayed. For this specific technique, the comment here describes how multiple software exploits are used.
+
+This feature is very useful if you are doing Cyber Threat Intelligence research for an organization.
+
+Clicking on the colour palette icon will allow you to change the default colour scheme here of blue to what colour you want to use. You can move your mouse cursor around the palette to choose.
+
+Expanding the sub-techniques icon will display the sub-techniques and the relevant comments for them. This is useful if you are analysing a primary technique that has been used against an organization before, and you want to delve deeper into the sub-techniques.
+
+CONCLUSION
+
+This brings us to the end of Introduction to MITRE ATT&CK Navigator scenarios.

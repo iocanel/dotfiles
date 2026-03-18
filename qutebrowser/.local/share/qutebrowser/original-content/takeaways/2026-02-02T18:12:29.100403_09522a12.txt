@@ -1,0 +1,304 @@
+Timestamp: 2026-02-02T18:12:29.100403
+URL: https://www.linkedin.com/learning/learning-scorm-and-tin-can-api/a-look-at-how-scorm-works?autoSkip=true&resume=false
+Title: A look at how SCORM works | LinkedIn Learning
+Hash: 09522a12771394749aad364f6b476cc63708d311601fe27358dafda0ab677bef
+================================================================================
+0 notifications total
+Skip to section
+Accessibility feedback
+Contact LinkedIn’s Disability Answer Desk with accessibility feedback or issues
+Close jump menu
+Expand site navigation
+Search
+Me
+EN
+Change language. Current language is English.
+Home
+My Career Journey
+My Library
+Content
+AI Coaching
+AI Role Play
+Hands-On Tech
+Certifications
+Help
+LinkedIn Learning
+Contents
+Introduction
+1. Understanding SCORM
+What is a learning management system (LMS)?
+(Viewed)
+1m 32s video
+Save
+What is SCORM?
+(Viewed)
+1m 54s video
+Save
+Why is SCORM important?
+(Viewed)
+1m 39s video
+Save
+The history of SCORM
+(Viewed)
+1m 56s video
+Save
+A look at how SCORM works
+(Viewed)
+2m 33s video
+Save
+Chapter Quiz
+(Viewed)
+4 questions
+2. Popular SCORM-Compliant Authoring Tools
+Publishing to an LMS with Adobe Captivate
+7m 53s video
+Save
+Publishing to an LMS with Articulate Storyline 2
+6m video
+Save
+Publishing to an LMS with Lectora Inspire
+7m 33s video
+Save
+Publishing to an LMS with Camtasia
+7m 12s video
+Save
+3. Tips for Publishing SCORM-Compliant Content
+Including graded interactions
+7m 35s video
+Save
+Handling lessons for credit vs. not for credit
+2m 3s video
+Save
+Reporting scores to be SCORM-compliant
+1m 33s video
+Save
+Handling mastery-score scenarios
+1m 50s video
+Save
+Chapter Quiz
+3 questions
+4. Next-Generation SCORM
+Defining Tin Can and Experience API, or xAPI
+1m 41s video
+Save
+How does Experience API differ from SCORM?
+1m 32s video
+Save
+Understanding LRS vs. LMS
+1m 43s video
+Save
+The four components of the ADL vision
+1m 28s video
+Save
+Chapter Quiz
+3 questions
+Conclusion
+Next steps
+39s video
+Save
+Learning SCORM and Tin Can API
+A look at how SCORM works
+1,145
+1,145 likes
+Save
+8,552
+8,552 bookmarks
+Add to my content
+Share Learning SCORM and Tin Can API
+Loaded: 84.15%
+Play
+Skip back 10 seconds
+Skip ahead 10 seconds
+Previous
+Next
+Current time 
+0:02/
+Duration 
+2:33
+1.5x
+Playback speed
+Open Captions Menu
+Settings
+Mute
+Turn fullscreen on
+like creating SCORM-compliant content for an LMS,
+Overview
+Notebook
+Transcript
+Instructor
+David Rivers
+Author, Trainer, and Learning and Development Expert
+Follow on LinkedIn
+Related to this course
+Exercise Files 
+Show all
+Certificates 
+Show all
+Course details
+1h
+Beginner
+Released: 12/15/2014
+4.6
+(358)
+SCORM, the Sharable Content Object Reference Model, integrates elearning content into learning management systems (LMSs), whether they're proprietary or purchased off the shelf, and is foundational knowledge for elearning creation.
+
+This course introduces the what, why, and how of SCORM, and the tools for creating SCORM-compliant content. Author David Rivers also covers the second generation of compliance integration, the Tin CAN API (aka the Experience API), which allows for learning events to be recorded and analyzed.
+Learning objectives
+What is SCORM?
+Why is SCORM important?
+Publishing to an LMS with tools like Adobe Captivate and Lectora Inspire
+Keeping SCORM-compliant by reporting scores
+Understanding the Tin Can API
+Skills covered
+SCORM
+Learners
+1,145 members like this content
+31,889 people started learning
+Learner reviews
+4.6 out of 5
+358 ratings
+Ratings calculation
+5 star
+70%
+4 star
+23%
+3 star
+5%
+2 star
+<1%
+1 star
+<1%
+Filter by:
+All stars
+Sort by: Most recent
+THOMAS S. 3rd
+Managing Partner
+
+Reviewer rating 5 out of 5
+
+September 9, 2025
+
+Excellent information
+
+Helpful
+Report
+Wande Anjorin 3rd
+Senior Learning Project Manager
+
+Reviewer rating 5 out of 5
+
+March 8, 2025
+
+I would highly recommend it for others.
+
+Helpful
+Report
+Boitumelo Amos 3rd
+Sales Consultant
+
+Reviewer rating 5 out of 5
+
+November 4, 2024
+
+it explains in length and is more detailed
+
+Helpful
+Report
+Show more reviews
+Related courses
+Using Neuroscience for More Effective L&D
+Course
+68,400 learners
+Save
+1h 7m
+Creating a Leadership Development Program
+Course
+137,438 learners
+Save
+1h 3m
+Build Your Own Professional Training: Quick Start Guide
+Course
+49,615 learners
+Save
+36m
+Make SwiftUI Playgrounds Applications
+Course
+1,122 learners
+Save
+4h 5m
+Hands-On Introduction: Scala
+Course
+2,421 learners
+Save
+2h 16m
+AI Coach Info
+Close AI Coach
+Video
+What is a learning management system (LMS)?
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+In this video, the key takeaways are:
+
+
+LMS Definition: An LMS (Learning Management System) is a web-based software application platform used to plan, implement, and assess learning activities. It serves as a place to store and manage elearning courses.
+Functions of an LMS: It helps instructors create and deliver content, monitor learner participation, and assess performance. It can also include interactive features like threaded discussions, web conferencing, and discussion forums.
+Relationship with SCORM: The LMS is where SCORM-compliant content is integrated, allowing for the management and delivery of elearning courses.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+What is SCORM?
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+SCORM Definition: SCORM stands for Shareable Content Object Reference Model. It is a set of instructions for creating and sharing elearning content.
+Purpose of SCORM: It was developed to standardize elearning content across different LMSs, ensuring interoperability and reducing duplication.
+Historical Context: SCORM was developed by the Department of Defense in 1999 to address the lack of standards in elearning content across various government departments.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Why is SCORM important?
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+SCORM Compliance: SCORM compliance is important if you plan to upload your courses to a SCORM-compliant LMS.
+Flexibility and Reusability: SCORM-compliant content can be reused in various systems and frameworks, protecting your content investment.
+Interoperability: SCORM allows for the flexibility to use course materials across different LMSs and withstand changes in technology without redesigning or recoding.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+The history of SCORM
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+Initial Standards: The first set of SCORM standards was completed in 2001, known as SCORM 1.1, based on existing standards from various organizations.
+Versions and Improvements: SCORM 1.2, introduced in 2001, included metadata specifications. SCORM 2004, first released in 2004, brought new API communication standards and learning objectives sharing. The last edition, SCORM 2004 edition four, debuted in 2009, improving operability across assets.
+Next Generation: The next generation of SCORM, known as Tin Can API, Experience API, or xAPI, is currently under development and will be explored further in the course.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+A look at how SCORM works
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+SCORM-Compliant Content Creation: Developing a course using software like Captivate or Storyline and ensuring it is SCORM-compliant for integration with LMSs.
+Publishing Process: When publishing, the course is broken into Shareable Content Objects (SCOs) that fit with any LMS.
+Reusability: SCORM-compliant content can be reused in different courses and LMSs, making it flexible and efficient.
+LMS Functions: An LMS not only delivers the course to learners but also tracks participation, progress, and scores.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Send message
+
+This is powered by AI and may make mistakes. Learn more about how your conversations are saved.

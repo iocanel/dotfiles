@@ -1,0 +1,31 @@
+Timestamp: 2025-12-28T17:37:17.381956
+URL: https://app.cyberranges.com/instance/69514e94dabdba0ee85a7550/questions
+Title: Scenario Questions | Introduction to MITRE ATT&CK Navigator Part 3 - CYBER RANGES
+Hash: e5e1034c043b0dafbe299969fd3be07038591641b1b105589c82b0ae08b1a887
+================================================================================
+Introduction to MITRE ATT&CK Navigator Part 3
+119 MIN
+0
+Overview
+Questions
+Score
+Help
+Exit
+1
+2
+3
+4
+5
+6
+MITRE Navigator Part 3 - Q1
+10
+0
+MITRE NAVIGATOR
+HIDE ANSWERS
+The abbreviation APT stands for Advanced Personal Threat in Groups ?
+Select the correct answer:
+True
+False
+SUBMIT ANSWER
+Remaining attempts: 1
+NEXT QUESTION

@@ -1,0 +1,119 @@
+Timestamp: 2025-12-29T19:37:48.619062
+URL: https://app.cyberranges.com/instance/6952bc5ddabdba0ee85a776c/overview
+Title: Scenario Overview | Cyber Threat Intelligence with MITRE ATT&CK - CYBER RANGES
+Hash: b86b55e17001d0a55cab3400afc6658cdb786f5b9b14ca25ad911d8647166944
+================================================================================
+Cyber Threat Intelligence with MITRE ATT&CK
+119 MIN
+0
+Overview
+Questions
+Score
+Help
+Exit
+MISSION
+RULES
+CYBER THREAT INTELLIGENCE WITH MITRE ATT&CK
+INTRODUCTION
+
+Cyber Threat Intelligence is all about knowing what your adversaries do and using that information to improve decision-making. For this scenario, a fictitious organization called XYZ pharmaceuticals PTY will be used as the targeted organization.
+
+You as the CTI analyst of XYZ Pharmaceuticals PTY have been requested by the chief information security officer of the company to conduct a CTI analysis using the MITRE ATT&CK framework. You also need to provide the CISO with a heat map of the priority techniques that the Groups use to attack organizations in your industry.
+
+The heat map must be done on MITRE ATT&CK Navigator - https://mitre-attack.github.io/attack-navigator/
+
+APT GROUP RESEARCH
+
+In order to conduct a Cyber threat intelligence study for your organization, one needs to first research the APT groups that are known to target the industry that your organization operates in.
+
+Navigate to the attack.mitre.org (https://attack.mitre.org/groups/) website and click on the groups tab section of the website.
+
+There are two ways you can search for the Groups that target your specific industry / organization. There is a search function window under the Tactics tab, or you can press CTRL F and the search bar will appear. Use both methods to confirm the searches, as sometimes the CTRL F method will not show all the groups.
+
+The key word that we are using to search is our industry that the organization operates in. You will notice a yellow highlight on the keyword of your search.
+
+The research now entails analysing each group in the list by clicking on the heading link. The relevant group page will then appear. This allows you to do further research on each Group's individual page.
+
+On each Group page you will have the Group description, techniques used, software and references. Consult the references as well in your research, as this assists with further information gathering.
+
+APT GROUP HEAT MAPPING
+
+After you have allocated and researched the various groups responsible for attacks to your industry and organization, it's time to create individual heatmaps of them on MITRE ATT&CK Navigator. Each group will have its own layer on the ATT&CK Navigator.
+
+Open up the ATT&CK Navigator.
+
+We are creating an Enterprise layer, which is the applicable layer for the company you are working in. Click on your filters / platform icon to confirm which platforms are relevant for the organization. If you are only running windows as an operating system in the Pharmaceutical company, then you can uncheck the Linux operating system box.
+
+Based on your research, the relevant groups targeting your Pharmaceutical company and which are going to be mapped to the Mitre Navigator are
+
+FIN4
+
+APT19
+
+Turla
+
+Axiom
+
+FIN4
+
+FIN4 is a financially-motivated threat group that has targeted confidential information related to the public financial market, particularly regarding healthcare and pharmaceutical companies, since at least 2013. FIN4 has targeted individuals such as top executives, legal counsel, outside consultants, and researchers, among others.
+
+Create your heat map on Navigator for FIN4. Pay close attention to naming your layer and giving your layer a score. You can also colour code your Layer. For this exercise, I am giving them a score of one.
+
+The reason for labelling your Layer is that you can have multiple layers, and it can get confusing if you do not assign a name to them.
+
+Notice if you expand the sub-techniques by clicking on the expand annotated sub-techniques icon you will notice now the following. This is important because Groups might be using sub-techniques as means to gain initial access, and this might not be highlighted on the main technique itself. To get a visual representation of possible sub-techniques, it's always a good idea to expand your sub-techniques on Navigator.
+
+It's important to give your techniques a score. Here I have given the techniques a score of one. This scoring system has been explained in my Mitre ATT&CK Navigator scenario series. Techniques which are assigned a score will be coloured according to a gradient defined in the scoring gradient section in the colour setup menu. Technique scores are mapped to a colour, scaled linearly between the "low value" and "high value" inputs.
+
+APT19
+
+APT19 is a Chinese-based threat group that has targeted a variety of industries, including defence, finance, energy, pharmaceutical, telecommunications, high-tech, education, manufacturing, and legal services. They have a number of associated groups names such as Codoso, Codoso Team, Sunshop Group.
+
+They use the penetration testing software Cobalt Strike and Empire to carry out their techniques.
+
+Do the same for APT19 - Select the group in the MITRE Navigator. Add a score and create a name to label the layer. Pay attention to the main technique and the sub-techniques.
+
+The organization might have certain detection methods for the techniques but not sub-techniques, so pay attention to those as well.
+
+TURLA
+
+Turla is a Russian-based threat group that has infected victims in over 45 countries, spanning a range of industries including government, embassies, military, education, research and pharmaceutical companies since 2004. They are known for conducting watering hole and spear phishing campaigns and leveraging in-house tools and malware.
+
+Do the same mapping for the Group Turla. Notice that you can now see multiple layers developing as we start to map the various Threat Groups on Navigator. Don't forget to give Turla a score. By expanding the sub-techniques on the Navigator and colour coding them shows us how relevant these sub-techniques are being used by this group.
+
+AXIOM
+
+Axiom is the final group in our analysis of Threat groups targeting our organization. They are a cyber espionage group suspected to be associated with the Chinese government. It is responsible for the Operation SMN campaign. They are also known as Group 72. The primary attack vectors are watering-hole, spear phishing, and other web-based attacks. Frequently, a remote administration tool (RAT) is used to maintain persistence within a victim’s organization.
+
+Heat map Axiom, the same as the other groups. Remember to score this group and label your layer as well.
+
+HEAT MAPPING MULTIPLE GROUPS
+
+Now it's time to combine all our research and the heat mapping of our individual groups into a final heatmap of all the APT Groups targeting our organization.
+
+Click on an empty layer tab and create layer from other layer. What you will notice is each layer is assigned a letter. A - D showing the total number of layers I have created for this analysis. You will also need to choose the domain to map to, so here we choose enterprise ATT&CK v10. If you do not choose a domain, you will be unable to calculate the various layers.
+
+In order to combine all your layers, you need to add them in a score expression. See the example below. What that is telling Navigator, is to add all the separate layers of APT groups you have just heat mapped into one combined layer. Click on create. Make sure there are no spaces between your letters.
+
+FINAL ANALYSIS
+
+In order to make recommendations about your findings, you need to heat map and do a final analysis on all the APT groups that are relevant to your organization. To make it easier and more meaningful for others to understand your mapping, I have taken the colour palette and clicked on green to red colour pre-set. This then will colour code the highest score in red and the lowest score in green.
+
+Recall, we gave all our APT groups a score of one. If you hover over the techniques with your mouse, the yellow colour will reveal a score of two. This means out of the all the groups, two groups use these techniques.
+
+To show the highest score used by most groups, we can instruct Navigator to show the scores in descending order. Click on the icon to sort by score descending
+
+The table will sort techniques by their score in descending order. Techniques with no score are treated as if their score is 0.
+
+The highest score will now show from the top. The yellow colour coded techniques show techniques used by 2 out of the 4 groups. This can give us a quick visual representation to show the more important priority techniques.
+
+To show sub-techniques, click on the annotated sub - technique icon, and this will show the scores per sub -technique as well. Notice the sub-technique of web Protocols colour coded in red. Meaning, 3 out of the 4 groups use this sub-technique. If you did not expand your sub-techniques, you might have missed this one. If you look at the main technique, which is Application Layer protocol, none of the groups uses this main technique.
+
+This emphasizes how important sub-techniques are to include in your analysis. Convey this message to your defenders. The heat maps will assist in making an overview presentation to your CISO to emphasize which groups are targeting your organization. Secondly, which techniques do most of the groups use and does the organization have the data sources available to log / detect these techniques. The heatmap can also be sent to the SOC, and they can analyse the level or confidence of detection for these techniques.
+
+CONCLUSION
+
+Please now proceed to the Assessment phase of the scenario, where questions will be asked to test your understanding of the process you have just completed.
+
+The assessment will also cover the practical aspect of mapping the Navigator yourself. Please make sure you have used the scoring value of One, in your navigator heatmaps.

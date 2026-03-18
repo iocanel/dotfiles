@@ -1,0 +1,477 @@
+Timestamp: 2025-12-28T12:06:59.830709
+URL: https://app.cyberranges.com/instance/6947cd8fdabdba0ee85a681d/overview
+Title: Scenario Overview | SQL Injection (Error-Based) 101 - CYBER RANGES
+Hash: 101e15c3567555e6235127ffa70ac0145932d6071fe30c138d227e4993c733a5
+================================================================================
+SQL Injection (Error-Based) 101
+0
+VPN
+CLOUD
+Overview
+Score
+Feedback
+Help
+Exit
+MISSION
+RULES
+SQL INJECTION (ERROR-BASED) 101
+INTRODUCTION
+
+Applications often need to store data, whether it’s a social media, ecommerce, or a task management application. In one way or another, they all rely on databases. Each application uses a database tailored to its specific needs. An SQL injection is an attack that targets databases. On of the most famous SQL injection happened in 2008 where the Heartland Payment systems, a payment processing company in the US, was targeted. The attackers were able to steal over 130 million credit and debit card records. This led to hundreds of millions in damages, lawsuits and a complete overhaul of their security systems.
+
+An SQL injection attack is an injection of a SQL query via the input data from the client to the application. A successful SQL injection exploit can read sensitive data from the database, modify database data, execute administration operations on the database, and recover the content of a given file present on the DBMS file system.
+
+Attackers can supply crafted input to break out of the data context in which their input appears and interfere with the structure of the surrounding query to modify its results.
+
+There are several types of SQL Injections, however, in this tutorial, we will carry out an Error-Based SQL Injection attack. Error-based SQL injection is an in-band SQL Injection technique that relies on error messages thrown by the database server to obtain information about the structure of the database. While errors are very useful during the development phase of a web application, they should be disabled in the production environment or logged to a file with restricted access instead. Learning how SQL injection works is important if you are:
+
+A developer, so you can build secure applications.
+
+An ethical hacker or penetration tester, so you can find and report these vulnerabilities when found in clients’ applications.
+
+Lab Access Guidelines
+
+To support completion of this scenario, you are provided with a Kali VM that can be used for receiving reverse connections.
+
+Browser based access is provided via the web service for GUI and ssh service for webshell.
+
+VM
+
+	
+
+IP
+
+	
+
+Username
+
+	
+
+Password
+
+
+
+
+Kali
+
+	
+
+192.168.125.100
+
+	
+
+kali
+
+	
+
+password
+
+
+
+
+Webproxy
+
+	
+
+192.168.125.150
+
+	
+
+admin
+
+	
+
+password
+
+For VPN access steps see the Rules section.
+
+OBJECTIVE
+
+The objective of this lab is to learn how to identify and exploit the SQL Injection vulnerability to extract the database version and user information.
+
+SECTION 1: Low
+UNDERSTANDING YOUR WEB APPLICATION
+
+When identifying web application vulnerabilities, it is important to understand the basic functionality of the web application. In our case, this involves discovering user input points and understanding the way the application responds to user input.
+
+Since this tutorial uses the DVWA vulnerable web app to showcase this vulnerability, we’ll first need to set up the environment by following these steps:
+
+Log in to the application via the login page - http://192.168.125.150/login.php (you can do this via the provided Kali VM or with your own VM)
+
+Select the DVWA Security Level to Low.
+
+Switch to the SQL Injection page.
+
+With the environment set to “Low”, we can now analyze the functionality of the application.
+
+The web page contains a user input that accepts an integer. When you provide input 1, the web page returns the First name and Surname of admin.
+
+This shows how the application behaves with valid input; it queries the data using the user-supplied ID and returns the associated record.
+
+With a baseline understanding of the application's normal behavior, we can now investigate how it handles malicious input. The next step is to determine if we can manipulate the user input to influence the SQL query.
+
+EXPLOITATION & MEETING OUR OBJECTIVE
+
+Now that we understand how the application behaves with valid input, we can dig deeper to understand what is happening behind the scenes. Let’s review the source code of the application and see how the input is being processed. To do that, simply click on the "View Source" button.
+
+<?php
+
+if( isset( $_REQUEST[ 'Submit' ] ) ) {
+    // Get input
+    $id = $_REQUEST[ 'id' ];
+
+    // Check database
+    $query  = "SELECT first_name, last_name FROM users WHERE user_id = '$id';";
+    $result = mysqli_query($GLOBALS["___mysqli_ston"],  $query ) or die( '<pre>' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . '</pre>' );
+
+    // Get results
+    while( $row = mysqli_fetch_assoc( $result ) ) {
+        // Get values
+        $first = $row["first_name"];
+        $last  = $row["last_name"];
+
+        // Feedback for end user
+        echo "<pre>ID: {$id}<br />First name: {$first}<br />Surname: {$last}</pre>";
+    }
+
+    mysqli_close($GLOBALS["___mysqli_ston"]);
+}
+
+?> 
+
+From the source code, we can now identify the SQL query that the application executes when a user submits input:
+
+$query = "SELECT first_name, last_name FROM users WHERE user_id = '$id';";
+
+Let's break down the SQL query:
+
+SELECT first_name, last_name: This specifies that the query should retrieve data from the `first_name` and `last_name` columns.
+
+FROM users: This indicates that the data will be retrieved from the `users` table.
+
+WHERE user_id = '$id': This is a filter that restricts the results to rows where the `user_id` matches the user-provided input (`$id`).
+
+Now that we know what the SQL query does, it is important to note that the application performs the SQL query in an unsafe manner and is vulnerable to SQL Injection. This is apparent because the application concatenates our input with the SQL query instead of using Parameterized Queries (aka Prepared Statements). Parameterized queries allow you to define the SQL query and use placeholders for user-provided variables. After the SQL statement is defined, you can pass each parameter to the query. This lets the database distinguish between the SQL command and data supplied by a user. If an attacker inputs SQL commands, the parameterized query treats them as literal text, and the database does not execute injected commands.
+
+Moving on, let's try to inject the input test'test and see what happens. The application returns the following error:
+
+This error happens because providing a single quote (') character turned the SQL query into this:
+
+SELECT first_name, last_name FROM users WHERE user_id = 'test'test';
+
+	
+
+Key Point: The single quote breaks the string literal defined in the `WHERE` clause, causing a syntax error. This error confirms that the application is likely vulnerable to SQL injection because it reveals that user input is being directly embedded into the SQL query.
+
+As you can see, our input changed the structure of the query, making the syntax invalid. This is why the application returns an error, confirming an Error-Based SQL Injection. At this point, we can be certain that our input is injected into an SQL query in an unsafe manner.
+
+	
+
+Reflection Point: Why does using a single quote (') break the SQL query, and what does the resulting error message tell you about the backend application?
+
+Model Answer: The single quote prematurely terminates the string value for `user_id`, leading to a syntax error because the rest of the input (`test'`) is not valid SQL. The error message confirms that the backend is processing raw SQL and that our input directly influences the query structure, which is the foundation of an SQL injection vulnerability.
+
+Having identified the SQL Injection, let's see what we can do with it. By submitting the input hack' or '1'='1', our query becomes as follows:
+
+SELECT first_name, last_name FROM users WHERE user_id = 'hack' or '1'='1';
+
+This results in more information being returned from the database.
+
+This is because the WHERE clause evaluates to true by us introducing the OR operation, and the application returns all the database entries.
+
+Now that we have confirmed we can exploit the SQL Injection vulnerability, let's enumerate the databases, tables, and columns.
+
+By providing the input hack' order by 5 # we get the following database error:
+
+Unknown column '5' in 'order clause'
+
+The ORDER BY keyword sorts the result-set. The error message indicates that the original SQL query selects less than 5 columns, which we already knew from the source code. Submitting the input hack' order by 2 # does not return an error, which means the query is valid but returns no rows.
+
+Note the # symbol at the end of our input. SQL comments are used to explain or prevent the execution of SQL statements. Single-line comments start with -- or #, and any text that follows is ignored. In MySQL, the -- comment style requires the second dash to be followed by at least one whitespace character (like a space or tab).
+
+	
+
+Easy to Confuse: While both `#` and `-- ` (note the space) can be used for comments in MySQL, they behave differently. `#` works immediately, while `-- ` requires a space or another whitespace character after it. Forgetting the space with `-- ` can cause your injection to fail.
+
+Having determined the number of columns in the query, we can now proceed to extract specific information from the database, starting with the database version.
+
+Enumerate database version
+
+Enumerating the database version allows us to tailor exploitation techniques since syntax may vary between versions. This information can also be used to find vulnerabilities specific to the database. We can use the UNION operation to add our own select statement for information extraction.
+
+	
+
+Watch out for this: When using a `UNION` statement, your `SELECT` statement must have the same number of columns as the original query. Using `ORDER BY` is a common technique to first determine this number. If the column counts don't match, the database will return an error.
+
+NOTE: We have to use the same number of columns as the first select statement. In this case, we ensure we query 2 columns.
+
+To query the database version in MySQL, @@version is used.
+
+hack' union select 1,@@version #
+
+With the database version identified as 5.5.58, our next objective is to enumerate the available databases. This will help us identify which databases are likely to contain sensitive data.
+
+Enumerate database names
+
+In MySQL, the information_schema database stores the structure of the instance, so querying it provides information on databases, tables, and columns. This database is essential during enumeration because it tells us where data lives before we try to extract it, which reduces guessing.
+
+	
+
+Key Point: The `information_schema` is a built-in database in MySQL that contains metadata about all other databases, tables, columns, and user privileges. It is the primary target for enumeration in a MySQL injection attack.
+
+To retrieve the database names, we can supply the following payload:
+
+' union select null,schema_name from information_schema.schemata #
+
+This payload works as follows:
+
+' union select: This initiates a `UNION`-based SQL injection, allowing us to append our own query.
+
+null,schema_name: We select `null` for the first column to match the original query's column count and `schema_name` for the second column to retrieve the database names.
+
+from information_schema.schemata: This specifies the table from which to retrieve the schema (database) names.
+
+#: This comments out the rest of the original query, preventing syntax errors.
+
+We get the database names in the second column: information_schema, dvwa, mysql, performance_schema.
+
+Now that we know the names of all the databases, we can focus on enumerating the tables within our target database, `dvwa`.
+
+Enumerate table names
+
+With the target database `dvwa` identified, the next step is to extract a list of its tables. Knowing the table names helps us focus on areas likely to contain sensitive data, such as user credentials.
+
+Using the input below, we can enumerate its table names.
+
+' union select null,table_name from information_schema.tables where table_schema = 'dvwa' #
+
+This payload queries the `information_schema.tables` system database, which stores metadata about every table in the MySQL instance. It retrieves the `table_name` values where the `table_schema` matches our target database, `dvwa`.
+
+This reveals two tables: `guestbook` and `users`.
+
+The table named users stores user information, as seen from the source code. Our next objective is to discover the column names it contains.
+
+Enumerate column names of the users table
+
+Tables called users usually contain credentials, so let's retrieve the column names of the `users` table. Knowing the column names will allow us to target and extract the exact data we want.
+
+To enumerate, we can query the `information_schema.columns` table, which stores metadata about every column in every table. The payload we will use:
+
+' union select 1,column_name from information_schema.columns where table_name = 'users' #
+
+This payload retrieves the `column_name` of the `table_name` `users`.
+
+When we run this payload, we see several columns: user_id, first_name, last_name, user, password, avatar, last_login, failed_login.
+
+It seems the `user` and `password` columns are what we need for extracting login credentials. With this information, we are ready to retrieve the user credentials.
+
+	
+
+Reflection Point: How would your enumeration strategy change if the `information_schema` database were inaccessible or restricted?
+
+Model Answer: If `information_schema` were restricted, I would have to rely on other techniques. This could include brute-forcing common table and column names (e.g., 'users', 'admin', 'password', 'username'), or using error-based and blind SQL injection techniques to guess names character by character. The process would be much slower and more difficult.
+
+Retrieve User Credentials
+
+We know the table contains two valuable columns: `user` and `password`. We can now supply the following input to retrieve the username and password of the DVWA users.
+
+NOTE: The user passwords are stored in a hash format, not in cleartext.
+
+An attacker would proceed to crack the retrieved hashes to gain unauthorized access, however, password cracking is out of scope for this tutorial.
+
+' union select user,password from users #
+
+Good job! We now have all the usernames and their password hashes. You can also see the admin hash at the beginning of the dumped information. Identifying this hash is critical, as the admin account is usually the highest-value target.
+
+SECTION 2: Medium
+
+In this section, we will use the same page but change the DVWA Security Level to Medium.
+
+Similar to Section 1, we can submit a User ID. However, this time we can only select from a predefined list and cannot directly submit any input we want. This restriction is designed to reduce the risk of direct SQL injection, but as we will see, there are still ways to bypass it.
+
+EXPLOITATION
+
+Since we have access to the source code, we can see what is done differently at this Medium security level. Simply click the View Source button. By reviewing the code, we can identify the developer's security measures and think about ways to work around them.
+
+<?php
+
+if( isset( $_POST[ 'Submit' ] ) ) {
+    // Get input
+    $id = $_POST[ 'id' ];
+
+    $id = mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $id);
+
+    $query  = "SELECT first_name, last_name FROM users WHERE user_id = $id;";
+    $result = mysqli_query($GLOBALS["___mysqli_ston"], $query) or die( '<pre>' . mysqli_error($GLOBALS["___mysqli_ston"]) . '</pre>' );
+
+    // Get results
+    while( $row = mysqli_fetch_assoc( $result ) ) {
+        // Display values
+        $first = $row["first_name"];
+        $last  = $row["last_name"];
+
+        // Feedback for end user
+        echo "<pre>ID: {$id}<br />First name: {$first}<br />Surname: {$last}</pre>";
+    }
+
+}
+
+// This is used later on in the index.php page
+// Setting it here so we can close the database connection in here like in the rest of the source scripts
+$query  = "SELECT COUNT(*) FROM users;";
+$result = mysqli_query($GLOBALS["___mysqli_ston"],  $query ) or die( '<pre>' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . '</pre>' );
+$number_of_rows = mysqli_fetch_row( $result )[0];
+
+mysqli_close($GLOBALS["___mysqli_ston"]);
+?>
+
+The application performs the SQL query the same way as in Section 1, but it tries to escape special characters in our input.
+
+We also don't have direct input for our payloads, as the front end only allows us to select from a predefined list. To overcome this, we can use an intercepting proxy like Burp Suite to modify the request from the browser before it's sent to the server.
+
+	
+
+Watch out for this: The dropdown menu on the webpage is a client-side control. You cannot perform this part of the attack without using a tool like Burp Suite to intercept and modify the POST request after it leaves your browser, replacing the legitimate ID with your payload.
+
+Launch Burp and intercept the request when you submit the User ID, then send it to the Repeater tab. Send the request, and it will look as below. Don't forget to change from "pretty" to "render" in the response tab to see the graphical response.
+
+Now let's modify the request and submit 1 or 1 as shown in the image below.
+
+The payload works. However, if we try submitting hack' or '1'='1' similar to Section 1, the query fails.
+
+Think about it: Before moving on, take a moment. Why do you think the application rejects this input? What is different compared to Section 1?
+
+At this security level, the application applies the mysqli_real_escape_string function to our input. This function escapes special characters like single quotes (‘), making it impossible to inject them directly into the query. This change forces us to alter our approach.
+
+Enumeration is an important step in any SQL injection test. Even with the restrictions, we can still extract valuable information. Let's continue and enumerate the database version with the following payload.
+
+1 union select 1,@@version
+
+We'll use the same enumeration approach as in Section 1. This structured order ensures we don't miss important information and that each step builds on the last.
+
+Database version, to understand what features and potential vulnerabilities to expect.
+
+Database name, to identify the specific database we are working against.
+
+To retrieve the database names, we can use the payload below, ensuring we don't use any quotes.
+
+1 union select null,schema_name from information_schema.schemata
+
+When retrieving table names, we use the query below.
+
+1 union select null,table_name from information_schema.tables where table_schema=0x64767761
+
+	
+
+Key Point: Since the `mysqli_real_escape_string` function blocks quotes, we bypass this filter by providing the string 'dvwa' in its hexadecimal form, `0x64767761`. MySQL automatically interprets hex literals as strings, allowing the `WHERE` clause to work without using quotes.
+
+Since we can't use quotes with WHERE, we can use hex encoding. In this case, the database name dvwa becomes 0x64767761 when converted to hex. You can use the Burp Suite decoder tab or CyberChef for hex encoding.
+
+We managed to retrieve the table names of the dvwa database.
+
+To retrieve the column names of the users table, we convert `users` to hex, which becomes 0x7573657273.
+
+1 union select 1,column_name from information_schema.columns where table_name = 0x7573657273
+
+	
+
+Reflection Point: Besides hex encoding, what other encoding or manipulation techniques could you try to bypass a filter that blocks single quotes?
+
+Model Answer: Other techniques could include using the `CHAR()` function to build a string from ASCII values (e.g., `CHAR(100, 118, 119, 97)` for 'dvwa'). Depending on the database and context, it might also be possible to use numerical comparisons if the target column contains numeric data, thus avoiding strings altogether.
+
+To retrieve the username and password, we can use the payload below.
+
+1 union select user,password from users
+
+Good job! We successfully bypassed security checks at the Medium level and injected SQL code to retrieve usernames and their password hashes. This included extracting the admin hash for potential privilege escalation.
+
+SECTION 3: High
+
+Similar to Section 2, we will modify the security level to High and read the source code to understand what additional security has been added.
+
+01) <?php
+02)    
+03) if( isset( $_SESSION [ 'id' ] ) ) {
+04) 	// Get input
+05) 	$id = $_SESSION[ 'id' ];
+06)    
+07) 	// Check database
+08) 	$query  = "SELECT first_name, last_name FROM users WHERE user_id = '$id' LIMIT 1;";
+09) 	$result = mysqli_query($GLOBALS["___mysqli_ston"], $query ) or die( '<pre>Something went wrong.</pre>' );
+10)    
+11) 	// Get results
+12) 	while( $row = mysqli_fetch_assoc( $result ) ) {
+13)     	// Get values
+14)     	$first = $row["first_name"];
+15)     	$last  = $row["last_name"];
+16)    
+17)     	// Feedback for end user
+18)     	echo "<pre>ID: {$id}<br />First name: {$first}<br />Surname: {$last}</pre>";
+19) 	}
+20)    
+21) 	((is_null($___mysqli_res = mysqli_close($GLOBALS["___mysqli_ston"]))) ? false : $___mysqli_res);    	   
+23) }
+24)    
+25) ?>
+
+At this level, the application applies stricter checks and input sanitization.
+
+We can see that the application checks (line 3) whether the session variable id is set (i.e., whether it's declared and is not NULL).
+
+If it is set, the application assigns the value of the session variable to the $id variable, which is then used in the SQL query:
+
+$query = "SELECT first_name, last_name FROM users WHERE user_id = '$id' LIMIT 1;";
+
+Let's break down the SQL query:
+
+It selects two columns: first_name and last_name from the users table.
+
+The WHERE clause filters rows that meet certain criteria.
+
+The LIMIT statement restricts the number of records returned. In this case, the database will return only one row where the user_id matches the value supplied by the user.
+
+Based on the application's functionality, we can assume the popup window sets the $_SESSION['id'] session variable to the value we supply. That's why the application showed the admin's name when we entered 1 earlier.
+
+The application set the $_SESSION['id'] variable to 1. So, when the initial page (/dvwa/vulnerabilities/sqli/) was refreshed, our query became the one below, and the application returned the admin's details:
+
+$query = "SELECT first_name, last_name FROM users WHERE user_id = '1' LIMIT 1;";
+
+You will notice that the response to that request does not contain the user information. Instead, our input is used in an SQL query when the initial page (/dvwa/vulnerabilities/sqli/) is accessed.
+
+This is a Second-Order SQL Injection. Our input is not executed immediately; this happens when user-supplied data is stored (in session variables, a database, etc.) and used later by another resource in an unsafe SQL query. Second-Order attacks are often easy to miss because an input in functionality A might only be used by functionality B, so be aware.
+
+	
+
+Watch out for this: The key to exploiting a Second-Order SQLi is realizing that the vulnerable query is not triggered by the same action that submits the input. Here, you submit the payload on one page, but you must navigate back to or refresh the main SQL injection page to see the result.
+
+Now, let's try to inject the input hack'hack and see what happens. Remember to check the initial page to see the actual output of the SQL query. The application returns the error: `Something went wrong.`
+
+This error occurs because providing a single quote (') character made the SQL query as follows:
+
+$query = "SELECT first_name, last_name FROM users WHERE user_id = 'hack'hack LIMIT 1;";
+
+As you can see, our input broke the query's structure, and the syntax is not valid. This is why the application returns an error.
+
+Let's try to submit an input that will make the query have valid syntax and return true. By submitting hack' or '1'='1', you will see on the output page that it is executed, and we retrieved the first user because 1=1 is true.
+
+Submit the input hack' or '1'='2'. The application does not return any data or error message because 1=2 is not true.
+
+We can extract information similar to Section 1. The input below will give the database version.
+
+hack' union select 1,@@version #
+
+We are successful in getting the version again. Even though we know the version from the low-security level, we are just trying to understand how the application responds at the high-security level.
+
+To get the password hashes and usernames, the payload below can be used again:
+
+' union select user,password from users #
+
+	
+
+Reflection Point: In a real-world scenario without source code access, how might you discover a Second-Order SQL injection vulnerability? What clues would you look for in the application's behavior?
+
+Model Answer: I would look for instances where my input is stored and then displayed or used on another page. For example, I might change my username or profile information to include a test payload, and then browse other parts of the site that use that information (like a "welcome back" message or a user list) to see if the payload executes. I would also test functionalities like "forgot password" or contact forms where data is stored and processed later.
+
+CONCLUSION
+
+In this lab, you successfully performed error-based SQL injection attacks against a web application with varying levels of security. You learned to bypass basic security filters, enumerate database information, and extract sensitive data. The key takeaways are the importance of proper input validation and the use of parameterized queries to prevent SQL injection vulnerabilities. These skills are fundamental for both developers building secure applications and penetration testers identifying security flaws.

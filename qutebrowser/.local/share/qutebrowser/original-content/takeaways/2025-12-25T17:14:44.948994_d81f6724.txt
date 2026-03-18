@@ -1,0 +1,197 @@
+Timestamp: 2025-12-25T17:14:44.948994
+URL: https://app.cyberranges.com/instance/694d51a2dabdba0ee85a73fd/overview
+Title: Scenario Overview | Drupal Hacking 101 - CYBER RANGES
+Hash: d81f6724a50d020be5a12d5655790e915627eb71f938de3995a6b96d6983bf51
+================================================================================
+Drupal Hacking 101
+76 MIN
+0
+VPN
+CLOUD
+Overview
+Questions
+Servers
+Score
+Help
+Exit
+MISSION
+RULES
+DRUPAL HACKING 101
+INTRODUCTION
+
+Drupal's prevalence across government, education, and enterprise sectors makes it a high-value target for attackers. A single outdated component can lead to a full system compromise, making the ability to identify and exploit its vulnerabilities a critical skill for any security professional. This lab provides a hands-on exercise in compromising a vulnerable Drupal instance. You will perform reconnaissance, enumeration, and exploitation using common tools like curl, nikto, droopescan, and a Ruby exploit script for a known CVE. By the end of this lab, you will have gained a shell on the target system, reinforcing the practical impact of diligent patch management.
+
+LAB ACCESS GUIDELINES
+
+To support the completion of this scenario, you are provided with a Kali VM that can be used for receiving reverse connections.
+
+Browser-based access is provided via the web service for GUI and ssh service for webshell.
+
+VM
+
+	
+
+IP
+
+	
+
+Username
+
+	
+
+Password
+
+
+
+
+Kali
+
+	
+
+192.168.125.200
+
+	
+
+rangeadmin
+
+	
+
+password_CR1
+
+For VPN access steps see the Rules section.
+
+OBJECTIVE
+
+You'll use a Kali VM to access a vulnerable web application and see how it responds to our attack. By the end, you will have learned the basics of Drupal hacking from gathering information, identifying users, exploiting a CVE, and gaining a root shell. This gives you a practical look at how this CMS site can be attacked in a controlled setting.
+
+Drupal Basics
+
+To effectively identify vulnerabilities, it is first necessary to understand how Drupal is structured. Familiarity with its core components, content organization (nodes), and user types provides the foundational knowledge needed to perform targeted reconnaissance and enumeration.
+
+In Drupal, content is organized and indexed through nodes, which serve as containers for various types of content such as blog posts, polls, articles, and more. Mostly, the page URIs follow a pattern like /node/<nodeid>.
+
+Example: curl site.com/node/1
+
+Drupal's architecture is built on four primary components:
+
+Kernel: The central component of the Drupal framework, managing the core request-response lifecycle.
+
+Modules: These extend Drupal's functionality. Examples include modules for user authentication, content management, or e-commerce. Each module can define its own configuration, routes, and services.
+
+Themes: Control the visual appearance of a Drupal site, including layout, styling, and design of pages and other elements.
+
+Entities: Represent content and configuration data. Common entities include nodes (the primary content containers), users, comments, and taxonomy terms.
+
+Our target is a vulnerable Drupal web application, reachable on the following IP:
+
+http://192.168.125.100:8080
+
+To check for versions, visit the paths below:
+
+/CHANGELOG.txt
+
+/core/CHANGELOG.txt
+
+/README.txt
+
+curl -s http://192.168.125.100:8080/core/CHANGELOG.txt | grep -m2 ""
+
+Seems like Drupal is running version 8. However, this is not very specific, and we will need to get more information from the installed modules.
+
+	
+
+Easy to Confuse: General vs. Specific Version
+
+Files like CHANGELOG.txt often only provide the major version (e.g., Drupal 8). This is useful for initial reconnaissance but is rarely specific enough to identify an exact vulnerability. Exploits are almost always tied to a precise version (e.g., 8.5.0), which requires more advanced scanning to discover.
+
+Use these directories:
+
+/config/sync/core.extension.yml
+
+/core/core.services.yml
+
+If we don't get anything, we need to use automated tools such as Nikto to find more information.
+
+nikto -h http://192.168.125.100:8080
+
+Nikto confirmed Drupal version 8 and the ability to access the web.config file. However, accessing it doesn't reveal anything useful because this file is only relevant for Drupal on IIS servers.
+
+	
+
+Easy to Confuse: web.config on Linux vs. IIS
+
+Finding a web.config file is a strong indicator of a Microsoft IIS web server. When found on a Linux/Apache server, as in this lab, it is usually a leftover file from development or a template and contains no useful configuration data. Chasing it is a common red herring.
+
+Nikto confirmed Drupal version 8 but did not provide the specific minor version needed to identify an exploit. While version identification continues, parallel reconnaissance can be performed to gather other useful information, such as valid user accounts. We will now attempt to enumerate users.
+
+To enumerate users, we need to understand that by default, Drupal has three user types:
+
+Administrator: This user has full control over the site
+
+Authenticated User: These users can log in to the website and undertake tasks like adding and modifying articles but lack administrative privileges.
+
+Anonymous: All visitors to the website are categorized as anonymous users and don't have any permission except to view content.
+
+Let us now access the /user/<number> directory to get the number of existing users.
+
+http://192.168.125.100:8080/user/1
+
+The Access denied error means that the user exists.
+
+http://192.168.125.100:8080/user/2
+
+The Page not found error means there's not more than 1 user on the site.
+
+	
+
+Key Point: Enumeration via Server Response
+
+This technique works because the server responds differently to requests for existing objects versus non-existing objects. An "Access denied" error confirms the user object exists but you can't view it, while a "Page not found" error confirms the user object does not exist at all. This is a form of information disclosure.
+
+	
+
+Reflection Point: Why is distinguishing between 'Access Denied' and 'Page Not Found' crucial for user enumeration in Drupal?
+
+Answer: This distinction is the core of the vulnerability. "Page Not Found" indicates that the user ID does not exist in the database, allowing you to stop searching. "Access Denied" confirms the user ID is valid, even though you cannot see their profile. This leaks information about which user IDs are active on the system.
+
+Since we've not been able to find the exact Drupal version, we will use droopescan. This is an automated tool that is already installed on Kali.
+
+droopescan scan drupal -u http://192.168.125.100:8080
+
+Droopescan managed to detect and confirm the accurate version as 8.5.0.
+
+A quick research about the version shows that it's vulnerable to the popular Drupalgeddon2.
+
+	
+
+Key Point: From Version to Vulnerability
+
+Discovering the exact version (8.5.0) is the pivotal moment in this attack. This specific version is known to be vulnerable to Drupalgeddon2 (CVE-2018-7600), a critical remote code execution flaw. This demonstrates the direct, linear path from accurate reconnaissance to successful exploitation.
+
+Let's try to exploit it against our target.
+
+I have put the exploit code on the /home/rangeadmin/Documents directory named CVE-2018-7600.rb.
+
+To run the provided code, type the following exploit:
+
+ruby CVE-2018-7600.rb http://192.168.125.100:8080
+
+	
+
+Watch out for this: Target URL Format
+
+Exploit scripts almost always require the full target URL, including the protocol (http:// or https://) and any non-standard port (:8080). Forgetting to include these is a common error that will cause the exploit to fail.
+
+We exploited it successfully.
+
+	
+
+Reflection Point: What was the critical piece of information that enabled the successful use of the CVE-2018-7600 exploit, and why was the initial reconnaissance not enough?
+
+Answer: The critical piece of information was the exact version, 8.5.0, found by droopescan. Initial reconnaissance only revealed "version 8," which is too broad. Most exploits target vulnerabilities in specific minor versions, so knowing the exact version was essential to select the correct and effective exploit (Drupalgeddon2).
+
+CONCLUSION
+
+In this lab, you successfully executed a common attack chain against a Drupal application. You began with reconnaissance, using file analysis (CHANGELOG.txt) and scanning tools (nikto, droopescan) to precisely identify the target's version as 8.5.0. This critical information allowed you to select the correct exploit for Drupalgeddon2 (CVE-2018-7600), leading to remote code execution and a command shell on the server. The key takeaway is the direct link between precise version identification and successful exploitation. This exercise underscores the critical importance of timely patch management, as a failure to update can expose the entire system to a complete compromise.
+
+Go ahead and answer the questions provided.

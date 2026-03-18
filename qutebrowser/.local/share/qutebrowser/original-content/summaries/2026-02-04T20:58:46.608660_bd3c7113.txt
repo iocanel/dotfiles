@@ -1,0 +1,375 @@
+Timestamp: 2026-02-04T20:58:46.608660
+URL: https://gitserver.silensec.com/cyberrange/cyberrange-auth/-/merge_requests/123/diffs
+Title: feat(CR-10695) - Create AuthProvider beans based on spring or DB properties values (!123) · Merge requests · cyberrange / cyberrange-auth · GitLab
+Hash: bd3c7113e44c2afff937d16b4a4ce092530b52f154be0b8251ffd5a995d2bdc0
+================================================================================
+Skip to main content
+Primary navigation
+Homepage
+Create new...
+Ioannis Canellos user’s menu
+ 12
+ 13
+ Search or go to…
+Project
+C
+cyberrange-auth
+Pinned
+Issues
+1
+Merge requests
+1
+CI/CD settings
+Manage
+Plan
+Code
+Merge requests
+1
+Repository
+Branches
+Commits
+Tags
+Repository graph
+Compare revisions
+Snippets
+Build
+Secure
+Deploy
+Operate
+Monitor
+Analyze
+Settings
+Help
+cyberrange
+cyberrange-auth
+Merge requests
+!123
+feat(CR-10695) - Create AuthProvider beans based on spring or DB properties values
+Edit
+Code
+Open
+feat(CR-10695) - Create AuthProvider beans based on spring or DB properties values
+feat-CR-10695
+into
+development
+Overview 
+3
+Commits 
+3
+Pipelines 
+3
+Changes 
+11
+1 unresolved thread
+Add a to-do item
+Open
+Adam Sabel
+requested to merge
+feat-CR-10695
+into
+development
+1 day ago
+Overview 3
+Commits 
+3
+Pipelines 
+3
+Changes 11
+1 unresolved thread
+Add a to-do item
+Compare
+development
+and
+latest version
+ 11 files
++
+117
+−
+44
+Inline
+Files
+11
+Search (e.g. *.vue) (Ctrl+P)
+ 
+auth/src/main/java/com/
+‎silensec/cyberrange/auth‎
+ 
+con
+‎fig‎
+ 
+actived
+‎irectory‎
+ 
+ActiveDirecto
+‎ryConfig.java‎
++31 -16
+ 
+ActiveDirectoryConfig
+‎urationProperties.java‎
++2 -2
+ 
+au
+‎th‎
+ 
+actived
+‎irectory‎
+ 
+CustomActiveDirectoryAut
+‎henticationProvider.java‎
++24 -5
+ 
+a
+‎pi‎
+ 
+AuthenticationPr
+‎oviderToggle.java‎
++7 -0
+ 
+rad
+‎ius‎
+ 
+CustomRadiusAuthent
+‎icationProvider.java‎
++19 -10
+ 
+rad
+‎ius‎
+ 
+RadiusCo
+‎nfig.java‎
++17 -2
+ 
+RadiusConfigurati
+‎onProperties.java‎
++2 -2
+ 
+AuthenticationManag
+‎erConfiguration.java‎
++2 -5
+ 
+exception/ac
+‎tivedirectory‎
+ 
+ActiveDirectoryDis
+‎abledException.java‎
++12 -0
+ 
+control
+‎ler/src‎
+ 
+main/re
+‎sources‎
+ 
+test-activedirector
+‎y-radius.properties‎
++1 -1
+ 
+test/java/com/silensec/cy
+‎berrange/controller/api/v1‎
+ 
+ActiveDirectoryW
+‎ithRadiusIT.java‎
++0 -1
+ auth/src/main/java/com/silensec/cyberrange/auth/config/activedirectory/ActiveDirectoryConfig.java 
++
+31
+−
+16
+Viewed
+Options
+@@ -2,11 +2,12 @@ package com.silensec.cyberrange.auth.config.activedirectory;
+
+
+import com.silensec.cyberrange.auth.api.IUserService;
+
+import com.silensec.cyberrange.auth.config.auth.activedirectory.CustomActiveDirectoryAuthenticationProvider;
+
+import com.silensec.cyberrange.auth.config.auth.api.AuthenticationProviderToggle;
+
+import com.silensec.cyberrange.auth.mapper.CustomActiveDirectoryUserDetailsMapper;
+
+import com.silensec.cyberrange.auth.repository.domain.User;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+
+import org.springframework.context.annotation.Bean;
+
+import org.springframework.context.annotation.Configuration;
+
+import org.springframework.context.annotation.Profile;
+
+import org.springframework.ldap.core.LdapTemplate;
+
+import org.springframework.ldap.core.support.LdapContextSource;
+
+import org.springframework.security.authentication.AuthenticationManager;
+
+@@ -18,7 +19,7 @@ import java.util.List;
+import java.util.Map;
+
+
+
+@Configuration
+
+@ConditionalOnProperty(value = "cyberranges.auth.activedirectory.enabled", havingValue = "true")
+
+@Profile("activedirectory")
+
+public class ActiveDirectoryConfig {
+
+    private final ActiveDirectoryConfigurationProperties activeDirectoryConfigurationProperties;
+
+    private final CustomActiveDirectoryUserDetailsMapper customActiveDirectoryUserDetailsMapper;
+
+@@ -34,24 +35,38 @@ public class ActiveDirectoryConfig {
+
+
+    @Bean
+
+    CustomActiveDirectoryAuthenticationProvider authenticationProvider() {
+
+        CustomActiveDirectoryAuthenticationProvider activeDirectoryLdapAuthenticationProvider =
+
+                new CustomActiveDirectoryAuthenticationProvider(
+
+                        activeDirectoryConfigurationProperties.getDomain(),
+
+                        activeDirectoryConfigurationProperties.getUrl(),
+
+                        activeDirectoryConfigurationProperties.getBase(),
+
+                        userService);
+
+        // The following search filter will check if there is an AD user with the attribute 'sAMAccountName'
+
+        // set to the username provided during the authentication attempt
+
+        activeDirectoryLdapAuthenticationProvider.setSearchFilter("(&(objectClass=user)(sAMAccountName={1}))");
+
+        activeDirectoryLdapAuthenticationProvider.setConvertSubErrorCodesToExceptions(true);
+
+        activeDirectoryLdapAuthenticationProvider.setUseAuthenticationRequestCredentials(true);
+
+        activeDirectoryLdapAuthenticationProvider.setUserDetailsContextMapper(customActiveDirectoryUserDetailsMapper);
+
+        return activeDirectoryLdapAuthenticationProvider;
+
+
+
+        if ("true".equals(activeDirectoryConfigurationProperties.getEnabled())) {
+
+
+
+            CustomActiveDirectoryAuthenticationProvider activeDirectoryLdapAuthenticationProvider =
+
+                    new CustomActiveDirectoryAuthenticationProvider(
+
+                            activeDirectoryConfigurationProperties.getDomain(),
+
+                            activeDirectoryConfigurationProperties.getUrl(),
+
+                            activeDirectoryConfigurationProperties.getBase(),
+
+                            userService);
+
+            // The following search filter will check if there is an AD user with the attribute 'sAMAccountName'
+
+            // set to the username provided during the authentication attempt
+
+            activeDirectoryLdapAuthenticationProvider.setSearchFilter("(&(objectClass=user)(sAMAccountName={1}))");
+
+            activeDirectoryLdapAuthenticationProvider.setConvertSubErrorCodesToExceptions(true);
+
+            activeDirectoryLdapAuthenticationProvider.setUseAuthenticationRequestCredentials(true);
+
+            activeDirectoryLdapAuthenticationProvider.setUserDetailsContextMapper(
+
+                    customActiveDirectoryUserDetailsMapper);
+
+            return activeDirectoryLdapAuthenticationProvider;
+
+        } else {
+
+            return new CustomActiveDirectoryAuthenticationProvider();
+
+        }
+
+
+
+    }
+
+
+
+    @Bean(name = "ldapAuthenticationManager")
+
+    public AuthenticationManager ldapAuthenticationManager(List<AuthenticationProvider> providers) {
+
+        return new ProviderManager(providers);
+
+        return new ProviderManager(providers.stream().filter(provider -> {
+
+            if (provider instanceof AuthenticationProviderToggle) {
+
+                return ((AuthenticationProviderToggle) provider).isEnabled();
+
+            } else {
+
+                return true;
+
+            }
+
+        }).toList());
+
+    }
+
+
+
+    @Bean
+
+ auth/src/main/java/com/silensec/cyberrange/auth/config/activedirectory/ActiveDirectoryConfigurationProperties.java 
++
+2
+−
+2
+Viewed
+Options
+@@ -4,16 +4,16 @@ import com.silensec.cyberrange.property.impl.PropertyRetriever;
+import jakarta.annotation.PostConstruct;
+
+import lombok.Data;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+
+import org.springframework.context.annotation.Profile;
+
+import org.springframework.stereotype.Component;
+
+
+
+@Component
+
+@ConditionalOnProperty(value = "cyberranges.auth.activedirectory.enabled", havingValue = "true")
+
+@EnableConfigurationProperties
+
+@ConfigurationProperties(prefix = "cyberranges.auth.activedirectory")
+
+@Data
+
+@Profile("activedirectory")
+
+public class ActiveDirectoryConfigurationProperties {
+
+    private String enabled;
+
+    private String domain;
+
+
+
+

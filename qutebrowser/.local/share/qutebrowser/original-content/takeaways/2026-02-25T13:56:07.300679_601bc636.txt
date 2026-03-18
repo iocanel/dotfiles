@@ -1,0 +1,379 @@
+Timestamp: 2026-02-25T13:56:07.300679
+URL: https://www.linkedin.com/learning/learning-canvas-2022/view-course-from-students-perspective?autoSkip=true&resume=false
+Title: View course from students' perspective | LinkedIn Learning
+Hash: 601bc636ddb66f8246a23e15d94b41290dd640fded6a25a84913bdbfd01f9375
+================================================================================
+0 notifications total
+Skip to section
+Accessibility feedback
+Contact LinkedIn’s Disability Answer Desk with accessibility feedback or issues
+Close jump menu
+Expand site navigation
+Search
+Me
+EN
+Change language. Current language is English.
+Home
+My Career Journey
+My Library
+Content
+AI Coaching
+AI Role Play
+Hands-On Tech
+Certifications
+Help
+LinkedIn Learning
+Contents
+Introduction
+1. Getting Started with Canvas
+2. Creating a Course
+Create a new Canvas course
+(Viewed)
+2m 2s video
+Save
+Set your course homepage
+(Viewed)
+1m 24s video
+Save
+Customize your course settings
+(Viewed)
+4m 11s video
+Save
+Add your grading scheme
+(Viewed)
+1m 30s video
+Save
+Add a course syllabus
+(Viewed)
+2m 57s video
+Save
+View course from students' perspective
+(Viewed)
+1m 23s video
+Save
+Chapter Quiz
+(In progress)
+6 questions
+3. Structure Your Course
+Create modules for your class
+(Viewed)
+3m 54s video
+Save
+Manage your online file library
+(Viewed)
+2m 26s video
+Save
+Chapter Quiz
+(In progress)
+2 questions
+4. Manage Students and Create Groups
+Add students to a course
+(Viewed)
+3m 54s video
+Save
+Create groups within classes
+(Viewed)
+4m video
+Save
+Chapter Quiz
+(In progress)
+2 questions
+5. Add Assignments and Quizzes
+The Rich Content Editor in Canvas
+(Viewed)
+4m 30s video
+Save
+Create pages for learners to access
+(Viewed)
+4m 26s video
+Save
+Create assignment groups
+(Viewed)
+2m 22s video
+Save
+Create assignments
+(Viewed)
+5m 47s video
+Save
+Create discussions
+(Viewed)
+4m 38s video
+Save
+Create a quiz
+(Viewed)
+4m 31s video
+Save
+Add questions to a quiz
+(Viewed)
+4m 57s video
+Save
+Create question banks
+(Viewed)
+4m 31s video
+Save
+Chapter Quiz
+(In progress)
+5 questions
+6. Explore the Grading Tools
+Overview of the Canvas gradebook
+(Viewed)
+5m 45s video
+Save
+Gradebook views in Canvas
+(Viewed)
+3m 45s video
+Save
+Individual assignments in the gradebook
+(Viewed)
+2m 17s video
+Save
+Late policy and grade posting policy
+(Viewed)
+1m 37s video
+Save
+Create assignment rubrics
+(Viewed)
+5m 13s video
+Save
+Create course outcomes
+(Viewed)
+3m 57s video
+Save
+Quickly grade with Speedgrader
+(Viewed)
+5m 10s video
+Save
+Chapter Quiz
+(In progress)
+5 questions
+7. Course Management Tools
+Communicate with conversations
+(Viewed)
+2m video
+Save
+Update your class with announcements
+(Viewed)
+2m 25s video
+Save
+Work with the course calendar
+(Viewed)
+2m 21s video
+Save
+Chapter Quiz
+(In progress)
+3 questions
+Conclusion
+Learning Canvas
+View course from students' perspective
+Leave a review
+390
+390 likes
+Save
+11,969
+11,969 bookmarks
+Add to my content
+Share Learning Canvas
+Loaded: 50.96%
+Pause
+Skip back 10 seconds
+Skip ahead 10 seconds
+Previous
+Next
+Current time 
+0:11/
+Duration 
+1:23
+1.5x
+Playback speed
+Open Captions Menu
+Settings
+Mute
+Turn fullscreen on
+in the upper right hand corner,
+Overview
+Notebook
+Transcript
+Instructor
+Oliver Schinkten
+Speaker, Consultant, Writer, Video Trainer
+Follow on LinkedIn
+Related to this course
+Certificates 
+Show all
+Course details
+1h 54m
+Beginner
+Released: 3/14/2022
+4.8
+(622)
+Learning management systems have revolutionized the way educators and corporate trainers are able to provide instruction. With an online platform, instructors and students can communicate, collaborate, share and access resources, submit assignments, and give feedback at any time. With online learning more important than ever, learning how to take advantage of all a learning management system has to offer is now a vital part of providing instruction. In this course, Oliver Schinkten explores how to set up and use Canvas, a leading LMS used by institutions and instructors around the globe. Oliver shows how to set up a class, work with students, teach online, and discusses best practices for leveraging Canvas for student success. He also covers grading, adding assignments, student communication, and adding multimedia. If you’re looking to enhance the online component of your classes, this course is for you.
+Skills covered
+Instructure Canvas
+Learners
+390 members like this content
+18,116 people started learning
+Learner reviews
+4.8 out of 5
+622 ratings
+Ratings calculation
+5 star
+84%
+4 star
+13%
+3 star
+3%
+2 star
+<1%
+1 star
+<1%
+Filter by:
+All stars
+Sort by: Most recent
+Atul Rajput 3rd
+Digital creator
+
+Reviewer rating 5 out of 5
+
+December 28, 2025
+
+Must do course
+
+Helpful
+Report
+Clementina Odiowaya 3rd
+Data Analytics Facilitator
+
+Reviewer rating 3 out of 5
+
+December 6, 2025
+
+It's good for beginners, but the engagement is very low, and there is no exercise file to work with. The content is not rich, and it's also an old video, as Canvas has undergone numerous updates.
+
+Helpful
+Report
+Lillian Steele
+Certified Teacher
+
+Reviewer rating 5 out of 5
+
+November 15, 2025
+
+Yes.
+
+Helpful
+Report
+Show more reviews
+Related courses
+Learning Brightspace by D2L
+Course
+2,732 learners
+Save
+1h 45m
+Learning Moodle
+Course
+7,801 learners
+Save
+1h 39m
+Learning Artboard Studio
+Course
+1,861 learners
+Save
+2h 40m
+Adobe Captivate Essential Training
+Course
+5,771 learners
+Save
+2h 39m
+Automated ML.NET Training, Metrics, and Accuracy
+Course
+1,838 learners
+Save
+35m
+AI Coach Info
+Close AI Coach
+Video
+Create a new Canvas course
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+If your course wasn't created for you, you need to create one by navigating to the dashboard and selecting 'start a new course'.
+You can name your course and hit 'create' to set it up.
+Once created, you can import existing content, choose a homepage, and start organizing your course content.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Set your course homepage
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+You can set the course homepage to different options such as Course Activity Stream, Course Modules, Assignments List, Syllabus, or a custom page.
+To change the homepage, select 'Choose Home page' on the right-hand side and pick your preferred option.
+The course homepage is the most visited page, so it's important to decide what you want it to look like early on.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Customize your course settings
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+You can customize various course settings in Canvas, such as adding a course image, adjusting the time zone, and setting the course term.
+The course navigation bar can be customized by enabling or disabling items and rearranging their order.
+Canvas offers a variety of apps that can be integrated into your course for additional functionality.
+Feature options like outcome extra credit and moderated grading can be enabled or disabled based on your needs.
+
+These settings help tailor the course to better fit your specific requirements and enhance the learning experience for students.
+
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Add your grading scheme
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+Navigate to the Settings tab in the Course Navigation bar.
+Enable the Grading Scheme by clicking on it and then selecting Set Grading Scheme.
+Customize the grading scheme by clicking the pencil icon and adjusting the grade ranges as needed.
+Save the changes to apply the new grading scheme.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Add a course syllabus
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+Navigate to the Syllabus tab in the Course Navigation bar to access the Syllabus page.
+Use the rich content editor to add and format your syllabus content, ensuring it is accessible and well-organized.
+The Course Summary section at the bottom will automatically populate with assignments and assessments as they are added to the course, keeping students informed and up-to-date.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+View course from students' perspective
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+Use the Student View feature in Canvas to see the course from a student's perspective.
+Access Student View from the upper right-hand corner of the course page.
+Regularly check the course in Student View to ensure it appears as intended for students, especially after adding new content like a syllabus or assignments.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Send message
+
+This is powered by AI and may make mistakes. Learn more about how your conversations are saved.

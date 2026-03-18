@@ -1,0 +1,112 @@
+Timestamp: 2026-01-28T10:56:26.208775
+URL: https://www.linkedin.com/learning/foundations-of-learning-management-systems-lms-2021/quiz/urn:li:learningApiAssessment:37932849?autoSkip=true&resume=false
+Title: Chapter Quiz | LinkedIn Learning
+Hash: 5cd0fa53edf48f0495fe17e12be26bf5edf3f9addda855f131b4c733c94bd3a9
+================================================================================
+0 notifications total
+Skip to section
+Accessibility feedback
+Contact LinkedIn’s Disability Answer Desk with accessibility feedback or issues
+Close jump menu
+Expand site navigation
+Search
+Me
+EN
+Change language. Current language is English.
+Home
+My Career Journey
+My Library
+Content
+AI Coaching
+AI Role Play
+Hands-On Tech
+Certifications
+Help
+LinkedIn Learning
+Contents
+Introduction
+1. What Is a Learning Management System?
+What is an LMS?
+(Viewed)
+1m 26s video
+Save
+Benefits of an LMS
+(Viewed)
+2m 31s video
+Save
+Corporate vs. academic uses of an LMS
+(Viewed)
+2m 26s video
+Save
+Standard LMS features
+(Viewed)
+2m 32s video
+Save
+SCORM and Tin Can API
+(Viewed)
+2m 2s video
+Save
+Chapter Quiz
+5 questions
+2. How to Select an LMS
+Choosing an LMS
+2m 22s video
+Save
+Understand who to involve
+3m 19s video
+Save
+Accessibility
+4m 8s video
+Save
+Before you make your decision
+1m 52s video
+Save
+Chapter Quiz
+4 questions
+3. Utilizing an LMS
+Add and manage participants
+3m 34s video
+Save
+Course and content structure and organization
+1m 27s video
+Save
+Create and curate online learning content
+2m 14s video
+Save
+Assignments, assessments, and accountability
+4m 16s video
+Save
+Integration of apps and plug-ins
+1m 43s video
+Save
+Communication
+1m 54s video
+Save
+Chapter Quiz
+5 questions
+Conclusion
+Next steps
+52s video
+Save
+Foundations of Learning Management Systems (LMS)
+Chapter Quiz
+1,702
+1,702 likes
+Save
+392,404
+392,404 bookmarks
+Add to my content
+Share Foundations of Learning Management Systems (LMS)
+Up next
+Choosing an LMS
+2m 22s
+Dismiss
+Question 1 of 5
+
+You are looking for an LMS that can track compliances and certifications, create short snippets of learning content, and use various apps as well as single sign-on. Which type of LMS will you focus on?
+
+academic LMS
+corporate LMS
+commercial LMS
+K-12 LMS
+Submit

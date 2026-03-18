@@ -1,0 +1,307 @@
+Timestamp: 2026-02-25T14:05:31.738194
+URL: https://www.linkedin.com/learning/learning-canvas-2022/quickly-grade-with-speedgrader?autoSkip=true&resume=false
+Title: Quickly grade with Speedgrader | LinkedIn Learning
+Hash: a437ac4bae78b6892216489775c647e50aaa814b3ade8f6b95d52a5fe4731ed3
+================================================================================
+0 notifications total
+Skip to section
+Accessibility feedback
+Contact LinkedIn’s Disability Answer Desk with accessibility feedback or issues
+Close jump menu
+Expand site navigation
+Search
+Me
+EN
+Change language. Current language is English.
+Home
+My Career Journey
+My Library
+Content
+AI Coaching
+AI Role Play
+Hands-On Tech
+Certifications
+Help
+LinkedIn Learning
+Contents
+Introduction
+1. Getting Started with Canvas
+2. Creating a Course
+3. Structure Your Course
+4. Manage Students and Create Groups
+5. Add Assignments and Quizzes
+6. Explore the Grading Tools
+Overview of the Canvas gradebook
+(Viewed)
+5m 45s video
+Save
+Gradebook views in Canvas
+(Viewed)
+3m 45s video
+Save
+Individual assignments in the gradebook
+(Viewed)
+2m 17s video
+Save
+Late policy and grade posting policy
+(Viewed)
+1m 37s video
+Save
+Create assignment rubrics
+(Viewed)
+5m 13s video
+Save
+Create course outcomes
+(Viewed)
+3m 57s video
+Save
+Quickly grade with Speedgrader
+(Viewed)
+5m 10s video
+Save
+Chapter Quiz
+(In progress)
+5 questions
+7. Course Management Tools
+Communicate with conversations
+(Viewed)
+2m video
+Save
+Update your class with announcements
+(Viewed)
+2m 25s video
+Save
+Work with the course calendar
+(Viewed)
+2m 21s video
+Save
+Chapter Quiz
+(In progress)
+3 questions
+Conclusion
+Learning Canvas
+Quickly grade with Speedgrader
+Leave a review
+390
+390 likes
+Save
+11,969
+11,969 bookmarks
+Add to my content
+Share Learning Canvas
+Loaded: 11.60%
+Pause
+Skip back 10 seconds
+Skip ahead 10 seconds
+Previous
+Next
+Current time 
+0:07/
+Duration 
+5:10
+1.5x
+Playback speed
+Open Captions Menu
+Settings
+Mute
+Turn fullscreen on
+I remember when I started creating online content,
+Overview
+Notebook
+Transcript
+Instructor
+Oliver Schinkten
+Speaker, Consultant, Writer, Video Trainer
+Follow on LinkedIn
+Related to this course
+Certificates 
+Show all
+Course details
+1h 54m
+Beginner
+Released: 3/14/2022
+4.8
+(622)
+Learning management systems have revolutionized the way educators and corporate trainers are able to provide instruction. With an online platform, instructors and students can communicate, collaborate, share and access resources, submit assignments, and give feedback at any time. With online learning more important than ever, learning how to take advantage of all a learning management system has to offer is now a vital part of providing instruction. In this course, Oliver Schinkten explores how to set up and use Canvas, a leading LMS used by institutions and instructors around the globe. Oliver shows how to set up a class, work with students, teach online, and discusses best practices for leveraging Canvas for student success. He also covers grading, adding assignments, student communication, and adding multimedia. If you’re looking to enhance the online component of your classes, this course is for you.
+Skills covered
+Instructure Canvas
+Learners
+390 members like this content
+18,116 people started learning
+Learner reviews
+4.8 out of 5
+622 ratings
+Ratings calculation
+5 star
+84%
+4 star
+13%
+3 star
+3%
+2 star
+<1%
+1 star
+<1%
+Filter by:
+All stars
+Sort by: Most recent
+Atul Rajput 3rd
+Digital creator
+
+Reviewer rating 5 out of 5
+
+December 28, 2025
+
+Must do course
+
+Helpful
+Report
+Clementina Odiowaya 3rd
+Data Analytics Facilitator
+
+Reviewer rating 3 out of 5
+
+December 6, 2025
+
+It's good for beginners, but the engagement is very low, and there is no exercise file to work with. The content is not rich, and it's also an old video, as Canvas has undergone numerous updates.
+
+Helpful
+Report
+Lillian Steele
+Certified Teacher
+
+Reviewer rating 5 out of 5
+
+November 15, 2025
+
+Yes.
+
+Helpful
+Report
+Show more reviews
+Related courses
+Learning Brightspace by D2L
+Course
+2,732 learners
+Save
+1h 45m
+Learning Moodle
+Course
+7,801 learners
+Save
+1h 39m
+Learning Artboard Studio
+Course
+1,861 learners
+Save
+2h 40m
+Adobe Captivate Essential Training
+Course
+5,771 learners
+Save
+2h 39m
+Automated ML.NET Training, Metrics, and Accuracy
+Course
+1,838 learners
+Save
+35m
+AI Coach Info
+Close AI Coach
+Video
+Overview of the Canvas gradebook
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on the Canvas grade book:
+
+
+The Canvas grade book automatically populates with students and assignments, saving time for instructors.
+It offers various features like filtering, color-coding, and viewing individual student performance to help track and manage grades effectively.
+Instructors can import and export grades, add notes, and use analytics to gain insights into student participation and performance.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Gradebook views in Canvas
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on the different views in the Canvas Gradebook:
+
+
+Gradebook Views: You can switch between the Gradebook view, individual view, and Gradebook history to manage and review grades.
+Filtering and Searching: The Gradebook history allows you to filter and search for specific grades by student, grader, or artifact.
+Individual View: This view lets you isolate and review individual student performance or specific assignments, and send messages to students based on their performance criteria.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Individual assignments in the gradebook
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on managing individual assignments in the Canvas grade book:
+
+
+Sorting and Grading: You can sort assignments by grades, missing, or late submissions and use SpeedGrader for efficient grading.
+Messaging Students: Quickly send messages to students based on criteria like scores or submission status.
+Grade Visibility: Hide or post grades to control when students can see their grades.
+Additional Options: Set default grades, curve grades, and choose to display grades as points or percentages.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Late policy and grade posting policy
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on adjusting the late policy and grade posting policy in Canvas:
+
+
+Late Policy: You can automatically apply a grade for missing submissions and set deductions for late submissions.
+Grade Posting Policy: Choose whether grades are automatically posted or manually posted by the instructor.
+Advanced Options: Decide if you want to allow final grade overrides.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Create assignment rubrics
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on creating rubrics in Canvas:
+
+
+Creating Rubrics: You can create a new rubric by navigating to the Rubrics tab and clicking on 'Add Rubric'.
+Customizing Criteria: Add and customize criteria and ratings for the rubric, including titles and descriptions.
+Attaching Rubrics: Once created, rubrics can be attached to assignments for grading.
+Efficiency: Although creating rubrics takes time upfront, they can be reused throughout the course, making grading more efficient.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Create course outcomes
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on creating course outcomes in Canvas:
+
+
+Creating Course Outcomes: You can create course outcomes and attach them to assignments, assessments, and discussions.
+Organizing Outcomes: Use outcome groups to keep your outcomes organized.
+Importing Outcomes: Import outcomes if you have them in CSV format or find pre-loaded outcomes from your organization.
+Attaching Outcomes to Assignments: Easily attach created outcomes to assignments to assess student performance against specific criteria.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Quickly grade with Speedgrader
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on utilizing SpeedGrader in Canvas:
+
+
+Efficiency: SpeedGrader allows you to grade assignments, provide feedback, and manage grades directly within Canvas, saving time and effort.
+Centralized Grading: You can view all student submissions in one place and enter grades that automatically populate the Gradebook.
+Feedback Options: Leave comments, add attachments, and even provide media comments for more personalized feedback.
+Rubrics and Quizzes: Use rubrics for grading assignments and manually grade essay questions in quizzes to ensure comprehensive assessment.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Send message
+
+This is powered by AI and may make mistakes. Learn more about how your conversations are saved.

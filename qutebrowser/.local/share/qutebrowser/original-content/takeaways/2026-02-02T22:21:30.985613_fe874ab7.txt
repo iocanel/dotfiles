@@ -1,0 +1,268 @@
+Timestamp: 2026-02-02T22:21:30.985613
+URL: https://www.linkedin.com/learning/learning-scorm-and-tin-can-api/the-four-components-of-the-adl-vision?autoSkip=true&resume=false
+Title: The four components of the ADL vision | LinkedIn Learning
+Hash: fe874ab75757fe4307b30daa54167532a5a11a3a1c2431283e5836cbab5d83fb
+================================================================================
+0 notifications total
+Skip to section
+Accessibility feedback
+Contact LinkedIn’s Disability Answer Desk with accessibility feedback or issues
+Close jump menu
+Expand site navigation
+Search
+Me
+EN
+Change language. Current language is English.
+Home
+My Career Journey
+My Library
+Content
+AI Coaching
+AI Role Play
+Hands-On Tech
+Certifications
+Help
+LinkedIn Learning
+Contents
+Introduction
+1. Understanding SCORM
+2. Popular SCORM-Compliant Authoring Tools
+Publishing to an LMS with Adobe Captivate
+(Viewed)
+7m 53s video
+Save
+Publishing to an LMS with Articulate Storyline 2
+(Viewed)
+6m video
+Save
+Publishing to an LMS with Lectora Inspire
+(Viewed)
+7m 33s video
+Save
+Publishing to an LMS with Camtasia
+(In progress)
+7m 12s video
+Save
+3. Tips for Publishing SCORM-Compliant Content
+4. Next-Generation SCORM
+Defining Tin Can and Experience API, or xAPI
+(Viewed)
+1m 41s video
+Save
+How does Experience API differ from SCORM?
+(Viewed)
+1m 32s video
+Save
+Understanding LRS vs. LMS
+(Viewed)
+1m 43s video
+Save
+The four components of the ADL vision
+(Viewed)
+1m 28s video
+Save
+Chapter Quiz
+3 questions
+Conclusion
+Next steps
+39s video
+Save
+Learning SCORM and Tin Can API
+The four components of the ADL vision
+Leave a review
+1,145
+1,145 likes
+Save
+8,552
+8,552 bookmarks
+Add to my content
+Share Learning SCORM and Tin Can API
+Loaded: 100.00%
+Pause
+Skip back 10 seconds
+Skip ahead 10 seconds
+Previous
+Next
+Current time 
+1:17/
+Duration 
+1:28
+2x
+Playback speed
+Open Captions Menu
+Settings
+Mute
+Turn fullscreen on
+effective learning is and incorporate these
+Overview
+Notebook
+Transcript
+Instructor
+David Rivers
+Author, Trainer, and Learning and Development Expert
+Follow on LinkedIn
+Related to this course
+Exercise Files 
+Show all
+Certificates 
+Show all
+Course details
+1h
+Beginner
+Released: 12/15/2014
+4.6
+(358)
+SCORM, the Sharable Content Object Reference Model, integrates elearning content into learning management systems (LMSs), whether they're proprietary or purchased off the shelf, and is foundational knowledge for elearning creation.
+
+This course introduces the what, why, and how of SCORM, and the tools for creating SCORM-compliant content. Author David Rivers also covers the second generation of compliance integration, the Tin CAN API (aka the Experience API), which allows for learning events to be recorded and analyzed.
+Learning objectives
+What is SCORM?
+Why is SCORM important?
+Publishing to an LMS with tools like Adobe Captivate and Lectora Inspire
+Keeping SCORM-compliant by reporting scores
+Understanding the Tin Can API
+Skills covered
+SCORM
+Learners
+1,145 members like this content
+31,889 people started learning
+Learner reviews
+4.6 out of 5
+358 ratings
+Ratings calculation
+5 star
+70%
+4 star
+23%
+3 star
+5%
+2 star
+<1%
+1 star
+<1%
+Filter by:
+All stars
+Sort by: Most recent
+THOMAS S. 3rd
+Managing Partner
+
+Reviewer rating 5 out of 5
+
+September 9, 2025
+
+Excellent information
+
+Helpful
+Report
+Wande Anjorin 3rd
+Senior Learning Project Manager
+
+Reviewer rating 5 out of 5
+
+March 8, 2025
+
+I would highly recommend it for others.
+
+Helpful
+Report
+Boitumelo Amos 3rd
+Sales Consultant
+
+Reviewer rating 5 out of 5
+
+November 4, 2024
+
+it explains in length and is more detailed
+
+Helpful
+Report
+Show more reviews
+Related courses
+Using Neuroscience for More Effective L&D
+Course
+68,400 learners
+Save
+1h 7m
+Creating a Leadership Development Program
+Course
+137,438 learners
+Save
+1h 3m
+Build Your Own Professional Training: Quick Start Guide
+Course
+49,615 learners
+Save
+36m
+Make SwiftUI Playgrounds Applications
+Course
+1,122 learners
+Save
+4h 5m
+Hands-On Introduction: Scala
+Course
+2,421 learners
+Save
+2h 16m
+AI Coach Info
+Close AI Coach
+Video
+Defining Tin Can and Experience API, or xAPI
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+SCORM has been the dominant standard in eLearning since the late nineties but has limitations, especially with mobile and informal learning.
+Tin Can API (Experience API or xAPI), introduced in 2013, addresses these limitations by allowing for more flexible and comprehensive tracking of learning experiences.
+Tin Can API is preferred by IT professionals as 'Tin Can' and by eLearning professionals as 'Experience API' due to its broader application in tracking various learning activities.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+How does Experience API differ from SCORM?
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+SCORM is limited to eLearning courses or learning management systems, while the Experience API (xAPI) is not.
+The Experience API allows for tracking a wide range of activities, including work-related tasks, social media interactions, and game achievements.
+xAPI uses activity streams to track what people are doing, similar to social networking sites like Facebook and Twitter.
+Activities tracked by xAPI are often relayed to a Learning Record Store (LRS).
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Understanding LRS vs. LMS
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+xAPI (Experience API) allows for tracking a wide range of learning activities, not just courses and scores.
+Learning Record Store (LRS) stores xAPI activity statements, which record all learning activities.
+An LRS can be integrated into an LMS or be a standalone product.
+An LMS with a built-in LRS supports xAPI and manages learning delivery, while a standalone LRS only supports xAPI tracking and reporting.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+The four components of the ADL vision
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video:
+
+
+Experience Tracking: Covered by the xAPI, it tracks various learning activities.
+Competency Infrastructure: Describes learning goals in terms of objectives, tasks, competencies, context, and performance standards.
+Content Brokering: Tags, indexes, and delivers learning content.
+Learner Profiles: Tags and describes learners to personalize learning experiences.
+
+The Training and Learning Architecture (TLA) aims to provide a new standard for describing learning experiences, goals, content, and audiences, enhancing the overall user experience in learning management systems.
+
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Send message
+
+This is powered by AI and may make mistakes. Learn more about how your conversations are saved.

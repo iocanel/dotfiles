@@ -1,0 +1,222 @@
+Timestamp: 2026-02-25T14:07:24.140855
+URL: https://www.linkedin.com/learning/learning-canvas-2022/work-with-the-course-calendar?autoSkip=true&resume=false
+Title: Work with the course calendar | LinkedIn Learning
+Hash: 66b03635f0620366b8b653e70023c0596511e0899144b490ff86a5e984c46585
+================================================================================
+0 notifications total
+Skip to section
+Accessibility feedback
+Contact LinkedIn’s Disability Answer Desk with accessibility feedback or issues
+Close jump menu
+Expand site navigation
+Search
+Me
+EN
+Change language. Current language is English.
+Home
+My Career Journey
+My Library
+Content
+AI Coaching
+AI Role Play
+Hands-On Tech
+Certifications
+Help
+LinkedIn Learning
+Contents
+Introduction
+1. Getting Started with Canvas
+2. Creating a Course
+3. Structure Your Course
+4. Manage Students and Create Groups
+5. Add Assignments and Quizzes
+6. Explore the Grading Tools
+7. Course Management Tools
+Communicate with conversations
+(Viewed)
+2m video
+Save
+Update your class with announcements
+(Viewed)
+2m 25s video
+Save
+Work with the course calendar
+(Viewed)
+2m 21s video
+Save
+Chapter Quiz
+(In progress)
+3 questions
+Conclusion
+Learning Canvas
+Work with the course calendar
+Leave a review
+390
+390 likes
+Save
+11,969
+11,969 bookmarks
+Add to my content
+Share Learning Canvas
+Loaded: 23.99%
+Pause
+Skip back 10 seconds
+Skip ahead 10 seconds
+Previous
+Next
+Current time 
+0:07/
+Duration 
+2:21
+1.5x
+Playback speed
+Open Captions Menu
+Settings
+Mute
+Turn fullscreen on
+of a Canvas tool that is really intuitive.
+Overview
+Notebook
+Transcript
+Instructor
+Oliver Schinkten
+Speaker, Consultant, Writer, Video Trainer
+Follow on LinkedIn
+Related to this course
+Certificates 
+Show all
+Course details
+1h 54m
+Beginner
+Released: 3/14/2022
+4.8
+(622)
+Learning management systems have revolutionized the way educators and corporate trainers are able to provide instruction. With an online platform, instructors and students can communicate, collaborate, share and access resources, submit assignments, and give feedback at any time. With online learning more important than ever, learning how to take advantage of all a learning management system has to offer is now a vital part of providing instruction. In this course, Oliver Schinkten explores how to set up and use Canvas, a leading LMS used by institutions and instructors around the globe. Oliver shows how to set up a class, work with students, teach online, and discusses best practices for leveraging Canvas for student success. He also covers grading, adding assignments, student communication, and adding multimedia. If you’re looking to enhance the online component of your classes, this course is for you.
+Skills covered
+Instructure Canvas
+Learners
+390 members like this content
+18,116 people started learning
+Learner reviews
+4.8 out of 5
+622 ratings
+Ratings calculation
+5 star
+84%
+4 star
+13%
+3 star
+3%
+2 star
+<1%
+1 star
+<1%
+Filter by:
+All stars
+Sort by: Most recent
+Atul Rajput 3rd
+Digital creator
+
+Reviewer rating 5 out of 5
+
+December 28, 2025
+
+Must do course
+
+Helpful
+Report
+Clementina Odiowaya 3rd
+Data Analytics Facilitator
+
+Reviewer rating 3 out of 5
+
+December 6, 2025
+
+It's good for beginners, but the engagement is very low, and there is no exercise file to work with. The content is not rich, and it's also an old video, as Canvas has undergone numerous updates.
+
+Helpful
+Report
+Lillian Steele
+Certified Teacher
+
+Reviewer rating 5 out of 5
+
+November 15, 2025
+
+Yes.
+
+Helpful
+Report
+Show more reviews
+Related courses
+Learning Brightspace by D2L
+Course
+2,732 learners
+Save
+1h 45m
+Learning Moodle
+Course
+7,801 learners
+Save
+1h 39m
+Learning Artboard Studio
+Course
+1,861 learners
+Save
+2h 40m
+Adobe Captivate Essential Training
+Course
+5,771 learners
+Save
+2h 39m
+Automated ML.NET Training, Metrics, and Accuracy
+Course
+1,838 learners
+Save
+35m
+AI Coach Info
+Close AI Coach
+Video
+Communicate with conversations
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on using the Conversations feature in Canvas:
+
+
+Accessing Conversations: You can access Conversations by going to the inbox in the global navigation bar.
+Functionality: The Conversations feature works similarly to an email platform, allowing you to sort, filter, and manage messages.
+Sending Messages: You can compose new messages, select recipients, and choose to send individual messages to each recipient to avoid group replies.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Update your class with announcements
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on using the Announcements feature in Canvas:
+
+
+Creating Announcements: You can create announcements by navigating to the Course Navigation bar and selecting Announcements.
+Content and Settings: Use the rich content editor to create your message, and you can delay posting or allow users to comment.
+Student Notifications: Ensure students have adjusted their notification settings to receive these announcements.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Work with the course calendar
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on using the Calendar feature in Canvas:
+
+
+Accessing the Calendar: Navigate to the global navigation bar on the far left and select Calendar.
+Views and Navigation: You can view the calendar by month, week, or agenda, and navigate between months using the arrows at the top.
+Adding Events: Click the plus icon to add events, specifying details like title, date, time, and location.
+Managing Calendars: Select or deselect different calendars to show or hide events. You can also sync with external calendars like Google or Outlook.
+Moving Events: Drag and drop events to different dates, and changes will be reflected throughout Canvas.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Send message
+
+This is powered by AI and may make mistakes. Learn more about how your conversations are saved.

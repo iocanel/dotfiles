@@ -1,0 +1,188 @@
+Timestamp: 2025-12-24T14:48:35.930756
+URL: https://app.cyberranges.com/instance/694bd84ddabdba0ee85a71cc/overview
+Title: Scenario Overview | WordPress Vulnerability Scanning with WPScan - CYBER RANGES
+Hash: 1c41d60369da8e48934fdda590e65ce7e8120ddd3065338377353ff46848560e
+================================================================================
+WordPress Vulnerability Scanning with WPScan
+83 MIN
+0
+VPN
+CLOUD
+Overview
+Questions
+Servers
+Score
+Help
+Exit
+MISSION
+RULES
+WORDPRESS VULNERABILITY SCANNING - WPSCAN
+INTRODUCTION
+
+WordPress powers a significant portion of the web, making its security a critical concern. As a security professional, efficiently assessing the security posture of WordPress sites is a fundamental skill. This lab focuses on using WPScan, a specialized scanner that automates the discovery of common misconfigurations, known vulnerabilities, and weak credentials.
+
+Here, you will use WPScan to perform a comprehensive scan on a vulnerable web application, moving from initial discovery to gaining administrative access.
+
+Lab Access Guidelines
+
+To support completion of this scenario, you are provided with a Kali VM.
+
+Browser based access is provided via the web service for GUI and ssh service for webshell.
+
+VM
+
+	
+
+IP
+
+	
+
+Username
+
+	
+
+Password
+
+
+
+
+Kali
+
+	
+
+192.168.125.100
+
+	
+
+kali
+
+	
+
+password
+
+OBJECTIVE
+
+You'll use a Kali VM to access a vulnerable web application on localhost and see how it responds to different scanning techniques. By the end, you will have scanned and learned most of the commands that WPScan has, to get admin account access. This gives you a practical look at how this scanner works in a controlled setting.
+
+WPScan Usage & Basic Scan
+
+Let's open the ssh service of the kali machine and type the following command to see help options:
+
+wpscan --help #help option
+wpscan -hh #full help option
+wpscan --update #updating the database
+wpscan --no-update #ignoring the update when you execute the tool
+
+Our target is a vulnerable WordPress web application that we will scan with wpscan. Credits for this vulnerable site belong to: https://github.com/vavkamil/dvwp
+
+Simple command to make a basic scan is as below:
+
+wpscan --url http://192.168.125.100:8080 --no-update
+
+	
+
+Watch out for this: Offline Scanning
+
+The --no-update flag is critical in this lab because the VM has no internet access. In a real-world scan, you would typically allow WPScan to update its vulnerability database to ensure you are checking against the latest known exploits.
+
+The output will be as in the image:
+
+The tool starts the output showing the target IP and then reveals interesting headers and files. This initial information provides a high-level overview of the target's technology stack (server version, PHP version) and confirms the WordPress version.
+
+	
+
+Reflection Point: Why is identifying the server headers and WordPress version from a basic scan a valuable first step in an assessment?
+
+Answer: This information provides immediate intelligence. Knowing the server type (e.g., Apache, Nginx) and PHP version can point to potential misconfiguration or version-specific vulnerabilities. Identifying the exact WordPress version allows you to look for known public exploits targeting that specific version, making it a critical piece of the initial reconnaissance phase.
+
+The basic scan provided an overview but found limited details on plugins and themes. To uncover specific vulnerabilities, we must now perform a more targeted enumeration of the site's components.
+
+ENUMERATING COMPONENTS
+
+WPScan's enumeration function allows us to actively probe for vulnerable plugins, themes, users, and more. We will use the `-e` option to specify which components to enumerate. The `-e` flag accepts several arguments to specify what to enumerate. These can be grouped by function:
+
+Plugins & Themes
+
+p, ap, vp (Popular, All, or Vulnerable plugins)
+
+t, at, vt (Popular, All, or Vulnerable themes)
+
+Sensitive Content
+
+tt (Timthumbs)
+
+cb (Config backups)
+
+dbe (Database exports)
+
+Users & Media
+
+u (User IDs, e.g., u1-5)
+
+m (Media IDs, e.g., m1-15)
+
+	
+
+Easy to Confuse: Scan Types
+
+The choice between scanning for popular (`p`, `t`), all (`ap`, `at`), or only vulnerable (`vp`, `vt`) components is a strategic one. A 'popular' scan is fast and hits common targets. An 'all' scan is extremely thorough but can be very time-consuming. A 'vulnerable' scan is efficient, as it only checks for components with known issues in the database.
+
+I'm going to use the argument `p` and `t` for popular plugins and popular themes. Option `-o` will output the results of the tool to the file `results.txt`.
+
+wpscan --url http://192.168.125.100:8080 -e p,t -o results.txt --no-update
+
+Next, we will enumerate other potentially sensitive items.
+
+wpscan --url http://192.168.125.100:8080 -e m,tt,cb,dbe --no-update
+
+The enumeration successfully identified a valid username: `admin`. With a known username, the next logical step in a security assessment is to test for weak passwords using a brute-force attack.
+
+User Enumeration and Brute-Force Attack
+
+The next option is enumerating users first. If we are lucky enough to find any names, we will attempt to brute force them to log in.
+
+	
+
+Key Point: From Enumeration to Attack
+
+Discovering valid usernames via enumeration (using the `-e u` flag) is a critical pivot point in a WordPress assessment. It transitions the engagement from passive reconnaissance to active attacks, as a known username significantly increases the probability of success for a brute-force or password-spraying attempt.
+
+wpscan --url http://192.168.125.100:8080 -e u --verbose --no-update
+
+Alright, we have found the user, it's called `admin`.
+
+We will now use WPScan's password attack module, providing the discovered username and a wordlist of common passwords. We use the `-U` option for the user and `-P` for the password list.
+
+wpscan --url http://192.168.125.100:8080/ -U admin -P wordlist.txt --no-update
+
+	
+
+Reflection Point: If the initial `wordlist.txt` had failed, what would be your next steps to continue the brute-force attack against the 'admin' user?
+
+Answer: Next steps would involve escalating the attack. I would search for larger, more comprehensive wordlists like RockYou.txt. I would also consider generating a custom wordlist based on information about the target (OSINT) or using tools to create permutations of known password patterns. Finally, I would check if the login form is vulnerable to other attacks, like default credentials for installed plugins.
+
+Advanced Scanning Techniques
+
+In real-world engagements, scans may be blocked by security measures or require anonymization. WPScan includes options for stealth and proxying traffic to handle these scenarios.
+
+Evasion with Stealthy Scans
+
+If a Web Application Firewall (WAF) is blocking requests, the `--stealthy` option can help bypass basic defenses. This is a convenient shortcut for a combination of other flags, such as `--random-user-agent` and `--detection-mode passive`.
+
+wpscan --url http://192.168.125.100:8080 --stealthy --no-update
+wpscan --url http://192.168.125.100:8080 --random-user-agent --no-update
+Using a Proxy
+
+To anonymize your scan or route traffic through a specific network interface, WPScan supports the `--proxy` option. In the example below, traffic is sent through a local Tor proxy.
+
+wpscan --url http://192.168.125.100:8080 -e p,vt,u --proxy socks5://127.0.0.1:9050 --no-update
+
+	
+
+Watch out for this: Proxy Performance
+
+While using a proxy like Tor can help with anonymity, it will significantly slow down your scans. In a professional engagement, ensure that using an anonymizing proxy is within the rules of engagement, as it can sometimes be prohibited or may cause performance issues for the target application.
+
+CONCLUSION
+
+In this lab, you successfully executed a full WPScan assessment workflow. You progressed from a basic scan to targeted enumeration of plugins, themes, and users, culminating in a successful brute-force attack to gain administrative access. These steps represent a core methodology in web application testing, providing you with the practical skills needed to identify and validate critical WordPress vulnerabilities during a security audit or penetration test.

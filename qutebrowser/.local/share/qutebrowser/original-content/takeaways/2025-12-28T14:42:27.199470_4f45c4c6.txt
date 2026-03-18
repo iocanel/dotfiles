@@ -1,0 +1,200 @@
+Timestamp: 2025-12-28T14:42:27.199470
+URL: https://app.cyberranges.com/instance/start/695125aadabdba0ee85a7536
+Title: Loading Scenario - CYBER RANGES
+Hash: 4f45c4c6a1e6b7075033f8192fd2f910d583bf18405643412e56f5996a7061aa
+================================================================================
+MISSION
+RULES
+LEADERBOARD
+VPN
+WINDOWS COMMAND LINE FUNDAMENTALS
+INTRODUCTION
+
+This scenario will walk you through an introductory on windows command line interface. The command prompt is the command line interface for Windows operating systems, which is officially known as Windows Command Processor, which is mostly abbreviated to CMD. The Command Prompt program allows you to work in an environment that looks more like a traditional operating system, as opposed to the graphical based Windows environment.
+
+LAB ACCESS GUIDELINES
+
+To support completion of this scenario, you are provided with a Windows 10 VM that can be used for receiving reverse connections.
+
+Browser based access is provided via the web service for GUI using guacamole.
+
+VM
+
+	
+
+IP
+
+	
+
+Username
+
+	
+
+Password
+
+
+
+
+Windows 10
+
+	
+
+192.168.125.100
+
+	
+
+admin
+
+	
+
+p_assword7
+
+For VPN access steps, see the Rules section.
+
+OPEN THE COMMAND PROMPT IN WINDOWS 10
+
+There are several methods of opening or accessing command prompt. These methods are illustrated below;
+
+You can also access it by pressing Win + R to open the Run box, then type "cmd" and hit Enter to open it.
+
+Press Win + X (or right-click the Start button) and choose Search and type "command prompt" or cmd, then hit 'Enter' to open it.
+
+All these methods will open command prompt as shown below;
+
+You can either run the commands as a standard user or as administrator.
+
+BASIC COMMAND PROMPT COMMANDS
+Getting Help
+
+For you to get help, run the command help on the commandline as shown below;
+
+C:\Users\admin>help
+
+This command line will display all available commands and their usage as shown below;
+
+You can also check the usage of a specific command using help. This can be achieved by adding the name of the command after help, i.e "help <command_name>". For example, to get more information about the usage of the command DATE type the command as shown below;
+
+C:\Users\admin>help DATE
+WORKING WITH FILES AND DIRECTORIES
+
+You can use Command Prompt commands to organize files into a directory hierarchy.
+
+Listing and Changing Directories
+
+The dir command is used to list the contents of the folder that you are currently in. dir is the short form of directory. To use this command, type dir and enter.
+
+C:\Users\admin> dir
+
+The cd command is used to change the directories. For example, to go to Documents folder type cd Documents and click enter as shown below;
+
+C:\Users\admin> cd Documents
+
+You can go back to the previous folder by typing cd with two dots (cd ..) as shown below;
+
+C:\Users\admin> cd ..
+Creating, Copying, Moving and Deleting Folders
+
+The mkdir command is used to create folders. To create a folder, run the command mkdir with folder name. For example, to create a folder 'test' run the mkdir command as shown below;
+
+C:\Users\admin> mkdir test
+
+We have several commands for creating files via cmd. This includes nul and echo. The nul command is similar to touch command on Linux, this command creates an empty file. The echo command is used to input data into a file, for example; To create a file cyber.txt with the message "I love Cyber Ranges Platform", run the echo command as follows;
+
+C:\Users\admin> echo "I love Cyber Ranges"  > cyber.txt
+
+You can now open or read the file created using more command as shown below;
+
+C:\Users\admin> more cyber.txt
+
+The output will be as shown below;
+
+The command del is used to delete folders and files. To delete a folder or a file, run the command as follows; del <folder/file_name>. For example, we would like to delete our folder Finals you will run the command as shown below;
+
+C:\Users\admin> del Finals
+
+You can also search for file using dir command. For example, to search for the file Cyber.txt, run the command as follows;
+
+C:\Users\admin> dir Cyber.txt /s
+NETWORKING COMMANDS
+
+We have some networking command line commands, some of the most useful commands include ping ipconfig, getmac, hostname, nslookup, tracert, netstat, arp, pathping, systeminfo and many more. We will briefly describe the functions of these commands.
+
+Ping
+
+The ping command is used to test the reachability of a device on a network. For example, to ping the host 192.168.125.100. Run the command as shown below;
+
+C:\Users\admin> ping 192.168.125.100
+
+The pinging host will return four packets if the host is reachable, as the shown on the screenshot below;
+
+When the host is not reachable, the packets will not be returned as shown below;
+
+The ping command has several options, on your cmd type help ping to learn more about other ping options.
+
+Ipconfig
+
+The ipconfig command displays basic IP address configuration information for the Windows device you are working on. It will display information for every network adapter that has ever been installed on your Windows device, as shown below;
+
+C:\Users\admin> ping
+Getmac
+
+The getmac command is used to get the MAC address of your device as shown below;
+
+C:\Users\admin> getmac
+Hostname
+
+The hostname command will display the current name of your device as shown below;
+
+C:\Users\admin> hostname
+Nslookup
+
+Using NSLookUp without a parameter will show the DNS server your PC is currently using to resolve domain names into IP addresses as shown below;
+
+C:\Users\admin> nslookup
+Tracert
+
+The tracert command will trace the route a data packet takes before reaching its destination, displaying information on each hop along the route. Each hop of the route will display the latency between your device and that particular hop and the IP address of the hop, as shown below;
+
+C:\Users\admin> tracert cyberranges.com
+
+The tracert command has several parameters, on your cmd type tracert /? to learn more about other parameters.
+
+Netstat
+
+The Netstat command displays active TCP connections, ports on which the computer is listening, Ethernet statistics, the IP routing table, IPv4 statistics, and IPv6 statistics. When used without parameters, this command displays active TCP connections as shown below;
+
+C:\Users\admin> netstat
+
+The netstat command has several parameters, on your cmd type netstat /? to learn more about other parameters.
+
+Arp
+
+The Arp command displays entries in the Address Resolution Protocol (ARP) cache, which contains one or more tables that are used to store IP addresses and their resolved Ethernet physical addresses. The arp command with parameter -a displays all current protocol data as shown below;
+
+arp -a
+
+The arp command has several parameters, on your cmd type arp /? to learn more about other parameters.
+
+Pathping
+
+The PathPing command is a combination of the ping command with the tracert command. It displays information about network latency and network loss at intermediate hops between a source and destination, as shown below;
+
+C:\Users\admin> pathping cyberranges.com
+
+The pathping command has several parameters, on your cmd type pathping to learn more about other parameters.
+
+SystemInfo
+
+This command displays a detailed list of configuration information about your device, as shown below;
+
+C:\Users\admin> systeminfo
+
+The systeminfo command has several parameters, on your cmd type help systeminfo to learn more about other parameters.
+
+This brings us to the end of the introduction to windows Command Line Fundamentals.
+
+Windows Command Line Fundamentals
+By Stephen Fwamba
+Loading...
+Loading 6%
+1m 5s left

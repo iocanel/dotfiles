@@ -1,0 +1,271 @@
+Timestamp: 2026-02-02T18:32:49.129542
+URL: https://www.linkedin.com/learning/learning-scorm-and-tin-can-api/publishing-to-an-lms-with-camtasia?autoSkip=true&resume=false
+Title: Publishing to an LMS with Camtasia | LinkedIn Learning
+Hash: 7076ffb82ced22005d2fba23f4cb645ad34b4cd8f73ee43a27703157ae40ab6e
+================================================================================
+0 notifications total
+Skip to section
+Accessibility feedback
+Contact LinkedIn’s Disability Answer Desk with accessibility feedback or issues
+Close jump menu
+Expand site navigation
+Search
+Me
+EN
+Change language. Current language is English.
+Home
+My Career Journey
+My Library
+Content
+AI Coaching
+AI Role Play
+Hands-On Tech
+Certifications
+Help
+LinkedIn Learning
+Contents
+Introduction
+1. Understanding SCORM
+2. Popular SCORM-Compliant Authoring Tools
+Publishing to an LMS with Adobe Captivate
+(Viewed)
+7m 53s video
+Save
+Publishing to an LMS with Articulate Storyline 2
+(Viewed)
+6m video
+Save
+Publishing to an LMS with Lectora Inspire
+(Viewed)
+7m 33s video
+Save
+Publishing to an LMS with Camtasia
+(In progress)
+7m 12s video
+Save
+3. Tips for Publishing SCORM-Compliant Content
+Including graded interactions
+7m 35s video
+Save
+Handling lessons for credit vs. not for credit
+2m 3s video
+Save
+Reporting scores to be SCORM-compliant
+1m 33s video
+Save
+Handling mastery-score scenarios
+1m 50s video
+Save
+Chapter Quiz
+3 questions
+4. Next-Generation SCORM
+Defining Tin Can and Experience API, or xAPI
+1m 41s video
+Save
+How does Experience API differ from SCORM?
+1m 32s video
+Save
+Understanding LRS vs. LMS
+1m 43s video
+Save
+The four components of the ADL vision
+1m 28s video
+Save
+Chapter Quiz
+3 questions
+Conclusion
+Next steps
+39s video
+Save
+Learning SCORM and Tin Can API
+Publishing to an LMS with Camtasia
+1,145
+1,145 likes
+Save
+8,552
+8,552 bookmarks
+Add to my content
+Share Learning SCORM and Tin Can API
+Loaded: 29.35%
+Pause
+Skip back 10 seconds
+Skip ahead 10 seconds
+Previous
+Next
+Current time 
+0:26/
+Duration 
+7:12
+2x
+Playback speed
+Open Captions Menu
+Settings
+Mute
+Turn fullscreen on
+of your exercise files, under Camtasia,
+Overview
+Notebook
+Transcript
+Instructor
+David Rivers
+Author, Trainer, and Learning and Development Expert
+Follow on LinkedIn
+Related to this course
+Exercise Files 
+Show all
+Certificates 
+Show all
+Course details
+1h
+Beginner
+Released: 12/15/2014
+4.6
+(358)
+SCORM, the Sharable Content Object Reference Model, integrates elearning content into learning management systems (LMSs), whether they're proprietary or purchased off the shelf, and is foundational knowledge for elearning creation.
+
+This course introduces the what, why, and how of SCORM, and the tools for creating SCORM-compliant content. Author David Rivers also covers the second generation of compliance integration, the Tin CAN API (aka the Experience API), which allows for learning events to be recorded and analyzed.
+Learning objectives
+What is SCORM?
+Why is SCORM important?
+Publishing to an LMS with tools like Adobe Captivate and Lectora Inspire
+Keeping SCORM-compliant by reporting scores
+Understanding the Tin Can API
+Skills covered
+SCORM
+Learners
+1,145 members like this content
+31,889 people started learning
+Learner reviews
+4.6 out of 5
+358 ratings
+Ratings calculation
+5 star
+70%
+4 star
+23%
+3 star
+5%
+2 star
+<1%
+1 star
+<1%
+Filter by:
+All stars
+Sort by: Most recent
+THOMAS S. 3rd
+Managing Partner
+
+Reviewer rating 5 out of 5
+
+September 9, 2025
+
+Excellent information
+
+Helpful
+Report
+Wande Anjorin 3rd
+Senior Learning Project Manager
+
+Reviewer rating 5 out of 5
+
+March 8, 2025
+
+I would highly recommend it for others.
+
+Helpful
+Report
+Boitumelo Amos 3rd
+Sales Consultant
+
+Reviewer rating 5 out of 5
+
+November 4, 2024
+
+it explains in length and is more detailed
+
+Helpful
+Report
+Show more reviews
+Related courses
+Using Neuroscience for More Effective L&D
+Course
+68,400 learners
+Save
+1h 7m
+Creating a Leadership Development Program
+Course
+137,438 learners
+Save
+1h 3m
+Build Your Own Professional Training: Quick Start Guide
+Course
+49,615 learners
+Save
+36m
+Make SwiftUI Playgrounds Applications
+Course
+1,122 learners
+Save
+4h 5m
+Hands-On Introduction: Scala
+Course
+2,421 learners
+Save
+2h 16m
+AI Coach Info
+Close AI Coach
+Video
+Publishing to an LMS with Adobe Captivate
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on publishing SCORM-compliant e-learning courses using Adobe Captivate:
+
+
+Setting Up Reporting: Ensure your project is ready to report quiz results to an LMS by enabling reporting in the Quiz Preferences.
+Choosing LMS and SCORM Standards: Select the appropriate LMS and SCORM standard (e.g., SCORM 2004) based on your LMS administrator's specifications.
+Publishing Options: Publish the course to your computer, creating a package to be provided to your LMS administrator for integration into the LMS.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Publishing to an LMS with Articulate Storyline 2
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on publishing SCORM-compliant e-learning courses using Articulate Storyline 2:
+
+
+Publishing to LMS: You can publish directly to an LMS by selecting the LMS option and configuring settings like SCORM 2004 compliance.
+Mobile Compatibility: Options are available to include HTML5 output and mobile player compatibility for iOS and Android.
+Tracking and Reporting: Set up tracking using quiz results and configure reporting options to ensure scores are reported accurately to the LMS.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Publishing to an LMS with Lectora Inspire
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on publishing SCORM-compliant content using Lectora Inspire:
+
+
+Error Checking: Lectora Inspire runs an error checker to identify warnings and errors before publishing SCORM-compliant content.
+Adding Exit Button: Ensure an exit button is included to allow learners to leave the course and return to the LMS.
+Publishing Options: You can select SCORM 1.2 or SCORM 2004 and configure various options like launching the course in a separate window and tracking interactions.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Video
+Publishing to an LMS with Camtasia
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the video on publishing SCORM-compliant content using Camtasia:
+
+
+SCORM Compliance: Camtasia allows you to create SCORM-compliant content, including quizzes and interactivity.
+Production Wizard: Use the Production Wizard to set up your project, including choosing SCORM options and setting passing scores.
+Publishing Options: You can publish your content to an LMS, ensuring it meets SCORM standards and includes necessary reporting features.
+Send positive feedback about Key takeaways for this video
+Send negative feedback about Key takeaways for this video
+Send message
+
+This is powered by AI and may make mistakes. Learn more about how your conversations are saved.

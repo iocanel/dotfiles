@@ -1,0 +1,466 @@
+Timestamp: 2026-01-02T14:12:30.630125
+URL: https://www.linkedin.com/learning/product-management-building-a-product-roadmap/three-steps-for-building-your-product-roadmap?autoSkip=true&contextUrn=urn%3Ali%3AlyndaLearningPath%3A6477c370498e31ada9757f94&resume=false&u=0
+Title: Three steps for building your product roadmap | LinkedIn Learning
+Hash: a3f5bab5deb920df44210192f1faa3fcb88c6467782db727a09ee043dd212a8a
+================================================================================
+0 notifications total
+Skip to section
+Accessibility feedback
+Contact LinkedIn’s Disability Answer Desk with accessibility feedback or issues
+Close jump menu
+Expand site navigation
+Search
+Me
+EN
+Change language. Current language is English.
+Home
+My Career Journey
+My Library
+Content
+AI Coaching
+AI Role Play
+Hands-On Tech
+Certifications
+Help
+LinkedIn Learning
+Contents
+BACK TO LEARNING PATH
+Aha! Product Management Professional Certificate
+Go back to learning path: Aha! Product Management Professional Certificate
+Introduction
+1. Product Roadmap Foundations
+2. Laying the Groundwork for Your Product Roadmap
+3. Product Roadmap: Decision-Making and Alignment
+4. Common Challenges in a Product Roadmap
+Conclusion
+Three steps for building your product roadmap
+(Viewed)
+1m 33s video
+Save
+Take exam
+Product Management: Building a Product Roadmap
+Three steps for building your product roadmap
+Leave a review
+18,218
+18,218 likes
+Save
+221,238
+221,238 bookmarks
+Add to my content
+Share Product Management: Building a Product Roadmap
+Loaded: 100.00%
+Pause
+Skip back 10 seconds
+Skip ahead 10 seconds
+Previous
+Next
+Current time 
+1:19/
+Duration 
+1:33
+1.75x
+Playback speed
+Open Captions Menu
+Settings
+Mute
+Turn fullscreen on
+and initiate a process to update it
+Overview
+Notebook
+Transcript
+Instructors
+Teg Grenager and Eldad Persky
+2 instructors
+Show all instructors
+Related to this course
+Exercise Files (2) 
+Show all
+Certificates 
+Show all
+Certifying Organizations 
+Show more
+Exam 
+Take exam
+Course details
+47m
+Intermediate
+Updated: 3/7/2024
+4.7
+(6,717)
+
+A roadmap is a simple but powerful tool for product development. A strong product roadmap supports your business objectives and product strategy. It can help you make decisions and answer critical questions. For example, how do you decide which projects to pursue, and which to defer until later? How can you know which projects will be important a few months from now, when the market is changing so quickly? And how do you get all the diverse groups in your organization aligned behind one particular plan?
+
+This course shows how to build a product roadmap for your business—and gain critical stakeholder buy-in. See examples of what roadmaps might look like, and spend time learning the tools and techniques necessary to map the projects for your specific organization. Instructors Teg Grenager and Eldad Persky show you how to create strong, dynamic roadmaps that can help ensure that your team is working on the right projects at the right time.
+
+This course is part of a Professional Certificate from Aha!.
+
+Learning objectives
+Articulate the purpose of a product roadmap.
+Differentiate the role of a product roadmap in agile and early-stage products.
+Interpret the causes of product roadmap failures.
+Explain ways in which milestones are impactful.
+Determine tips to follow when presenting a product roadmap.
+Skills covered
+Product Management
+Product Road Mapping
+Learners
+18,218 members like this content
+416,552 people started learning
+Professional Certifications and Continuing Education Units (CEUs)
+National Association of State Boards of Accountancy (NASBA)
+Continuing Professional Education Credit (CPE): 1.8
+Recommended NASBA Field of Study: Business Management & Organization
+
+Sponsor Identification number: 140940
+
+To earn CPE credits, the learner is expected to:
+
+Complete all videos and chapter quizzes
+Complete the final exam within one year from completing the course
+Score 70% or higher on final exam
+
+Glossary: see PDF file in the Exercise Files area
+Program Level: Basic
+Prerequisite Education: There are no prerequisites for this course.
+Advanced Preparation: There is no advance preparation required for this course.
+If you undertake this course for CPE credits, you can leave final comments in the Self Study Course Evaluation.
+
+LinkedIn Learning is registered with the National Association of State Boards of Accountancy (NASBA) as a sponsor of continuing professional education on the National Registry of CPE Sponsors. State boards of accountancy have final authority on the acceptance of individual courses for CPE credit. Complaints regarding registered sponsors may be submitted to the National Registry of CPE Sponsors through its web site: NASBA Registry.
+
+For course refund policy, issue resolution, and additional info please see the LinkedIn User Agreement. For more information regarding administrative policies such as complaint and refund, please contact our offices at +1 650-687-3600.
+
+Show more
+Project Management Institute (PMI)®
+PDUs/ContactHours: 0.75
+
+LinkedIn Learning has been reviewed and approved by the PMI® Authorized Training Partner Program. This course qualifies for professional development units (PDUs).
+
+The PMI Authorized Training Partner logo is a registered mark of the Project Management Institute, Inc.
+
+To view the activity and PDU details for this course, click here.
+
+Show more
+Instructors
+Teg Grenager
+Entrepreneur, Product Manager, Software Engineer
+Follow on LinkedIn
+Eldad Persky
+Executive leader specializing in creating strong teams
+Follow on LinkedIn
+Learner reviews
+4.7 out of 5
+6,717 ratings
+Ratings calculation
+5 star
+75%
+4 star
+20%
+3 star
+4%
+2 star
+<1%
+1 star
+<1%
+Filter by:
+All stars
+Sort by: Most recent
+Priyank Jain 2nd
+QA Technical Manager
+
+Reviewer rating 5 out of 5
+
+December 31, 2025
+
+Insightful to the points in short time lots of information shared
+
+Helpful
+Report
+Tamrat Ayana
+International Value added service and remittance Expert
+
+Reviewer rating 5 out of 5
+
+December 25, 2025
+
+it makes product roadmap easy and purposeful, yes i recommend
+
+Helpful
+Report
+Chris Hendricks 3rd
+Manager II, Enterprise Technology Security & Remediation Services
+
+Reviewer rating 5 out of 5
+
+December 24, 2025
+
+Great reminders for things learned in the past that I need to be reminded of. And apply to my current role. Somethings I did not know, but others a great reminder, new insights on how to apply at a higher level.
+
+Helpful
+Report
+Show more reviews
+Related courses
+Product Management First Steps
+Course
+353,840 learners
+Save
+Popular
+1h 36m
+Transitioning to Product Management
+Course
+284,437 learners
+Save
+Popular
+38m
+Generative AI for Product Managers
+Course
+94,638 learners
+Save
+Popular
+24m
+Product Management Insights
+Course
+33,208 learners
+Save
+34m
+Data-Driven Product Management
+Course
+31,327 learners
+Save
+Popular
+2h 1m
+AI Coach Info
+Close AI Coach
+Video
+Getting started in building your product roadmap
+Ioannis Canellos:
+Key takeaways for this course
+Learning AI:
+Here are the key takeaways from the course Product Management: Building a Product Roadmap:
+
+
+Purpose of a Product Roadmap: Understand the importance and purpose of a product roadmap in supporting business objectives and product strategy.
+Role in Agile and Early-Stage Products: Learn how product roadmaps function differently in agile organizations and early-stage products.
+Common Failures and Milestones: Identify common reasons for product roadmap failures and the significance of key milestones.
+Stakeholder Alignment: Gain insights into how to get buy-in from stakeholders and align diverse groups within the organization.
+Presentation Tips: Discover effective tips for presenting your product roadmap to ensure clarity and support.
+Send positive feedback
+Send negative feedback
+Video
+Product roadmap definition and purpose
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video:
+
+
+Purpose of a Product Roadmap: It provides a long-term product development plan that helps stakeholders coordinate their planning.
+Stakeholder Benefits: It benefits customers, customer-facing groups, investors, and internal teams by providing predictability and aiding in planning and coordination.
+Alignment with Business Goals: It ensures that product development efforts are aligned with business goals and strategies, promoting effective collaboration among stakeholders.
+Send positive feedback
+Send negative feedback
+Video
+Product roadmap template
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video:
+
+
+No One-Size-Fits-All Format: Different organizations require different formats for their product roadmaps, depending on their development processes and product maturity.
+Stakeholder Support is Crucial: The format of the product roadmap is less important than having the support and alignment of key stakeholders.
+Practical Example: The video provides an example of a product roadmap for a digital publishing company, illustrating how to plot milestones and align them with business goals.
+Send positive feedback
+Send negative feedback
+Video
+Roadmaps in agile organizations
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video:
+
+
+Difference Between Product Backlog and Product Roadmap: A product backlog is a prioritized list of tasks, while a product roadmap provides stakeholders with information about future milestones and their estimated dates.
+Importance of Milestones: Milestones on the roadmap are significant for stakeholders and require completing many tasks from the backlog.
+Estimating Dates: Dates for product milestones are estimated independently by the product development leader, even though these estimates might be inaccurate.
+Send positive feedback
+Send negative feedback
+Video
+Roadmaps for early-stage products
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video:
+
+
+Timing for Roadmap Creation: Don't create a product roadmap for very early-stage products or when exploring new markets. Instead, focus on learning about the market and customers.
+Product-Market Fit: Ensure your product has achieved product-market fit before developing a roadmap. This means having active, engaged customers who would be disappointed without your product.
+Validation Over Planning: Before achieving product-market fit, prioritize validating key hypotheses over long-term planning. Use development projects to efficiently validate these hypotheses.
+Send positive feedback
+Send negative feedback
+Video
+The importance of process when developing a product roadmap
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video:
+
+
+Stakeholder Alignment: Ensure that all key stakeholders are aligned around the product roadmap to avoid execution issues.
+Early Involvement: Include stakeholders early in the process to gather feedback and build ownership.
+Continuous Updates: Keep stakeholders updated as the plan evolves to maintain alignment and support.
+Send positive feedback
+Send negative feedback
+Video
+Why product roadmaps fail
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video:
+
+
+Sound Product Strategy: A product roadmap must be based on a solid product strategy.
+Realistic Planning: The roadmap should be realistic and achievable.
+Stakeholder Support: Full support from key stakeholders is crucial for success.
+Avoiding Shortcuts: Common failures occur when shortcuts are taken, missing one of these critical elements.
+Involving Stakeholders: Involving all stakeholders in the process ensures alignment and support.
+Send positive feedback
+Send negative feedback
+Video
+Select your stakeholders in developing your roadmap
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video:
+
+
+Importance of Stakeholder Selection: Choosing the right stakeholders for the roadmap creation process is crucial to avoid future issues and ensure success.
+Key Stakeholders: The core team should include the business leader, sales leader, and product development leader, such as the CTO or VP of engineering.
+Involvement and Ownership: Involve the business leader early and often to ensure they feel ownership of the roadmap and can allocate necessary resources.
+Send positive feedback
+Send negative feedback
+Video
+Customer research to inform your product roadmap
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video:
+
+
+Customer Knowledge: Knowing your customer and market is crucial for earning respect as a product manager.
+Direct Customer Interaction: Engage directly with customers through surveys, sales meetings, or qualitative research to gain insights.
+Authority and Respect: Use customer insights to speak with authority about product development options and earn team respect.
+Send positive feedback
+Send negative feedback
+Video
+Start with product strategy when building your roadmap
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video:
+
+
+Understand the Company's Strategy: You can't evaluate a product roadmap without knowing the company's strategy, including business goals, target customers, and competitors.
+Articulate Product Strategy: Clearly define your product strategy, including business goals, target customers, key benefits, competitors, and differentiators.
+Involve Business Leaders: Ensure business leaders feel ownership of the strategy and actively promote it.
+Stakeholder Alignment: Discuss the strategy with stakeholders individually and in groups to gain alignment and support.
+Send positive feedback
+Send negative feedback
+Video
+Identify key milestones for high-impact product roadmaps
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video:
+
+
+Identify Product Milestones: Start by rereading your product strategy and identifying barriers that can be addressed through product changes.
+Stakeholder Engagement: Meet with each stakeholder one-on-one to gather their ideas and feedback on milestones.
+Strategic Objectives: Ensure each milestone supports a strategic objective and document the rationale behind it.
+Send positive feedback
+Send negative feedback
+Video
+Estimate levels of effort in your product roadmap
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video:
+
+
+Estimate Development Capacity: Work with your product development leader to estimate the realistic development capacity of your team, accounting for time spent on bug-fixing, maintenance, and engineering-driven projects.
+Use Developer Time Units: Measure development capacity in units like developer days, weeks, or months.
+Capture Estimates in a Spreadsheet: Document the strategic objective, milestone summary, source, and development time in a spreadsheet for clarity and future reference.
+Group or Decompose Milestones: Adjust milestones to ensure they are of appropriate size, grouping smaller ones or breaking down larger ones as needed.
+Send positive feedback
+Send negative feedback
+Video
+The first draft of your product roadmap
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video:
+
+
+Create a Straw Man Roadmap: Start with a rough first draft of your product roadmap to facilitate productive discussions with your team.
+Sequence and Prioritize Milestones: Sequence your milestones based on their value in supporting your product strategy and prioritize them accordingly.
+Schedule Milestones: Use the development capacity of your team and effort estimates to schedule milestones realistically.
+Sanity Check: Ensure the roadmap aligns with your product strategy and is feasible from a development perspective before sharing it with your team.
+Send positive feedback
+Send negative feedback
+Video
+The product roadmap meeting: Getting input and alignment
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video:
+
+
+Stakeholder Alignment: The main goal of the product roadmap meeting is to ensure all stakeholders are aligned with the development plan.
+Collaboration with Business Leaders: Work closely with your business leader to plan and run the meeting, as they manage most stakeholders and can ensure participation.
+Review and Modify: Present the roadmap, gather feedback, and make necessary adjustments during the meeting to address any concerns and align with the team's capacity and strategic objectives.
+Send positive feedback
+Send negative feedback
+Video
+Evangelize the product roadmap
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video:
+
+
+Create a Presentation: Develop a short presentation that highlights the key elements and decisions of the product roadmap, including the rationale behind them.
+One-on-One Meetings: Schedule one-on-one meetings with stakeholders who were not part of the development process to present the roadmap and gather their feedback.
+All Hands Meeting: Roll out the roadmap to the entire company or business unit in an all hands meeting, keeping the presentation brief and engaging.
+Team Effort: Present the roadmap as the result of the team's efforts, emphasizing collective decision-making.
+Send positive feedback
+Send negative feedback
+Video
+Maintain the product roadmap
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video:
+
+
+Dynamic Nature of Roadmaps: Product roadmaps are dynamic documents that need to be updated when new information about customers, competitors, or development timelines is learned.
+Types of New Information: Updates may be needed due to new insights about customer needs, competitor actions, or changes in development time or costs.
+Team Member Requests: When team members request changes, understand the reason behind the request to determine if it is based on new information or misalignment with previous decisions.
+Frequency of Updates: The frequency of roadmap updates varies based on product maturity and market stability.
+Send positive feedback
+Send negative feedback
+Video
+Three steps for building your product roadmap
+Ioannis Canellos:
+Key takeaways for this video
+Learning AI:
+Here are the key takeaways from the current video:
+
+
+Understand Customer Needs: Spend time with your customers to deeply understand their needs and how they think about your product.
+Engage Stakeholders: Identify key product stakeholders and schedule strategy meetings to get everyone aligned around your product strategy.
+Build and Share the Roadmap: Create your first roadmap, identify product milestones, scope them with your product development leader, and share it with your company and stakeholders.
+Maintain Relevance: Keep your roadmap relevant by regularly reviewing market and customer assumptions and updating the roadmap as necessary.
+Send positive feedback
+Send negative feedback
+Send message
+
+This is powered by AI and may make mistakes. Learn more about how your conversations are saved.
