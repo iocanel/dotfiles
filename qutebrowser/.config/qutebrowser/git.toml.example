@@ -1,0 +1,29 @@
+# Git userscripts configuration example
+# Copy this to git.toml to activate
+
+[default]
+method = "fallback"  # Options: ssh, https, fallback
+
+# Host-specific configurations
+["github.com"]
+method = "https"
+
+["gitlab.company.com"]
+method = "ssh" 
+username = "ioannis.canellos"  # Custom username for SSH URLs
+
+["gitlab.internal.com"]
+method = "ssh"
+username = "john.doe"
+
+# Repository-specific configurations (highest priority)
+["gitlab.company.com/org/legacy-repo"]
+method = "https"  # Force HTTPS for this specific repo
+
+["github.com/personal/private-repo"]
+method = "ssh"
+username = "personal-account"  # Use different GitHub account
+
+["gitlab.internal.com/team/secure-project"]
+method = "fallback"
+username = "security-team"
