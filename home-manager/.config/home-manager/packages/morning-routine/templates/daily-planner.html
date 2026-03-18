@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @page { size: letter; margin: 10mm; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 20px; line-height: 1.5; background: #fff; }
+    .header { text-align: center; padding: 4px; border-bottom: 2px solid #333; margin-bottom: 12px; }
+    .header .date { font-size: 18px; font-weight: bold; }
+    .section { border: 2px solid #bbb; border-radius: 8px; margin-bottom: 14px; overflow: hidden; page-break-inside: avoid; }
+    .section-header { background: #e8e8e8; padding: 8px 14px; font-weight: bold; font-size: 24px; border-bottom: 2px solid #bbb; }
+    .section-content { padding: 10px 14px; }
+    .card { border: 1px solid #ccc; border-radius: 5px; padding: 8px 12px; margin-bottom: 8px; background: #fafafa; }
+    .card:last-child { margin-bottom: 0; }
+    .card-title { font-weight: 600; font-size: 22px; }
+    .card-meta { font-size: 18px; color: #555; margin-top: 2px; }
+    .checkbox { display: inline-block; width: 22px; height: 22px; border: 2px solid #333; margin-right: 10px; vertical-align: middle; }
+    .task-item { padding: 6px 0; border-bottom: 1px dotted #ccc; font-size: 22px; }
+    .task-item:last-child { border-bottom: none; }
+    .meeting-item { padding: 4px 0; font-size: 22px; }
+    .meeting-item:last-child { border-bottom: none; }
+    .log-line { border-bottom: 1px solid #ccc; height: 36px; margin-bottom: 4px; }
+    .time-tag { background: #d4edda; padding: 4px 12px; border-radius: 4px; font-size: 20px; margin-right: 12px; font-weight: 600; }
+    .two-col { display: flex; gap: 14px; }
+    .two-col > div { flex: 1; }
+    .habits-inline { font-size: 22px; line-height: 2.4; }
+    .habits-inline .checkbox { margin-left: 12px; }
+    .habits-inline .checkbox:first-child { margin-left: 0; }
+    .notebook-page { page-break-before: always; }
+    .notebook-header { font-size: 22px; font-weight: bold; margin-bottom: 8px; color: #555; }
+    .notebook-line { border-bottom: 1px solid #999; height: 28px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="date">{{DATE_DISPLAY}}</div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">Meetings</div>
+    <div class="section-content">
+      {{MEETINGS}}
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">MR to Review</div>
+    <div class="section-content">
+      {{MERGE_REQUESTS}}
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">Tasks</div>
+    <div class="section-content">
+      {{TASKS}}
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">Habits</div>
+    <div class="section-content habits-inline">
+      {{HABITS}}
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="section">
+      <div class="section-header">Meals</div>
+      <div class="section-content">
+        <div class="log-line">breakfast:</div>
+        <div class="log-line">lunch:</div>
+        <div class="log-line">dinner:</div>
+        <div style="margin-top: 8px; font-weight: 600;">Total Calories: ______</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">Workout</div>
+      <div class="section-content">
+        <div class="log-line"></div>
+        <div class="log-line"></div>
+        <div class="log-line"></div>
+        <div class="log-line"></div>
+        <div class="log-line"></div>
+        <div class="log-line"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notebook Page 1 -->
+  <div class="notebook-page">
+    <div class="notebook-header">Notes</div>
+    <div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div>
+    <div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div>
+    <div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div>
+    <div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div>
+    <div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div>
+    <div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div>
+  </div>
+
+  <!-- Notebook Page 2 -->
+  <div class="notebook-page">
+    <div class="notebook-header">Notes</div>
+    <div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div>
+    <div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div>
+    <div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div>
+    <div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div>
+    <div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div>
+    <div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div>
+  </div>
+
+  <!-- Notebook Page 3 -->
+  <div class="notebook-page">
+    <div class="notebook-header">Notes</div>
+    <div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div>
+    <div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div>
+    <div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div>
+    <div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div>
+    <div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div>
+    <div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div>
+  </div>
+</body>
+</html>
