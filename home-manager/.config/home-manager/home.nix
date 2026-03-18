@@ -18,9 +18,15 @@ let
   storyteller = pkgs.callPackage ./packages/storyteller/default.nix { };
   robot = pkgs.callPackage ./packages/robot/default.nix { };
   asana-cli = pkgs.callPackage ./packages/asana-cli/default.nix { };
+  clara-cli = pkgs.callPackage ./packages/clara-cli/default.nix { };
   outlook-mcp = pkgs.callPackage ./packages/outlook-mcp/default.nix { };
   airchiv = pkgs.callPackage ./packages/airchiv/default.nix { };
   fuseki-cli = pkgs.callPackage ./packages/fuseki-cli/default.nix { };
+
+  # CUDA-enabled openai-whisper
+  openai-whisper-cuda = pkgs.openai-whisper.override {
+    torch = pkgs.python3Packages.torchWithCuda;
+  };
 
   in
 {
@@ -48,6 +54,11 @@ let
     enable = true;
   };
 
+  # VPN credentials management
+  vpn = {
+    enable = true;
+  };
+
   home.stateVersion = "25.05"; # Adjust this according to your Nixpkgs version
   home.username = "iocanel";
   home.homeDirectory = "/home/iocanel";
@@ -69,6 +80,7 @@ let
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.permittedInsecurePackages = [
     "openssl-1.1.1w"
+    "qtwebengine-5.15.19"
   ];
 
   home.packages = with pkgs; [
@@ -91,6 +103,8 @@ let
     brave
     tor-browser
     qutebrowser
+    #Email
+    thunderbird
     # Media
     cozy
     musicpod
@@ -104,6 +118,8 @@ let
     asciinema-scenario
     asciinema-automation
     losslesscut-bin
+    openshot-qt
+    kdePackages.kdenlive
     ombi
     geeqie
     digikam
@@ -122,7 +138,7 @@ let
     v4l-utils
     guvcview
     mpv
-    opencv
+    (lib.hiPrio opencv)
     audacity
     # Desktop (shared)
     arandr
@@ -256,6 +272,7 @@ let
     org-cli
     glab-mr-tracker
     asana-cli
+    clara-cli
     outlook-mcp
     fuseki-cli
     whisperApi
@@ -287,6 +304,9 @@ let
     openapi-generator-cli
     vscode
     jetbrains.idea-oss
+    # Clojure
+    babashka
+    leiningen
     # codelldb
     vscode-extensions.vadimcn.vscode-lldb
     (pkgs.writeShellScriptBin "codelldb" ''
@@ -304,6 +324,8 @@ let
     node2nix
     typescript-language-server
     vue-language-server
+    deno
+    bun
     # Python
     (python312.withPackages (ps: with ps; [
       numpy
@@ -323,7 +345,9 @@ let
       weaviate-client
       zulip
       debugpy
+      scenedetect
       sentence-transformers
+      argos-translate-files
       # PDF generation (for kathimerini-news skill)
       pdfkit
       pypdf
@@ -719,6 +743,7 @@ let
             Environment = [
               "PATH=${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
               "HOME=${config.home.homeDirectory}"
+              "SASL_PATH=${config.home.homeDirectory}/.nix-profile/lib/sasl2"
             ];
           };
         };
