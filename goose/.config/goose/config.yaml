@@ -1,0 +1,44 @@
+GOOSE_MODEL: gpt-oss:20b
+GOOSE_PROVIDER: ollama
+OLLAMA_HOST: localhost
+
+profiles:
+  coding:
+    provider: ollama
+    model: deepseek-coder-v2:16b
+    description: "For coding and development tasks"
+  agentic:
+    provider: ollama
+    model: gpt-oss:20b
+    description: "For tools and agentic tasks"
+  tools:
+    provider: ollama
+    model: gpt-oss:20b
+    description: "For tool usage and planning"
+
+extensions:
+  developer:
+    bundled: true
+    display_name: Developer Tools
+    enabled: true
+    name: developer
+    timeout: 300
+    type: builtin
+  memory:
+    bundled: true
+    display_name: Memory
+    enabled: true
+    name: memory
+    timeout: 300
+    type: builtin
+  org-roam:
+    args: []
+    bundled: null
+    cmd: org-roam-mcp
+    description: MCP sever for Org Roam
+    enabled: true
+    env_keys: []
+    envs: {}
+    name: org-roam
+    timeout: 300
+    type: stdio

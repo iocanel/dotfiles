@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+CLAUDE_STORE="${CLAUDE_STORE:-"$HOME/.claude-store"}"
+DRY_RUN=false
+
+# Parse args
+if [[ "${1:-}" == "--dry-run" ]]; then
+  DRY_RUN=true
+  shift
+fi
+
+case "$PWD" in
+  "$HOME"/*) ;;
+  *)
+    echo "ERROR: Current directory ($PWD) is not under \$HOME ($HOME)."
+    exit 1
+    ;;
+esac
+
+rel_pwd="${PWD#"$HOME/"}"
+store_base="$CLAUDE_STORE/$rel_pwd"
+
+if [[ ! -d "$store_base" ]]; then
+  echo "Nothing to restore: $store_base does not exist."
+  exit 0
+fi
+
+err=0
+
+run_cmd() {
+  if $DRY_RUN; then
+    echo "[DRY-RUN] $*"
+  else
+    "$@"
+  fi
+}
+
+restore_one() {
+  local stored="$1"
+  local rel="${stored#"$CLAUDE_STORE/"}"
+  local target="$HOME/$rel"
+
+  case "$target" in
+    "$PWD"/*) ;;
+    *) return 0 ;; # skip if not under current folder
+  esac
+
+  if [[ -e "$target" ]]; then
+    echo "ERROR: Target already exists locally: $target" >&2
+    err=1
+    return 0
+  fi
+
+  run_cmd mkdir -p "$(dirname "$target")"
+  run_cmd mv "$stored" "$target"
+  echo "Restored: $stored -> $target"
+
+  # Tidy empty dirs
+  local parent
+  parent="$(dirname "$stored")"
+  while [[ "$parent" != "$CLAUDE_STORE" && "$parent" == "$CLAUDE_STORE/"* ]]; do
+    if $DRY_RUN; then
+      echo "[DRY-RUN] rmdir \"$parent\" (if empty)"
+      parent="$(dirname "$parent")"
+      continue
+    fi
+    rmdir "$parent" 2>/dev/null || break
+    parent="$(dirname "$parent")"
+  done
+}
+
+# Restore everything under the store subtree
+while IFS= read -r f; do
+  restore_one "$f"
+done < <(find "$store_base" -type f -name 'CLAUDE.md' -print)
+
+while IFS= read -r d; do
+  restore_one "$d"
+done < <(find "$store_base" -type d -name '.claude' -print)
+
+if [[ $err -ne 0 ]]; then
+  exit 1
+fi

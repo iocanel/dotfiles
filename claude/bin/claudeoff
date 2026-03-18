@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+# Default store
+CLAUDE_STORE="${CLAUDE_STORE:-"$HOME/.claude-store"}"
+DRY_RUN=false
+
+# Parse args
+if [[ "${1:-}" == "--dry-run" ]]; then
+  DRY_RUN=true
+  shift
+fi
+
+mkdir -p "$CLAUDE_STORE"
+
+# Ensure current directory is under $HOME
+case "$PWD" in
+  "$HOME"/*) ;;
+  *)
+    echo "ERROR: Current directory ($PWD) is not under \$HOME ($HOME)."
+    exit 1
+    ;;
+esac
+
+err=0
+
+run_cmd() {
+  if $DRY_RUN; then
+    printf '%q ' "$@"
+    printf '\n'
+  else
+    "$@"
+  fi
+}
+
+move_one() {
+  local src="$1"
+
+  case "$src" in
+    "$HOME"/*) ;;
+    *)
+      echo "Skipping (not under \$HOME): $src" >&2
+      return 0
+      ;;
+  esac
+
+  local rel="${src#"$HOME/"}"
+  local dest="$CLAUDE_STORE/$rel"
+
+  if [[ -e "$dest" ]]; then
+    echo "ERROR: Destination already exists in store: $dest" >&2
+    err=1
+    return 0
+  fi
+
+  run_cmd mkdir -p "$(dirname "$dest")"
+  run_cmd mv "$src" "$dest"
+  echo "Moved: $src -> $dest"
+}
+
+# Find targets
+while IFS= read -r f; do
+  move_one "$f"
+done < <(find "$PWD" -type f -name 'CLAUDE.md' -print)
+
+while IFS= read -r d; do
+  move_one "$d"
+done < <(find "$PWD" -type d -name '.claude' -print)
+
+if [[ $err -ne 0 ]]; then
+  exit 1
+fi
