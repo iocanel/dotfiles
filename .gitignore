@@ -24,6 +24,10 @@ qutebrowser/.config/qutebrowser/userscripts/.venv/
 # Nix build artifacts
 home-manager/.config/home-manager/result
 
+# Home-manager managed symlinks (transient nix store paths)
+gnupg/.gnupg/gpg-agent.conf
+msmtp/.config/msmtp/config
+
 # Misc
 nohup.out
 msmtp/.config/msmtp/config.backup
