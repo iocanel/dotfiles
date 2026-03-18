@@ -1,0 +1,38 @@
+#!/bin/bash
+# Reset all audio device and stream volumes to 100%
+
+# Function to set volume for all devices of a type
+set_device_volumes() {
+    local device_type="$1"
+    
+    wpctl status | grep -A 50 "$device_type:" | grep -E "^\s+[0-9]+\." | while read -r line; do
+        device_id=$(echo "$line" | grep -oE "^\s+[0-9]+" | tr -d ' ')
+        if [ -n "$device_id" ]; then
+            wpctl set-volume "$device_id" 1.0 2>/dev/null
+            wpctl set-mute "$device_id" 0 2>/dev/null
+        fi
+    done
+}
+
+# Function to set volume for all streams
+set_stream_volumes() {
+    wpctl status | grep -A 100 "Streams:" | grep -E "^\s+[0-9]+\." | while read -r line; do
+        stream_id=$(echo "$line" | grep -oE "^\s+[0-9]+" | tr -d ' ')
+        if [ -n "$stream_id" ]; then
+            wpctl set-volume "$stream_id" 1.0 2>/dev/null
+            wpctl set-mute "$stream_id" 0 2>/dev/null
+        fi
+    done
+}
+
+# Reset all audio volumes
+echo "Resetting audio volumes to 100%..."
+
+# Set device volumes
+set_device_volumes "Sinks"
+set_device_volumes "Sources"
+
+# Set stream volumes  
+set_stream_volumes
+
+echo "Audio volumes reset complete."
