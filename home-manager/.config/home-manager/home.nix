@@ -22,13 +22,9 @@ let
   outlook-mcp = pkgs.callPackage ./packages/outlook-mcp/default.nix { };
   airchiv = pkgs.callPackage ./packages/airchiv/default.nix { };
   fuseki-cli = pkgs.callPackage ./packages/fuseki-cli/default.nix { };
+  greeksuber = pkgs.callPackage ./packages/greeksuber/default.nix { };
 
-  # CUDA-enabled openai-whisper
-  openai-whisper-cuda = pkgs.openai-whisper.override {
-    torch = pkgs.python3Packages.torchWithCuda;
-  };
-
-  in
+in
 {
   imports = [
     ./modules/display/manager.nix
@@ -276,7 +272,7 @@ let
     outlook-mcp
     fuseki-cli
     whisperApi
-    openai-whisper
+    greeksuber
     chatgpt-cli
     aider-chat-full
     goose-cli
@@ -743,7 +739,7 @@ let
             Environment = [
               "PATH=${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
               "HOME=${config.home.homeDirectory}"
-              "SASL_PATH=${config.home.homeDirectory}/.nix-profile/lib/sasl2"
+              "SASL_PATH=${pkgs.cyrus_sasl.out}/lib/sasl2:${config.home.homeDirectory}/.nix-profile/lib/sasl2"
             ];
           };
         };
