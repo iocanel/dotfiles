@@ -23,6 +23,11 @@ let
   airchiv = pkgs.callPackage ./packages/airchiv/default.nix { };
   fuseki-cli = pkgs.callPackage ./packages/fuseki-cli/default.nix { };
   greeksuber = pkgs.callPackage ./packages/greeksuber/default.nix { };
+  monopoli-scrapper = pkgs.callPackage ./packages/monopoli-scrapper/default.nix { };
+  clickatlife-scrapper = pkgs.callPackage ./packages/clickatlife-scrapper/default.nix { };
+  athinorama-scrapper = pkgs.callPackage ./packages/athinorama-scrapper/default.nix { };
+  more-scrapper = pkgs.callPackage ./packages/more-scrapper/default.nix { };
+  gws-cli = pkgs.callPackage ./packages/gws-cli/default.nix { };
 
 in
 {
@@ -273,6 +278,11 @@ in
     fuseki-cli
     whisperApi
     greeksuber
+    monopoli-scrapper
+    clickatlife-scrapper
+    athinorama-scrapper
+    more-scrapper
+    gws-cli
     chatgpt-cli
     aider-chat-full
     goose-cli
