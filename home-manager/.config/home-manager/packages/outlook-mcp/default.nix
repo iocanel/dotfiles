@@ -1,6 +1,6 @@
 { pkgs
 , lib ? pkgs.lib
-, outlookMcpSrc ? /home/iocanel/workspace/src/github.com/iocanel/outlook-mcp
+, outlookMcpSrc ? /home/iocanel/workspace/src/github.com/iocanel/scrappers/outlook.com
 , version ? "0.1.0"
 }:
 
@@ -21,7 +21,7 @@ pkgs.symlinkJoin {
 
   meta = with lib; {
     description = "CLI and MCP server for Outlook calendar and email via browser automation";
-    homepage = "https://github.com/iocanel/outlook-mcp";
+    homepage = "https://github.com/iocanel/scrappers";
     license = licenses.mit;
     platforms = platforms.linux;
     mainProgram = "outlook";
