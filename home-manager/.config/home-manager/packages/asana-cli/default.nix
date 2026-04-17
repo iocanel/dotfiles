@@ -1,25 +1,35 @@
 { pkgs
 , lib ? pkgs.lib
-, asanaSrc ? /home/iocanel/workspace/src/gitserver.silensec.com/iocanel/asana-client
 , version ? "0.1-SNAPSHOT"
 }:
 
 let
-  binaryName = "asana-cli-${version}-runner";
-  binaryPath = "${asanaSrc}/cli/target/${binaryName}";
-
-  asanaWrapper = pkgs.writeShellScriptBin "asana" ''
-    exec ${binaryPath} "$@"
-  '';
+  src = /home/iocanel/workspace/src/github.com/iocanel/apis/asana-client;
 
 in
-pkgs.symlinkJoin {
-  name = "asana-cli-${version}";
-  paths = [ asanaWrapper ];
+pkgs.maven.buildMavenPackage {
+  pname = "asana-cli";
+  inherit version src;
+
+  mvnHash = "sha256-lv2XZCv5IL+uTd1EWwyaaG1MD2AYZsEIIT6aHd60+wY=";
+
+  mvnJdk = pkgs.temurin-bin-21;
+
+  nativeBuildInputs = [
+    pkgs.graalvmPackages.graalvm-ce
+  ];
+
+  mvnParameters = "-Pnative -pl cli -am -DskipTests --no-transfer-progress -Dquarkus.native.graalvm-home=${pkgs.graalvmPackages.graalvm-ce}";
+
+  installPhase = ''
+    mkdir -p $out/bin
+    cp cli/target/asana-cli-${version}-runner $out/bin/asana
+    chmod +x $out/bin/asana
+  '';
 
   meta = with lib; {
     description = "Asana CLI client with MCP server support";
-    homepage = "https://gitserver.silensec.com/iocanel/asana-client";
+    homepage = "https://github.com/iocanel/apis";
     license = licenses.asl20;
     platforms = platforms.linux;
     mainProgram = "asana";
