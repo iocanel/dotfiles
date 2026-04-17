@@ -3,31 +3,23 @@
 with lib;
 
 let
+  unstable = import (builtins.fetchTarball {
+    url = "https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz";
+  }) {
+    config = { allowUnfree = true; };
+  };
+
   buildFishPlugin = pkgs.fishPlugins.buildFishPlugin;
   fisher = pkgs.callPackage ./packages/fisher/4.4.4.nix {
     inherit buildFishPlugin;
-  };
-  org-cli = pkgs.callPackage ./packages/org-cli/default.nix {
-    src = /home/iocanel/workspace/src/github.com/iocanel/org-cli;
-  };
-  glab-mr-tracker = pkgs.callPackage ./packages/glab-mr-tracker/default.nix {
-    src = /home/iocanel/workspace/src/github.com/iocanel/glab-mr-tracker;
   };
   whisperApi = pkgs.callPackage ./packages/whisper-api/default.nix { };
   gimp3WithPlugins = pkgs.callPackage ./packages/gimp3-with-plugins/default.nix { };
   storyteller = pkgs.callPackage ./packages/storyteller/default.nix { };
   robot = pkgs.callPackage ./packages/robot/default.nix { };
-  asana-cli = pkgs.callPackage ./packages/asana-cli/default.nix { };
-  clara-cli = pkgs.callPackage ./packages/clara-cli/default.nix { };
-  outlook-mcp = pkgs.callPackage ./packages/outlook-mcp/default.nix { };
-  airchiv = pkgs.callPackage ./packages/airchiv/default.nix { };
-  fuseki-cli = pkgs.callPackage ./packages/fuseki-cli/default.nix { };
-  greeksuber = pkgs.callPackage ./packages/greeksuber/default.nix { };
-  monopoli-scrapper = pkgs.callPackage ./packages/monopoli-scrapper/default.nix { };
-  clickatlife-scrapper = pkgs.callPackage ./packages/clickatlife-scrapper/default.nix { };
-  athinorama-scrapper = pkgs.callPackage ./packages/athinorama-scrapper/default.nix { };
-  more-scrapper = pkgs.callPackage ./packages/more-scrapper/default.nix { };
   gws-cli = pkgs.callPackage ./packages/gws-cli/default.nix { };
+  rtk = pkgs.callPackage ./packages/rtk/default.nix { };
+  h5p-cli = pkgs.callPackage ./packages/h5p-cli/default.nix { };
 
 in
 {
@@ -230,6 +222,9 @@ in
     #
     # CLI
     #
+    # Hardware
+    teensy-loader-cli
+
     android-tools
     google-cloud-sdk
     kubectl
@@ -268,27 +263,39 @@ in
     #
     # AI tools
     codeium
-    claude-code
+    (pkgs.stdenv.mkDerivation rec {
+      pname = "claude-code";
+      version = "2.1.91";
+      src = pkgs.fetchurl {
+        url = "https://registry.npmjs.org/@anthropic-ai/claude-code/-/claude-code-${version}.tgz";
+        hash = "sha256-T7Ta53HW+tHnRwN0EUj17i0kg39KBOqycEF0b3pbPis=";
+      };
+      nativeBuildInputs = [ pkgs.makeWrapper ];
+      buildInputs = [ pkgs.nodejs ];
+      dontBuild = true;
+      installPhase = ''
+        mkdir -p $out/lib/node_modules/@anthropic-ai/claude-code
+        cp -r . $out/lib/node_modules/@anthropic-ai/claude-code/
+        makeWrapper ${pkgs.nodejs}/bin/node $out/bin/claude \
+          --add-flags "$out/lib/node_modules/@anthropic-ai/claude-code/cli.js" \
+          --set DISABLE_AUTOUPDATER 1 \
+          --set DISABLE_INSTALLATION_CHECKS 1
+      '';
+      meta = {
+        description = "Claude Code CLI";
+        mainProgram = "claude";
+      };
+    })
     opencode
-    org-cli
-    glab-mr-tracker
-    asana-cli
-    clara-cli
-    outlook-mcp
-    fuseki-cli
     whisperApi
-    greeksuber
-    monopoli-scrapper
-    clickatlife-scrapper
-    athinorama-scrapper
-    more-scrapper
     gws-cli
+    rtk
+    h5p-cli
     chatgpt-cli
     aider-chat-full
     goose-cli
     storyteller
     robot
-    airchiv
     # Goose CLI - dependencies
     dbus
     pkg-config
@@ -326,6 +333,7 @@ in
     # Javascript
     nodejs
     yarn-berry
+    pnpm
     nodePackages.gulp
     node2nix
     typescript-language-server
@@ -477,10 +485,12 @@ in
   fi
   export ANTHROPIC_API_KEY=$(${pkgs.pass}/bin/pass show anthropic.com/iocanel/default-key)
   export OPENAI_API_KEY=$(${pkgs.pass}/bin/pass show openai.com/iocanel/api-key)
-  export GEMINI_PROJECT_ID=$(${pkgs.pass}/bin/pass show services/geminiai/project-id)
-  export GEMINI_LOCATION=$(${pkgs.pass}/bin/pass show services/geminiai/location)
+  export TRIPADVISOR_API_KEY=$(${pkgs.pass}/bin/pass show tripadvisor.com/iocanel/api-key)
+  export GEMINI_PROJECT_ID=$(${pkgs.pass}/bin/pass show apis.google.com/generativeai/project-id)
+  export GEMINI_LOCATION=$(${pkgs.pass}/bin/pass show apis.google.com/generativeai/location)
 
   export TAVILY_API_KEY=$(${pkgs.pass}/bin/pass show tavily.com/api-key)
+  export OMDB_API_KEY=$(${pkgs.pass}/bin/pass show omdbapi.com/iocanel/api-key)
   export QUARKUS_BACKSTAGE_URL=http://localhost:7007
   export QUARKUS_BACKSTAGE_TOKEN=7KE4bWxxoSHIuOczpLhIy/4GbeMz0Bjc
 
@@ -492,9 +502,11 @@ in
   echo "# .profile: generated, do not edit by hand." > $HOME/.profile
   echo "export ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY" >> $HOME/.profile
   echo "export OPENAI_API_KEY=$OPENAI_API_KEY" >> $HOME/.profile
+  echo "export TRIPADVISOR_API_KEY=$TRIPADVISOR_API_KEY" >> $HOME/.profile
   echo "export GEMINI_PROJECT_ID=$GEMINI_PROJECT_ID" >> $HOME/.profile
   echo "export GEMINI_LOCATION=$GEMINI_LOCATION" >> $HOME/.profile
   echo "export TAVILY_API_KEY=$TAVILY_API_KEY" >> $HOME/.profile
+  echo "export OMDB_API_KEY=$OMDB_API_KEY" >> $HOME/.profile
   echo "export PATH=$PATH" >> $HOME/.profile
   echo "export QUARKUS_BACKSTAGE_URL=$QUARKUS_BACKSTAGE_URL" >> $HOME/.profile
   echo "export QUARKUS_BACKSTAGE_TOKEN=$QUARKUS_BACKSTAGE_TOKEN" >> $HOME/.profile
@@ -573,10 +585,14 @@ in
         qtds="java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=\\*:5005 -jar /home/iocanel/workspace/src/github.com/quarkiverse/quarkus-tekton/cli/target/quarkus-tekton-cli-999-SNAPSHOT.jar";
       };
       interactiveShellInit = ''
+      function tcc
+          claude --dangerously-skip-permissions --continue $argv; or claude --dangerously-skip-permissions $argv
+      end
+      function tncc
+          claude --dangerously-skip-permissions $argv
+      end
       function fish_user_key_bindings
         bind --erase ctrl-space
-        bind 'ctrl-space' _fish_ai_autocomplete_or_fix
-        bind ctrl-f _fish_ai_autocomplete_or_fix
       end
       function fish_prompt_disabled
           set_color yellow
