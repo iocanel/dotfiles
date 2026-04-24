@@ -437,6 +437,7 @@ in
     #
     xdotool
     imagemagick
+    luajitPackages.magick
     rsync
     rclone
     unison
