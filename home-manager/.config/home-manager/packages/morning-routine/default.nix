@@ -3,8 +3,6 @@
 , version ? "0.1.0"
 , org-cli
 , glab-mr-tracker
-, asana-cli
-, outlook-mcp
 }:
 
 let
@@ -37,7 +35,7 @@ let
 
       wrapProgram $out/bin/daily-planner \
         --set DAILY_PLANNER_TEMPLATE "$out/share/morning-routine/daily-planner.html" \
-        --prefix PATH : ${lib.makeBinPath [ org-cli glab-mr-tracker asana-cli outlook-mcp pkgs.wkhtmltopdf ]}
+        --prefix PATH : ${lib.makeBinPath [ org-cli glab-mr-tracker pkgs.wkhtmltopdf ]}
     '';
 
     meta = with lib; {
