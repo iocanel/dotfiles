@@ -14,6 +14,11 @@ ORGANIZATION=$(extract_organization "$URL")
 REPOSITORY_NAME=$(extract_repository "$URL")
 PULL_REQUEST_NUMBER=$(extract_github_pr_number "$URL")
 
+if [ -z "$PULL_REQUEST_NUMBER" ]; then
+    echo "No pull request number found in URL: $URL — falling back to regular clone."
+    exec "$SCRIPT_DIR/github-clone.sh" "$URL"
+fi
+
 REVIEW_DIR=$(build_review_path "$HOST" "$ORGANIZATION" "$REPOSITORY_NAME" "$PULL_REQUEST_NUMBER")
 
 # Create a script to run in terminal

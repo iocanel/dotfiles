@@ -15,6 +15,11 @@ ORGANIZATION=$(extract_organization "$URL")
 REPOSITORY_NAME=$(extract_repository "$URL")
 MERGE_REQUEST_NUMBER=$(extract_gitlab_mr_number "$URL")
 
+if [ -z "$MERGE_REQUEST_NUMBER" ]; then
+    echo "No merge request number found in URL: $URL — falling back to regular clone."
+    exec "$SCRIPT_DIR/gitlab-clone.sh" "$URL"
+fi
+
 REVIEW_DIR=$(build_review_path "$HOST" "$ORGANIZATION" "$REPOSITORY_NAME" "$MERGE_REQUEST_NUMBER")
 
 # Create a script to run in terminal
