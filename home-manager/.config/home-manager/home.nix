@@ -192,11 +192,13 @@ in
     # Emulation
     wine
     winetricks
+    (pkgs.bottles.override { removeWarningPopup = true; })
     # Latex
     texliveFull
     # Office
     libreoffice
     evince
+    foliate
     qpdf
     xournalpp
     wkhtmltopdf
@@ -464,6 +466,7 @@ in
     
     # Gaming
     steam
+    scummvm
   ];
 
 
