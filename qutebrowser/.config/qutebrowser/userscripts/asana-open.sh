@@ -9,11 +9,14 @@ OPEN_CMD=(qutebrowser --target window)
 
 die() { echo "ERROR: $*" >&2; exit 1; }
 
-is_github() { [[ "$1" =~ /pull/[0-9]+ ]]; }
-is_gitlab() { [[ "$1" =~ /merge_requests/[0-9]+ ]]; }
+is_github_pr() { [[ "$1" =~ /pull/[0-9]+ ]]; }
+is_gitlab_mr() { [[ "$1" =~ /merge_requests/[0-9]+ ]]; }
+is_github_commit() { [[ "$1" =~ github\.[^/]+/[^/]+/[^/]+/commit/[0-9a-f]+ ]]; }
+is_gitlab_commit() { [[ "$1" =~ /-/commit/[0-9a-f]+ ]]; }
 
 extract_github_pr() { [[ "$1" =~ /pull/([0-9]+) ]] && echo "${BASH_REMATCH[1]}"; }
 extract_gitlab_mr() { [[ "$1" =~ /merge_requests/([0-9]+) ]] && echo "${BASH_REMATCH[1]}"; }
+extract_commit_sha() { [[ "$1" =~ /commit/([0-9a-f]+) ]] && echo "${BASH_REMATCH[1]}"; }
 
 # GitHub: https://host/org/repo/pull/123 -> org/repo
 extract_github_repo() {
@@ -22,11 +25,11 @@ extract_github_repo() {
 
 # GitLab: https://host/group/subgroup/repo/-/merge_requests/114 -> https://host/group/subgroup/repo
 extract_gitlab_project_url() {
-  echo "$1" | sed -E 's#(https?://[^/]+/.+)/-/merge_requests/[0-9]+.*#\1#'
+  echo "$1" | sed -E 's#(https?://[^/]+/.+)/-/(merge_requests|commit)/[^/]+.*#\1#'
 }
 
 get_title() {
-  if is_github "$URL"; then
+  if is_github_pr "$URL"; then
     local pr repo
     pr="$(extract_github_pr "$URL")"
     repo="$(extract_github_repo "$URL")"
@@ -34,7 +37,7 @@ get_title() {
 
     gh pr view "$pr" -R "$repo" --json title -q .title
 
-  elif is_gitlab "$URL"; then
+  elif is_gitlab_mr "$URL"; then
     local mr project_url
     mr="$(extract_gitlab_mr "$URL")"
     project_url="$(extract_gitlab_project_url "$URL")"
@@ -43,13 +46,31 @@ get_title() {
     glab mr view "$mr" -R "$project_url" \
       | sed -n 's/^title:[[:space:]]*//Ip' \
       | head -n1
+
+  elif is_github_commit "$URL"; then
+    local sha repo
+    sha="$(extract_commit_sha "$URL")"
+    repo="$(extract_github_repo "$URL")"
+    [[ -n "${sha:-}" && -n "${repo:-}" ]] || die "Could not extract GitHub repo/commit from URL"
+
+    gh api "repos/$repo/commits/$sha" --jq '.commit.message' | head -n1
+
+  elif is_gitlab_commit "$URL"; then
+    local sha project_url
+    sha="$(extract_commit_sha "$URL")"
+    project_url="$(extract_gitlab_project_url "$URL")"
+    [[ -n "${sha:-}" && -n "${project_url:-}" ]] || die "Could not extract GitLab project/commit from URL"
+
+    glab api "projects/$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1].split('://')[1].lstrip('/'), safe=''))" "$project_url")/repository/commits/$sha" \
+      | jq -r '.title'
+
   else
-    die "Unsupported URL (not a PR/MR?): $URL"
+    die "Unsupported URL (not a PR/MR/commit): $URL"
   fi
 }
 
 get_branch() {
-  if is_github "$URL"; then
+  if is_github_pr "$URL"; then
     local pr repo
     pr="$(extract_github_pr "$URL")"
     repo="$(extract_github_repo "$URL")"
@@ -57,7 +78,7 @@ get_branch() {
 
     gh pr view "$pr" -R "$repo" --json headRefName -q .headRefName
 
-  elif is_gitlab "$URL"; then
+  elif is_gitlab_mr "$URL"; then
     local mr project_url
     mr="$(extract_gitlab_mr "$URL")"
     project_url="$(extract_gitlab_project_url "$URL")"
@@ -104,5 +125,5 @@ echo "Found: ${cr_refs[*]}"
 for cr in "${cr_refs[@]}"; do
   asana_url="${ASANA_BASE}${cr}"
   echo "Opening: $asana_url"
-  "$OPEN_CMD" "$asana_url" >/dev/null 2>&1 || true
+  "${OPEN_CMD[@]}" "$asana_url" >/dev/null 2>&1 || true
 done
