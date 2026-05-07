@@ -1,17 +1,17 @@
 { pkgs
 , lib ? pkgs.lib
-, version ? "0.1-SNAPSHOT"
+, version ? "999-SNAPSHOT"
 }:
 
 let
-  src = /home/iocanel/workspace/src/github.com/iocanel/apis/asana-client;
+  src = /home/iocanel/workspace/src/gitserver.silensec.com/iocanel/asana-client;
 
 in
 pkgs.maven.buildMavenPackage {
   pname = "asana-cli";
   inherit version src;
 
-  mvnHash = "sha256-lv2XZCv5IL+uTd1EWwyaaG1MD2AYZsEIIT6aHd60+wY=";
+  mvnHash = "sha256-qMsUlXMakzeySu0J4lZT/lY99Rf8aTXmjo7zE2TEErU=";
 
   mvnJdk = pkgs.temurin-bin-21;
 
