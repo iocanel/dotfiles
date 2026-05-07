@@ -33,6 +33,9 @@ msmtp/.config/msmtp/config
 # Wine/application icons (auto-generated)
 emacs/.local/share/icons/
 
+# RTK cache
+**/.rtk/
+
 # Misc
 nohup.out
 msmtp/.config/msmtp/config.backup
