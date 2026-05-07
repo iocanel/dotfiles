@@ -495,8 +495,6 @@ in
 
   export TAVILY_API_KEY=$(${pkgs.pass}/bin/pass show tavily.com/api-key)
   export OMDB_API_KEY=$(${pkgs.pass}/bin/pass show omdbapi.com/iocanel/api-key)
-  export QUARKUS_BACKSTAGE_URL=http://localhost:7007
-  export QUARKUS_BACKSTAGE_TOKEN=7KE4bWxxoSHIuOczpLhIy/4GbeMz0Bjc
 
   export PATH=$HOME/bin:/run/wrappers/bin:/home/iocanel/.nix-profile/bin:/nix/profile/bin:/home/iocanel/.local/state/nix/profile/bin:/etc/profiles/per-user/iocanel/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin
 
@@ -512,8 +510,6 @@ in
   echo "export TAVILY_API_KEY=$TAVILY_API_KEY" >> $HOME/.profile
   echo "export OMDB_API_KEY=$OMDB_API_KEY" >> $HOME/.profile
   echo "export PATH=$PATH" >> $HOME/.profile
-  echo "export QUARKUS_BACKSTAGE_URL=$QUARKUS_BACKSTAGE_URL" >> $HOME/.profile
-  echo "export QUARKUS_BACKSTAGE_TOKEN=$QUARKUS_BACKSTAGE_TOKEN" >> $HOME/.profile
   echo "export JAVA_HOME=$JAVA_HOME" >> $HOME/.profile
 
   # This is against NixOS philosophy but I do need it for demo etc
