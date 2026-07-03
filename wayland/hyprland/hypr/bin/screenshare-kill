@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Kills any active local screen capture / screen share.
+#
+# Two layers:
+#  1. Close active ScreenCast portal sessions via the xdg-desktop-portal
+#     session objects (stops browser/app shares that went through the portal).
+#  2. Kill local recorders that grab the screen directly (OBS, wf-recorder,
+#     wl-screenrec, ffmpeg x11/kms grabs).
+#
+# Only runs if something is actually capturing, so a stray click on the gray
+# icon is a no-op.
+set -uo pipefail
+
+portal=$(pw-dump 2>/dev/null \
+  | jq '[.[] | select(.info.props."media.class" == "Stream/Output/Video")] | length' \
+  2>/dev/null || echo 0)
+
+if [ "${portal:-0}" -eq 0 ] \
+  && ! pgrep -x wf-recorder >/dev/null 2>&1 \
+  && ! pgrep -x wl-screenrec >/dev/null 2>&1; then
+  exit 0
+fi
+
+# Layer 1: close portal ScreenCast sessions.
+for session in $(busctl --user tree org.freedesktop.portal.Desktop 2>/dev/null \
+  | grep -oE '/org/freedesktop/portal/desktop/session/[^ ]+' | sort -u); do
+  busctl --user call org.freedesktop.portal.Desktop \
+    "$session" org.freedesktop.portal.Session Close 2>/dev/null || true
+done
+
+# Layer 2: stop direct local recorders.
+pkill -TERM -f 'wf-recorder' 2>/dev/null || true
+pkill -TERM -f 'wl-screenrec' 2>/dev/null || true
+pkill -TERM -f 'ffmpeg .*(x11grab|kmsgrab|/dev/dri|pipewire)' 2>/dev/null || true
+
+notify-send -a screenshare -u critical "Screen share stopped" \
+  "Killed active screen capture." 2>/dev/null || true
+
+exit 0

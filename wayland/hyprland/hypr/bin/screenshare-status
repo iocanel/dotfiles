@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Reports whether the screen is currently being captured/shared.
+# Emits JSON consumed by the hyprpanel custom module's icon map:
+#   {"alt":"active"}  -> red icon  (a ScreenCast portal stream is live)
+#   {"alt":"idle"}    -> gray icon (nothing is capturing the screen)
+#
+# Detection covers both Wayland capture paths:
+#  1. Portal path: xdg-desktop-portal-hyprland publishes a Stream/Output/Video
+#     PipeWire node while a ScreenCast session is active. Browser tab/window
+#     shares, OBS-via-portal, Zoom, Teams and Meet all go through this.
+#  2. Direct wlr-screencopy path: wf-recorder / wl-screenrec grab the output
+#     without a portal or PipeWire node, so they are detected by process.
+set -euo pipefail
+
+portal=$(pw-dump 2>/dev/null \
+  | jq '[.[] | select(.info.props."media.class" == "Stream/Output/Video")] | length' \
+  2>/dev/null || echo 0)
+
+direct=0
+if pgrep -x wf-recorder >/dev/null 2>&1 || pgrep -x wl-screenrec >/dev/null 2>&1; then
+  direct=1
+fi
+
+if [ "${portal:-0}" -gt 0 ] || [ "$direct" -eq 1 ]; then
+  printf '{"alt":"active","tooltip":"Screen is being captured (click to stop)"}\n'
+else
+  printf '{"alt":"idle","tooltip":"No screen capture active"}\n'
+fi
