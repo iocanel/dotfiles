@@ -120,6 +120,7 @@
         "media"
       ],
       "right": [
+        "custom/screenshare",
         "volume",
         "network",
         "bluetooth",

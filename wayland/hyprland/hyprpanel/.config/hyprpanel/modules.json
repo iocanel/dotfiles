@@ -1,1 +1,16 @@
-{}
+{
+  "custom/screenshare": {
+    "execute": "screenshare-status",
+    "interval": 2000,
+    "label": "",
+    "tooltip": "{tooltip}",
+    "icon": {
+      "active": "🔴",
+      "idle": "⚪",
+      "default": "⚪"
+    },
+    "actions": {
+      "onLeftClick": "screenshare-kill"
+    }
+  }
+}
