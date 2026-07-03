@@ -104,6 +104,7 @@ in
     rhythmbox
     newsflash
     obs-studio
+    gnome-network-displays  # Miracast/cast screen to smart TVs (Wi-Fi Direct)
     peek
     gifski
     asciinema
