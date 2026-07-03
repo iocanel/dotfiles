@@ -6,8 +6,8 @@
     "tooltip": "{tooltip}",
     "icon": {
       "active": "🔴",
-      "idle": "⚪",
-      "default": "⚪"
+      "idle": "",
+      "default": ""
     },
     "actions": {
       "onLeftClick": "screenshare-kill"
