@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# Cast this screen to a networked display (smart TV / Miracast sink).
+#
+# Opens gnome-network-displays, which scans the LAN over Wi-Fi Direct (P2P) for
+# Miracast receivers and DLNA/Chromecast-style sinks, then lets you pick one and
+# start casting. Bound to the hyprpanel screenshare icon's right-click.
+#
+# If a cast/screencast is already active this still just opens the picker; use
+# left-click on the icon (screenshare-kill) to stop an active capture.
+set -uo pipefail
+
+if ! command -v gnome-network-displays >/dev/null 2>&1; then
+  notify-send -a screenshare -u critical "Cannot cast" \
+    "gnome-network-displays is not installed. Run: home-manager switch" 2>/dev/null || true
+  exit 1
+fi
+
+CLASS="org.gnome.NetworkDisplays"
+
+win_addr() {
+  hyprctl clients -j 2>/dev/null \
+    | jq -r --arg c "$CLASS" '.[] | select(.class == $c) | .address' | head -1
+}
+win_ws() {
+  hyprctl clients -j 2>/dev/null \
+    | jq -r --arg c "$CLASS" '.[] | select(.class == $c) | .workspace.name' | head -1
+}
+
+# A window already exists. If it was minimized to the hidden workspace after a
+# cast connected, bring it back so the user can disconnect or switch TV.
+# Otherwise just focus the open picker. Either way, do not spawn a second one.
+# (Match on window class: pgrep -f false-matches any command line containing the
+# string, and the real process comm is truncated to "gnome-network-di".)
+addr=$(win_addr)
+if [ -n "$addr" ]; then
+  if [ "$(win_ws)" = "special:casthidden" ]; then
+    cur=$(hyprctl activeworkspace -j 2>/dev/null | jq -r .id)
+    hyprctl dispatch movetoworkspace "$cur,address:$addr" >/dev/null 2>&1 || true
+  fi
+  hyprctl dispatch focuswindow "address:$addr" >/dev/null 2>&1 || true
+  exit 0
+fi
+
+notify-send -a screenshare "Screen casting" \
+  "Scanning for TVs and Miracast receivers on the network..." 2>/dev/null || true
+
+# Watch for the cast to connect, then minimize the window to a hidden workspace.
+setsid screenshare-cast-autohide >/dev/null 2>&1 < /dev/null &
+
+# gnome-network-displays' bundled libpulse aborts when it probes the
+# pipewire-pulse socket on this setup. Disabling the pulse probe lets it run;
+# Miracast carries its own audio path, so this only skips the local pulse query.
+exec env PULSE_SERVER=none gnome-network-displays

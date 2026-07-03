@@ -5,12 +5,13 @@
     "label": "",
     "tooltip": "{tooltip}",
     "icon": {
-      "active": "🔴",
-      "idle": "",
-      "default": ""
+      "active": "󰝥",
+      "idle": "󰄰",
+      "default": "󰄰"
     },
     "actions": {
-      "onLeftClick": "screenshare-kill"
+      "onLeftClick": "screenshare-kill",
+      "onRightClick": "screenshare-cast"
     }
   }
 }

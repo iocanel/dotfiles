@@ -1,39 +1,59 @@
 #!/usr/bin/env bash
-# Kills any active local screen capture / screen share.
+# Stops any active screen capture / screen share / cast.
 #
-# Two layers:
-#  1. Close active ScreenCast portal sessions via the xdg-desktop-portal
-#     session objects (stops browser/app shares that went through the portal).
-#  2. Kill local recorders that grab the screen directly (OBS, wf-recorder,
-#     wl-screenrec, ffmpeg x11/kms grabs).
+# Layers:
+#  1. Stop a gnome-network-displays cast (terminates the app, which tears down
+#     its portal Video/Source + Stream/Input/Video nodes and disconnects the TV).
+#  2. Close active ScreenCast portal sessions (browser/app shares via the portal).
+#  3. Kill local recorders that grab the screen directly (wf-recorder,
+#     wl-screenrec, ffmpeg x11/kms/pipewire grabs).
 #
-# Only runs if something is actually capturing, so a stray click on the gray
-# icon is a no-op.
+# Only acts if something is actually capturing, so a stray click on the gray
+# icon is a no-op. Detection matches screenshare-status: a portal Video/Source
+# in "running" state, any screencast stream node (input or output), a
+# gnome-network-displays node, or a direct recorder process.
 set -uo pipefail
 
-portal=$(pw-dump 2>/dev/null \
-  | jq '[.[] | select(.info.props."media.class" == "Stream/Output/Video")] | length' \
-  2>/dev/null || echo 0)
+capturing=$(pw-dump 2>/dev/null | jq '
+  [ .[]
+    | select(.type == "PipeWire:Interface:Node")
+    | .info as $i
+    | select(
+        ( ($i.props."node.name" // "") | test("portal-hyprland") ) and ($i.state == "running")
+        or ( ($i.props."node.name" // "") | test("network-displays") )
+        or ( ($i.props."media.class" // "") | test("Stream/(Output|Input)/Video") )
+      )
+  ] | length' 2>/dev/null || echo 0)
 
-if [ "${portal:-0}" -eq 0 ] \
+if [ "${capturing:-0}" -eq 0 ] \
   && ! pgrep -x wf-recorder >/dev/null 2>&1 \
   && ! pgrep -x wl-screenrec >/dev/null 2>&1; then
   exit 0
 fi
 
-# Layer 1: close portal ScreenCast sessions.
+# Layer 1: stop a gnome-network-displays cast. TERM tears the cast down cleanly.
+# The Nix wrapper gives the process an odd comm (".gnome-network-", truncated),
+# so pkill -x misses it; match candidates by command line, then confirm via
+# /proc/PID/comm to avoid killing shells that merely mention the name.
+for pid in $(pgrep -f gnome-network-displays 2>/dev/null); do
+  case "$(cat "/proc/$pid/comm" 2>/dev/null)" in
+    *gnome-network*) kill -TERM "$pid" 2>/dev/null || true ;;
+  esac
+done
+
+# Layer 2: close portal ScreenCast sessions.
 for session in $(busctl --user tree org.freedesktop.portal.Desktop 2>/dev/null \
   | grep -oE '/org/freedesktop/portal/desktop/session/[^ ]+' | sort -u); do
   busctl --user call org.freedesktop.portal.Desktop \
     "$session" org.freedesktop.portal.Session Close 2>/dev/null || true
 done
 
-# Layer 2: stop direct local recorders.
+# Layer 3: stop direct local recorders.
 pkill -TERM -f 'wf-recorder' 2>/dev/null || true
 pkill -TERM -f 'wl-screenrec' 2>/dev/null || true
 pkill -TERM -f 'ffmpeg .*(x11grab|kmsgrab|/dev/dri|pipewire)' 2>/dev/null || true
 
 notify-send -a screenshare -u critical "Screen share stopped" \
-  "Killed active screen capture." 2>/dev/null || true
+  "Stopped active screen capture / cast." 2>/dev/null || true
 
 exit 0

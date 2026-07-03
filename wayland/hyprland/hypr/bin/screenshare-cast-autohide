@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# Persistent daemon: when a gnome-network-displays cast goes live, minimize its
+# window to a hidden scratchpad workspace ONCE. The hyprpanel screenshare icon
+# turns red while the cast is active, so the live cast stays visible there;
+# right-clicking the icon (screenshare-cast) brings the window back and it stays
+# back (the daemon does not re-hide the same cast session).
+#
+# Runs continuously (systemd user service bound to the Hyprland session), so it
+# works no matter how gnome-network-displays was launched, and re-arms for the
+# next cast once the current one ends.
+set -uo pipefail
+
+CLASS="org.gnome.NetworkDisplays"
+HIDDEN_WS="special:casthidden"
+POLL=1
+
+# Connected == GND is actually streaming the screen. When a sink is picked and
+# linked, gnome-network-displays opens a Stream/Input/Video node (it consumes
+# the captured screen) and the desktop portal's Video/Source goes "running".
+# Both stay quiet while GND is merely scanning/selecting, so this won't hide the
+# picker before a TV is chosen.
+connected() {
+  local n
+  n=$(pw-dump 2>/dev/null | jq '
+    [ .[]
+      | select(.type == "PipeWire:Interface:Node")
+      | .info as $i
+      | select(
+          ( ($i.props."node.name" // "") | test("network-displays") )
+          or ( ($i.props."node.name" // "") | test("portal-hyprland") ) and ($i.state == "running")
+        )
+    ] | length' 2>/dev/null || echo 0)
+  [ "${n:-0}" -gt 0 ]
+}
+
+# Emit "addr ws" for the GND window, or nothing if it is not open.
+gnd_window() {
+  hyprctl clients -j 2>/dev/null \
+    | jq -r --arg c "$CLASS" '.[] | select(.class == $c) | "\(.address) \(.workspace.name)"' \
+    | head -1
+}
+
+# Whether we have already auto-hidden the current cast session. Reset when the
+# cast ends, so each new cast is hidden exactly once and a manual "bring back"
+# during a cast is respected.
+hidden_this_cast=0
+
+while true; do
+  if connected; then
+    if [ "$hidden_this_cast" -eq 0 ]; then
+      win=$(gnd_window)
+      if [ -n "$win" ]; then
+        addr=${win%% *}
+        ws=${win##* }
+        if [ "$ws" != "$HIDDEN_WS" ]; then
+          hyprctl dispatch movetoworkspacesilent "$HIDDEN_WS,address:$addr" >/dev/null 2>&1 || true
+          notify-send -a screenshare "Casting" \
+            "Connected. Window minimized. Right-click the bar icon to bring it back." \
+            2>/dev/null || true
+        fi
+        hidden_this_cast=1
+      fi
+    fi
+  else
+    hidden_this_cast=0
+  fi
+  sleep "$POLL"
+done

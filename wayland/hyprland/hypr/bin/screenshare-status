@@ -4,17 +4,27 @@
 #   {"alt":"active"}  -> red icon  (a ScreenCast portal stream is live)
 #   {"alt":"idle"}    -> gray icon (nothing is capturing the screen)
 #
-# Detection covers both Wayland capture paths:
-#  1. Portal path: xdg-desktop-portal-hyprland publishes a Stream/Output/Video
-#     PipeWire node while a ScreenCast session is active. Browser tab/window
-#     shares, OBS-via-portal, Zoom, Teams and Meet all go through this.
+# Detection covers every Wayland screen-capture path:
+#  1. Portal capture (browser tab/window shares, OBS-via-portal, Zoom, Teams,
+#     Meet AND gnome-network-displays casting): xdg-desktop-portal-hyprland
+#     publishes a Video/Source node that goes to state "running" while the
+#     screen is actually being captured. A consumer also appears as a
+#     Stream/Output/Video (browser/app) or Stream/Input/Video (GND) node.
 #  2. Direct wlr-screencopy path: wf-recorder / wl-screenrec grab the output
 #     without a portal or PipeWire node, so they are detected by process.
 set -euo pipefail
 
-portal=$(pw-dump 2>/dev/null \
-  | jq '[.[] | select(.info.props."media.class" == "Stream/Output/Video")] | length' \
-  2>/dev/null || echo 0)
+# Portal screen capture: the portal's own Video/Source node is "running", or a
+# screencast stream node (either direction) exists.
+portal=$(pw-dump 2>/dev/null | jq '
+  [ .[]
+    | select(.type == "PipeWire:Interface:Node")
+    | .info as $i
+    | select(
+        ( ($i.props."node.name" // "") | test("portal-hyprland") ) and ($i.state == "running")
+        or ( ($i.props."media.class" // "") | test("Stream/(Output|Input)/Video") )
+      )
+  ] | length' 2>/dev/null || echo 0)
 
 direct=0
 if pgrep -x wf-recorder >/dev/null 2>&1 || pgrep -x wl-screenrec >/dev/null 2>&1; then
@@ -22,7 +32,7 @@ if pgrep -x wf-recorder >/dev/null 2>&1 || pgrep -x wl-screenrec >/dev/null 2>&1
 fi
 
 if [ "${portal:-0}" -gt 0 ] || [ "$direct" -eq 1 ]; then
-  printf '{"alt":"active","tooltip":"Screen is being captured (click to stop)"}\n'
+  printf '{"alt":"active","tooltip":"Screen is being captured. Left-click: stop. Right-click: cast to TV"}\n'
 else
-  printf '{"alt":"idle","tooltip":"No screen capture active"}\n'
+  printf '{"alt":"idle","tooltip":"No screen capture active. Right-click: cast to TV"}\n'
 fi

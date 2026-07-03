@@ -1,7 +1,6 @@
 // Screenshare indicator: match the bar's icon color and background exactly.
-// The idle glyph is a monochrome nerd-font circle that inherits this gray so it
-// blends with every other bar icon. The active glyph is a color emoji (red dot)
-// that ignores CSS color, so it stays red regardless of this rule.
+// Both glyphs are monochrome nerd-font circles (idle = outline, active = filled)
+// that inherit this gray so the indicator blends with every other bar icon.
 .cmodule-screenshare.txt-icon {
   color: #9a9996;
 }
