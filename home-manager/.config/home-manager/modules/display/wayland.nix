@@ -127,6 +127,32 @@ with lib;
           RestartSec = "1";
         };
       };
+
+      # Hyprland-only: when a gnome-network-displays cast goes live, minimize its
+      # window to a hidden scratchpad workspace. Uses hyprctl, so not bound to
+      # the sway session.
+      screenshare-cast-autohide = {
+        Unit = {
+          Description = "Auto-hide gnome-network-displays window while casting";
+          After = [ "hyprland-session.target" ];
+          PartOf = [ "hyprland-session.target" ];
+        };
+        Install = {
+          WantedBy = [ "hyprland-session.target" ];
+        };
+        Service = {
+          Type = "simple";
+          Path = [ pkgs.hyprland pkgs.jq pkgs.pipewire pkgs.libnotify ];
+          ExecStart = "${pkgs.writeShellScript "start-screenshare-cast-autohide" ''
+            until [ -n "$WAYLAND_DISPLAY" ] && [ -S "/run/user/$(id -u)/$WAYLAND_DISPLAY" ]; do
+              sleep 1
+            done
+            exec "$HOME/.dotfiles/wayland/hyprland/hypr/bin/screenshare-cast-autohide"
+          ''}";
+          Restart = "on-failure";
+          RestartSec = "2";
+        };
+      };
     };
   };
 }
