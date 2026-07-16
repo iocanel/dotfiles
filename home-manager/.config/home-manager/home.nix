@@ -102,6 +102,7 @@ in
     cozy
     musicpod
     rhythmbox
+    mpc
     newsflash
     obs-studio
     gnome-network-displays  # Miracast/cast screen to smart TVs (Wi-Fi Direct)
@@ -987,5 +988,136 @@ in
         Categories=Development;
       '';
     };
+
+    # HyprPanel media picker: browse folders / pick playlists into MPD via wofi.
+    # HyprPanel controls MPD through the MPRIS bridge (mpd-mpris).
+    "bin/mpd-picker" = {
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+        # Pick a stored MPD playlist or browse a folder under the music library,
+        # load it into the MPD queue and start playing. No external GUI app needed.
+        set -euo pipefail
+
+        # Ensure the tools resolve even when launched from a minimal PATH,
+        # e.g. HyprPanel's rightClick runs "bash -c" without the session PATH.
+        export PATH="${lib.makeBinPath [ pkgs.mpc pkgs.wofi pkgs.kitty pkgs.neovim pkgs.findutils pkgs.gnused pkgs.coreutils ]}:$PATH"
+
+        # Rescan the library before doing anything, so newly added music is
+        # picked up. --wait blocks until the scan completes; it is cheap when
+        # nothing changed (MPD only re-reads files with a newer mtime).
+        mpc update --wait >/dev/null 2>&1 || true
+
+        MUSIC_DIR="${config.home.homeDirectory}/Documents/Music"
+        PLAYLIST_DIR="${config.home.homeDirectory}/.local/share/mpd/playlists"
+
+        menu() {
+          wofi --dmenu --prompt "$1" --width 700 --lines 15
+        }
+
+        edit_playlist() {
+          # Pick an existing playlist or type a new name.
+          name=$( (mpc lsplaylists; echo " New playlist...") | menu "Edit / create" ) || exit 0
+          [ -z "$name" ] && exit 0
+          if [ "$name" = " New playlist..." ]; then
+            name=$(true | menu "New playlist name") || exit 0
+            [ -z "$name" ] && exit 0
+          fi
+          file="$PLAYLIST_DIR/$name.m3u"
+          mkdir -p "$PLAYLIST_DIR"
+          # Seed a brand-new playlist with all top-level folders under the
+          # music dir as a starting scaffold to trim down.
+          if [ ! -e "$file" ]; then
+            (cd "$MUSIC_DIR" && find . -mindepth 1 -maxdepth 1 -type d | sed 's|^\./||' | sort) > "$file"
+          fi
+          kitty --title "Edit playlist: $name" -e nvim "$file"
+        }
+
+        # Right-click on the HyprPanel media module jumps straight to editing.
+        if [ "''${1:-}" = "edit" ]; then
+          edit_playlist
+          exit 0
+        fi
+
+        # Top-level choice. "Play everything" is first, so it is the default
+        # entry (highlighted on open — just press Enter to play the whole library).
+        mode=$(printf '%s\n' " Play everything" " Playlist" " Play folder" " Play folder (random)" " Edit playlist" | menu "Play") || exit 0
+
+        case "$mode" in
+          *everything*)
+            mpc clear
+            mpc add /
+            mpc play
+            ;;
+          *"Edit playlist"*)
+            edit_playlist
+            ;;
+          *Playlist*)
+            pl=$(mpc lsplaylists | menu "Playlist") || exit 0
+            [ -z "$pl" ] && exit 0
+            mpc clear
+            # Add each line so entries that are folders (the seed scaffold) get
+            # expanded to their tracks. mpc load only accepts song paths, not
+            # folders, so it would silently load nothing for a folder-based list.
+            while IFS= read -r entry; do
+              [ -z "$entry" ] && continue
+              mpc add "$entry" || true
+            done < "$PLAYLIST_DIR/$pl.m3u"
+            mpc play
+            ;;
+          *random*)
+            # List directories relative to the music dir (MPD uses relative paths).
+            dir=$(cd "$MUSIC_DIR" && find . -mindepth 1 -type d | sed 's|^\./||' | sort | menu "Folder") || exit 0
+            [ -z "$dir" ] && exit 0
+            mpc clear
+            # Expand the folder to its tracks and shuffle them before queueing,
+            # so the queue itself is in random order (not just random playback).
+            mpc listall "$dir" | shuf | mpc add
+            mpc play
+            ;;
+          *folder*)
+            # List directories relative to the music dir (MPD uses relative paths).
+            dir=$(cd "$MUSIC_DIR" && find . -mindepth 1 -type d | sed 's|^\./||' | sort | menu "Folder") || exit 0
+            [ -z "$dir" ] && exit 0
+            mpc clear
+            mpc add "$dir"
+            mpc play
+            ;;
+        esac
+      '';
+    };
+  };
+
+  # Headless music daemon; HyprPanel controls it via MPRIS.
+  services.mpd = {
+    enable = true;
+    musicDirectory = "${config.home.homeDirectory}/Documents/Music";
+    extraConfig = ''
+      audio_output {
+        type "pipewire"
+        name "PipeWire Output"
+      }
+    '';
+  };
+
+  # MPRIS bridge so HyprPanel / playerctl see MPD as a controllable player.
+  services.mpd-mpris.enable = true;
+
+  # Tie MPD and its MPRIS bridge to the Hyprland graphical session instead of
+  # the default target. Home-manager relinks these units during login
+  # activation, which happens *after* default.target has already been reached,
+  # so a plain "WantedBy=default.target" leaves them enabled-but-not-started
+  # after a reboot. hyprland-session.target is started by Hyprland itself
+  # (exec-once in hyprland.conf), i.e. after activation, so binding here makes
+  # them come up reliably every session.
+  systemd.user.services.mpd = {
+    Install.WantedBy = lib.mkForce [ "hyprland-session.target" ];
+    Unit.After = [ "hyprland-session.target" ];
+    Unit.PartOf = [ "hyprland-session.target" ];
+  };
+  systemd.user.services.mpd-mpris = {
+    Install.WantedBy = lib.mkForce [ "hyprland-session.target" ];
+    Unit.After = [ "mpd.service" "hyprland-session.target" ];
+    Unit.PartOf = [ "hyprland-session.target" ];
   };
 }
