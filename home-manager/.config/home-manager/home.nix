@@ -656,7 +656,7 @@ in
       maxCacheTtl = 604800;
       enableSshSupport = true;
       pinentry = {
-        package = pkgs.pinentry-curses;
+        package = pkgs.pinentry-qt;
       };
       extraConfig = ''
         allow-preset-passphrase
