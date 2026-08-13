@@ -1134,7 +1134,7 @@ in
 
         # Ensure the tools resolve even when launched from a minimal PATH,
         # e.g. HyprPanel's rightClick runs "bash -c" without the session PATH.
-        export PATH="${lib.makeBinPath [ pkgs.mpc pkgs.wofi pkgs.kitty pkgs.neovim pkgs.findutils pkgs.gnused pkgs.coreutils ]}:$PATH"
+        export PATH="${lib.makeBinPath [ pkgs.mpc pkgs.wofi pkgs.kitty pkgs.neovim pkgs.findutils pkgs.gnused pkgs.coreutils pkgs.hyprland pkgs.jq ]}:$PATH"
 
         # Rescan the library before doing anything, so newly added music is
         # picked up. --wait blocks until the scan completes; it is cheap when
@@ -1144,8 +1144,121 @@ in
         MUSIC_DIR="${config.home.homeDirectory}/Documents/Music"
         PLAYLIST_DIR="${config.home.homeDirectory}/.local/share/mpd/playlists"
 
+        # Lowercase, drop Greek accents and diaeresis, and fold final sigma so
+        # both alphabets reach a common baseline before being mapped across.
+        fold_case() {
+          sed 's/.*/\L&/' \
+            | sed -e 's/ά/α/g; s/έ/ε/g; s/ή/η/g; s/ί/ι/g; s/ό/ο/g; s/ύ/υ/g; s/ώ/ω/g' \
+                  -e 's/ϊ/ι/g; s/ϋ/υ/g; s/ΐ/ι/g; s/ΰ/υ/g; s/ς/σ/g'
+        }
+
+        # Greek spelling rendered in Latin: "φ" becomes "f", "γ" becomes "g".
+        # The digraphs (θ/χ/ψ) expand first, otherwise the single-letter pass
+        # would rewrite the Latin letters they just produced.
+        latinize() {
+          fold_case \
+            | sed -e 's/θ/th/g; s/χ/ch/g; s/ψ/ps/g' \
+                  -e 's/α/a/g; s/β/v/g; s/γ/g/g; s/δ/d/g; s/ε/e/g; s/ζ/z/g' \
+                  -e 's/η/i/g; s/ι/i/g; s/κ/k/g; s/λ/l/g; s/μ/m/g; s/ν/n/g' \
+                  -e 's/ξ/x/g; s/ο/o/g; s/π/p/g; s/ρ/r/g; s/σ/s/g; s/τ/t/g' \
+                  -e 's/υ/y/g; s/φ/f/g; s/ω/o/g'
+        }
+
+        # The mirror image, so a Greek-typed query also finds Latin-named
+        # entries. Letters Greek lacks fall back to their closest sound
+        # (b and v both to β, c and k both to κ), which is what a phonetic
+        # typist would reach for anyway.
+        grecize() {
+          fold_case \
+            | sed -e 's/th/θ/g; s/ch/χ/g; s/ps/ψ/g' \
+                  -e 's/a/α/g; s/b/β/g; s/v/β/g; s/g/γ/g; s/d/δ/g; s/e/ε/g' \
+                  -e 's/z/ζ/g; s/h/η/g; s/i/ι/g; s/j/ι/g; s/c/κ/g; s/k/κ/g' \
+                  -e 's/q/κ/g; s/l/λ/g; s/m/μ/g; s/n/ν/g; s/x/ξ/g; s/o/ο/g' \
+                  -e 's/p/π/g; s/r/ρ/g; s/s/σ/g; s/t/τ/g; s/u/υ/g; s/y/υ/g' \
+                  -e 's/f/φ/g; s/w/ω/g'
+        }
+
+        # Wofi reserves room for the full --lines count whether or not that many
+        # entries exist, and it sizes rows from the raw entry text rather than
+        # what pre-display-cmd renders. The search keys appended below therefore
+        # inflate every row well beyond its visible height, so a fixed count
+        # overflows a short screen. Measured against this stylesheet, a row
+        # costs 108 logical pixels and the input row plus borders another 104
+        # (heights of 536 / 968 / 1400 at 4 / 8 / 12 lines, an exact fit for
+        # 108n + 104). Scaling divides the usable height, so the budget is
+        # measured in logical pixels.
+        #
+        # Both constants are tied to wofi/style.css and to the tab-separated
+        # keys in menu(). Re-measure them with `hyprctl -j layers` if either
+        # the font sizes, the paddings or the key format change.
+        WOFI_ROW_PX=108
+        WOFI_CHROME_PX=104
+
+        # Wofi does not top-align the window, it centres it, and it keeps the
+        # vertical offset symmetric around a fixed span rather than around the
+        # free area. Measuring three sizes on a 1200px screen with a 51px bottom
+        # bar gave y = 143 / 89 / 35 for h = 968 / 1076 / 1184, i.e. h + 2y is
+        # the constant 1254 = height + reserved. So the window centres in
+        #
+        #   span   = monitor height + reserved
+        #   bottom = (span + h) / 2
+        #
+        # and staying clear of the bar means bottom <= height - reserved, which
+        # rearranges to the height budget below. Ignoring the centring and
+        # simply fitting h into the free height overshoots by a row, which is
+        # what left the last entry under the panel.
+        #
+        # jq reports the scale as a float, so it is asked for the logical
+        # numbers directly and rounds them there. Keeping the rest of the
+        # arithmetic in bash avoids depending on awk, which this script's
+        # trimmed PATH does not carry.
+        wofi_lines() {
+          local geom height reserved budget lines
+          geom=$(
+            hyprctl -j monitors 2>/dev/null \
+              | jq -r 'map(select(.focused)) | .[0]
+                       | "\((.height / .scale) | floor) \(((.reserved[1] + .reserved[3]) / .scale) | floor)"' \
+              2>/dev/null
+          ) || true
+          read -r height reserved <<< "''${geom:-}"
+          # Fall back to a count that is safe on a short screen if Hyprland
+          # cannot be reached, e.g. when launched outside a running compositor.
+          # An empty result matches the non-digit pattern too, so it needs no
+          # separate branch.
+          case "''${height:-}" in *[!0-9]*|"") echo 8; return;; esac
+          case "''${reserved:-}" in *[!0-9]*|"") reserved=0;; esac
+          # bottom = (span + h) / 2 <= height - reserved, span = height + reserved
+          budget=$(( 2 * (height - reserved) - (height + reserved) ))
+          lines=$(( (budget - WOFI_CHROME_PX) / WOFI_ROW_PX ))
+          [ "$lines" -lt 3 ] && lines=3
+          [ "$lines" -gt 15 ] && lines=15
+          echo "$lines"
+        }
+
+        # Wofi matches against the entry text but renders whatever
+        # pre-display-cmd prints, so each entry carries tab-separated Latin and
+        # Greek search keys that are matchable yet never shown. Carrying both
+        # means the search works in either direction regardless of which
+        # alphabet the entry itself is written in. The keys are cut back off
+        # the selection so callers still get the original value.
         menu() {
-          wofi --dmenu --prompt "$1" --width 700 --lines 15
+          while IFS= read -r line; do
+            printf '%s\t%s\t%s\n' "$line" \
+              "$(printf '%s' "$line" | latinize)" \
+              "$(printf '%s' "$line" | grecize)"
+          done \
+            | wofi --dmenu --prompt "$1" --width 700 --lines "$(wofi_lines)" \
+                --matching fuzzy --insensitive \
+                --pre-display-cmd "cut -f1 <<< '%s'" \
+            | cut -f1
+        }
+
+        # Album folders relative to the music dir, which is the form MPD wants.
+        # Hidden directories are pruned: they are scratch space (.projects,
+        # .claude and friends), not music, and they only add noise to the menu.
+        music_folders() {
+          (cd "$MUSIC_DIR" && find . -mindepth 1 -name '.*' -prune -o "$@" -type d -print \
+            | sed 's|^\./||' | sort)
         }
 
         edit_playlist() {
@@ -1161,7 +1274,7 @@ in
           # Seed a brand-new playlist with all top-level folders under the
           # music dir as a starting scaffold to trim down.
           if [ ! -e "$file" ]; then
-            (cd "$MUSIC_DIR" && find . -mindepth 1 -maxdepth 1 -type d | sed 's|^\./||' | sort) > "$file"
+            music_folders -maxdepth 1 > "$file"
           fi
           kitty --title "Edit playlist: $name" -e nvim "$file"
         }
@@ -1199,8 +1312,7 @@ in
             mpc play
             ;;
           *random*)
-            # List directories relative to the music dir (MPD uses relative paths).
-            dir=$(cd "$MUSIC_DIR" && find . -mindepth 1 -type d | sed 's|^\./||' | sort | menu "Folder") || exit 0
+            dir=$(music_folders | menu "Folder") || exit 0
             [ -z "$dir" ] && exit 0
             mpc clear
             # Expand the folder to its tracks and shuffle them before queueing,
@@ -1209,8 +1321,7 @@ in
             mpc play
             ;;
           *folder*)
-            # List directories relative to the music dir (MPD uses relative paths).
-            dir=$(cd "$MUSIC_DIR" && find . -mindepth 1 -type d | sed 's|^\./||' | sort | menu "Folder") || exit 0
+            dir=$(music_folders | menu "Folder") || exit 0
             [ -z "$dir" ] && exit 0
             mpc clear
             mpc add "$dir"
