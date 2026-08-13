@@ -969,6 +969,17 @@ in
         icon = "${pkgs.teams-for-linux}/share/icons/hicolor/512x512/apps/teams-for-linux.png";
         startupNotify = true;
       };
+      "nm-applet" = {
+        name = "Network Manager Applet";
+        genericName = "Network Manager";
+        comment = "Manage network connections from the system tray";
+        exec = "${pkgs.networkmanagerapplet}/bin/nm-applet --indicator";
+        terminal = false;
+        type = "Application";
+        categories = [ "Network" "System" "Settings" ];
+        icon = "nm-device-wireless";
+        startupNotify = false;
+      };
       "steam" = {
         name = "Steam";
         comment = "Application for managing and playing games on Steam";
