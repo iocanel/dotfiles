@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Mirror each artist folder from ~/Documents/Music to the seedbox media library.
+# Syncs per-artist with --delete inside each folder, so artists that exist only
+# on the server (not part of the local library) are never touched or deleted.
+set -euo pipefail
+
+SRC="$HOME/Documents/Music"
+DST="$HOME/.box/media/Music"
+
+if ! mountpoint -q "$HOME/.box/media"; then
+  echo "sync-music: $HOME/.box/media is not mounted, skipping" >&2
+  exit 1
+fi
+
+cd "$SRC"
+for artist in */; do
+  rsync -a --delete "$SRC/$artist" "$DST/$artist"
+done
+echo "sync-music: synced $(ls -d */ | wc -l) artist folders"

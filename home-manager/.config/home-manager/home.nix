@@ -810,6 +810,54 @@ in
           };
           # Run service after the user session starts
         };
+        sync-music = {
+          Unit = {
+            Description = "Sync music library to the seedbox media mount";
+            ConditionPathIsMountPoint = "${config.home.homeDirectory}/.box/media";
+          };
+          Install = {
+            # Don't auto-start, only run via timer when mount is active
+            WantedBy = [ ];
+          };
+          Service = {
+            Type = "oneshot";
+            ExecStart = "${config.home.homeDirectory}/.config/home-manager/scripts/sync-music";
+            TimeoutStartSec = "3600";
+            Environment = [
+              "PATH=${pkgs.rsync}/bin:${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
+              "HOME=${config.home.homeDirectory}"
+            ];
+          };
+        };
+        sync-transcripts = {
+          Unit = {
+            Description = "Pull today's meeting transcripts from Outlook";
+            # An expired Outlook session fails every attempt, so cap the retries
+            # rather than looping until the timer's next window.
+            StartLimitIntervalSec = 1800;
+            StartLimitBurst = 3;
+          };
+          Install = {
+            WantedBy = [ ];
+          };
+          Service = {
+            Type = "oneshot";
+            # --no-interactive: a headless oneshot cannot answer a login prompt, so fail
+            # fast instead of blocking until TimeoutStartSec kills it.
+            ExecStart = "${config.home.homeDirectory}/bin/outlook transcript --today --no-interactive --output ${config.home.homeDirectory}/Documents/org/meetings/";
+            TimeoutStartSec = "600";
+            Restart = "on-failure";
+            RestartSec = 300;
+            Environment = [
+              "PATH=${config.home.homeDirectory}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin"
+              "HOME=${config.home.homeDirectory}"
+              # Chromium fails to start without this. The ambient LD_LIBRARY_PATH carries
+              # an alsa-lib needing a glibc symbol (GLIBC_ABI_GNU2_TLS) that Chromium's
+              # glibc does not provide, so this must replace it, not extend it.
+              "LD_LIBRARY_PATH=${pkgs.pipewire.jack}/lib"
+            ];
+          };
+        };
       };
       timers = {
         update-nixos-config = {
@@ -865,11 +913,42 @@ in
             WantedBy = [ "timers.target" ];
           };
         };
+        sync-music = {
+          Unit = {
+            Description = "Timer for sync-music";
+            ConditionPathIsMountPoint = "${config.home.homeDirectory}/.box/media";
+          };
+          Timer = {
+            OnCalendar = "03:00";
+            Persistent = true;
+            Unit = "sync-music.service";
+          };
+          Install = {
+            WantedBy = [ "timers.target" ];
+          };
+        };
+        sync-transcripts = {
+          Unit = {
+            Description = "Timer for sync-transcripts";
+          };
+          Timer = {
+            # Weekdays at 21:00. Not persistent: --today only makes sense
+            # on the same day, a catch-up run would fetch the wrong date.
+            OnCalendar = "Mon..Fri 21:00";
+            Persistent = false;
+            Unit = "sync-transcripts.service";
+          };
+          Install = {
+            WantedBy = [ "timers.target" ];
+          };
+        };
       };
     };
   };
   
   xdg = {
+    enable = true;
+
     mimeApps = {
       enable = true;
       defaultApplications = {
