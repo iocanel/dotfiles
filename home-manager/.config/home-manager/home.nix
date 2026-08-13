@@ -254,7 +254,7 @@ in
     bc
     jq
     yq
-    yt-dlp
+    unstable.yt-dlp
     lastpass-cli
     git
     git-filter-repo
@@ -279,29 +279,7 @@ in
     #
     # AI tools
     codeium
-    (pkgs.stdenv.mkDerivation rec {
-      pname = "claude-code";
-      version = "2.1.91";
-      src = pkgs.fetchurl {
-        url = "https://registry.npmjs.org/@anthropic-ai/claude-code/-/claude-code-${version}.tgz";
-        hash = "sha256-T7Ta53HW+tHnRwN0EUj17i0kg39KBOqycEF0b3pbPis=";
-      };
-      nativeBuildInputs = [ pkgs.makeWrapper ];
-      buildInputs = [ pkgs.nodejs ];
-      dontBuild = true;
-      installPhase = ''
-        mkdir -p $out/lib/node_modules/@anthropic-ai/claude-code
-        cp -r . $out/lib/node_modules/@anthropic-ai/claude-code/
-        makeWrapper ${pkgs.nodejs}/bin/node $out/bin/claude \
-          --add-flags "$out/lib/node_modules/@anthropic-ai/claude-code/cli.js" \
-          --set DISABLE_AUTOUPDATER 1 \
-          --set DISABLE_INSTALLATION_CHECKS 1
-      '';
-      meta = {
-        description = "Claude Code CLI";
-        mainProgram = "claude";
-      };
-    })
+    unstable.claude-code
     opencode
     whisperApi
     gws-cli
