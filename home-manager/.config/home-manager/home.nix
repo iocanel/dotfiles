@@ -516,6 +516,17 @@ in
   #echo "export NIX_LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib ]}" >> $HOME/.profile
   '';
 
+  # Input Leap SSL - disabled until InputCapture portal is available
+  # home.activation.input-leap-ssl = lib.hm.dag.entryAfter ["writeBoundary"] ''
+  # #/bin/sh
+  # SSL_DIR=$HOME/.config/InputLeap/SSL
+  # mkdir -p "$SSL_DIR/Fingerprints"
+  # if [ ! -f "$SSL_DIR/InputLeap.pem" ]; then
+  #   ${pkgs.openssl}/bin/openssl req -x509 -newkey rsa:4096 -keyout "$SSL_DIR/InputLeap.pem" -out "$SSL_DIR/InputLeap.pem" -days 3650 -nodes -subj "/CN=InputLeap"
+  #   ${pkgs.openssl}/bin/openssl x509 -fingerprint -sha256 -noout -in "$SSL_DIR/InputLeap.pem" > "$SSL_DIR/InputLeap.pem.fingerprint"
+  # fi
+  # '';
+
   # Rclone
   home.activation.rclone = lib.hm.dag.entryAfter ["writeBoundary"] ''
   #/bin/sh
@@ -691,6 +702,22 @@ in
           };
         };
 
+        # input-leap-server = {
+        #   Unit = {
+        #     Description = "Input Leap KVM Server";
+        #     After = [ "graphical-session.target" ];
+        #     PartOf = [ "graphical-session.target" ];
+        #   };
+        #   Install = {
+        #     WantedBy = [ "graphical-session.target" ];
+        #   };
+        #   Service = {
+        #     Type = "simple";
+        #     ExecStart = "${pkgs.input-leap}/bin/input-leaps -f --use-ei -c ${config.home.homeDirectory}/.config/input-leap/input-leap.conf";
+        #     Restart = "on-failure";
+        #     RestartSec = 5;
+        #   };
+        # };
         update-nixos-config = {
           Unit = {
             Description = "Update nixos configuration";
@@ -902,6 +929,27 @@ in
       batch = true
       fastcheck = true
     '';
+    # Input Leap config - disabled until InputCapture portal is available
+    # ".config/input-leap/input-leap.conf".text = ''
+    #   section: screens
+    #     canelio:
+    #     iwin:
+    #   end
+    #
+    #   section: links
+    #     canelio:
+    #       right = iwin
+    #     iwin:
+    #       left = canelio
+    #   end
+    #
+    #   section: options
+    #     relativeMouseMoves = false
+    #     screenSaverSync = true
+    #     clipboardSharing = true
+    #   end
+    # '';
+
     ".config/fish-ai.ini".text = ''
       [fish-ai]
       configuration = openai
