@@ -5,7 +5,33 @@
 }:
 
 let
-  pythonEnv = pkgs.python312.withPackages (ps: with ps; [
+  # Pin nixpkgs so the CUDA stack (torch, ctranslate2) is not recompiled on every
+  # channel bump. This commit matches what these packages were first built against;
+  # bump it deliberately when you want newer CUDA builds (and accept the rebuild).
+  pinnedNixpkgs = builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/archive/3c9db02515ef1d9b6b709fc60ba9a540957f661c.tar.gz";
+  };
+
+  cudaPkgs = import pinnedNixpkgs {
+    inherit (pkgs) system;
+    config = {
+      allowUnfree = true;
+      cudaSupport = true;
+    };
+  };
+
+  # faster-whisper does its GPU work via ctranslate2 (CUDA); its onnxruntime
+  # dependency is only the CPU-side VAD. Feed it the non-CUDA onnxruntime so we
+  # use the cached build instead of compiling onnxruntime-cuda from source.
+  cpuPkgs = import pinnedNixpkgs {
+    inherit (pkgs) system;
+    config.allowUnfree = true;
+  };
+  fasterWhisperCpuOnnx = cudaPkgs.python312Packages.faster-whisper.override {
+    onnxruntime = cpuPkgs.python312Packages.onnxruntime;
+  };
+
+  pythonEnv = cudaPkgs.python312.withPackages (ps: with ps; [
     torch
     transformers
     sentencepiece
@@ -13,12 +39,14 @@ let
     tqdm
     pysrt
     ffmpeg-python
-    faster-whisper
+    fasterWhisperCpuOnnx
     openai-whisper
     rapidfuzz
   ]);
 
   greeksuberWrapper = pkgs.writeShellScriptBin "greeksuber" ''
+    unset LD_LIBRARY_PATH
+    export PATH="${lib.makeBinPath [ pkgs.ffmpeg ]}:$PATH"
     export PYTHONPATH="${greeksuberSrc}/src:$PYTHONPATH"
     exec ${pythonEnv}/bin/python -m greeksuber "$@"
   '';
