@@ -213,6 +213,7 @@ in
     libreoffice
     evince
     foliate
+    poppler
     qpdf
     xournalpp
     wkhtmltopdf
@@ -280,7 +281,7 @@ in
     # AI tools
     codeium
     unstable.claude-code
-    opencode
+    unstable.opencode
     whisperApi
     gws-cli
     rtk
@@ -374,6 +375,9 @@ in
     
     # SQL    
     sqlitebrowser
+
+    #Mongo
+    mongosh
 
     # Go
     go
@@ -569,6 +573,20 @@ in
     };
     gpg = {
       enable = true;
+    };
+    ssh = {
+      enable = true;
+      # HM 25.11 still injects its legacy `Host *` defaults (ServerAliveInterval 0)
+      # and warns about them on every rebuild. Opt out and set the defaults here.
+      enableDefaultConfig = false;
+      # Rental boxes (vast.ai) run sshd with ClientAliveInterval 10 /
+      # ClientAliveCountMax 2, so 20s of silence on the channel kills the session
+      # mid-command. Our own keepalive every 5s keeps it non-idle.
+      matchBlocks."*" = {
+        serverAliveInterval = 5;
+        serverAliveCountMax = 6;
+        extraOptions.TCPKeepAlive = "yes";
+      };
     };
     home-manager = {
       enable = true;
@@ -832,10 +850,13 @@ in
         sync-transcripts = {
           Unit = {
             Description = "Pull today's meeting transcripts from Outlook";
-            # An expired Outlook session fails every attempt, so cap the retries
-            # rather than looping until the timer's next window.
-            StartLimitIntervalSec = 1800;
-            StartLimitBurst = 3;
+            # StartLimitBurst counts *starts*, and this unit always starts fine and only
+            # exits 1 later, so the counter reset on every run and never tripped. On
+            # 2026-08-24 that let it restart 17 times over three hours, cross midnight and
+            # overwrite a good three-meeting file. RuntimeMaxSec bounds the whole retry
+            # chain instead, so the loop cannot outlive the evening it started in.
+            StartLimitIntervalSec = 3600;
+            StartLimitBurst = 4;
           };
           Install = {
             WantedBy = [ ];
@@ -844,8 +865,27 @@ in
             Type = "oneshot";
             # --no-interactive: a headless oneshot cannot answer a login prompt, so fail
             # fast instead of blocking until TimeoutStartSec kills it.
-            ExecStart = "${config.home.homeDirectory}/bin/outlook transcript --today --no-interactive --output ${config.home.homeDirectory}/Documents/org/meetings/";
+            # --day pins the scheduled date: --today re-resolved against the wall clock
+            # on every restart, so a retry after midnight scanned the wrong day. The stamp
+            # lives under /tmp keyed by date-of-first-start, since RuntimeDirectory is
+            # wiped between restarts of a oneshot and could not carry the pin.
+            # RuntimeMaxSec caps the whole retry chain well short of midnight.
+            ExecStart = let
+              pinDay = pkgs.writeShellScript "sync-transcripts-pinned" ''
+                set -eu
+                stamp=/tmp/sync-transcripts-day
+                # Claim the pin only if it is missing or from an earlier run chain. A
+                # stamp younger than the retry window belongs to this evening's chain.
+                if [ ! -s "$stamp" ] || [ -z "$(find "$stamp" -newermt '-7200 seconds' 2>/dev/null)" ]; then
+                  date +%F > "$stamp"
+                fi
+                exec "${config.home.homeDirectory}/bin/outlook" transcript \
+                  --day "$(cat "$stamp")" --no-interactive \
+                  --output "${config.home.homeDirectory}/Documents/org/meetings/"
+              '';
+            in "${pinDay}";
             TimeoutStartSec = "600";
+            RuntimeMaxSec = "7200";
             Restart = "on-failure";
             RestartSec = 300;
             Environment = [
