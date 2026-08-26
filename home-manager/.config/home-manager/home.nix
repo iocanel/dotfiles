@@ -25,6 +25,7 @@ in
 {
   imports = [
     ./modules/display/manager.nix
+    ./modules/mpd-hykr-watch.nix
     ./private/index.nix
   ];
 
@@ -1177,6 +1178,10 @@ in
 
   # MPRIS bridge so HyprPanel / playerctl see MPD as a controllable player.
   services.mpd-mpris.enable = true;
+
+  # Records podcast playback progress so mpd-hykr can resume an episode. The
+  # script itself is installed from its repo with "just install", not by nix.
+  services.mpd-hykr-watch.enable = true;
 
   # Tie MPD and its MPRIS bridge to the Hyprland graphical session instead of
   # the default target. Home-manager relinks these units during login
