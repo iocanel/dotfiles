@@ -111,6 +111,10 @@ noremap <C-x>c :action ActivateTerminalToolWindow<cr>
 noremap <C-x>s :action ViewStatusBar<cr>
 noremap <C-x>m :action ActivateMavenToolWindow<cr>
 
+" Clipboard: sync vim registers with system clipboard
+set clipboard+=unnamedplus
+set clipboard+=ideaput
+
 " Set relative line numbers
 set relativenumber
 let g:relative_number_set = 0
