@@ -95,7 +95,10 @@ in
       Service = {
         Type = "simple";
         ExecStart = cfg.command;
+        # A compositor-launched unit does not get the login shell's PATH, and
+        # python3 is what the watcher runs on.
         Environment = [
+          "PATH=${lib.makeBinPath [ pkgs.python3 ]}"
           "PODCAST_STATE_DIR=${cfg.stateDir}"
           "PODCAST_SAVE_INTERVAL=${toString cfg.saveInterval}"
           "PODCAST_MIN_ELAPSED=${toString cfg.minElapsed}"
@@ -111,9 +114,5 @@ in
 
       Install.WantedBy = [ cfg.target ];
     };
-
-    # python3 is what the watcher runs on, and a compositor-launched unit does
-    # not get the login shell's PATH.
-    home.packages = [ pkgs.python3 ];
   };
 }
